@@ -5,7 +5,7 @@ export interface CartItem {
   tourId: string;
   tourTitle: string;
   tourSlug: string;
-  tourImage?: string;
+  tourImage: string;
   location?: string;
   tourDate: string;
   tourTime: string;

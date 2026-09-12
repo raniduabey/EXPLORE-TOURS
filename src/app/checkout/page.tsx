@@ -373,8 +373,8 @@ export default function CheckoutPage() {
             <div className="flex gap-3">
               <div className="relative w-20 h-20 rounded-xl overflow-hidden bg-slate-100 shrink-0">
                 <Image
-                  src={item.tourImage}
-                  alt={item.tourTitle}
+                  src={item.tourImage || "https://images.unsplash.com/photo-1578564499890-7949609022f3?q=80&w=800&auto=format&fit=crop"}
+                  alt={item.tourTitle || "Tour"}
                   fill
                   className="object-cover"
                 />
