@@ -18,3 +18,5 @@ export function formatPrice(amount: number, currency: string = "USD"): string {
   const c = currencies[currency] || currencies.USD;
   return c.format(amount * c.rate);
 }
+
+export const formatCurrency = formatPrice;
