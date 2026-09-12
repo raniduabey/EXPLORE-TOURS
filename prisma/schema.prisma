@@ -1,0 +1,207 @@
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        String    @id @default(uuid())
+  email     String    @unique
+  name      String
+  role      String    @default("CUSTOMER")
+  phone     String?
+  avatar    String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  bookings  Booking[]
+}
+
+model Destination {
+  id                 String  @id @default(uuid())
+  name               String  @unique
+  slug               String  @unique
+  shortDesc          String
+  longDesc           String
+  image              String
+  experienceCount    Int     @default(0)
+  startingPrice      Float   @default(0)
+  popularAttractions String
+  bestTimeToVisit    String
+  featured           Boolean @default(false)
+  tours              Tour[]
+}
+
+model Category {
+  id          String @id @default(uuid())
+  name        String @unique
+  slug        String @unique
+  icon        String
+  description String
+  image       String
+  tours       Tour[]
+}
+
+model Tour {
+  id               String          @id @default(uuid())
+  title            String
+  slug             String          @unique
+  location         String
+  destinationId    String?
+  destination      Destination?    @relation(fields: [destinationId], references: [id])
+  categoryId       String?
+  category         Category?       @relation(fields: [categoryId], references: [id])
+  duration         String
+  durationHours    Int             @default(8)
+  rating           Float           @default(4.9)
+  reviewCount      Int             @default(120)
+  bookedCount      Int             @default(450)
+  price            Float
+  previousPrice    Float?
+  tourType         String
+  badge            String?
+  freeCancellation Boolean         @default(true)
+  instantBook      Boolean         @default(true)
+  pickupAvailable  Boolean         @default(true)
+  guideIncluded    Boolean         @default(true)
+  liveGuide        String          @default("English")
+  description      String
+  highlights       String
+  includes         String
+  excludes         String
+  importantInfo    String?
+  whatToBring      String?
+  featured         Boolean         @default(false)
+  images           TourImage[]
+  itinerary        ItineraryItem[]
+  bookings         Booking[]
+  reviews          Review[]
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+}
+
+model TourImage {
+  id        String  @id @default(uuid())
+  tourId    String
+  tour      Tour    @relation(fields: [tourId], references: [id], onDelete: Cascade)
+  url       String
+  caption   String?
+  isPrimary Boolean @default(false)
+}
+
+model ItineraryItem {
+  id          String  @id @default(uuid())
+  tourId      String
+  tour        Tour    @relation(fields: [tourId], references: [id], onDelete: Cascade)
+  stepNumber  Int
+  title       String
+  description String
+  location    String?
+  duration    String?
+}
+
+model Booking {
+  id              String   @id @default(uuid())
+  bookingRef      String   @unique
+  userId          String?
+  user            User?    @relation(fields: [userId], references: [id])
+  tourId          String
+  tour            Tour     @relation(fields: [tourId], references: [id])
+  tourDate        String
+  tourTime        String
+  adults          Int      @default(1)
+  children        Int      @default(0)
+  infants         Int      @default(0)
+  guestName       String
+  guestEmail      String
+  guestPhone      String
+  guestCountry    String
+  pickupLocation  String
+  specialRequests String?
+  totalAmount     Float
+  currency        String   @default("USD")
+  paymentMethod   String   @default("PayHere")
+  paymentStatus   String   @default("CONFIRMED")
+  bookingStatus   String   @default("CONFIRMED")
+  createdAt       DateTime @default(now())
+}
+
+model Review {
+  id              String   @id @default(uuid())
+  tourId          String
+  tour            Tour     @relation(fields: [tourId], references: [id], onDelete: Cascade)
+  userName        String
+  userCountry     String
+  userAvatar      String?
+  rating          Float
+  guideRating     Float    @default(5.0)
+  transportRating Float    @default(5.0)
+  valueRating     Float    @default(5.0)
+  comment         String
+  travelDate      String
+  verified        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+}
+
+model Coupon {
+  id             String    @id @default(uuid())
+  code           String    @unique
+  discountType   String    @default("PERCENT")
+  discountAmount Float
+  minSpend       Float     @default(0)
+  usageLimit     Int       @default(100)
+  usageCount     Int       @default(0)
+  active         Boolean   @default(true)
+  expiresAt      DateTime?
+}
+
+model BlogPost {
+  id          String   @id @default(uuid())
+  title       String
+  slug        String   @unique
+  excerpt     String
+  content     String
+  image       String
+  category    String
+  author      String
+  readTime    String   @default("5 min read")
+  featured    Boolean  @default(false)
+  publishedAt DateTime @default(now())
+}
+
+model CustomTripRequest {
+  id             String   @id @default(uuid())
+  name           String
+  email          String
+  phone          String
+  country        String
+  travelDates    String
+  duration       String
+  budget         String
+  travelers      String
+  accommodation  String
+  transportation String
+  destinations   String
+  interests      String
+  specialNotes   String?
+  status         String   @default("NEW")
+  createdAt      DateTime @default(now())
+}
+
+model HeroSlide {
+  id                String   @id @default(uuid())
+  tagline           String
+  headlineLine1     String
+  headlineHighlight String
+  subtitle          String
+  image             String
+  destination       String
+  ctaText           String
+  ctaLink           String
+  active            Boolean  @default(true)
+  orderIndex        Int      @default(0)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
