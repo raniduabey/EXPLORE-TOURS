@@ -49,8 +49,14 @@ export const Header: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
           <Link href="/" className="inline-flex items-center group shrink-0">
-            <div className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-2xl overflow-hidden bg-white p-1 shadow-sm border border-slate-200/70 group-hover:shadow group-hover:scale-105 transition-all duration-300 flex items-center justify-center font-extrabold text-ceylon-navy text-xs tracking-tight">
-              <span>CEYLON EXPLORE</span>
+            <div className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-2xl overflow-hidden bg-white p-1 shadow-sm border border-slate-200/70 group-hover:shadow group-hover:scale-105 transition-all duration-300">
+              <Image
+                src="/images/logo.png"
+                alt="Ceylon Explore Guide Official Logo"
+                fill
+                className="object-contain"
+                priority
+              />
             </div>
           </Link>
 

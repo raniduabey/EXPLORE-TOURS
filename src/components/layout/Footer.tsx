@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { MapPin, Phone, Mail, ShieldCheck, Instagram, Facebook, Youtube } from "lucide-react";
 import { useCurrency } from "@/context/CurrencyContext";
 
@@ -14,8 +15,16 @@ export const Footer: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pb-12 border-b border-white/10">
           <div className="lg:col-span-2 space-y-4">
             <Link href="/" className="inline-block group">
-              <div className="bg-white rounded-2xl p-2.5 inline-flex items-center shadow-lg border border-white/30 group-hover:scale-105 transition-transform duration-300 font-extrabold text-ceylon-navy text-sm">
-                CEYLON EXPLORE GUIDE
+              <div className="bg-white rounded-2xl p-2.5 inline-flex items-center shadow-lg border border-white/30 group-hover:scale-105 transition-transform duration-300">
+                <div className="relative w-32 h-32 sm:w-36 sm:h-36">
+                  <Image
+                    src="/images/logo.png"
+                    alt="Ceylon Explore Guide Official Logo"
+                    fill
+                    className="object-contain"
+                    priority
+                  />
+                </div>
               </div>
             </Link>
             <p className="text-slate-300 text-sm leading-relaxed max-w-sm pt-1">
