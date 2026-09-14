@@ -186,21 +186,23 @@ export default async function TourDetailPage({
       }));
   }
 
-  const highlights: string[] = tour.highlights
-    ? typeof tour.highlights === "string"
-      ? JSON.parse(tour.highlights)
-      : tour.highlights
-    : [];
-  const includes: string[] = tour.includes
-    ? typeof tour.includes === "string"
-      ? JSON.parse(tour.includes)
-      : tour.includes
-    : [];
-  const excludes: string[] = tour.excludes
-    ? typeof tour.excludes === "string"
-      ? JSON.parse(tour.excludes)
-      : tour.excludes
-    : [];
+  const safeParseArray = (val: any): string[] => {
+    if (!val) return [];
+    if (Array.isArray(val)) return val;
+    if (typeof val === "string") {
+      try {
+        const res = JSON.parse(val);
+        if (Array.isArray(res)) return res;
+      } catch (e) {
+        return [val];
+      }
+    }
+    return [];
+  };
+
+  const highlights: string[] = safeParseArray(tour.highlights);
+  const includes: string[] = safeParseArray(tour.includes);
+  const excludes: string[] = safeParseArray(tour.excludes);
 
   const jsonLd = {
     "@context": "https://schema.org",

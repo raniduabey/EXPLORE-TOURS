@@ -120,13 +120,11 @@ export default function RootLayout({
 
   return (
     <html lang="en" className="scroll-smooth">
-      <head>
+      <body className="antialiased min-h-screen flex flex-col justify-between">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
         />
-      </head>
-      <body className="antialiased min-h-screen flex flex-col justify-between">
         <CurrencyProvider>
           <WishlistProvider>
             <CartProvider>
