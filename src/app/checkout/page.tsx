@@ -55,17 +55,18 @@ export default function CheckoutPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           tourId: item.tourId,
+          tourSlug: item.tourSlug,
           tourDate: item.tourDate,
           tourTime: item.tourTime,
           adults: item.adults,
           children: item.childrenCount,
-          guestName: `${firstName} ${lastName}`,
-          guestEmail: email,
+          guestName: `${firstName} ${lastName}`.trim(),
+          guestEmail: email.trim().toLowerCase(),
           guestPhone: phone,
           guestCountry: country,
           pickupLocation: pickupLocation || item.pickupLocation,
           specialRequests,
-          totalAmount: finalTotal,
+          promoCode,
           currency,
           paymentMethod,
         }),
@@ -292,10 +293,24 @@ export default function CheckoutPage() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {[
-                  { id: "PayHere", title: "PayHere (Sri Lanka Gateway)", desc: "Supports LKR/USD Card Payments", badge: "Recommended" },
-                  { id: "Stripe", title: "Stripe Secure Card", desc: "Visa, Mastercard, Amex, Apple Pay", badge: "" },
-                  { id: "PayPal", title: "PayPal Instant Express", desc: "Pay securely with your PayPal account", badge: "" },
-                  { id: "Card", title: "Credit / Debit Card", desc: "Instant tokenized payment processing", badge: "" }
+                  {
+                    id: "Reserve Now & Pay on Arrival",
+                    title: "Reserve Now & Pay on Tour",
+                    desc: "Instant digital confirmation voucher. Settle balance directly with your chauffeur/guide in USD or LKR cash.",
+                    badge: "Recommended",
+                  },
+                  {
+                    id: "Card",
+                    title: "Credit / Debit Card",
+                    desc: "Tokenized 256-bit SSL transaction via Visa or Mastercard.",
+                    badge: "Instant",
+                  },
+                  {
+                    id: "Bank Transfer",
+                    title: "Direct Bank Transfer",
+                    desc: "Wire funds directly to our licensed Sri Lankan corporate account.",
+                    badge: "",
+                  },
                 ].map((gateway) => (
                   <div
                     key={gateway.id}

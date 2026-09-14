@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Calendar, Clock, Users, ChevronDown, Zap } from "lucide-react";
+import { Calendar, Clock, Users, ChevronDown, Zap, ShieldCheck } from "lucide-react";
 import { useCurrency } from "@/context/CurrencyContext";
 import { useCart } from "@/context/CartContext";
 
@@ -28,12 +28,30 @@ export const BookingWidget: React.FC<BookingWidgetProps> = ({
   const { formatPrice } = useCurrency();
   const { addToCart } = useCart();
 
-  const [date, setDate] = useState("2026-09-15");
+  // Dynamic default date: tomorrow
+  const getTomorrowStr = () => {
+    const d = new Date();
+    d.setDate(d.getDate() + 1);
+    return d.toISOString().split("T")[0];
+  };
+
+  const minDateStr = getTomorrowStr();
+  const [date, setDate] = useState(minDateStr);
   const [time, setTime] = useState("07:00 AM");
   const [adults, setAdults] = useState(2);
   const [childrenCount, setChildrenCount] = useState(0);
   const [pickup, setPickup] = useState("");
   const [openTravellerModal, setOpenTravellerModal] = useState(false);
+
+  // Calculate cancellation deadline
+  let cancelDeadlineText = "24 hours prior to departure";
+  try {
+    const cd = new Date(date);
+    if (!isNaN(cd.getTime())) {
+      cd.setDate(cd.getDate() - 1);
+      cancelDeadlineText = `${cd.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })} at ${time}`;
+    }
+  } catch (e) {}
 
   const total = adults * price + price * 0.7 * childrenCount;
 
@@ -88,6 +106,7 @@ export const BookingWidget: React.FC<BookingWidgetProps> = ({
             <input
               type="date"
               value={date}
+              min={minDateStr}
               onChange={(e) => setDate(e.target.value)}
               className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-semibold text-ceylon-text focus:outline-none focus:border-ceylon-blue"
             />
@@ -183,6 +202,15 @@ export const BookingWidget: React.FC<BookingWidgetProps> = ({
               onChange={(e) => setPickup(e.target.value)}
               className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-medium text-ceylon-text focus:outline-none focus:border-ceylon-blue"
             />
+          </div>
+        </div>
+
+        {/* Cancellation deadline banner */}
+        <div className="text-[11px] text-emerald-800 bg-emerald-50/90 border border-emerald-200/70 rounded-xl p-2.5 flex items-start gap-2">
+          <ShieldCheck className="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5" />
+          <div>
+            <span className="font-bold block">Free Cancellation</span>
+            <span className="text-slate-600">Full refund if cancelled before <strong>{cancelDeadlineText}</strong></span>
           </div>
         </div>
 

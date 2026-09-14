@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { Sparkles, CheckCircle, Phone, Users, Calendar, MapPin, Check, Send } from "lucide-react";
+import { siteConfig } from "@/config/site";
 
 export default function PlanMyTripPage() {
   const [submitted, setSubmitted] = useState(false);
@@ -8,7 +9,14 @@ export default function PlanMyTripPage() {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [country, setCountry] = useState("United States");
-  const [travelDates, setTravelDates] = useState("2026-09-15");
+  
+  const getTomorrowStr = () => {
+    const d = new Date();
+    d.setDate(d.getDate() + 1);
+    return d.toISOString().split("T")[0];
+  };
+
+  const [travelDates, setTravelDates] = useState(getTomorrowStr());
   const [duration, setDuration] = useState("7 Days");
   const [budget, setBudget] = useState("Comfort ($100-$200/day)");
   const [travelers, setTravelers] = useState("2 Adults");
@@ -60,7 +68,7 @@ export default function PlanMyTripPage() {
   };
 
   const waText = encodeURIComponent(
-    `Hi Ceylon Explore Guide, I submitted a custom trip request!\nName: ${name}\nDuration: ${duration}\nDestinations: ${destinations.join(
+    `Hi ${siteConfig.name}, I submitted a custom trip request!\nName: ${name}\nDuration: ${duration}\nDestinations: ${destinations.join(
       ", "
     )}\nInterests: ${interests.join(", ")}`
   );
@@ -92,7 +100,7 @@ export default function PlanMyTripPage() {
             Our Senior Sri Lanka Travel Specialist will curate your custom itinerary and email your PDF proposal within 24 hours.
           </p>
           <a
-            href={`https://wa.me/94771234567?text=${waText}`}
+            href={`https://wa.me/${siteConfig.contact.whatsapp}?text=${waText}`}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-6 py-3 bg-[#25D366] hover:bg-[#20ba5a] text-white font-extrabold text-xs rounded-xl shadow-lg transition-transform active:scale-95"

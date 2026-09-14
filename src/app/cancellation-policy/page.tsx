@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { ArrowLeft, RotateCcw, CircleCheck, Clock, TriangleAlert } from "lucide-react";
+import { siteConfig } from "@/config/site";
 
 export const metadata = {
-  title: "Refund & Cancellation Policy | Ceylon Explore Guide",
+  title: "Refund & Cancellation Policy | Ceylon Explore Tours",
   description: "Free 24-hour cancellation policy, 100% refund terms, weather guarantee, and refund processing procedures.",
 };
 
@@ -68,7 +69,7 @@ export default function CancellationPolicyPage() {
             1. Standard Cancellation Guidelines
           </h2>
           <p>
-            We understand that travel plans can change unexpectedly. At <strong>Ceylon Explore Guide</strong>, we aim to provide maximum flexibility:
+            We understand that travel plans can change unexpectedly. At <strong>Ceylon Explore Tours</strong>, we aim to provide maximum flexibility:
           </p>
           <ul className="list-disc pl-5 space-y-1.5 text-xs">
             <li>
@@ -105,11 +106,11 @@ export default function CancellationPolicyPage() {
             </li>
             <li>
               Email our support team at{" "}
-              <strong className="text-ceylon-navy">support@ceylonexploreguide.com</strong> with your Booking Reference ID (e.g. CEG-123456).
+              <strong className="text-ceylon-navy">{siteConfig.contact.email}</strong> with your Booking Reference ID (e.g. CET-2026-XXXXX).
             </li>
             <li>
               Message our 24/7 WhatsApp Hotline at{" "}
-              <strong className="text-ceylon-green">+94 77 123 4567</strong>.
+              <strong className="text-ceylon-green">{siteConfig.contact.phone}</strong>.
             </li>
           </ol>
         </section>

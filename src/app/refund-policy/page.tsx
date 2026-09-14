@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { ArrowLeft, RotateCcw, CircleCheck, Clock, TriangleAlert } from "lucide-react";
+import { siteConfig } from "@/config/site";
 
 export const metadata = {
-  title: "Refund & Cancellation Policy | Ceylon Explore Guide",
+  title: "Refund & Cancellation Policy | Ceylon Explore Tours",
   description: "Free 24-hour cancellation policy, 100% refund terms, weather guarantee, and refund processing procedures.",
 };
 
@@ -37,27 +38,27 @@ export default function CancellationPolicyPage() {
           </div>
           <h3 className="font-extrabold text-sm text-ceylon-navy">Free 24h Cancellation</h3>
           <p className="text-xs text-ceylon-muted">
-            Full 100% refund if cancelled at least 24 hours prior to starting time.
+            Full 100% refund if cancelled at least 24 hours prior to starting time. No questions asked.
           </p>
         </div>
 
         <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-2">
-          <div className="w-10 h-10 rounded-xl bg-ceylon-softblue text-ceylon-blue flex items-center justify-center font-bold">
+          <div className="w-10 h-10 rounded-xl bg-blue-100 text-ceylon-blue flex items-center justify-center font-bold">
             <Clock className="w-6 h-6" />
           </div>
-          <h3 className="font-extrabold text-sm text-ceylon-navy">3-5 Days Processing</h3>
+          <h3 className="font-extrabold text-sm text-ceylon-navy">Fast Processing</h3>
           <p className="text-xs text-ceylon-muted">
-            Refunds automatically credit back to your original payment card/account.
+            Approved refunds are credited back to your original payment method within 3–5 banking business days.
           </p>
         </div>
 
         <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-2">
-          <div className="w-10 h-10 rounded-xl bg-amber-100 text-amber-900 flex items-center justify-center font-bold">
-            <TriangleAlert className="w-6 h-6 text-amber-600" />
+          <div className="w-10 h-10 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center font-bold">
+            <TriangleAlert className="w-6 h-6" />
           </div>
-          <h3 className="font-extrabold text-sm text-ceylon-navy">Weather Protection</h3>
+          <h3 className="font-extrabold text-sm text-ceylon-navy">Weather Guarantee</h3>
           <p className="text-xs text-ceylon-muted">
-            Full refund or free date change if ocean/weather forces safari or cruise cancellation.
+            If severe weather shuts down safaris or boat tours, reschedule freely or receive a 100% refund.
           </p>
         </div>
       </div>
@@ -65,27 +66,17 @@ export default function CancellationPolicyPage() {
       <div className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200/90 shadow-sm text-sm text-slate-700 leading-relaxed space-y-6">
         <section className="space-y-2">
           <h2 className="font-extrabold text-lg text-ceylon-navy">
-            1. Standard Cancellation Guidelines
+            1. Standard Cancellation Policy Timeline
           </h2>
-          <p>
-            We understand that travel plans can change unexpectedly. At <strong>Ceylon Explore Guide</strong>, we aim to provide maximum flexibility:
-          </p>
-          <ul className="list-disc pl-5 space-y-1.5 text-xs">
+          <ul className="list-disc pl-5 space-y-2 text-xs">
             <li>
-              <strong className="text-emerald-700">
-                Cancellation 24 Hours or More Before Tour Start:
-              </strong>{" "}
-              100% Full Refund with zero penalty fees.
+              <strong>24+ Hours Before Tour Departure:</strong> Eligible for a full <strong>100% refund</strong> with no cancellation fees deducted.
             </li>
             <li>
-              <strong className="text-rose-600">
-                Cancellation Less Than 24 Hours Before Tour Start:
-              </strong>{" "}
-              Non-refundable due to pre-booked vehicle rentals, guide reservations, and meal preparations.
+              <strong>Less than 24 Hours Before Tour Departure:</strong> Due to vehicle reservations, dedicated private guide allocations, and advance national park permit purchases, cancellations made within 24 hours are non-refundable.
             </li>
             <li>
-              <strong className="text-rose-600">No-Show at Hotel Pickup:</strong>{" "}
-              Non-refundable if the driver arrives at your designated pickup point and guest fails to appear after a 30-minute grace period.
+              <strong>No-Shows:</strong> If travellers do not arrive at the agreed pickup hotel lobby or meeting point within 30 minutes of the scheduled time without notifying our support team, the tour will be marked as a no-show and is non-refundable.
             </li>
           </ul>
         </section>
@@ -105,11 +96,11 @@ export default function CancellationPolicyPage() {
             </li>
             <li>
               Email our support team at{" "}
-              <strong className="text-ceylon-navy">support@ceylonexploreguide.com</strong> with your Booking Reference ID (e.g. CEG-123456).
+              <strong className="text-ceylon-navy">{siteConfig.contact.email}</strong> with your Booking Reference ID (e.g. CET-2026-XXXXX).
             </li>
             <li>
               Message our 24/7 WhatsApp Hotline at{" "}
-              <strong className="text-ceylon-green">+94 77 123 4567</strong>.
+              <strong className="text-ceylon-green">{siteConfig.contact.phone}</strong>.
             </li>
           </ol>
         </section>

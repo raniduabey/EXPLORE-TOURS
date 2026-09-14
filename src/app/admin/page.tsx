@@ -45,14 +45,58 @@ export default function AdminPage() {
       if (dRes.ok) setDestinations(await dRes.json());
 
       const tRes = await fetch("/api/tours");
-      if (tRes.ok) setTours(await tRes.json());
+      let tourList: any[] = [];
+      if (tRes.ok) {
+        tourList = await tRes.json();
+        setTours(tourList);
+      }
 
-      const bRes = await fetch("/api/user/bookings");
-      if (bRes.ok) setBookings(await bRes.json());
+      const bRes = await fetch("/api/admin/bookings");
+      let bookingList: any[] = [];
+      if (bRes.ok) {
+        bookingList = await bRes.json();
+        setBookings(bookingList);
+      }
+
+      const rev = bookingList.reduce(
+        (acc: number, b: any) => acc + (Number(b.totalAmount) || 0),
+        0
+      );
+      setStats({
+        totalRevenue: rev,
+        totalBookings: bookingList.length,
+        totalTours: tourList.length,
+        totalLeads: 0,
+      });
     } catch (e) {
       console.error("Admin data fetch error", e);
     }
   }
+
+  const handleLogout = async () => {
+    try {
+      await fetch("/api/admin/logout", { method: "POST" });
+      window.location.href = "/admin/login";
+    } catch (e) {
+      window.location.href = "/admin/login";
+    }
+  };
+
+  const updateBookingStatus = async (id: string, newStatus: string) => {
+    try {
+      const res = await fetch("/api/admin/bookings", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, bookingStatus: newStatus }),
+      });
+      if (res.ok) {
+        setStatusMsg(`Booking status updated to ${newStatus}`);
+        loadData();
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   useEffect(() => {
     loadData();
@@ -169,15 +213,18 @@ export default function AdminPage() {
           <span className="text-xs font-bold text-emerald-400 uppercase tracking-widest block">
             Enterprise Portal
           </span>
-          <h1 className="text-2xl sm:text-3xl font-extrabold">Ceylon Explore Guide Admin Suite</h1>
+          <h1 className="text-2xl sm:text-3xl font-extrabold">Ceylon Explore Tours Admin Portal</h1>
         </div>
         <div className="flex items-center gap-3">
-          <span className="text-xs bg-ceylon-green text-white px-3 py-1 rounded-full font-bold">
-            Currency: LKR (Rs.)
-          </span>
           <span className="text-xs bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 px-3 py-1 rounded-full font-mono font-bold">
-            Online
+            Authenticated Admin
           </span>
+          <button
+            onClick={handleLogout}
+            className="px-3.5 py-1.5 bg-white/10 hover:bg-rose-600 text-white rounded-xl text-xs font-bold transition-colors"
+          >
+            Sign Out
+          </button>
         </div>
       </div>
 
@@ -710,26 +757,55 @@ export default function AdminPage() {
                 className="bg-white p-5 rounded-2xl border border-slate-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
               >
                 <div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-wrap items-center gap-2">
                     <span className="font-mono text-xs font-extrabold text-ceylon-blue">
                       {b.bookingRef}
                     </span>
-                    <span className="text-[10px] font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded">
-                      {b.paymentStatus}
+                    <span
+                      className={`text-[10px] font-bold px-2 py-0.5 rounded ${
+                        b.bookingStatus === "CANCELLED"
+                          ? "bg-rose-100 text-rose-800"
+                          : b.bookingStatus === "COMPLETED"
+                          ? "bg-blue-100 text-blue-800"
+                          : "bg-emerald-100 text-emerald-800"
+                      }`}
+                    >
+                      {b.bookingStatus || "CONFIRMED"}
+                    </span>
+                    <span className="text-[10px] font-bold bg-slate-100 text-slate-700 px-2 py-0.5 rounded">
+                      Pay: {b.paymentStatus || "PENDING"}
                     </span>
                   </div>
                   <h4 className="font-bold text-sm text-ceylon-navy mt-1">
                     {b.guestName} ({b.guestEmail})
                   </h4>
                   <p className="text-xs text-slate-500">
-                    {b.tour?.title} • {b.tourDate} at {b.tourTime}
+                    {b.tour?.title || "Tour"} • {b.tourDate} at {b.tourTime}
+                  </p>
+                  <p className="text-[11px] text-slate-400">
+                    Pickup: {b.pickupLocation} • Guests: {b.adults} Adults{b.children ? `, ${b.children} Kids` : ""}
                   </p>
                 </div>
-                <div className="text-right">
-                  <span className="text-sm font-extrabold text-ceylon-navy block">
-                    ${b.totalAmount} {b.currency}
-                  </span>
-                  <span className="text-xs text-slate-400">Paid with {b.paymentMethod}</span>
+                <div className="text-right space-y-2">
+                  <div>
+                    <span className="text-sm font-extrabold text-ceylon-navy block">
+                      ${b.totalAmount} {b.currency || "USD"}
+                    </span>
+                    <span className="text-[11px] text-slate-400">Method: {b.paymentMethod}</span>
+                  </div>
+                  <div>
+                    <select
+                      value={b.bookingStatus || "CONFIRMED"}
+                      onChange={(e) => updateBookingStatus(b.id, e.target.value)}
+                      className="bg-slate-50 border border-slate-200 rounded-lg px-2 py-1 text-xs font-bold text-ceylon-navy focus:outline-none"
+                    >
+                      <option value="CONFIRMED">Status: Confirmed</option>
+                      <option value="PENDING">Status: Pending</option>
+                      <option value="COMPLETED">Status: Completed</option>
+                      <option value="CANCELLED">Status: Cancelled</option>
+                      <option value="REFUNDED">Status: Refunded</option>
+                    </select>
+                  </div>
                 </div>
               </div>
             ))

@@ -1,36 +1,71 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { TOURS_CATALOG } from "@/data/toursData";
 
 export async function GET() {
   try {
-    const tours = await prisma.tour.findMany({
-      include: {
-        images: {
-          where: { isPrimary: true },
-          take: 1,
-        },
-      },
-      orderBy: { bookedCount: "desc" },
-    });
+    let formatted: any[] = [];
 
-    const formatted = tours.map((e: any) => ({
-      id: e.id,
-      title: e.title,
-      slug: e.slug,
-      location: e.location,
-      duration: e.duration,
-      rating: e.rating,
-      reviewCount: e.reviewCount,
-      price: e.price,
-      previousPrice: e.previousPrice,
-      tourType: e.tourType,
-      badge: e.badge,
-      freeCancellation: e.freeCancellation,
-      instantBook: e.instantBook,
-      primaryImage:
-        e.images[0]?.url ||
-        "https://images.unsplash.com/photo-1578564499890-7949609022f3?q=80&w=800&auto=format&fit=crop",
-    }));
+    try {
+      const tours = await prisma.tour.findMany({
+        include: {
+          images: {
+            where: { isPrimary: true },
+            take: 1,
+          },
+          destination: true,
+          category: true,
+        },
+        orderBy: { bookedCount: "desc" },
+      });
+
+      if (tours && tours.length > 0) {
+        formatted = tours.map((e: any) => ({
+          id: e.id,
+          title: e.title,
+          slug: e.slug,
+          location: e.location,
+          destinationSlug: e.destination?.slug || "",
+          categorySlug: e.category?.slug || "",
+          duration: e.duration,
+          rating: e.rating,
+          reviewCount: e.reviewCount,
+          price: e.price,
+          previousPrice: e.previousPrice,
+          tourType: e.tourType,
+          badge: e.badge,
+          freeCancellation: e.freeCancellation,
+          instantBook: e.instantBook,
+          primaryImage:
+            e.images[0]?.url ||
+            "https://images.unsplash.com/photo-1578564499890-7949609022f3?q=80&w=800&auto=format&fit=crop",
+        }));
+      }
+    } catch (dbErr) {
+      console.error("Prisma tours query failed, using catalog fallback", dbErr);
+    }
+
+    // If DB returned fewer than catalog or empty, use catalog
+    if (formatted.length === 0) {
+      formatted = TOURS_CATALOG.map((t) => ({
+        id: t.id,
+        title: t.title,
+        slug: t.slug,
+        location: t.location,
+        destinationSlug: t.destinationSlug,
+        categorySlug: t.categorySlug,
+        duration: t.duration,
+        rating: t.rating,
+        reviewCount: t.reviewCount,
+        price: t.price,
+        previousPrice: t.previousPrice,
+        tourType: t.tourType,
+        badge: t.badge,
+        freeCancellation: t.freeCancellation,
+        instantBook: t.instantBook,
+        primaryImage: t.images[0]?.url,
+      }));
+    }
 
     return NextResponse.json(formatted, {
       headers: {

@@ -10,9 +10,13 @@ import {
   Compass,
   Calendar,
   MapPin,
-  ShieldCheck
+  ShieldCheck,
+  AlertCircle,
+  Phone,
+  Mail
 } from "lucide-react";
 import { useCurrency } from "@/context/CurrencyContext";
+import { siteConfig } from "@/config/site";
 import confetti from "canvas-confetti";
 import jsPDF from "jspdf";
 
@@ -24,43 +28,28 @@ export default function BookingConfirmationPage({
   const { formatPrice } = useCurrency();
   const [booking, setBooking] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   useEffect(() => {
-    try {
-      confetti({
-        particleCount: 80,
-        spread: 70,
-        origin: { y: 0.6 },
-      });
-    } catch (e) {}
-
     async function fetchBooking() {
       try {
         const res = await fetch(`/api/bookings/${params.id}`);
         if (res.ok) {
           const data = await res.json();
           setBooking(data);
+          try {
+            confetti({
+              particleCount: 80,
+              spread: 70,
+              origin: { y: 0.6 },
+            });
+          } catch (e) {}
         } else {
-          setBooking({
-            bookingRef: params.id,
-            guestName: "Valued Traveler",
-            guestEmail: "guest@example.com",
-            guestPhone: "+94 77 123 4567",
-            tourDate: "2026-09-20",
-            tourTime: "07:00 AM",
-            adults: 2,
-            children: 0,
-            pickupLocation: "Hotel Lobby",
-            totalAmount: 170,
-            paymentMethod: "PayHere",
-            tour: {
-              title: "Sigiriya Rock Fortress & Dambulla Cave Temple Day Tour",
-              location: "Sigiriya & Dambulla",
-            },
-          });
+          setErrorMsg("Booking not found or expired. Please check your reference code or contact support.");
         }
       } catch (err) {
         console.error("Booking retrieval error", err);
+        setErrorMsg("Failed to retrieve booking details. Please try again or contact support.");
       } finally {
         setLoading(false);
       }
@@ -74,7 +63,7 @@ export default function BookingConfirmationPage({
     doc.setFont("helvetica", "bold");
     doc.setFontSize(22);
     doc.setTextColor(7, 81, 125);
-    doc.text("CEYLON EXPLORE GUIDE", 20, 25);
+    doc.text(siteConfig.name.toUpperCase(), 20, 25);
     doc.setFontSize(10);
     doc.setFont("helvetica", "normal");
     doc.setTextColor(37, 132, 55);
@@ -91,15 +80,16 @@ export default function BookingConfirmationPage({
     doc.text(`Pickup Point: ${booking.pickupLocation}`, 20, 100);
     doc.text(`Guests: ${booking.adults} Adults, ${booking.children} Children`, 20, 110);
     doc.text(
-      `Total Amount Paid: $${booking.totalAmount.toFixed(2)} (${booking.paymentMethod})`,
+      `Total Amount: $${(booking.totalAmount || 0).toFixed(2)} (${booking.paymentMethod})`,
       20,
       120
     );
     doc.setFontSize(10);
     doc.setTextColor(100, 114, 125);
-    doc.text("Important Instructions:", 20, 140);
+    doc.text("Important Instructions & Policies:", 20, 140);
     doc.text("• Please present this digital voucher or QR code to your driver/guide upon pickup.", 20, 148);
-    doc.text("• 24/7 Customer Support Hotline: +94 77 123 4567", 20, 154);
+    doc.text(`• 24/7 Customer Support Hotline: ${siteConfig.contact.phone}`, 20, 154);
+    doc.text("• Cancellation Policy: 100% refund up to 24 hours prior to departure.", 20, 160);
     doc.save(`Voucher-${booking.bookingRef}.pdf`);
   };
 
@@ -107,12 +97,24 @@ export default function BookingConfirmationPage({
     booking?.bookingRef || params.id
   )}`;
 
+  // Calculate cancellation deadline (24 hours prior)
+  let cancelDeadlineText = "24 hours prior to tour departure";
+  if (booking?.tourDate) {
+    try {
+      const tourD = new Date(booking.tourDate);
+      if (!isNaN(tourD.getTime())) {
+        tourD.setDate(tourD.getDate() - 1);
+        cancelDeadlineText = `${tourD.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })} at ${booking.tourTime || "07:00 AM"}`;
+      }
+    } catch (e) {}
+  }
+
   if (loading) {
     return (
-      <div className="min-h-screen py-20 text-center">
+      <div className="min-h-screen py-24 text-center">
         <div className="w-12 h-12 border-4 border-ceylon-blue border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-        <p className="text-xs font-bold text-ceylon-navy">
-          Generating Tour Confirmation Voucher...
+        <p className="text-sm font-bold text-ceylon-navy">
+          Retrieving Tour Confirmation Voucher...
         </p>
       </div>
     );
@@ -120,14 +122,31 @@ export default function BookingConfirmationPage({
 
   if (!booking) {
     return (
-      <div className="min-h-screen py-20 text-center space-y-4">
-        <h2 className="text-xl font-bold text-ceylon-navy">Booking Not Found</h2>
-        <Link
-          href="/tours"
-          className="px-4 py-2 bg-ceylon-blue text-white rounded-xl text-xs font-bold"
-        >
-          Back to Tours
-        </Link>
+      <div className="min-h-screen py-24 px-4 max-w-lg mx-auto text-center space-y-6">
+        <div className="w-16 h-16 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center mx-auto">
+          <AlertCircle className="w-8 h-8" />
+        </div>
+        <h2 className="text-2xl font-extrabold text-ceylon-navy">Booking Reference Not Found</h2>
+        <p className="text-sm text-slate-600">
+          We couldn&apos;t find an active reservation for reference code <code className="bg-slate-100 px-2 py-1 rounded font-mono font-bold text-ceylon-navy">{params.id}</code>.
+        </p>
+        <p className="text-xs text-slate-500">
+          If you just placed a booking, please allow a few moments or verify your confirmation email. For immediate assistance, contact our 24/7 hotline at <strong className="text-ceylon-navy">{siteConfig.contact.phone}</strong>.
+        </p>
+        <div className="flex justify-center gap-3 pt-4">
+          <Link
+            href="/account"
+            className="px-5 py-2.5 bg-ceylon-navy text-white rounded-xl text-xs font-bold hover:bg-ceylon-blue transition-colors"
+          >
+            Find My Booking
+          </Link>
+          <Link
+            href="/tours"
+            className="px-5 py-2.5 bg-slate-100 text-slate-700 rounded-xl text-xs font-bold hover:bg-slate-200 transition-colors"
+          >
+            Browse Tours
+          </Link>
+        </div>
       </div>
     );
   }
@@ -180,13 +199,13 @@ export default function BookingConfirmationPage({
             <div className="relative w-12 h-12 rounded-full overflow-hidden bg-white p-1">
               <Image
                 src="/images/logo.png"
-                alt="Ceylon Explore Guide"
+                alt={siteConfig.name}
                 fill
                 className="object-contain"
               />
             </div>
             <div>
-              <h3 className="font-extrabold text-lg tracking-tight">CEYLON EXPLORE GUIDE</h3>
+              <h3 className="font-extrabold text-lg tracking-tight uppercase">{siteConfig.name}</h3>
               <span className="text-[10px] text-emerald-400 font-bold uppercase tracking-wider block">
                 Official Tour Voucher
               </span>
@@ -265,14 +284,21 @@ export default function BookingConfirmationPage({
             <span className="font-bold text-ceylon-navy block">Pickup / Departure Instructions:</span>
             <p className="text-slate-700">{booking.pickupLocation}</p>
           </div>
+
+          <div className="p-3.5 rounded-2xl bg-emerald-50 border border-emerald-200/60 text-xs flex items-center gap-2">
+            <ShieldCheck className="w-4 h-4 text-ceylon-green flex-shrink-0" />
+            <span className="text-emerald-950 font-medium">
+              <strong>Free Cancellation Deadline:</strong> 100% full refund if cancelled before <strong>{cancelDeadlineText}</strong>.
+            </span>
+          </div>
         </div>
 
-        <div className="bg-slate-50 p-4 px-8 border-t border-slate-100 flex items-center justify-between text-xs text-ceylon-muted">
-          <div className="flex items-center gap-1">
+        <div className="bg-slate-50 p-4 px-8 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between text-xs text-ceylon-muted gap-2">
+          <div className="flex items-center gap-1.5">
             <ShieldCheck className="w-4 h-4 text-ceylon-green" />
-            <span>Paid via {booking.paymentMethod} • Status: CONFIRMED</span>
+            <span>Paid via {booking.paymentMethod} • Status: <strong className="text-ceylon-green uppercase">{booking.status || "CONFIRMED"}</strong></span>
           </div>
-          <span>Support Hotline: +94 77 123 4567</span>
+          <span>Support Hotline: <strong>{siteConfig.contact.phone}</strong></span>
         </div>
       </div>
     </div>

@@ -2,8 +2,8 @@ import Link from "next/link";
 import { ArrowLeft, ShieldCheck } from "lucide-react";
 
 export const metadata = {
-  title: "Privacy Policy | Ceylon Explore Guide",
-  description: "Privacy policy detailing data protection, SSL security, and user information handling at Ceylon Explore Guide.",
+  title: "Privacy Policy | Ceylon Explore Tours",
+  description: "Privacy policy detailing data protection, SSL security, and user information handling at Ceylon Explore Tours.",
 };
 
 export default function PrivacyPage() {
@@ -36,37 +36,33 @@ export default function PrivacyPage() {
             1. Information We Collect
           </h2>
           <p>
-            When you reserve a tour or submit a trip planning inquiry on <strong>Ceylon Explore Guide</strong>, we collect necessary personal details to fulfill your reservation:
+            When you reserve a tour or submit a trip planning inquiry on <strong>Ceylon Explore Tours</strong>, we collect necessary personal details to fulfill your reservation:
           </p>
-          <ul className="list-disc pl-5 space-y-1 text-xs">
-            <li>Full Name, Email Address, Phone/WhatsApp Number, and Country of Residence.</li>
-            <li>Hotel Name and Pickup Address for chauffeur pickup coordination.</li>
-            <li>Special requests (such as dietary needs or infant car seat requirements).</li>
+          <ul className="list-disc pl-5 space-y-1">
+            <li>Full Name, Email Address, and Phone Number (for WhatsApp coordination).</li>
+            <li>Travel dates, guest counts, and special dietary or accessibility requests.</li>
+            <li>Hotel pickup address or arrival flight details.</li>
           </ul>
         </section>
 
         <section className="space-y-2">
           <h2 className="font-extrabold text-lg text-ceylon-navy">
-            2. Payment Security & Card Data Policy
+            2. Payment Security & Processing
           </h2>
           <p>
-            <strong>We NEVER store unencrypted or raw credit/debit card numbers on our servers.</strong>
-          </p>
-          <p>
-            All online transactions are tokenized and processed securely by PCIDSS-compliant payment gateways (PayHere Sri Lanka, Stripe, PayPal). Payment data transmission is encrypted using standard 256-bit SSL (Secure Sockets Layer) technology.
+            We process payments through Tier-1 PCI-DSS compliant gateways (PayHere, Stripe, and direct bank transfers). We never store your raw credit card numbers or security CVV codes on our servers. All web traffic is strictly encrypted using 256-bit TLS/SSL protocols.
           </p>
         </section>
 
         <section className="space-y-2">
           <h2 className="font-extrabold text-lg text-ceylon-navy">
-            3. How We Use Your Information
+            3. How We Use Your Data
           </h2>
-          <p>Your personal information is strictly used to:</p>
-          <ul className="list-disc pl-5 space-y-1 text-xs">
-            <li>Generate official digital QR booking vouchers and confirmation emails.</li>
-            <li>Coordinate driver/guide pickup logistics in Sri Lanka.</li>
-            <li>Provide 24/7 customer support via email or WhatsApp.</li>
-            <li>Send travel inspiration newsletters (only if explicitly opted-in).</li>
+          <p>Your details are used solely to:</p>
+          <ul className="list-disc pl-5 space-y-1">
+            <li>Generate your official digital tour voucher and QR verification code.</li>
+            <li>Coordinate pickup logistics with your licensed chauffeur-guide.</li>
+            <li>Send time-sensitive weather or itinerary updates.</li>
           </ul>
         </section>
 
@@ -85,7 +81,7 @@ export default function PrivacyPage() {
           </h2>
           <p>
             For privacy inquiries or to request data removal, please contact:<br />
-            <strong>Email:</strong> privacy@ceylonexploreguide.com
+            <strong>Email:</strong> privacy@ceylonexploretours.com / info@ceylonexploretours.com
           </p>
         </section>
       </div>

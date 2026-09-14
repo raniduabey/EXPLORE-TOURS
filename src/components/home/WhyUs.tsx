@@ -2,15 +2,34 @@
 import React from "react";
 import Image from "next/image";
 import { ShieldCheck, CheckCircle2 } from "lucide-react";
+import { siteConfig } from "@/config/site";
 
 export const WhyUs: React.FC = () => {
   const points = [
-    { title: "Authentic Sri Lankan Experiences", desc: "Curated directly with certified local operators and village hosts." },
-    { title: "Professional Local Guides", desc: "Licensed English & multi-lingual guides passionate about Sri Lankan history." },
-    { title: "Transparent Pricing", desc: "No hidden booking charges or unexpected fees at checkout." },
-    { title: "Flexible Cancellation", desc: "100% money-back guarantee on eligible bookings up to 24h prior." },
-    { title: "Instant Booking & Digital Vouchers", desc: "Get immediate confirmation vouchers sent straight to your phone & email." },
-    { title: "Personalized Island Itineraries", desc: "Custom-tailored trips designed around your exact budget and travel pace." },
+    {
+      title: "Authentic Sri Lankan Experiences",
+      desc: "Curated directly with certified native guides, village hosts, and wildlife trackers.",
+    },
+    {
+      title: "Professional Licensed Guides",
+      desc: "Licensed English & multi-lingual chauffeur guides passionate about Sri Lanka's heritage.",
+    },
+    {
+      title: "Transparent Upfront Pricing",
+      desc: "No hidden booking charges or unexpected fees at checkout.",
+    },
+    {
+      title: "Flexible Free Cancellation",
+      desc: `100% money-back guarantee on eligible bookings up to ${siteConfig.cancellationPolicy.defaultHoursPrior}h prior.`,
+    },
+    {
+      title: "Instant Digital Vouchers",
+      desc: "Get immediate QR-coded confirmation vouchers sent straight to your phone & email.",
+    },
+    {
+      title: "Personalized Island Itineraries",
+      desc: "Custom-tailored trips designed around your exact budget and travel pace.",
+    },
   ];
 
   return (
@@ -23,6 +42,7 @@ export const WhyUs: React.FC = () => {
                 src="https://images.unsplash.com/photo-1588668214407-6ea9a6d8c272?q=80&w=800&auto=format&fit=crop"
                 alt="Sri Lanka Local Hospitality"
                 fill
+                sizes="(max-width: 768px) 50vw, 300px"
                 className="object-cover"
               />
             </div>
@@ -31,6 +51,7 @@ export const WhyUs: React.FC = () => {
                 src="https://images.unsplash.com/photo-1586861635167-e5223aadc9fe?q=80&w=800&auto=format&fit=crop"
                 alt="Ceylon Tea Plantation Guide"
                 fill
+                sizes="(max-width: 768px) 50vw, 300px"
                 className="object-cover"
               />
             </div>
@@ -40,8 +61,8 @@ export const WhyUs: React.FC = () => {
               <ShieldCheck className="w-6 h-6" />
             </div>
             <div>
-              <h4 className="text-xs font-bold text-ceylon-navy">100% Verified Local Guides</h4>
-              <p className="text-[10px] text-ceylon-muted">SLTDA Authorized Tourism Brand</p>
+              <h4 className="text-xs font-bold text-ceylon-navy">Verified Local Guides</h4>
+              <p className="text-[10px] text-ceylon-muted">Certified native expertise</p>
             </div>
           </div>
         </div>
@@ -49,7 +70,7 @@ export const WhyUs: React.FC = () => {
         <div className="space-y-6">
           <div>
             <span className="text-xs font-bold text-ceylon-green uppercase tracking-wider block mb-1">
-              Why Ceylon Explore Guide
+              Why {siteConfig.name}
             </span>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-ceylon-navy tracking-tight leading-tight">
               Travel Deeper. <br />
@@ -57,15 +78,20 @@ export const WhyUs: React.FC = () => {
             </h2>
           </div>
           <p className="text-sm text-ceylon-muted leading-relaxed">
-            We bridge the gap between global travellers seeking seamless, reliable online bookings and Sri Lanka’s most authentic, passionate local guides and tour providers.
+            We bridge the gap between global travellers seeking seamless, reliable online bookings and Sri Lanka&apos;s most authentic, passionate local guides and tour providers.
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
             {points.map((p, idx) => (
-              <div key={idx} className="flex items-start gap-3 p-3 rounded-xl bg-slate-50 border border-slate-100">
+              <div
+                key={idx}
+                className="flex items-start gap-3 p-3 rounded-xl bg-slate-50 border border-slate-100"
+              >
                 <CheckCircle2 className="w-5 h-5 text-ceylon-green shrink-0 mt-0.5" />
                 <div>
                   <h4 className="text-xs font-bold text-ceylon-navy">{p.title}</h4>
-                  <p className="text-[11px] text-ceylon-muted mt-0.5 leading-snug">{p.desc}</p>
+                  <p className="text-[11px] text-ceylon-muted mt-0.5 leading-snug">
+                    {p.desc}
+                  </p>
                 </div>
               </div>
             ))}

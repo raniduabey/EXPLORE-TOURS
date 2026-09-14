@@ -52,18 +52,13 @@ const defaultSlides = [
   }
 ];
 
-const destinations = ["Colombo", "Negombo", "Kandy", "Sigiriya", "Ella", "Galle", "Mirissa", "Yala", "Nuwara Eliya", "Bentota", "Arugam Bay", "Trincomalee"];
+import { DESTINATIONS_CATALOG } from "@/data/destinationsData";
 
 const categories = [
   { label: "All Activities", value: "" },
-  { label: "Day Tours", value: "cultural" },
+  { label: "Cultural Heritage", value: "cultural" },
   { label: "Wildlife Safaris", value: "wildlife" },
-  { label: "Cultural Tours", value: "cultural" },
-  { label: "Hiking & Adventure", value: "adventure" },
-  { label: "Surfing & Ocean", value: "beaches" },
-  { label: "Whale Watching", value: "beaches" },
-  { label: "Food Experiences", value: "food" },
-  { label: "Scenic Train Journeys", value: "scenic" }
+  { label: "Adventure & Hiking", value: "adventure" },
 ];
 
 const SearchWidget: React.FC = () => {
@@ -100,28 +95,34 @@ const SearchWidget: React.FC = () => {
             className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-semibold text-ceylon-text cursor-pointer flex items-center justify-between hover:border-ceylon-blue transition-colors"
           >
             <span className={destination ? "text-ceylon-text" : "text-slate-400"}>
-              {destination || "Where do you want to go?"}
+              {DESTINATIONS_CATALOG.find((d) => d.slug === destination)?.name || "Where do you want to go?"}
             </span>
             <ChevronDown className="w-4 h-4 text-slate-400" />
           </div>
           {destOpen && (
             <div className="absolute left-0 top-full mt-2 w-full bg-white rounded-xl shadow-dropdown border border-slate-100 py-2 z-50 max-h-56 overflow-y-auto">
               <div
-                onClick={() => { setDestination(""); setDestOpen(false); }}
+                onClick={() => {
+                  setDestination("");
+                  setDestOpen(false);
+                }}
                 className="px-4 py-2 text-xs font-medium text-slate-500 hover:bg-ceylon-softblue cursor-pointer"
               >
                 All Sri Lanka Destinations
               </div>
-              {destinations.map((d) => (
+              {DESTINATIONS_CATALOG.map((d) => (
                 <div
-                  key={d}
-                  onClick={() => { setDestination(d); setDestOpen(false); }}
+                  key={d.slug}
+                  onClick={() => {
+                    setDestination(d.slug);
+                    setDestOpen(false);
+                  }}
                   className={`px-4 py-2 text-xs font-semibold hover:bg-ceylon-softblue cursor-pointer flex items-center justify-between ${
-                    destination === d ? "text-ceylon-blue bg-ceylon-softblue" : "text-ceylon-text"
+                    destination === d.slug ? "text-ceylon-blue bg-ceylon-softblue" : "text-ceylon-text"
                   }`}
                 >
-                  <span>{d}</span>
-                  {destination === d && <Check className="w-3.5 h-3.5 text-ceylon-blue" />}
+                  <span>{d.name}</span>
+                  {destination === d.slug && <Check className="w-3.5 h-3.5 text-ceylon-blue" />}
                 </div>
               ))}
             </div>

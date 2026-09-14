@@ -17,7 +17,7 @@ export const ReviewsSection: React.FC = () => {
       country: "Germany",
       rating: 5,
       tour: "Kandy to Ella Scenic Train Ride",
-      comment: "Getting reserved seats on the scenic mountain train was impossible everywhere else, but Ceylon Explore Guide secured them effortlessly. 10/10 service!",
+      comment: "Getting reserved seats on the scenic mountain train was impossible everywhere else, but Ceylon Explore Tours secured them effortlessly. 10/10 service!",
       date: "July 2026"
     },
     {

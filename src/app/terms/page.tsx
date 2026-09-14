@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { ArrowLeft, FileText } from "lucide-react";
+import { siteConfig } from "@/config/site";
 
 export const metadata = {
-  title: "Terms & Conditions | Ceylon Explore Guide",
-  description: "Terms and conditions governing tour bookings, local guide agreements, and platform usage with Ceylon Explore Guide.",
+  title: `Terms & Conditions | ${siteConfig.name}`,
+  description: `Terms and conditions governing tour bookings, local guide agreements, and platform usage with ${siteConfig.name}.`,
 };
 
 export default function TermsPage() {
@@ -26,7 +27,7 @@ export default function TermsPage() {
           Terms & Conditions
         </h1>
         <p className="text-xs text-slate-300">
-          Last updated: August 28, 2026 • Ceylon Explore Guide (SLTDA Registered Operator)
+          Last updated: August 2026 • {siteConfig.companyName}
         </p>
       </div>
 
@@ -36,7 +37,7 @@ export default function TermsPage() {
             1. Introduction & Acceptance
           </h2>
           <p>
-            Welcome to <strong>Ceylon Explore Guide</strong> (“we”, “our”, “us”). By accessing our website, booking tours, or utilizing our trip planning services, you agree to comply with and be bound by these Terms and Conditions. These terms apply to all visitors, registered users, and guests who book activities across Sri Lanka through our marketplace platform.
+            Welcome to <strong>{siteConfig.name}</strong> (&ldquo;we&rdquo;, &ldquo;our&rdquo;, &ldquo;us&rdquo;). By accessing our website, booking tours, or utilizing our trip planning services, you agree to comply with and be bound by these Terms and Conditions. These terms apply to all visitors, registered users, and guests who book activities across Sri Lanka through our platform.
           </p>
         </section>
 
@@ -45,7 +46,7 @@ export default function TermsPage() {
             2. Booking & Instant Confirmation Vouchers
           </h2>
           <p>
-            All tour reservations made through Ceylon Explore Guide are subject to availability. Upon successful payment authorization via our authorized payment gateways (PayHere, Stripe, PayPal, Credit Card), an official digital QR-coded voucher will be issued to your designated email address.
+            All tour reservations made through {siteConfig.name} are subject to availability. Upon successful booking via our authorized payment options (Pay on Tour, Card, Bank Transfer), an official digital confirmation voucher will be issued to your designated email address.
           </p>
           <ul className="list-disc pl-5 space-y-1 text-xs">
             <li>You must present your digital voucher or printed PDF voucher to your assigned local guide/chauffeur upon pickup.</li>
@@ -75,7 +76,7 @@ export default function TermsPage() {
             4. Pricing, Payments & Taxes
           </h2>
           <p>
-            Prices displayed include all mandatory government service charges and local taxes unless explicitly specified under the “What\'s Excluded” section of an individual tour listing (such as optional personal entrance tickets or driver tips).
+            Prices displayed include all services agreed upon in your itinerary description. Optional personal expenses, entrance tickets, or gratuities are clearly indicated under individual tour listings.
           </p>
         </section>
 
@@ -85,8 +86,8 @@ export default function TermsPage() {
           </h2>
           <p>
             If you have any questions regarding these Terms & Conditions, please contact our support team at:<br />
-            <strong>Email:</strong> support@ceylonexploreguide.com<br />
-            <strong>Hotline:</strong> +94 77 123 4567 (24/7 Support)
+            <strong>Email:</strong> {siteConfig.contact.email}<br />
+            <strong>Hotline:</strong> {siteConfig.contact.phone} (24/7 Support)
           </p>
         </section>
       </div>
