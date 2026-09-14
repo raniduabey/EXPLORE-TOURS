@@ -32,7 +32,11 @@ export async function GET() {
         "https://images.unsplash.com/photo-1578564499890-7949609022f3?q=80&w=800&auto=format&fit=crop",
     }));
 
-    return NextResponse.json(formatted);
+    return NextResponse.json(formatted, {
+      headers: {
+        "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300",
+      },
+    });
   } catch (error) {
     console.error("API error fetching tours", error);
     return NextResponse.json({ error: "Failed to fetch tours" }, { status: 500 });

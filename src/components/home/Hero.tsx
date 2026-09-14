@@ -298,7 +298,9 @@ export const Hero: React.FC = () => {
             src={s.image}
             alt={s.destination || "Sri Lanka"}
             fill
+            sizes="100vw"
             priority={idx === 0}
+            quality={85}
             className="object-cover object-center transition-transform duration-[6000ms] ease-out"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-ceylon-navy/95 via-ceylon-navy/70 to-ceylon-navy/40" />
