@@ -1,5 +1,6 @@
 export interface SiteConfig {
   name: string;
+  companyName: string;
   legalName: string;
   tagline: string;
   description: string;
@@ -16,6 +17,7 @@ export interface SiteConfig {
       street: string;
       city: string;
       province: string;
+      state: string;
       country: string;
       postalCode: string;
     };
@@ -26,6 +28,16 @@ export interface SiteConfig {
     instagram?: string;
     youtube?: string;
     tripadvisor?: string;
+  };
+  social: {
+    facebook?: string;
+    instagram?: string;
+    youtube?: string;
+    tripadvisor?: string;
+  };
+  analytics: {
+    googleAnalyticsId?: string;
+    metaPixelId?: string;
   };
   sltda: {
     registrationNumber: string | null;
@@ -38,14 +50,22 @@ export interface SiteConfig {
   };
 }
 
+const socialLinks = {
+  instagram: process.env.NEXT_PUBLIC_INSTAGRAM_URL || "https://instagram.com/ceylonexploretours",
+  facebook: process.env.NEXT_PUBLIC_FACEBOOK_URL || "https://facebook.com/ceylonexploretours",
+  youtube: process.env.NEXT_PUBLIC_YOUTUBE_URL || "https://youtube.com/@ceylonexploretours",
+  tripadvisor: process.env.NEXT_PUBLIC_TRIPADVISOR_URL || "https://tripadvisor.com",
+};
+
 export const siteConfig: SiteConfig = {
   name: "Ceylon Explore Tours",
+  companyName: "Ceylon Explore Tours (Pvt) Ltd",
   legalName: "Ceylon Explore Tours (Pvt) Ltd",
   tagline: "Explore Sri Lanka With People Who Know It Best",
   description:
     "Authentic Sri Lankan tours, wildlife safaris, scenic mountain train journeys, and bespoke travel experiences curated by certified local guides.",
   domain: "ceylonexploretours.com",
-  url: "https://www.ceylonexploretours.com",
+  url: process.env.NEXT_PUBLIC_SITE_URL || "https://www.ceylonexploretours.com",
   contact: {
     email: process.env.NEXT_PUBLIC_CONTACT_EMAIL || "info@ceylonexploretours.com",
     supportEmail: process.env.NEXT_PUBLIC_SUPPORT_EMAIL || "support@ceylonexploretours.com",
@@ -57,15 +77,17 @@ export const siteConfig: SiteConfig = {
       street: "45 Galle Road",
       city: "Colombo 03",
       province: "Western Province",
+      state: "Western Province",
       country: "Sri Lanka",
       postalCode: "00300",
     },
     operatingHours: "Monday - Sunday: 24/7 Traveller Support Hotline",
   },
-  socials: {
-    instagram: "https://instagram.com",
-    facebook: "https://facebook.com",
-    youtube: "https://youtube.com",
+  socials: socialLinks,
+  social: socialLinks,
+  analytics: {
+    googleAnalyticsId: process.env.NEXT_PUBLIC_GA_ID || process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID || "",
+    metaPixelId: process.env.NEXT_PUBLIC_META_PIXEL_ID || process.env.NEXT_PUBLIC_FACEBOOK_PIXEL_ID || "",
   },
   sltda: {
     registrationNumber: process.env.NEXT_PUBLIC_SLTDA_REGISTRATION || null,

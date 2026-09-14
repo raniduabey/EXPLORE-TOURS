@@ -112,9 +112,10 @@ export default function RootLayout({
       },
     ],
     sameAs: [
-      siteConfig.social.facebook,
-      siteConfig.social.instagram,
-      siteConfig.social.tripadvisor,
+      siteConfig.socials?.facebook || siteConfig.social?.facebook,
+      siteConfig.socials?.instagram || siteConfig.social?.instagram,
+      siteConfig.socials?.youtube || siteConfig.social?.youtube,
+      siteConfig.socials?.tripadvisor || siteConfig.social?.tripadvisor,
     ].filter(Boolean),
   };
 

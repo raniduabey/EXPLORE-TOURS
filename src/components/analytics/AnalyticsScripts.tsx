@@ -26,8 +26,8 @@ export function AnalyticsScripts() {
     };
   }, []);
 
-  const gaId = siteConfig.analytics.googleAnalyticsId;
-  const pixelId = siteConfig.analytics.metaPixelId;
+  const gaId = siteConfig.analytics?.googleAnalyticsId;
+  const pixelId = siteConfig.analytics?.metaPixelId;
 
   // If no IDs provided or consent not yet accepted, do not load trackers
   if (!consentGranted) {
