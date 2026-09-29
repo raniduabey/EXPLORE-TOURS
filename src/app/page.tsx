@@ -10,6 +10,7 @@ import { ReviewsSection } from "@/components/home/ReviewsSection";
 import { BlogSection } from "@/components/home/BlogSection";
 import { Newsletter } from "@/components/home/Newsletter";
 import prisma from "@/lib/prisma";
+import { TOURS_CATALOG } from "@/data/toursData";
 
 export const revalidate = 60;
 
@@ -51,6 +52,25 @@ export default async function HomePage() {
     }));
   } catch (e) {
     // fallback gracefully
+  }
+
+  if (tours.length === 0) {
+    tours = TOURS_CATALOG.slice(0, 8).map((t) => ({
+      id: t.id,
+      title: t.title,
+      slug: t.slug,
+      location: t.location,
+      duration: t.duration,
+      rating: t.rating,
+      reviewCount: t.reviewCount,
+      price: t.price,
+      previousPrice: t.previousPrice,
+      tourType: t.tourType,
+      badge: t.badge,
+      freeCancellation: t.freeCancellation,
+      instantBook: t.instantBook,
+      primaryImage: t.images[0]?.url || "https://images.unsplash.com/photo-1578564499890-7949609022f3?q=80&w=800&auto=format&fit=crop"
+    }));
   }
 
   try {

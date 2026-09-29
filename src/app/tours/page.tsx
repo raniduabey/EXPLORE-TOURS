@@ -29,6 +29,7 @@ const DESTINATION_OPTIONS = [
 
 const CATEGORIES = [
   { label: "All Categories", value: "" },
+  { label: "Multi-Day Tour Packages", value: "multiday" },
   { label: "Cultural Heritage", value: "cultural" },
   { label: "Wildlife & Safari", value: "wildlife" },
   { label: "Adventure & Hiking", value: "adventure" },
@@ -41,7 +42,7 @@ function ToursPageContent() {
   const urlDest = searchParams.get("destination") || "";
   const urlCat = searchParams.get("category") || "";
   const urlRating = searchParams.get("minRating") || "0";
-  const urlMaxPrice = searchParams.get("maxPrice") || "200";
+  const urlMaxPrice = searchParams.get("maxPrice") || "3500";
 
   const [tours, setTours] = useState<any[]>(TOURS_CATALOG);
   const [loading, setLoading] = useState(true);
@@ -52,7 +53,7 @@ function ToursPageContent() {
   const [filters, setFilters] = useState({
     destination: urlDest,
     category: urlCat,
-    maxPrice: Number(urlMaxPrice) || 200,
+    maxPrice: Number(urlMaxPrice) || 3500,
     minRating: Number(urlRating) || 0,
     tourType: "",
     freeCancellation: false,
@@ -112,7 +113,7 @@ function ToursPageContent() {
     setFilters({
       destination: "",
       category: "",
-      maxPrice: 200,
+      maxPrice: 3500,
       minRating: 0,
       tourType: "",
       freeCancellation: false,
@@ -169,7 +170,7 @@ function ToursPageContent() {
   const activeFilterCount =
     (filters.destination ? 1 : 0) +
     (filters.category ? 1 : 0) +
-    (filters.maxPrice < 200 ? 1 : 0) +
+    (filters.maxPrice < 3500 ? 1 : 0) +
     (filters.minRating > 0 ? 1 : 0) +
     (filters.freeCancellation ? 1 : 0) +
     (filters.instantBook ? 1 : 0);
@@ -333,8 +334,8 @@ function ToursPageContent() {
               <input
                 type="range"
                 min="40"
-                max="200"
-                step="5"
+                max="3500"
+                step="50"
                 value={filters.maxPrice}
                 onChange={(e) => setFilters({ ...filters, maxPrice: Number(e.target.value) })}
                 className="w-full accent-ceylon-blue cursor-pointer"

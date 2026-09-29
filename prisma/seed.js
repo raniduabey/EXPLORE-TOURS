@@ -41,6 +41,19 @@ async function main() {
     }
   });
 
+
+  const multiday = await prisma.category.upsert({
+    where: { slug: 'multiday' },
+    update: {},
+    create: {
+      name: 'Multi-Day Tour Packages',
+      slug: 'multiday',
+      icon: 'CalendarRange',
+      description: 'Comprehensive 6 to 21-day private island circuits with certified chauffeur guides.',
+      image: 'https://images.unsplash.com/photo-1546708973-b339540b5162?q=80&w=800&auto=format&fit=crop'
+    }
+  });
+
   // 2. Destinations
   const sigiriya = await prisma.destination.upsert({
     where: { slug: 'sigiriya' },
@@ -576,7 +589,228 @@ async function main() {
     }
   });
 
-  console.log('Database seeded with all 6 comprehensive tours and destinations!');
+
+  // 7. 6-Day Highlights
+  await prisma.tour.upsert({
+    where: { slug: '6-day-sri-lanka-highlights-golden-triangle-tour' },
+    update: {},
+    create: {
+      title: '6-Day Sri Lanka Highlights & Golden Triangle Tour',
+      slug: '6-day-sri-lanka-highlights-golden-triangle-tour',
+      location: 'Colombo, Sigiriya, Kandy, Ella, Yala & Mirissa',
+      destinationId: sigiriya.id,
+      categoryId: multiday.id,
+      duration: '6 Days / 5 Nights',
+      durationHours: 144,
+      rating: 4.96,
+      reviewCount: 168,
+      bookedCount: 312,
+      tourType: 'Private Tour Package',
+      liveGuide: 'English, German & French',
+      price: 365,
+      previousPrice: 450,
+      badge: 'Top Rated Package',
+      freeCancellation: true,
+      instantBook: true,
+      featured: true,
+      description: 'The quintessential 6-day private circuit: scale Sigiriya Lion Rock, explore Dambulla caves, sacred Kandy, misty Ella mountain ridges, Yala leopard safari, and Mirissa blue whales.',
+      highlights: JSON.stringify([
+        'Climb King Kashyapa 5th-century UNESCO Sigiriya Lion Rock Fortress citadel',
+        'Explore the 5 golden subterranean cave sanctuaries of Dambulla with 150+ Buddha statues',
+        'Witness sacred evening reverence at the Temple of the Sacred Tooth Relic in Kandy',
+        'Hike to Little Adams Peak and photograph colonial Demodara Nine Arches Bridge',
+        'Thrilling private 4x4 open-top jeep safari in Yala National Park tracking leopards & wild elephants',
+        'Early morning ocean cruise off Mirissa searching for majestic blue whales'
+      ]),
+      includes: JSON.stringify([
+        'Private dedicated modern air-conditioned vehicle with licensed chauffeur guide',
+        '5 nights handpicked hotel accommodations with daily breakfast',
+        'Airport pickup and final drop-off at CMB Airport or Colombo/Negombo hotel',
+        'All vehicle fuel charges, expressway tolls, driver accommodation & parking fees',
+        'Chilled bottled water provided throughout the private journey'
+      ]),
+      excludes: JSON.stringify([
+        'National park and cultural site entrance tickets',
+        'Optional safari jeeps and whale watching boat tickets',
+        'Lunches and dinners'
+      ]),
+      images: {
+        create: [
+          { url: 'https://images.unsplash.com/photo-1578564499890-7949609022f3?q=80&w=1200&auto=format&fit=crop', caption: 'Sunrise at Sigiriya Lion Rock Citadel', isPrimary: true },
+          { url: 'https://images.unsplash.com/photo-1546708973-b339540b5162?q=80&w=1200&auto=format&fit=crop', caption: 'Demodara Nine Arch Bridge in Ella', isPrimary: false }
+        ]
+      }
+    }
+  });
+
+  // 8. 8-Day Splendour
+  await prisma.tour.upsert({
+    where: { slug: '8-day-splendour-of-sri-lanka-classical-circuit' },
+    update: {},
+    create: {
+      title: '8-Day Splendour of Sri Lanka Classical Circuit',
+      slug: '8-day-splendour-of-sri-lanka-classical-circuit',
+      location: 'Negombo, Sigiriya, Kandy, Nuwara Eliya, Ella, Yala & Mirissa',
+      destinationId: sigiriya.id,
+      categoryId: multiday.id,
+      duration: '8 Days / 7 Nights',
+      durationHours: 192,
+      rating: 4.98,
+      reviewCount: 215,
+      bookedCount: 438,
+      tourType: 'Private Tour Package',
+      liveGuide: 'English, German, French & Italian',
+      price: 430,
+      previousPrice: 540,
+      badge: 'Bestseller Circuit',
+      freeCancellation: true,
+      instantBook: true,
+      featured: true,
+      description: 'The ultimate 8-day classical voyage: Sigiriya Citadel, Dambulla Cave Sanctuaries, Temple of the Tooth, Nuwara Eliya tea carpet, iconic scenic blue train, Yala safari, and Galle Fort.',
+      highlights: JSON.stringify([
+        'Climb 5th-century Sigiriya UNESCO Lion Rock Fortress Citadel and marvel at ancient royal frescoes',
+        'Explore 5 gilded subterranean cave sanctuaries at UNESCO Dambulla Golden Temple',
+        'Witness sacred evening ceremonies at the Temple of the Sacred Tooth Relic in Kandy',
+        'Tour lush Nuwara Eliya tea estates, waterfalls, and colonial landmarks in Little England',
+        'Experience the world most scenic blue train ride through misty mountain passes into Ella',
+        'Hike to Little Adams Peak and photograph Demodara Nine Arches colonial railway bridge',
+        'Thrilling private 4x4 jeep safari in Yala National Park tracking leopards and wild elephants',
+        'Guided stroll along the 17th-century ramparts of UNESCO World Heritage Galle Dutch Fort'
+      ]),
+      includes: JSON.stringify([
+        '7 nights quality hotel accommodations with daily breakfast',
+        'Private modern air-conditioned vehicle with licensed chauffeur guide',
+        'Roundtrip airport transfers from CMB International Airport or Colombo / Negombo',
+        'Reserved seats on scenic mountain blue train (Nanu Oya to Ella)',
+        'All vehicle fuel, expressway tolls, highway charges, driver accommodation & parking fees'
+      ]),
+      excludes: JSON.stringify([
+        'Monuments & National Park entry tickets',
+        'Optional activities: Whale watching boat tour, Minneriya safari',
+        'Lunches and dinners'
+      ]),
+      images: {
+        create: [
+          { url: 'https://images.unsplash.com/photo-1546708973-b339540b5162?q=80&w=1200&auto=format&fit=crop', caption: 'Scenic Blue Train crossing Nine Arch Bridge', isPrimary: true },
+          { url: 'https://images.unsplash.com/photo-1534567153574-2b12153a87f0?q=80&w=1200&auto=format&fit=crop', caption: 'Leopard Safari in Yala National Park', isPrimary: false }
+        ]
+      }
+    }
+  });
+
+  // 9. 14-Day Grand Tour
+  await prisma.tour.upsert({
+    where: { slug: '14-day-sri-lanka-all-in-one-classic-grand-tour' },
+    update: {},
+    create: {
+      title: '14-Day Sri Lanka All-in-One Classic Grand Tour',
+      slug: '14-day-sri-lanka-all-in-one-classic-grand-tour',
+      location: 'Negombo, Anuradhapura, Polonnaruwa, Sigiriya, Kandy, Nuwara Eliya, Ella, Yala & Bentota',
+      destinationId: sigiriya.id,
+      categoryId: multiday.id,
+      duration: '14 Days / 13 Nights',
+      durationHours: 336,
+      rating: 4.97,
+      reviewCount: 184,
+      bookedCount: 289,
+      tourType: 'Comprehensive Grand Tour',
+      liveGuide: 'English, German, French & Spanish',
+      price: 1050,
+      previousPrice: 1280,
+      badge: 'Most Comprehensive',
+      freeCancellation: true,
+      instantBook: true,
+      featured: true,
+      description: 'A grand 14-day odyssey uncovering the ancient kingdoms of Anuradhapura & Polonnaruwa, Sigiriya Lion Rock, Kandy, Horton Plains, tea highlands, scenic train, Yala safari, Mirissa whales, and Bentota beach.',
+      highlights: JSON.stringify([
+        'Sacred ancient capital of Anuradhapura: 2,300-year-old Jaya Sri Maha Bodhi tree & white stupas',
+        'Royal ruins of 12th-century Polonnaruwa and Gal Vihara monumental carved Buddha statues',
+        'Private 4x4 elephant safari at Minneriya National Park during the legendary gathering',
+        'Climb 5th-century Sigiriya UNESCO Lion Rock Citadel and explore Dambulla Cave Temples',
+        'Temple of the Sacred Tooth Relic and authentic Kandyan cultural dance performance',
+        'Trek Horton Plains National Park through cloud forests to the dramatic 880m Worlds End drop',
+        'Iconic mountain blue train ride from Nanu Oya to Ella through tea plantations and viaducts',
+        'Exciting dawn and afternoon leopard safari drives in Yala National Park',
+        'Walk 17th-century ramparts of UNESCO Galle Fort and enjoy Bentota beach & Madu River safari'
+      ]),
+      includes: JSON.stringify([
+        '13 nights handpicked boutique hotels & eco-resorts with daily breakfast',
+        'Private modern air-conditioned vehicle with dedicated licensed chauffeur guide',
+        'Roundtrip CMB Airport transfers and inter-city highway toll fees',
+        'Reserved seats on scenic mountain blue train (Nanu Oya to Ella)',
+        'Madu River mangrove boat safari through cinnamon peeling islands'
+      ]),
+      excludes: JSON.stringify([
+        'Heritage and National Park entrance tickets',
+        'Optional safari jeeps & whale watching boat tickets',
+        'Lunches and dinners'
+      ]),
+      images: {
+        create: [
+          { url: 'https://images.unsplash.com/photo-1566836647472-a7457ef4560b?q=80&w=1200&auto=format&fit=crop', caption: 'Sacred Ruwanwelisaya Stupa in Anuradhapura', isPrimary: true },
+          { url: 'https://images.unsplash.com/photo-1578564499890-7949609022f3?q=80&w=1200&auto=format&fit=crop', caption: 'Sigiriya Rock Citadel Aerial Vista', isPrimary: false }
+        ]
+      }
+    }
+  });
+
+  // 10. 21-Day Odyssey
+  await prisma.tour.upsert({
+    where: { slug: '21-day-natures-secret-sri-lanka-ultimate-odyssey' },
+    update: {},
+    create: {
+      title: '21-Day Nature Secret Sri Lanka Ultimate Wildlife & Heritage Odyssey',
+      slug: '21-day-natures-secret-sri-lanka-ultimate-odyssey',
+      location: 'Islandwide: Cultural Triangle, East Coast, Highlands, Deep South & Wilpattu',
+      destinationId: sigiriya.id,
+      categoryId: multiday.id,
+      duration: '21 Days / 20 Nights',
+      durationHours: 504,
+      rating: 5.0,
+      reviewCount: 96,
+      bookedCount: 142,
+      tourType: 'Luxury Expedition Circuit',
+      liveGuide: 'English & European Languages',
+      price: 3000,
+      previousPrice: 3600,
+      badge: 'Ultimate Island Odyssey',
+      freeCancellation: true,
+      instantBook: true,
+      featured: true,
+      description: 'The definitive 3-week luxury expedition encompassing the entire island: Colombo, South Coast beaches, Yala leopards, Ella mountains, Nuwara Eliya, Horton Plains, Kandy, Cultural Triangle, Trincomalee & Nilaveli marine reef, and Wilpattu wilderness.',
+      highlights: JSON.stringify([
+        'Complete exploration of all 8 UNESCO World Heritage Sites across Sri Lanka',
+        'Private full-day 4x4 wildlife safaris in both Yala and Wilpattu National Parks',
+        'Marine coral snorkeling expedition at Pigeon Island National Park off Nilaveli beach',
+        'Sacred Hindu cliffside temple of Koneswaram atop Swami Rock in Trincomalee',
+        'Ancient royal capitals: Anuradhapura, Polonnaruwa, Sigiriya Lion Rock, and Royal Kandy',
+        'Cloud forest trek across Horton Plains National Park to the 880m Worlds End drop',
+        'World-famous scenic mountain blue train journey from Nanu Oya to Ella through tea plantations',
+        'River mangrove safari along Madu River and Sea Turtle Conservation Project in Kosgoda'
+      ]),
+      includes: JSON.stringify([
+        '20 nights premium boutique hotel and eco-lodge accommodations with daily breakfast',
+        'Dedicated luxury private air-conditioned vehicle with certified English-speaking senior chauffeur guide',
+        'VIP airport greeting, arrival welcome kit, and roundtrip airport transfers',
+        'Reserved seats on scenic highland blue train (Nanu Oya to Ella)',
+        'Pigeon Island National Park boat transfer and marine snorkeling gear in Nilaveli',
+        'Madu River mangrove boat safari through cinnamon islands'
+      ]),
+      excludes: JSON.stringify([
+        'National Park and monument entry fees',
+        'Optional whale watching boat tickets and safari jeep hire',
+        'Lunches and dinners'
+      ]),
+      images: {
+        create: [
+          { url: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?q=80&w=1200&auto=format&fit=crop', caption: 'Pigeon Island Marine Sanctuary in Nilaveli', isPrimary: true },
+          { url: 'https://images.unsplash.com/photo-1564349683136-77e08dba1ef7?q=80&w=1200&auto=format&fit=crop', caption: 'Wilpattu National Park Wilderness', isPrimary: false }
+        ]
+      }
+    }
+  });
+
+  console.log('Database seeded with all 10 comprehensive tours and destinations!');
 }
 
 main().catch(console.error).finally(() => prisma.$disconnect());

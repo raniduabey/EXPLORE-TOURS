@@ -47,26 +47,29 @@ export async function GET() {
       console.error("Prisma tours query failed, using catalog fallback", dbErr);
     }
 
-    // If DB returned fewer than catalog or empty, use catalog
-    if (formatted.length === 0) {
-      formatted = TOURS_CATALOG.map((t) => ({
-        id: t.id,
-        title: t.title,
-        slug: t.slug,
-        location: t.location,
-        destinationSlug: t.destinationSlug,
-        categorySlug: t.categorySlug,
-        duration: t.duration,
-        rating: t.rating,
-        reviewCount: t.reviewCount,
-        price: t.price,
-        previousPrice: t.previousPrice,
-        tourType: t.tourType,
-        badge: t.badge,
-        freeCancellation: t.freeCancellation,
-        instantBook: t.instantBook,
-        primaryImage: t.images[0]?.url,
-      }));
+    // Merge any catalog tours not yet in the DB results (ensuring multi-day packages appear)
+    const existingSlugs = new Set(formatted.map((t: any) => t.slug));
+    for (const t of TOURS_CATALOG) {
+      if (!existingSlugs.has(t.slug)) {
+        formatted.push({
+          id: t.id,
+          title: t.title,
+          slug: t.slug,
+          location: t.location,
+          destinationSlug: t.destinationSlug,
+          categorySlug: t.categorySlug,
+          duration: t.duration,
+          rating: t.rating,
+          reviewCount: t.reviewCount,
+          price: t.price,
+          previousPrice: t.previousPrice,
+          tourType: t.tourType,
+          badge: t.badge,
+          freeCancellation: t.freeCancellation,
+          instantBook: t.instantBook,
+          primaryImage: t.images[0]?.url,
+        });
+      }
     }
 
     return NextResponse.json(formatted, {

@@ -2,10 +2,17 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Landmark, Compass, Mountain, Waves, Utensils, TrainTrack } from "lucide-react";
+import { Landmark, Compass, Mountain, Waves, Utensils, TrainTrack, CalendarRange } from "lucide-react";
 
 export const CategoryGrid: React.FC = () => {
   const categories = [
+    {
+      title: "Multi-Day Tour Packages",
+      desc: "Comprehensive 6 to 21-day private island circuits with certified chauffeur guides.",
+      slug: "multiday",
+      icon: CalendarRange,
+      image: "https://images.unsplash.com/photo-1546708973-b339540b5162?q=80&w=800&auto=format&fit=crop"
+    },
     {
       title: "Cultural Experiences",
       desc: "Temples, ancient kingdoms and UNESCO heritage.",
