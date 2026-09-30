@@ -39,7 +39,7 @@ export async function POST(req: Request) {
         subtitle: subtitle || "Unforgettable tours and authentic island experiences.",
         image:
           image ||
-          "https://images.unsplash.com/photo-1578564499890-7949609022f3?q=80&w=1600&auto=format&fit=crop",
+          "https://images.unsplash.com/photo-1589182373726-e4f658ab50f0?q=80&w=1600&auto=format&fit=crop",
         destination: destination || "Sri Lanka",
         ctaText: ctaText || "Explore Tours",
         ctaLink: ctaLink || "/tours",

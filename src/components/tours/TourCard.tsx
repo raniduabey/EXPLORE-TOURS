@@ -24,9 +24,9 @@ export interface TourCardData {
 }
 
 const fallbackImages: Record<string, string> = {
-  galle: "https://images.unsplash.com/photo-1566296566002-390b1062b186?q=80&w=1000&auto=format&fit=crop",
+  galle: "https://images.unsplash.com/photo-1580835239846-5bb9ce03c8c3?q=80&w=1000&auto=format&fit=crop",
   colombo: "https://images.unsplash.com/photo-1601050690597-df0568f70950?q=80&w=1000&auto=format&fit=crop",
-  sigiriya: "https://images.unsplash.com/photo-1578564499890-7949609022f3?q=80&w=1000&auto=format&fit=crop",
+  sigiriya: "https://images.unsplash.com/photo-1589182373726-e4f658ab50f0?q=80&w=1000&auto=format&fit=crop",
   ella: "https://images.unsplash.com/photo-1546708973-b339540b5162?q=80&w=1000&auto=format&fit=crop",
   mirissa: "https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?q=80&w=1000&auto=format&fit=crop",
   yala: "https://images.unsplash.com/photo-1534567153574-2b12153a87f0?q=80&w=1000&auto=format&fit=crop",
@@ -40,8 +40,8 @@ export const TourCard: React.FC<{ tour: TourCardData }> = ({ tour }) => {
   const isSaved = isInWishlist(tour.id);
   const locLower = tour.location?.toLowerCase() || "";
   const imageUrl = imgError
-    ? fallbackImages[locLower] || "https://images.unsplash.com/photo-1578564499890-7949609022f3?q=80&w=1000&auto=format&fit=crop"
-    : tour.primaryImage || "https://images.unsplash.com/photo-1578564499890-7949609022f3?q=80&w=1000&auto=format&fit=crop";
+    ? fallbackImages[locLower] || "https://images.unsplash.com/photo-1589182373726-e4f658ab50f0?q=80&w=1000&auto=format&fit=crop"
+    : tour.primaryImage || "https://images.unsplash.com/photo-1589182373726-e4f658ab50f0?q=80&w=1000&auto=format&fit=crop";
 
   return (
     <div className="group bg-white rounded-2xl overflow-hidden border border-slate-200/80 shadow-card hover:shadow-card-hover transition-all duration-300 flex flex-col h-full">

@@ -35,7 +35,7 @@ const defaultTours: TourCardData[] = [
     badge: "Bestseller",
     freeCancellation: true,
     instantBook: true,
-    primaryImage: "https://images.unsplash.com/photo-1578564499890-7949609022f3?q=80&w=800&auto=format&fit=crop"
+    primaryImage: "https://images.unsplash.com/photo-1589182373726-e4f658ab50f0?q=80&w=800&auto=format&fit=crop"
   },
   {
     id: "tour-14day-grand",
@@ -51,7 +51,7 @@ const defaultTours: TourCardData[] = [
     badge: "Most Comprehensive",
     freeCancellation: true,
     instantBook: true,
-    primaryImage: "https://images.unsplash.com/photo-1566836647472-a7457ef4560b?q=80&w=800&auto=format&fit=crop"
+    primaryImage: "https://images.unsplash.com/photo-1567157577867-05ccb1388e66?q=80&w=800&auto=format&fit=crop"
   },
   {
     id: "tour-ella",

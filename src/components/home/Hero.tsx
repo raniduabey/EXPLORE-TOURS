@@ -12,7 +12,7 @@ const defaultSlides = [
     headlineLine1: "Your Journey,",
     headlineHighlight: "Expertly Guided.",
     subtitle: "Discover ancient palaces, local village stories, and unforgettable island experiences with a Sri Lankan guide who cares.",
-    image: "https://images.unsplash.com/photo-1578564499890-7949609022f3?q=80&w=1600&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1589182373726-e4f658ab50f0?q=80&w=1600&auto=format&fit=crop",
     destination: "Sigiriya Rock Citadel",
     ctaText: "Explore Tours",
     ctaLink: "/tours?category=cultural"
@@ -56,6 +56,7 @@ import { DESTINATIONS_CATALOG } from "@/data/destinationsData";
 
 const categories = [
   { label: "All Activities", value: "" },
+  { label: "Multi-Day Tour Packages", value: "multiday" },
   { label: "Cultural Heritage", value: "cultural" },
   { label: "Wildlife Safaris", value: "wildlife" },
   { label: "Adventure & Hiking", value: "adventure" },

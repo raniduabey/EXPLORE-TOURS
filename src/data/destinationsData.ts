@@ -22,7 +22,7 @@ export const DESTINATIONS_CATALOG: DestinationData[] = [
     longDesc:
       "The Cultural Triangle forms the cradle of ancient Sri Lankan civilization. Anchored by the UNESCO World Heritage Lion Rock Citadel of Sigiriya and the subterranean Buddhist shrines of Dambulla, this region invites travelers into an awe-inspiring world of 2,500-year-old hydraulic engineering, vibrant frescoes, and spiritual serenity.",
     image:
-      "https://images.unsplash.com/photo-1578564499890-7949609022f3?q=80&w=1200&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1589182373726-e4f658ab50f0?q=80&w=1200&auto=format&fit=crop",
     experienceCount: 8,
     startingPrice: 85,
     popularAttractions:
@@ -75,7 +75,7 @@ export const DESTINATIONS_CATALOG: DestinationData[] = [
     longDesc:
       "Built by Portuguese and Dutch colonizers between the 16th and 17th centuries, Galle Fort is Asia's best-preserved fortified sea bastion. Stroll past whitewashed ramparts, colonial clock towers, spice merchants, and charming seaside gelato parlors.",
     image:
-      "https://images.unsplash.com/photo-1566296566002-390b1062b186?q=80&w=1200&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1580835239846-5bb9ce03c8c3?q=80&w=1200&auto=format&fit=crop",
     experienceCount: 4,
     startingPrice: 45,
     popularAttractions:
@@ -109,7 +109,7 @@ export const DESTINATIONS_CATALOG: DestinationData[] = [
     longDesc:
       "Nestled in the shadows of Mount Pidurutalagala at 1,868 meters elevation, Nuwara Eliya is the heartland of world-renowned Ceylon tea. With Victorian post offices, manicured golf links, botanical gardens, and dramatic cascades like Ramboda Falls, it offers a refreshing highland retreat.",
     image:
-      "https://images.unsplash.com/photo-1544735716-392fe2489ffa?q=80&w=1200&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1576085898323-218337e3e43c?q=80&w=1200&auto=format&fit=crop",
     experienceCount: 4,
     startingPrice: 70,
     popularAttractions:

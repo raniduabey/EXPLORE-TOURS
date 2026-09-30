@@ -18,7 +18,7 @@ export const CategoryGrid: React.FC = () => {
       desc: "Temples, ancient kingdoms and UNESCO heritage.",
       slug: "cultural",
       icon: Landmark,
-      image: "https://images.unsplash.com/photo-1578564499890-7949609022f3?q=80&w=800&auto=format&fit=crop"
+      image: "https://images.unsplash.com/photo-1589182373726-e4f658ab50f0?q=80&w=800&auto=format&fit=crop"
     },
     {
       title: "Wildlife & Safari",

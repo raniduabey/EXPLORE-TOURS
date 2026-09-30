@@ -103,21 +103,27 @@ export const TOURS_CATALOG: TourData[] = [
     ],
     images: [
       {
-        id: "sig-1",
-        url: "https://images.unsplash.com/photo-1578564499890-7949609022f3?q=80&w=1200&auto=format&fit=crop",
-        caption: "Sigiriya Ancient Lion Rock Citadel",
+        id: "img-sig-1",
+        url: "https://images.unsplash.com/photo-1589182373726-e4f658ab50f0?q=80&w=1200&auto=format&fit=crop",
+        caption: "King Kashyapa 5th-century UNESCO Sigiriya Lion Rock Citadel",
         isPrimary: true,
       },
       {
-        id: "sig-2",
-        url: "https://images.unsplash.com/photo-1566296566002-390b1062b186?q=80&w=1200&auto=format&fit=crop",
-        caption: "Cultural Triangle Heritage",
+        id: "img-sig-2",
+        url: "https://images.unsplash.com/photo-1586861635167-e5223aadc9fe?q=80&w=1200&auto=format&fit=crop",
+        caption: "Panoramic vista of Sigiriya Rock from summit of Pidurangala",
         isPrimary: false,
       },
       {
-        id: "sig-3",
-        url: "https://images.unsplash.com/photo-1546708973-b339540b5162?q=80&w=1200&auto=format&fit=crop",
-        caption: "Scenic Central Plains",
+        id: "img-sig-3",
+        url: "https://images.unsplash.com/photo-1580618672591-eb180b1a973f?q=80&w=1200&auto=format&fit=crop",
+        caption: "Sacred Golden Cave Temples and gilded Buddha statues of Dambulla",
+        isPrimary: false,
+      },
+      {
+        id: "img-sig-4",
+        url: "https://images.unsplash.com/photo-1588668214407-6ea9a6d8c272?q=80&w=1200&auto=format&fit=crop",
+        caption: "Ancient Royal Water Gardens and hydraulic pools of Sigiriya",
         isPrimary: false,
       },
     ],
@@ -254,21 +260,27 @@ export const TOURS_CATALOG: TourData[] = [
     ],
     images: [
       {
-        id: "ella-1",
+        id: "img-ella-1",
         url: "https://images.unsplash.com/photo-1546708973-b339540b5162?q=80&w=1200&auto=format&fit=crop",
-        caption: "Iconic Sri Lanka Blue Train crossing Nine Arches Bridge",
+        caption: "Iconic colonial Nine Arch Viaduct bridge nestled in Ella mountains",
         isPrimary: true,
       },
       {
-        id: "ella-2",
-        url: "https://images.unsplash.com/photo-1586861635167-e5223aadc9fe?q=80&w=1200&auto=format&fit=crop",
-        caption: "Rolling Ceylon Tea Hills",
+        id: "img-ella-2",
+        url: "https://images.unsplash.com/photo-1589802829985-817e51171b92?q=80&w=1200&auto=format&fit=crop",
+        caption: "World-famous scenic blue train crossing through misty tea valleys",
         isPrimary: false,
       },
       {
-        id: "ella-3",
-        url: "https://images.unsplash.com/photo-1544735716-392fe2489ffa?q=80&w=1200&auto=format&fit=crop",
-        caption: "Ella Gap Mountain Vistas",
+        id: "img-ella-3",
+        url: "https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?q=80&w=1200&auto=format&fit=crop",
+        caption: "Panoramic mountain trail hiking up Little Adam's Peak at sunrise",
+        isPrimary: false,
+      },
+      {
+        id: "img-ella-4",
+        url: "https://images.unsplash.com/photo-1533105079780-92b9be482077?q=80&w=1200&auto=format&fit=crop",
+        caption: "Open-door carriage view of lush highlands from the scenic train",
         isPrimary: false,
       },
     ],
@@ -386,15 +398,27 @@ export const TOURS_CATALOG: TourData[] = [
     ],
     images: [
       {
-        id: "yala-1",
+        id: "img-yala-1",
         url: "https://images.unsplash.com/photo-1534567153574-2b12153a87f0?q=80&w=1200&auto=format&fit=crop",
-        caption: "Sri Lankan Leopard on rocky outcrop in Yala",
+        caption: "Wild Sri Lankan Leopard resting on granite rocks in Yala National Park",
         isPrimary: true,
       },
       {
-        id: "yala-2",
-        url: "https://images.unsplash.com/photo-1588668214407-6ea9a6d8c272?q=80&w=1200&auto=format&fit=crop",
-        caption: "Wild Asian Elephant herd in Yala sanctuary",
+        id: "img-yala-2",
+        url: "https://images.unsplash.com/photo-1557050543-4d5f4e07ef46?q=80&w=1200&auto=format&fit=crop",
+        caption: "Wild Asian Elephant herd bathing in a freshwater safari reservoir",
+        isPrimary: false,
+      },
+      {
+        id: "img-yala-3",
+        url: "https://images.unsplash.com/photo-1516426122078-c23e76319801?q=80&w=1200&auto=format&fit=crop",
+        caption: "Customized 4x4 open-top game drive jeep tracking wildlife in Yala",
+        isPrimary: false,
+      },
+      {
+        id: "img-yala-4",
+        url: "https://images.unsplash.com/photo-1547970810-dc1eac37d174?q=80&w=1200&auto=format&fit=crop",
+        caption: "Elephant family herd traversing coastal dry zone scrublands",
         isPrimary: false,
       },
     ],
@@ -506,10 +530,28 @@ export const TOURS_CATALOG: TourData[] = [
     ],
     images: [
       {
-        id: "galle-1",
-        url: "https://images.unsplash.com/photo-1566296566002-390b1062b186?q=80&w=1200&auto=format&fit=crop",
-        caption: "Historic Galle Dutch Fort ramparts and lighthouse",
+        id: "img-galle-1",
+        url: "https://images.unsplash.com/photo-1580835239846-5bb9ce03c8c3?q=80&w=1200&auto=format&fit=crop",
+        caption: "Historic Galle Fort Lighthouse surrounded by palm trees and ocean",
         isPrimary: true,
+      },
+      {
+        id: "img-galle-2",
+        url: "https://images.unsplash.com/photo-1588598198321-9735fd52455b?q=80&w=1200&auto=format&fit=crop",
+        caption: "17th-century Dutch colonial sea ramparts and bastions overlooking the Indian Ocean",
+        isPrimary: false,
+      },
+      {
+        id: "img-galle-3",
+        url: "https://images.unsplash.com/photo-1544735716-392fe2489ffa?q=80&w=1200&auto=format&fit=crop",
+        caption: "Traditional stilt fishermen balancing on wooden poles in Weligama Bay",
+        isPrimary: false,
+      },
+      {
+        id: "img-galle-4",
+        url: "https://images.unsplash.com/photo-1518467166778-b88f373ffec7?q=80&w=1200&auto=format&fit=crop",
+        caption: "Green sea turtle at Kosgoda Sea Turtle Conservation Project",
+        isPrimary: false,
       },
     ],
     itinerary: [
@@ -622,10 +664,28 @@ export const TOURS_CATALOG: TourData[] = [
     ],
     images: [
       {
-        id: "mir-1",
-        url: "https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?q=80&w=1200&auto=format&fit=crop",
-        caption: "Southern Sri Lanka coastline and marine waters",
+        id: "img-mir-1",
+        url: "https://images.unsplash.com/photo-1568430462989-44163eb1752f?q=80&w=1200&auto=format&fit=crop",
+        caption: "Majestic Blue Whale fluke diving into deep waters off Mirissa",
         isPrimary: true,
+      },
+      {
+        id: "img-mir-2",
+        url: "https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?q=80&w=1200&auto=format&fit=crop",
+        caption: "Golden crescent shores and turquoise waters of Mirissa Beach",
+        isPrimary: false,
+      },
+      {
+        id: "img-mir-3",
+        url: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1200&auto=format&fit=crop",
+        caption: "Sunset viewpoint from iconic Coconut Tree Hill overlooking Mirissa Bay",
+        isPrimary: false,
+      },
+      {
+        id: "img-mir-4",
+        url: "https://images.unsplash.com/photo-1518837695005-2083093ee35b?q=80&w=1200&auto=format&fit=crop",
+        caption: "Pods of playful spinner dolphins leaping in the Indian Ocean",
+        isPrimary: false,
       },
     ],
     itinerary: [
@@ -737,15 +797,27 @@ export const TOURS_CATALOG: TourData[] = [
     ],
     images: [
       {
-        id: "nuw-1",
-        url: "https://images.unsplash.com/photo-1544735716-392fe2489ffa?q=80&w=1200&auto=format&fit=crop",
-        caption: "Misty tea estates and hills of Nuwara Eliya",
+        id: "img-nuw-1",
+        url: "https://images.unsplash.com/photo-1576085898323-218337e3e43c?q=80&w=1200&auto=format&fit=crop",
+        caption: "Lush green Ceylon tea estate and traditional tea plucking in Nuwara Eliya",
         isPrimary: true,
       },
       {
-        id: "nuw-2",
+        id: "img-nuw-2",
+        url: "https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=1200&auto=format&fit=crop",
+        caption: "Spectacular cascading double falls of Ramboda Waterfall (109m)",
+        isPrimary: false,
+      },
+      {
+        id: "img-nuw-3",
+        url: "https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?q=80&w=1200&auto=format&fit=crop",
+        caption: "Misty mountain valleys and emerald tea plantations of Little England",
+        isPrimary: false,
+      },
+      {
+        id: "img-nuw-4",
         url: "https://images.unsplash.com/photo-1586861635167-e5223aadc9fe?q=80&w=1200&auto=format&fit=crop",
-        caption: "Highland tea plucking in Ceylon hills",
+        caption: "Highland mountain pass panorama in central Sri Lanka",
         isPrimary: false,
       },
     ],
@@ -865,7 +937,7 @@ export const TOURS_CATALOG: TourData[] = [
     images: [
       {
         id: "img-6d-1",
-        url: "https://images.unsplash.com/photo-1578564499890-7949609022f3?q=80&w=1200&auto=format&fit=crop",
+        url: "https://images.unsplash.com/photo-1589182373726-e4f658ab50f0?q=80&w=1200&auto=format&fit=crop",
         caption: "Sunrise at UNESCO Sigiriya Lion Rock Fortress Citadel",
         isPrimary: true,
       },
@@ -1035,7 +1107,7 @@ export const TOURS_CATALOG: TourData[] = [
       },
       {
         id: "img-8d-2",
-        url: "https://images.unsplash.com/photo-1578564499890-7949609022f3?q=80&w=1200&auto=format&fit=crop",
+        url: "https://images.unsplash.com/photo-1589182373726-e4f658ab50f0?q=80&w=1200&auto=format&fit=crop",
         caption: "Ancient Sigiriya Lion Rock Fortress rising dramatically above the jungle",
         isPrimary: false,
       },
@@ -1220,13 +1292,13 @@ export const TOURS_CATALOG: TourData[] = [
     images: [
       {
         id: "img-14d-1",
-        url: "https://images.unsplash.com/photo-1566836647472-a7457ef4560b?q=80&w=1200&auto=format&fit=crop",
+        url: "https://images.unsplash.com/photo-1567157577867-05ccb1388e66?q=80&w=1200&auto=format&fit=crop",
         caption: "Sacred Ruwanwelisaya Stupa in ancient kingdom of Anuradhapura",
         isPrimary: true,
       },
       {
         id: "img-14d-2",
-        url: "https://images.unsplash.com/photo-1578564499890-7949609022f3?q=80&w=1200&auto=format&fit=crop",
+        url: "https://images.unsplash.com/photo-1589182373726-e4f658ab50f0?q=80&w=1200&auto=format&fit=crop",
         caption: "Sigiriya UNESCO Lion Rock Citadel aerial vista",
         isPrimary: false,
       },
@@ -1478,7 +1550,7 @@ export const TOURS_CATALOG: TourData[] = [
       },
       {
         id: "img-21d-2",
-        url: "https://images.unsplash.com/photo-1578564499890-7949609022f3?q=80&w=1200&auto=format&fit=crop",
+        url: "https://images.unsplash.com/photo-1589182373726-e4f658ab50f0?q=80&w=1200&auto=format&fit=crop",
         caption: "King Kashyapa's 5th-century Sigiriya UNESCO Lion Rock Citadel",
         isPrimary: false,
       },

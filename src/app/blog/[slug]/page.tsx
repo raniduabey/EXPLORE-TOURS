@@ -16,7 +16,7 @@ const FALLBACK_POSTS: Record<string, any> = {
     author: "Nalaka Perera",
     readTime: "7 Min Read",
     publishedAt: new Date("2026-08-15"),
-    image: "https://images.unsplash.com/photo-1578564499890-7949609022f3?q=80&w=1200&auto=format&fit=crop"
+    image: "https://images.unsplash.com/photo-1589182373726-e4f658ab50f0?q=80&w=1200&auto=format&fit=crop"
   },
   "kandy-to-ella-train-guide": {
     id: "post-2",

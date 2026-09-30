@@ -13,7 +13,7 @@ async function main() {
       slug: 'cultural',
       icon: 'Landmark',
       description: 'Ancient citadels, sacred Buddhist temples, and UNESCO World Heritage sites.',
-      image: 'https://images.unsplash.com/photo-1578564499890-7949609022f3?q=80&w=800&auto=format&fit=crop'
+      image: 'https://images.unsplash.com/photo-1589182373726-e4f658ab50f0?q=80&w=800&auto=format&fit=crop'
     }
   });
 
@@ -63,7 +63,7 @@ async function main() {
       slug: 'sigiriya',
       shortDesc: 'Ancient 5th-century rock citadels, gilded cave temples, and royal water gardens.',
       longDesc: 'The Cultural Triangle forms the cradle of ancient Sri Lankan civilization with Sigiriya and Dambulla at its core.',
-      image: 'https://images.unsplash.com/photo-1578564499890-7949609022f3?q=80&w=1200&auto=format&fit=crop',
+      image: 'https://images.unsplash.com/photo-1589182373726-e4f658ab50f0?q=80&w=1200&auto=format&fit=crop',
       experienceCount: 8,
       startingPrice: 85,
       popularAttractions: 'Sigiriya Lion Rock, Dambulla Cave Temple, Pidurangala Rock, Minneriya Safari',
@@ -114,7 +114,7 @@ async function main() {
       slug: 'galle',
       shortDesc: '17th-century oceanfront ramparts, cobblestone alleys, and Dutch colonial architecture.',
       longDesc: 'Built in the 16th and 17th centuries, Galle Fort is Asia best-preserved fortified sea bastion.',
-      image: 'https://images.unsplash.com/photo-1566296566002-390b1062b186?q=80&w=1200&auto=format&fit=crop',
+      image: 'https://images.unsplash.com/photo-1580835239846-5bb9ce03c8c3?q=80&w=1200&auto=format&fit=crop',
       experienceCount: 4,
       startingPrice: 45,
       popularAttractions: 'Galle Lighthouse, Dutch Reformed Church, Sea Wall Ramparts, Maritime Museum',
@@ -167,7 +167,7 @@ async function main() {
           headlineLine1: 'Discover Sri Lanka',
           headlineHighlight: 'Your Way',
           subtitle: 'Authentic day tours, wildlife safaris, and highland journeys curated by local travel experts.',
-          image: 'https://images.unsplash.com/photo-1578564499890-7949609022f3?q=80&w=1600&auto=format&fit=crop',
+          image: 'https://images.unsplash.com/photo-1589182373726-e4f658ab50f0?q=80&w=1600&auto=format&fit=crop',
           destination: 'Sigiriya Rock Fortress',
           ctaText: 'Explore All Tours',
           ctaLink: '/tours',
@@ -284,8 +284,8 @@ async function main() {
       ]),
       images: {
         create: [
-          { url: 'https://images.unsplash.com/photo-1578564499890-7949609022f3?q=80&w=1200&auto=format&fit=crop', caption: 'Sigiriya Ancient Citadel', isPrimary: true },
-          { url: 'https://images.unsplash.com/photo-1566296566002-390b1062b186?q=80&w=1200&auto=format&fit=crop', caption: 'Cultural Heritage', isPrimary: false }
+          { url: 'https://images.unsplash.com/photo-1589182373726-e4f658ab50f0?q=80&w=1200&auto=format&fit=crop', caption: 'Sigiriya Ancient Citadel', isPrimary: true },
+          { url: 'https://images.unsplash.com/photo-1580835239846-5bb9ce03c8c3?q=80&w=1200&auto=format&fit=crop', caption: 'Cultural Heritage', isPrimary: false }
         ]
       }
     }
@@ -464,7 +464,7 @@ async function main() {
       ]),
       images: {
         create: [
-          { url: 'https://images.unsplash.com/photo-1566296566002-390b1062b186?q=80&w=1200&auto=format&fit=crop', caption: 'Galle Dutch Fort Ramparts', isPrimary: true }
+          { url: 'https://images.unsplash.com/photo-1580835239846-5bb9ce03c8c3?q=80&w=1200&auto=format&fit=crop', caption: 'Galle Dutch Fort Ramparts', isPrimary: true }
         ]
       }
     }
@@ -636,7 +636,7 @@ async function main() {
       ]),
       images: {
         create: [
-          { url: 'https://images.unsplash.com/photo-1578564499890-7949609022f3?q=80&w=1200&auto=format&fit=crop', caption: 'Sunrise at Sigiriya Lion Rock Citadel', isPrimary: true },
+          { url: 'https://images.unsplash.com/photo-1589182373726-e4f658ab50f0?q=80&w=1200&auto=format&fit=crop', caption: 'Sunrise at Sigiriya Lion Rock Citadel', isPrimary: true },
           { url: 'https://images.unsplash.com/photo-1546708973-b339540b5162?q=80&w=1200&auto=format&fit=crop', caption: 'Demodara Nine Arch Bridge in Ella', isPrimary: false }
         ]
       }
@@ -747,8 +747,8 @@ async function main() {
       ]),
       images: {
         create: [
-          { url: 'https://images.unsplash.com/photo-1566836647472-a7457ef4560b?q=80&w=1200&auto=format&fit=crop', caption: 'Sacred Ruwanwelisaya Stupa in Anuradhapura', isPrimary: true },
-          { url: 'https://images.unsplash.com/photo-1578564499890-7949609022f3?q=80&w=1200&auto=format&fit=crop', caption: 'Sigiriya Rock Citadel Aerial Vista', isPrimary: false }
+          { url: 'https://images.unsplash.com/photo-1567157577867-05ccb1388e66?q=80&w=1200&auto=format&fit=crop', caption: 'Sacred Ruwanwelisaya Stupa in Anuradhapura', isPrimary: true },
+          { url: 'https://images.unsplash.com/photo-1589182373726-e4f658ab50f0?q=80&w=1200&auto=format&fit=crop', caption: 'Sigiriya Rock Citadel Aerial Vista', isPrimary: false }
         ]
       }
     }
