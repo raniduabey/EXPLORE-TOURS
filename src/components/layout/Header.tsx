@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
 import { Globe, ChevronDown, Heart, ShoppingBag, User, X, Menu, Phone } from "lucide-react";
 import { useCurrency } from "@/context/CurrencyContext";
 import { useWishlist } from "@/context/WishlistContext";
@@ -192,57 +193,65 @@ export const Header: React.FC = () => {
         </div>
 
         {/* Mobile Navigation Drawer */}
-        {mobileMenuOpen && (
-          <div className="lg:hidden mt-3 pt-3 pb-5 border-t border-slate-100 space-y-3">
-            <div className="flex flex-col space-y-2">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.name}
-                  href={link.href}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className={`text-xs font-bold px-3 py-2 rounded-xl transition-colors ${
-                    pathname === link.href
-                      ? "bg-ceylon-softblue text-ceylon-blue font-extrabold"
-                      : "text-ceylon-text hover:bg-slate-50"
-                  }`}
-                >
-                  {link.name}
-                </Link>
-              ))}
-              <Link
-                href="/account"
-                onClick={() => setMobileMenuOpen(false)}
-                className="text-xs font-bold px-3 py-2 rounded-xl text-ceylon-navy hover:bg-slate-50 flex items-center gap-2"
-              >
-                <User className="w-4 h-4 text-ceylon-blue" />
-                <span>My Booking Voucher / Account</span>
-              </Link>
-            </div>
-
-            <div className="pt-3 border-t border-slate-100 flex items-center justify-between px-3">
-              <span className="text-xs font-bold text-slate-500">Currency:</span>
-              <div className="flex gap-1">
-                {currencyOptions.map((c) => (
-                  <button
-                    type="button"
-                    key={c}
-                    onClick={() => {
-                      setCurrency(c);
-                      setMobileMenuOpen(false);
-                    }}
-                    className={`px-2 py-1 rounded text-xs font-bold ${
-                      currency === c
-                        ? "bg-ceylon-blue text-white"
-                        : "bg-slate-100 text-slate-700"
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+              className="lg:hidden mt-3 pt-3 pb-5 border-t border-slate-100 space-y-3 overflow-hidden"
+            >
+              <div className="flex flex-col space-y-2">
+                {navLinks.map((link) => (
+                  <Link
+                    key={link.name}
+                    href={link.href}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={`text-xs font-bold px-3 py-2 rounded-xl transition-colors ${
+                      pathname === link.href
+                        ? "bg-ceylon-softblue text-ceylon-blue font-extrabold"
+                        : "text-ceylon-text hover:bg-slate-50"
                     }`}
                   >
-                    {c}
-                  </button>
+                    {link.name}
+                  </Link>
                 ))}
+                <Link
+                  href="/account"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="text-xs font-bold px-3 py-2 rounded-xl text-ceylon-navy hover:bg-slate-50 flex items-center gap-2"
+                >
+                  <User className="w-4 h-4 text-ceylon-blue" />
+                  <span>My Booking Voucher / Account</span>
+                </Link>
               </div>
-            </div>
-          </div>
-        )}
+
+              <div className="pt-3 border-t border-slate-100 flex items-center justify-between px-3">
+                <span className="text-xs font-bold text-slate-500">Currency:</span>
+                <div className="flex gap-1">
+                  {currencyOptions.map((c) => (
+                    <button
+                      type="button"
+                      key={c}
+                      onClick={() => {
+                        setCurrency(c);
+                        setMobileMenuOpen(false);
+                      }}
+                      className={`px-2 py-1 rounded text-xs font-bold ${
+                        currency === c
+                          ? "bg-ceylon-blue text-white"
+                          : "bg-slate-100 text-slate-700"
+                      }`}
+                    >
+                      {c}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </header>
   );

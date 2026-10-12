@@ -3,6 +3,7 @@ import React from "react";
 import Image from "next/image";
 import { ShieldCheck, CheckCircle2 } from "lucide-react";
 import { siteConfig } from "@/config/site";
+import { FadeIn, FadeInStagger, FadeInStaggerItem } from "@/components/ui/motion";
 
 export const WhyUs: React.FC = () => {
   const points = [
@@ -12,7 +13,7 @@ export const WhyUs: React.FC = () => {
     },
     {
       title: "Professional Licensed Guides",
-      desc: "Licensed English & multi-lingual chauffeur guides passionate about Sri Lanka's heritage.",
+      desc: "Licensed English & multilingual chauffeur guides passionate about Sri Lanka's heritage.",
     },
     {
       title: "Transparent Upfront Pricing",
@@ -35,24 +36,24 @@ export const WhyUs: React.FC = () => {
   return (
     <section className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-        <div className="relative">
+        <FadeIn direction="right" className="relative">
           <div className="grid grid-cols-2 gap-4">
-            <div className="relative h-80 rounded-2xl overflow-hidden shadow-card">
+            <div className="relative h-80 rounded-2xl overflow-hidden shadow-card group">
               <Image
                 src="https://images.unsplash.com/photo-1588668214407-6ea9a6d8c272?q=80&w=800&auto=format&fit=crop"
                 alt="Sri Lanka Local Hospitality"
                 fill
                 sizes="(max-width: 768px) 50vw, 300px"
-                className="object-cover"
+                className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
               />
             </div>
-            <div className="relative h-80 rounded-2xl overflow-hidden shadow-card mt-8">
+            <div className="relative h-80 rounded-2xl overflow-hidden shadow-card mt-8 group">
               <Image
                 src="https://images.unsplash.com/photo-1586861635167-e5223aadc9fe?q=80&w=800&auto=format&fit=crop"
                 alt="Ceylon Tea Plantation Guide"
                 fill
                 sizes="(max-width: 768px) 50vw, 300px"
-                className="object-cover"
+                className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
               />
             </div>
           </div>
@@ -62,12 +63,12 @@ export const WhyUs: React.FC = () => {
             </div>
             <div>
               <h4 className="text-xs font-bold text-ceylon-navy">Verified Local Guides</h4>
-              <p className="text-[10px] text-ceylon-muted">Certified native expertise</p>
+              <p className="text-[10px] text-ceylon-muted">SLTDA registered chauffeur guides</p>
             </div>
           </div>
-        </div>
+        </FadeIn>
 
-        <div className="space-y-6">
+        <FadeIn direction="left" className="space-y-6">
           <div>
             <span className="text-xs font-bold text-ceylon-green uppercase tracking-wider block mb-1">
               Why {siteConfig.name}
@@ -80,11 +81,11 @@ export const WhyUs: React.FC = () => {
           <p className="text-sm text-ceylon-muted leading-relaxed">
             We bridge the gap between global travellers seeking seamless, reliable online bookings and Sri Lanka&apos;s most authentic, passionate local guides and tour providers.
           </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+          <FadeInStagger className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
             {points.map((p, idx) => (
-              <div
+              <FadeInStaggerItem
                 key={idx}
-                className="flex items-start gap-3 p-3 rounded-xl bg-slate-50 border border-slate-100"
+                className="flex items-start gap-3 p-3.5 rounded-2xl bg-slate-50 border border-slate-100/80 hover:bg-white hover:shadow-sm transition-all"
               >
                 <CheckCircle2 className="w-5 h-5 text-ceylon-green shrink-0 mt-0.5" />
                 <div>
@@ -93,10 +94,10 @@ export const WhyUs: React.FC = () => {
                     {p.desc}
                   </p>
                 </div>
-              </div>
+              </FadeInStaggerItem>
             ))}
-          </div>
-        </div>
+          </FadeInStagger>
+        </FadeIn>
       </div>
     </section>
   );

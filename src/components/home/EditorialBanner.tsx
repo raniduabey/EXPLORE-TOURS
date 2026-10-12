@@ -2,7 +2,8 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Sparkles } from "lucide-react";
+import { FadeIn, ScaleIn } from "@/components/ui/motion";
 
 export const EditorialBanner: React.FC = () => {
   return (
@@ -15,7 +16,7 @@ export const EditorialBanner: React.FC = () => {
           className="object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-ceylon-navy/90 via-ceylon-navy/70 to-ceylon-navy/90" />
-        <div className="relative z-10 max-w-2xl mx-auto space-y-6 text-white">
+        <FadeIn className="relative z-10 max-w-2xl mx-auto space-y-6 text-white">
           <span className="text-xs font-extrabold uppercase tracking-widest text-emerald-400 block">
             Featured Island Editorial
           </span>
@@ -28,13 +29,13 @@ export const EditorialBanner: React.FC = () => {
           <div className="pt-2">
             <Link
               href="/tours"
-              className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-extrabold text-sm text-ceylon-navy bg-white hover:bg-emerald-400 transition-all transform hover:-translate-y-0.5 shadow-lg"
+              className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-extrabold text-sm text-ceylon-navy bg-white hover:bg-emerald-400 transition-all transform hover:-translate-y-0.5 shadow-lg group"
             >
-              <span>Explore Sri Lanka</span>
-              <ArrowRight className="w-4 h-4" />
+              <span>Explore All Tours & Packages</span>
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Link>
           </div>
-        </div>
+        </FadeIn>
       </div>
     </section>
   );

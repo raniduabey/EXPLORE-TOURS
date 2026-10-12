@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { motion } from "framer-motion";
 import { Heart, MapPin, Star, Clock, CheckCircle, Zap } from "lucide-react";
 import { useCurrency } from "@/context/CurrencyContext";
 import { useWishlist } from "@/context/WishlistContext";
@@ -44,7 +45,11 @@ export const TourCard: React.FC<{ tour: TourCardData }> = ({ tour }) => {
     : tour.primaryImage || "https://images.unsplash.com/photo-1589182373726-e4f658ab50f0?q=80&w=1000&auto=format&fit=crop";
 
   return (
-    <div className="group bg-white rounded-2xl overflow-hidden border border-slate-200/80 shadow-card hover:shadow-card-hover transition-all duration-300 flex flex-col h-full">
+    <motion.div
+      whileHover={{ y: -6 }}
+      transition={{ duration: 0.25, ease: "easeOut" }}
+      className="group bg-white rounded-2xl overflow-hidden border border-slate-200/80 shadow-card hover:shadow-card-hover transition-shadow duration-300 flex flex-col h-full"
+    >
       <div className="relative h-48 sm:h-52 w-full overflow-hidden bg-slate-100">
         <Image
           src={imageUrl}
@@ -61,20 +66,21 @@ export const TourCard: React.FC<{ tour: TourCardData }> = ({ tour }) => {
             </span>
           </div>
         )}
-        <button
+        <motion.button
           type="button"
+          whileTap={{ scale: 0.75 }}
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
             toggleWishlist(tour.id);
           }}
-          className={`absolute top-3 right-3 z-10 w-8 h-8 rounded-full flex items-center justify-center backdrop-blur-md transition-transform active:scale-90 ${
+          className={`absolute top-3 right-3 z-10 w-8 h-8 rounded-full flex items-center justify-center backdrop-blur-md transition-colors ${
             isSaved ? "bg-white text-rose-500 shadow-md" : "bg-black/30 text-white hover:bg-white hover:text-rose-500"
           }`}
           aria-label="Save to Wishlist"
         >
           <Heart className={`w-4 h-4 ${isSaved ? "fill-current" : ""}`} />
-        </button>
+        </motion.button>
         <div className="absolute bottom-3 left-3 z-10 flex items-center gap-1 px-2.5 py-1 rounded-full bg-slate-900/70 backdrop-blur-md text-white text-[11px] font-medium">
           <MapPin className="w-3 h-3 text-emerald-400" />
           <span>{tour.location}</span>
@@ -135,6 +141,6 @@ export const TourCard: React.FC<{ tour: TourCardData }> = ({ tour }) => {
           </Link>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };

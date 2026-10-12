@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Clock, MapPin, ChevronUp, ChevronDown } from "lucide-react";
 
 interface ItineraryItem {
@@ -63,11 +64,21 @@ export const ItineraryTimeline: React.FC<ItineraryTimelineProps> = ({ items }) =
                     {isExp ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                   </button>
                 </div>
-                {isExp && (
-                  <p className="text-xs text-slate-600 leading-relaxed pt-2 border-t border-slate-100">
-                    {item.description}
-                  </p>
-                )}
+                <AnimatePresence initial={false}>
+                  {isExp && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.25, ease: "easeInOut" }}
+                      className="overflow-hidden"
+                    >
+                      <p className="text-xs text-slate-600 leading-relaxed pt-2 border-t border-slate-100">
+                        {item.description}
+                      </p>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             </div>
           );

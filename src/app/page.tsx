@@ -1,12 +1,15 @@
 import React from "react";
-import { Hero } from "@/components/home/Hero";
-import { TrustBar } from "@/components/home/TrustBar";
-import { DestinationGrid } from "@/components/home/DestinationGrid";
+import { HomeClientWrapper } from "@/components/home/HomeClientWrapper";
+import { StatsCounter } from "@/components/home/StatsCounter";
+import { RegionExplorer } from "@/components/home/RegionExplorer";
 import { TopExperiences } from "@/components/home/TopExperiences";
+import { SeasonMatrix } from "@/components/home/SeasonMatrix";
+import { DestinationGrid } from "@/components/home/DestinationGrid";
 import { CategoryGrid } from "@/components/home/CategoryGrid";
 import { EditorialBanner } from "@/components/home/EditorialBanner";
 import { WhyUs } from "@/components/home/WhyUs";
 import { ReviewsSection } from "@/components/home/ReviewsSection";
+import { HomeFaqSection } from "@/components/home/HomeFaqSection";
 import { BlogSection } from "@/components/home/BlogSection";
 import { Newsletter } from "@/components/home/Newsletter";
 import prisma from "@/lib/prisma";
@@ -22,7 +25,7 @@ export default async function HomePage() {
   try {
     destinations = await prisma.destination.findMany({
       where: { featured: true },
-      take: 8
+      take: 8,
     });
   } catch (e) {
     // fallback gracefully
@@ -32,7 +35,7 @@ export default async function HomePage() {
     const rawTours = await prisma.tour.findMany({
       where: { featured: true },
       include: { images: { where: { isPrimary: true }, take: 1 } },
-      take: 6
+      take: 8,
     });
     tours = rawTours.map((t) => ({
       id: t.id,
@@ -48,7 +51,9 @@ export default async function HomePage() {
       badge: t.badge,
       freeCancellation: t.freeCancellation,
       instantBook: t.instantBook,
-      primaryImage: t.images[0]?.url || "https://images.unsplash.com/photo-1589182373726-e4f658ab50f0?q=80&w=800&auto=format&fit=crop"
+      primaryImage:
+        t.images[0]?.url ||
+        "https://images.unsplash.com/photo-1589182373726-e4f658ab50f0?q=80&w=800&auto=format&fit=crop",
     }));
   } catch (e) {
     // fallback gracefully
@@ -69,14 +74,16 @@ export default async function HomePage() {
       badge: t.badge,
       freeCancellation: t.freeCancellation,
       instantBook: t.instantBook,
-      primaryImage: t.images[0]?.url || "https://images.unsplash.com/photo-1589182373726-e4f658ab50f0?q=80&w=800&auto=format&fit=crop"
+      primaryImage:
+        t.images[0]?.url ||
+        "https://images.unsplash.com/photo-1589182373726-e4f658ab50f0?q=80&w=800&auto=format&fit=crop",
     }));
   }
 
   try {
     blogPosts = await prisma.blogPost.findMany({
       where: { featured: true },
-      take: 3
+      take: 3,
     });
   } catch (e) {
     // fallback gracefully
@@ -84,14 +91,17 @@ export default async function HomePage() {
 
   return (
     <div className="space-y-6">
-      <Hero />
-      <TrustBar />
-      <DestinationGrid destinations={destinations} />
+      <HomeClientWrapper />
+      <StatsCounter />
+      <RegionExplorer />
       <TopExperiences tours={tours} />
+      <SeasonMatrix />
+      <DestinationGrid destinations={destinations} />
       <CategoryGrid />
       <EditorialBanner />
       <WhyUs />
       <ReviewsSection />
+      <HomeFaqSection />
       <BlogSection posts={blogPosts} />
       <Newsletter />
     </div>

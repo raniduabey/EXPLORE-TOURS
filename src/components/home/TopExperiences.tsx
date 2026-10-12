@@ -3,6 +3,7 @@ import React, { useRef } from "react";
 import Link from "next/link";
 import { Sparkles, ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
 import { TourCard, TourCardData } from "@/components/tours/TourCard";
+import { FadeIn } from "@/components/ui/motion";
 
 const defaultTours: TourCardData[] = [
   {
@@ -102,7 +103,7 @@ export const TopExperiences: React.FC<{ tours?: TourCardData[] }> = ({ tours: pr
 
   return (
     <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-8">
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+      <FadeIn className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 text-amber-900 text-xs font-bold mb-2">
             <Sparkles className="w-3.5 h-3.5 text-amber-600" />
@@ -143,7 +144,7 @@ export const TopExperiences: React.FC<{ tours?: TourCardData[] }> = ({ tours: pr
             <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
-      </div>
+      </FadeIn>
 
       <div
         ref={containerRef}

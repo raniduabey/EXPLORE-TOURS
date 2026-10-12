@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { CheckCircle2, Mail, Send, AlertCircle } from "lucide-react";
 import { siteConfig } from "@/config/site";
+import { FadeIn } from "@/components/ui/motion";
 
 export const Newsletter: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -40,7 +41,7 @@ export const Newsletter: React.FC = () => {
       <div className="bg-ceylon-navy rounded-3xl p-8 sm:p-12 lg:p-14 text-white relative overflow-hidden shadow-2xl">
         <div className="absolute -right-16 -bottom-16 w-80 h-80 rounded-full bg-ceylon-blue/20 blur-3xl" />
         <div className="absolute -left-16 -top-16 w-80 h-80 rounded-full bg-ceylon-green/20 blur-3xl" />
-        <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+        <FadeIn className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
           <div className="space-y-3">
             <span className="text-xs font-bold text-emerald-400 uppercase tracking-widest block">
               Stay Inspired
@@ -94,7 +95,7 @@ export const Newsletter: React.FC = () => {
               </form>
             )}
           </div>
-        </div>
+        </FadeIn>
       </div>
     </section>
   );

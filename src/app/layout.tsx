@@ -7,6 +7,7 @@ import { CartProvider } from "@/context/CartContext";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { WhatsAppButton } from "@/components/ui/WhatsAppButton";
+import { StickyMobileCta } from "@/components/ui/StickyMobileCta";
 import { CookieConsent } from "@/components/ui/CookieConsent";
 import { AnalyticsScripts } from "@/components/analytics/AnalyticsScripts";
 
@@ -133,6 +134,7 @@ export default function RootLayout({
               <main className="flex-grow pt-20">{children}</main>
               <Footer />
               <WhatsAppButton />
+              <StickyMobileCta />
               <CookieConsent />
               <AnalyticsScripts />
             </CartProvider>

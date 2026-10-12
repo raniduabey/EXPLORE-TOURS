@@ -3,7 +3,9 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { ChevronLeft, ChevronRight, Star, MapPin, Users, Camera, Compass, Sparkles, ChevronDown, Check, Calendar, Search } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ChevronLeft, ChevronRight, Star, MapPin, Users, Camera, Compass, Sparkles, ChevronDown, Check, Calendar, Search, ShieldCheck } from "lucide-react";
+import { Float } from "@/components/ui/motion";
 
 const defaultSlides = [
   {
@@ -249,11 +251,49 @@ const SearchWidget: React.FC = () => {
           </button>
         </div>
       </form>
+
+      {/* Trending Search Chips */}
+      <div className="mt-3.5 pt-3 border-t border-slate-100 flex flex-wrap items-center gap-2 text-xs">
+        <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1">
+          <Sparkles className="w-3 h-3 text-amber-500" />
+          Popular:
+        </span>
+        <Link
+          href="/tours/8-day-splendour-of-sri-lanka-classical-circuit"
+          className="px-2.5 py-1 rounded-lg bg-slate-50 hover:bg-ceylon-softblue text-slate-700 hover:text-ceylon-blue font-medium text-[11px] transition-colors border border-slate-200/60"
+        >
+          🔥 8-Day Classical
+        </Link>
+        <Link
+          href="/tours/sigiriya-rock-fortress-dambulla-day-tour"
+          className="px-2.5 py-1 rounded-lg bg-slate-50 hover:bg-ceylon-softblue text-slate-700 hover:text-ceylon-blue font-medium text-[11px] transition-colors border border-slate-200/60"
+        >
+          🏰 Sigiriya Fortress
+        </Link>
+        <Link
+          href="/tours/kandy-to-ella-scenic-train-journey"
+          className="px-2.5 py-1 rounded-lg bg-slate-50 hover:bg-ceylon-softblue text-slate-700 hover:text-ceylon-blue font-medium text-[11px] transition-colors border border-slate-200/60"
+        >
+          🚂 Ella Scenic Train
+        </Link>
+        <Link
+          href="/tours/yala-national-park-private-safari"
+          className="px-2.5 py-1 rounded-lg bg-slate-50 hover:bg-ceylon-softblue text-slate-700 hover:text-ceylon-blue font-medium text-[11px] transition-colors border border-slate-200/60"
+        >
+          🐆 Yala Safari
+        </Link>
+        <Link
+          href="/tours?category=multiday"
+          className="px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold text-[11px] transition-colors border border-emerald-200"
+        >
+          ✨ Multi-Day Packages
+        </Link>
+      </div>
     </div>
   );
 };
 
-export const Hero: React.FC = () => {
+export const Hero: React.FC<{ onOpenCustomPlanner?: () => void }> = ({ onOpenCustomPlanner }) => {
   const [slides, setSlides] = useState(defaultSlides);
   const [current, setCurrent] = useState(0);
   const [paused, setPaused] = useState(false);
@@ -277,7 +317,7 @@ export const Hero: React.FC = () => {
     if (paused || slides.length === 0) return;
     const interval = setInterval(() => {
       setCurrent((c) => (c + 1) % slides.length);
-    }, 5000);
+    }, 6000);
     return () => clearInterval(interval);
   }, [paused, slides.length]);
 
@@ -285,7 +325,7 @@ export const Hero: React.FC = () => {
 
   return (
     <section
-      className="relative min-h-[680px] lg:min-h-[740px] flex flex-col justify-between pt-8 pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden bg-ceylon-navy"
+      className="relative min-h-[680px] lg:min-h-[760px] flex flex-col justify-between pt-8 pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden bg-ceylon-navy"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
@@ -293,7 +333,7 @@ export const Hero: React.FC = () => {
         <div
           key={s.id || idx}
           className={`absolute inset-0 z-0 transition-opacity duration-1000 ease-in-out ${
-            idx === current ? "opacity-100 scale-100" : "opacity-0 scale-105 pointer-events-none"
+            idx === current ? "opacity-100" : "opacity-0 pointer-events-none"
           }`}
         >
           <Image
@@ -303,12 +343,60 @@ export const Hero: React.FC = () => {
             sizes="100vw"
             priority={idx === 0}
             quality={85}
-            className="object-cover object-center transition-transform duration-[6000ms] ease-out"
+            className={`object-cover object-center transition-transform duration-[7000ms] ease-out ${
+              idx === current ? "scale-105" : "scale-100"
+            }`}
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-ceylon-navy/95 via-ceylon-navy/70 to-ceylon-navy/40" />
+          <div className="absolute inset-0 bg-gradient-to-r from-ceylon-navy/95 via-ceylon-navy/75 to-ceylon-navy/40" />
         </div>
       ))}
 
+      {/* Slide Progress Timer Bar */}
+      <div className="absolute top-0 left-0 right-0 z-20 h-1 bg-white/10">
+        <motion.div
+          key={current}
+          initial={{ width: "0%" }}
+          animate={{ width: paused ? "0%" : "100%" }}
+          transition={{ duration: 6, ease: "linear" }}
+          className="h-full bg-emerald-400"
+        />
+      </div>
+
+      {/* Floating Trust Badges */}
+      <div className="hidden lg:block absolute right-12 top-24 z-20 pointer-events-none">
+        <Float duration={5} yOffset={10}>
+          <div className="bg-white/15 backdrop-blur-md border border-white/25 rounded-2xl p-3.5 shadow-2xl flex items-center gap-3 text-white">
+            <div className="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-300 flex items-center justify-center font-bold text-lg">
+              🇱🇰
+            </div>
+            <div>
+              <div className="flex items-center gap-1 text-[11px] font-extrabold uppercase tracking-wider text-emerald-400">
+                <ShieldCheck className="w-3.5 h-3.5" />
+                <span>SLTDA Certified</span>
+              </div>
+              <p className="text-xs font-bold text-white">Official Chauffeur Guides</p>
+            </div>
+          </div>
+        </Float>
+      </div>
+
+      <div className="hidden xl:block absolute right-16 top-48 z-20 pointer-events-none">
+        <Float duration={6} yOffset={12}>
+          <div className="bg-white/15 backdrop-blur-md border border-white/25 rounded-2xl p-3.5 shadow-2xl flex items-center gap-3 text-white">
+            <div className="flex text-amber-400">
+              <Star className="w-5 h-5 fill-current" />
+            </div>
+            <div>
+              <div className="text-[11px] font-extrabold text-amber-300">
+                4.98 / 5.0 Rating
+              </div>
+              <p className="text-[11px] text-slate-200">TripAdvisor & Google Reviews</p>
+            </div>
+          </div>
+        </Float>
+      </div>
+
+      {/* Navigation Arrows */}
       <button
         type="button"
         onClick={() => setCurrent((c) => (c === 0 ? slides.length - 1 : c - 1))}
@@ -326,30 +414,42 @@ export const Hero: React.FC = () => {
         <ChevronRight className="w-6 h-6 group-hover:translate-x-0.5 transition-transform text-ceylon-blue" />
       </button>
 
+      {/* Slide Content with AnimatePresence */}
       <div className="relative z-10 max-w-5xl mx-auto w-full pt-8 sm:pt-12 space-y-6">
-        <div className="flex flex-wrap items-center gap-3">
-          <span className="text-xs font-extrabold uppercase tracking-widest text-emerald-400 bg-emerald-950/60 backdrop-blur-md px-3.5 py-1 rounded-full border border-emerald-400/30">
-            {slide.tagline}
-          </span>
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white text-xs font-semibold">
-            <div className="flex text-amber-400">
-              {[...Array(5)].map((_, i) => (
-                <Star key={i} className="w-3 h-3 fill-current" />
-              ))}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={slide.id || current}
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -15 }}
+            transition={{ duration: 0.45, ease: "easeOut" }}
+            className="space-y-6"
+          >
+            <div className="flex flex-wrap items-center gap-3">
+              <span className="text-xs font-extrabold uppercase tracking-widest text-emerald-400 bg-emerald-950/60 backdrop-blur-md px-3.5 py-1 rounded-full border border-emerald-400/30">
+                {slide.tagline}
+              </span>
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white text-xs font-semibold">
+                <div className="flex text-amber-400">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-3 h-3 fill-current" />
+                  ))}
+                </div>
+                <span>4.9/5 Rated (15,000+ Travellers)</span>
+              </div>
             </div>
-            <span>4.9/5 Rated (12,000+ Travellers)</span>
-          </div>
-        </div>
 
-        <div className="space-y-2 max-w-3xl">
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-none drop-shadow-lg">
-            {slide.headlineLine1} <br />
-            <span className="text-emerald-400 font-serif italic">{slide.headlineHighlight}</span>
-          </h1>
-          <p className="text-base sm:text-lg text-slate-200 font-normal max-w-xl leading-relaxed pt-2">
-            {slide.subtitle}
-          </p>
-        </div>
+            <div className="space-y-2 max-w-3xl">
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-none drop-shadow-lg">
+                {slide.headlineLine1} <br />
+                <span className="text-emerald-400 font-serif italic">{slide.headlineHighlight}</span>
+              </h1>
+              <p className="text-base sm:text-lg text-slate-200 font-normal max-w-xl leading-relaxed pt-2">
+                {slide.subtitle}
+              </p>
+            </div>
+          </motion.div>
+        </AnimatePresence>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-2xl pt-2">
           <div className="flex items-center gap-3 bg-white/10 backdrop-blur-md p-3 rounded-2xl border border-white/15">
@@ -391,13 +491,24 @@ export const Hero: React.FC = () => {
               <span>{slide.ctaText || "Explore Tours"}</span>
               <ChevronRight className="w-4 h-4" />
             </Link>
-            <Link
-              href="/plan-my-trip"
-              className="px-6 py-3.5 rounded-xl font-extrabold text-sm text-ceylon-navy bg-white hover:bg-slate-50 shadow-xl transition-all transform hover:-translate-y-0.5 flex items-center gap-2"
-            >
-              <Sparkles className="w-4 h-4 text-ceylon-blue" />
-              <span>Plan My Trip</span>
-            </Link>
+            {onOpenCustomPlanner ? (
+              <button
+                type="button"
+                onClick={onOpenCustomPlanner}
+                className="px-6 py-3.5 rounded-xl font-extrabold text-sm text-ceylon-navy bg-white hover:bg-slate-50 shadow-xl transition-all transform hover:-translate-y-0.5 flex items-center gap-2"
+              >
+                <Sparkles className="w-4 h-4 text-ceylon-blue" />
+                <span>Plan My Trip</span>
+              </button>
+            ) : (
+              <Link
+                href="/plan-my-trip"
+                className="px-6 py-3.5 rounded-xl font-extrabold text-sm text-ceylon-navy bg-white hover:bg-slate-50 shadow-xl transition-all transform hover:-translate-y-0.5 flex items-center gap-2"
+              >
+                <Sparkles className="w-4 h-4 text-ceylon-blue" />
+                <span>Plan My Trip</span>
+              </Link>
+            )}
           </div>
 
           <div className="flex items-center gap-2 bg-black/40 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/20">

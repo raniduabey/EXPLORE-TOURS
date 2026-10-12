@@ -3,6 +3,7 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Landmark, Compass, Mountain, Waves, Utensils, TrainTrack, CalendarRange } from "lucide-react";
+import { FadeIn, FadeInStagger, FadeInStaggerItem } from "@/components/ui/motion";
 
 export const CategoryGrid: React.FC = () => {
   const categories = [
@@ -60,7 +61,7 @@ export const CategoryGrid: React.FC = () => {
   return (
     <section className="py-16 px-4 sm:px-6 lg:px-8 bg-ceylon-softblue/50">
       <div className="max-w-7xl mx-auto">
-        <div className="text-center max-w-2xl mx-auto mb-12">
+        <FadeIn className="text-center max-w-2xl mx-auto mb-12">
           <span className="text-xs font-bold text-ceylon-green uppercase tracking-wider block mb-1">
             Find What You Love
           </span>
@@ -70,37 +71,38 @@ export const CategoryGrid: React.FC = () => {
           <p className="text-sm text-ceylon-muted mt-2">
             Tailor your Sri Lankan vacation around your unique passions and travel style.
           </p>
-        </div>
+        </FadeIn>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <FadeInStagger className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {categories.map((c) => {
             const Icon = c.icon;
             return (
-              <Link
-                key={c.slug}
-                href={`/tours?category=${c.slug}`}
-                className="group relative h-64 rounded-2xl overflow-hidden shadow-card hover:shadow-card-hover transition-all duration-300 transform hover:-translate-y-1 block"
-              >
-                <Image
-                  src={c.image}
-                  alt={c.title}
-                  fill
-                  className="object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-ceylon-navy/95 via-ceylon-navy/40 to-transparent" />
-                <div className="absolute top-4 left-4 w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center text-white">
-                  <Icon className="w-5 h-5" />
-                </div>
-                <div className="absolute bottom-0 left-0 right-0 p-5 text-white">
-                  <h3 className="text-lg font-bold tracking-tight text-white group-hover:text-emerald-300 transition-colors">
-                    {c.title}
-                  </h3>
-                  <p className="text-xs text-slate-200 mt-1 line-clamp-2">{c.desc}</p>
-                </div>
-              </Link>
+              <FadeInStaggerItem key={c.slug}>
+                <Link
+                  href={`/tours?category=${c.slug}`}
+                  className="group relative h-64 rounded-2xl overflow-hidden shadow-card hover:shadow-card-hover transition-all duration-300 transform hover:-translate-y-1 block"
+                >
+                  <Image
+                    src={c.image}
+                    alt={c.title}
+                    fill
+                    className="object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-ceylon-navy/95 via-ceylon-navy/40 to-transparent" />
+                  <div className="absolute top-4 left-4 w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center text-white">
+                    <Icon className="w-5 h-5" />
+                  </div>
+                  <div className="absolute bottom-0 left-0 right-0 p-5 text-white">
+                    <h3 className="text-lg font-bold tracking-tight text-white group-hover:text-emerald-300 transition-colors">
+                      {c.title}
+                    </h3>
+                    <p className="text-xs text-slate-200 mt-1 line-clamp-2">{c.desc}</p>
+                  </div>
+                </Link>
+              </FadeInStaggerItem>
             );
           })}
-        </div>
+        </FadeInStagger>
       </div>
     </section>
   );
