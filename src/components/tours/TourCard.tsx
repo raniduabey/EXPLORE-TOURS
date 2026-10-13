@@ -3,9 +3,8 @@ import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { Heart, MapPin, Star, Clock, CheckCircle, Zap } from "lucide-react";
+import { MapPin, Star, Clock, CheckCircle } from "lucide-react";
 import { useCurrency } from "@/context/CurrencyContext";
-import { useWishlist } from "@/context/WishlistContext";
 
 export interface TourCardData {
   id: string;
@@ -13,8 +12,8 @@ export interface TourCardData {
   slug: string;
   location: string;
   duration: string;
-  rating: number;
-  reviewCount: number;
+  rating?: number;
+  reviewCount?: number;
   price: number;
   previousPrice?: number | null;
   tourType: string;
@@ -35,14 +34,14 @@ const fallbackImages: Record<string, string> = {
 
 export const TourCard: React.FC<{ tour: TourCardData }> = ({ tour }) => {
   const { formatPrice } = useCurrency();
-  const { isInWishlist, toggleWishlist } = useWishlist();
   const [imgError, setImgError] = useState(false);
 
-  const isSaved = isInWishlist(tour.id);
   const locLower = tour.location?.toLowerCase() || "";
   const imageUrl = imgError
     ? fallbackImages[locLower] || "https://images.unsplash.com/photo-1589182373726-e4f658ab50f0?q=80&w=1000&auto=format&fit=crop"
     : tour.primaryImage || "https://images.unsplash.com/photo-1589182373726-e4f658ab50f0?q=80&w=1000&auto=format&fit=crop";
+
+  const hasGenuineReviews = (tour.reviewCount ?? 0) > 0 && (tour.rating ?? 0) > 0;
 
   return (
     <motion.div
@@ -66,23 +65,8 @@ export const TourCard: React.FC<{ tour: TourCardData }> = ({ tour }) => {
             </span>
           </div>
         )}
-        <motion.button
-          type="button"
-          whileTap={{ scale: 0.75 }}
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            toggleWishlist(tour.id);
-          }}
-          className={`absolute top-3 right-3 z-10 w-8 h-8 rounded-full flex items-center justify-center backdrop-blur-md transition-colors ${
-            isSaved ? "bg-white text-rose-500 shadow-md" : "bg-black/30 text-white hover:bg-white hover:text-rose-500"
-          }`}
-          aria-label="Save to Wishlist"
-        >
-          <Heart className={`w-4 h-4 ${isSaved ? "fill-current" : ""}`} />
-        </motion.button>
         <div className="absolute bottom-3 left-3 z-10 flex items-center gap-1 px-2.5 py-1 rounded-full bg-slate-900/70 backdrop-blur-md text-white text-[11px] font-medium">
-          <MapPin className="w-3 h-3 text-emerald-400" />
+          <MapPin className="w-3.5 h-3.5 text-emerald-400" />
           <span>{tour.location}</span>
         </div>
       </div>
@@ -90,13 +74,23 @@ export const TourCard: React.FC<{ tour: TourCardData }> = ({ tour }) => {
       <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-3">
         <div className="space-y-2">
           <div className="flex items-center gap-1.5 text-xs">
-            <div className="flex items-center text-amber-400">
-              <Star className="w-3.5 h-3.5 fill-current" />
-              <span className="font-extrabold text-ceylon-navy ml-1">{tour.rating?.toFixed(1) || "4.9"}</span>
-            </div>
-            <span className="text-ceylon-muted">({tour.reviewCount || 120} reviews)</span>
-            <span className="text-slate-300">•</span>
-            <span className="text-slate-500 text-[11px] font-medium">{tour.tourType || "Private"}</span>
+            {hasGenuineReviews && (
+              <>
+                <div className="flex items-center text-amber-400">
+                  <Star className="w-3.5 h-3.5 fill-current" />
+                  <span className="font-extrabold text-ceylon-navy ml-1">
+                    {(tour.rating || 0).toFixed(1)}
+                  </span>
+                </div>
+                <span className="text-ceylon-muted">
+                  ({tour.reviewCount} {tour.reviewCount === 1 ? "review" : "reviews"})
+                </span>
+                <span className="text-slate-300">•</span>
+              </>
+            )}
+            <span className="text-slate-500 text-[11px] font-medium">
+              {tour.tourType || "Private Tour"}
+            </span>
           </div>
 
           <Link href={`/tours/${tour.slug}`} className="block">
@@ -126,7 +120,7 @@ export const TourCard: React.FC<{ tour: TourCardData }> = ({ tour }) => {
               <span className="text-lg sm:text-xl font-extrabold text-ceylon-navy">
                 {formatPrice(tour.price)}
               </span>
-              {tour.previousPrice && (
+              {tour.previousPrice && tour.previousPrice > tour.price && (
                 <span className="text-xs text-slate-400 line-through">
                   {formatPrice(tour.previousPrice)}
                 </span>

@@ -217,19 +217,25 @@ export default async function TourDetailPage({
       availability: "https://schema.org/InStock",
       url: `${siteConfig.url}/tours/${tour.slug}`,
     },
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: tour.rating,
-      reviewCount: tour.reviewCount,
-      bestRating: "5",
-      worstRating: "1",
-    },
+    ...(tour.reviewCount > 0 && tour.rating > 0
+      ? {
+          aggregateRating: {
+            "@type": "AggregateRating",
+            ratingValue: tour.rating,
+            reviewCount: tour.reviewCount,
+            bestRating: "5",
+            worstRating: "1",
+          },
+        }
+      : {}),
     provider: {
       "@type": "TravelAgency",
       name: siteConfig.name,
       url: siteConfig.url,
     },
   };
+
+  const hasReviews = (tour.reviewCount || 0) > 0 && (tour.rating || 0) > 0;
 
   return (
     <>
@@ -249,25 +255,29 @@ export default async function TourDetailPage({
           <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-ceylon-navy tracking-tight leading-tight">
             {tour.title}
           </h1>
-          <div className="flex flex-wrap items-center gap-4 text-xs">
-            <div className="flex items-center text-amber-400">
-              <Star className="w-4 h-4 fill-current" />
-              <span className="font-extrabold text-ceylon-navy ml-1">
-                {tour.rating.toFixed(1)}
-              </span>
-              <span className="text-ceylon-muted ml-1">
-                ({tour.reviewCount} verified reviews)
-              </span>
-            </div>
-            <span className="text-slate-300">•</span>
-            <span className="text-ceylon-navy font-semibold">
-              {tour.bookedCount}+ Travellers Booked
-            </span>
-            <span className="text-slate-300">•</span>
+          <div className="flex flex-wrap items-center gap-3 text-xs">
+            {hasReviews && (
+              <>
+                <div className="flex items-center text-amber-400">
+                  <Star className="w-4 h-4 fill-current" />
+                  <span className="font-extrabold text-ceylon-navy ml-1">
+                    {tour.rating.toFixed(1)}
+                  </span>
+                  <span className="text-ceylon-muted ml-1">
+                    ({tour.reviewCount} verified {tour.reviewCount === 1 ? "review" : "reviews"})
+                  </span>
+                </div>
+                <span className="text-slate-300">•</span>
+              </>
+            )}
             <div className="flex items-center gap-1 text-emerald-700 font-bold bg-emerald-50 px-2.5 py-0.5 rounded-full">
               <ShieldCheck className="w-3.5 h-3.5" />
-              <span>Verified Local Experience</span>
+              <span>Verified Private Experience</span>
             </div>
+            <span className="text-slate-300">•</span>
+            <span className="text-slate-500 font-medium">
+              100% Tailored Sri Lanka Itinerary
+            </span>
           </div>
         </div>
 

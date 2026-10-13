@@ -12,10 +12,9 @@ const defaultTours: TourCardData[] = [
     slug: "8-day-splendour-of-sri-lanka-classical-circuit",
     location: "Sigiriya, Kandy, Ella, Yala & Mirissa",
     duration: "8 Days / 7 Nights",
-    rating: 4.98,
-    reviewCount: 215,
+    rating: 0,
+    reviewCount: 0,
     price: 430,
-    previousPrice: 540,
     tourType: "Private Tour Package",
     badge: "Bestseller Circuit",
     freeCancellation: true,
@@ -28,10 +27,9 @@ const defaultTours: TourCardData[] = [
     slug: "sigiriya-rock-fortress-dambulla-day-tour",
     location: "Sigiriya & Dambulla",
     duration: "10 Hours",
-    rating: 4.95,
-    reviewCount: 342,
+    rating: 0,
+    reviewCount: 0,
     price: 85,
-    previousPrice: 110,
     tourType: "Private Tour",
     badge: "Bestseller",
     freeCancellation: true,
@@ -44,10 +42,9 @@ const defaultTours: TourCardData[] = [
     slug: "14-day-sri-lanka-all-in-one-classic-grand-tour",
     location: "Complete Islandwide Circuit",
     duration: "14 Days / 13 Nights",
-    rating: 4.97,
-    reviewCount: 184,
+    rating: 0,
+    reviewCount: 0,
     price: 1050,
-    previousPrice: 1280,
     tourType: "Grand Private Tour",
     badge: "Most Comprehensive",
     freeCancellation: true,
@@ -60,12 +57,11 @@ const defaultTours: TourCardData[] = [
     slug: "kandy-to-ella-scenic-train-journey",
     location: "Ella Highlands",
     duration: "8 Hours",
-    rating: 4.92,
-    reviewCount: 289,
+    rating: 0,
+    reviewCount: 0,
     price: 65,
-    previousPrice: 85,
     tourType: "Small Group / Private",
-    badge: "Likely to Sell Out",
+    badge: "Popular Experience",
     freeCancellation: true,
     instantBook: true,
     primaryImage: "https://images.unsplash.com/photo-1546708973-b339540b5162?q=80&w=800&auto=format&fit=crop"
@@ -76,10 +72,9 @@ const defaultTours: TourCardData[] = [
     slug: "yala-national-park-safari",
     location: "Yala National Park",
     duration: "6 Hours",
-    rating: 4.88,
-    reviewCount: 195,
+    rating: 0,
+    reviewCount: 0,
     price: 95,
-    previousPrice: 125,
     tourType: "Private 4x4",
     badge: "Top Wildlife",
     freeCancellation: true,
@@ -113,7 +108,7 @@ export const TopExperiences: React.FC<{ tours?: TourCardData[] }> = ({ tours: pr
             Top Experiences in Sri Lanka
           </h2>
           <p className="text-sm text-ceylon-muted mt-2 max-w-xl">
-            Handpicked bestsellers rated 4.8+ by international travelers with verified guides and instant booking.
+            Handpicked Sri Lankan journeys with certified local guides, private vehicles, and instant booking confirmation.
           </p>
         </div>
 
@@ -140,7 +135,7 @@ export const TopExperiences: React.FC<{ tours?: TourCardData[] }> = ({ tours: pr
             href="/tours"
             className="inline-flex items-center gap-1.5 text-xs font-bold text-ceylon-blue hover:text-ceylon-navy transition-colors pl-2"
           >
-            <span>All 100+ Tours</span>
+            <span>View All Experiences</span>
             <ArrowRight className="w-4 h-4" />
           </Link>
         </div>

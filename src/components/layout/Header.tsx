@@ -4,9 +4,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { Globe, ChevronDown, Heart, ShoppingBag, User, X, Menu, Phone } from "lucide-react";
+import { Globe, ChevronDown, ShoppingBag, User, X, Menu } from "lucide-react";
 import { useCurrency } from "@/context/CurrencyContext";
-import { useWishlist } from "@/context/WishlistContext";
 import { useCart } from "@/context/CartContext";
 import { currencies } from "@/lib/currency";
 import { siteConfig } from "@/config/site";
@@ -17,7 +16,6 @@ export const Header: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [currencyOpen, setCurrencyOpen] = useState(false);
   const { currency, setCurrency } = useCurrency();
-  const { wishlist } = useWishlist();
   const { cartCount } = useCart();
 
   useEffect(() => {
@@ -45,14 +43,14 @@ export const Header: React.FC = () => {
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
           ? "bg-white/95 backdrop-blur-md shadow-md py-2 border-b border-slate-100"
-          : "bg-white/90 backdrop-blur-sm py-3 border-b border-slate-100/60"
+          : "bg-white/90 backdrop-blur-sm py-2.5 sm:py-3 border-b border-slate-100/60"
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
-          {/* Logo */}
-          <Link href="/" className="inline-flex items-center gap-3 group shrink-0">
-            <div className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-2xl overflow-hidden bg-white p-1 shadow-sm border border-slate-200/70 group-hover:scale-105 transition-all duration-300">
+          {/* Logo — Enlarged by 35-40% with preserved aspect ratio & refined alignment */}
+          <Link href="/" className="inline-flex items-center gap-3.5 group shrink-0">
+            <div className="relative w-14 h-14 sm:w-[72px] sm:h-[72px] rounded-2xl overflow-hidden bg-white p-1 shadow-sm border border-slate-200/80 group-hover:scale-105 transition-all duration-300">
               <Image
                 src="/images/logo.png"
                 alt={`${siteConfig.name} Official Logo`}
@@ -61,12 +59,12 @@ export const Header: React.FC = () => {
                 priority
               />
             </div>
-            <div className="hidden sm:block">
-              <span className="font-extrabold text-sm sm:text-base text-ceylon-navy tracking-tight block">
+            <div className="flex flex-col justify-center">
+              <span className="font-extrabold text-sm sm:text-base lg:text-lg text-ceylon-navy tracking-tight leading-tight block">
                 {siteConfig.name}
               </span>
-              <span className="text-[10px] font-bold text-ceylon-green tracking-wider uppercase block">
-                Sri Lanka Local Tours
+              <span className="text-[10px] sm:text-[11px] font-bold text-ceylon-green tracking-wider uppercase block mt-0.5">
+                Authentic Sri Lanka Tours
               </span>
             </div>
           </Link>
@@ -129,21 +127,7 @@ export const Header: React.FC = () => {
               )}
             </div>
 
-            {/* Wishlist */}
-            <Link
-              href="/account"
-              className="relative p-2 rounded-xl text-ceylon-text hover:text-ceylon-blue hover:bg-ceylon-softblue transition-colors"
-              title="Saved Experiences"
-            >
-              <Heart className="w-4 h-4" />
-              {wishlist.length > 0 && (
-                <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-rose-500 text-white text-[10px] font-extrabold flex items-center justify-center">
-                  {wishlist.length}
-                </span>
-              )}
-            </Link>
-
-            {/* Booking Cart / Voucher */}
+            {/* Booking Cart */}
             <Link
               href="/checkout"
               className="relative p-2 rounded-xl text-ceylon-text hover:text-ceylon-blue hover:bg-ceylon-softblue transition-colors"
@@ -157,7 +141,7 @@ export const Header: React.FC = () => {
               )}
             </Link>
 
-            {/* Account / My Vouchers */}
+            {/* Account / My Booking */}
             <Link
               href="/account"
               className="flex items-center gap-1.5 px-3.5 py-1.5 bg-ceylon-navy hover:bg-ceylon-blue text-white rounded-xl text-xs font-bold transition-colors shadow-sm"
@@ -223,7 +207,7 @@ export const Header: React.FC = () => {
                   className="text-xs font-bold px-3 py-2 rounded-xl text-ceylon-navy hover:bg-slate-50 flex items-center gap-2"
                 >
                   <User className="w-4 h-4 text-ceylon-blue" />
-                  <span>My Booking Voucher / Account</span>
+                  <span>My Booking / Vouchers</span>
                 </Link>
               </div>
 

@@ -15,9 +15,9 @@ export const Footer: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pb-12 border-b border-white/10">
           <div className="lg:col-span-2 space-y-4">
-            <Link href="/" className="inline-block group">
-              <div className="bg-white rounded-2xl p-2.5 inline-flex items-center shadow-lg border border-white/30 group-hover:scale-105 transition-transform duration-300">
-                <div className="relative w-28 h-28 sm:w-32 sm:h-32">
+            <Link href="/" className="inline-flex items-center gap-4 group">
+              <div className="bg-white rounded-2xl p-2 inline-flex items-center shadow-lg border border-white/30 group-hover:scale-105 transition-transform duration-300">
+                <div className="relative w-24 h-24 sm:w-28 sm:h-28">
                   <Image
                     src="/images/logo.png"
                     alt={`${siteConfig.name} Official Logo`}
@@ -26,6 +26,14 @@ export const Footer: React.FC = () => {
                     priority
                   />
                 </div>
+              </div>
+              <div>
+                <span className="font-extrabold text-lg sm:text-xl text-white tracking-tight block">
+                  {siteConfig.name}
+                </span>
+                <span className="text-xs font-bold text-emerald-400 uppercase tracking-wider block mt-0.5">
+                  Sri Lanka Local Tours
+                </span>
               </div>
             </Link>
             <p className="text-slate-300 text-xs sm:text-sm leading-relaxed max-w-sm pt-1">

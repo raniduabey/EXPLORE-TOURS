@@ -1,38 +1,37 @@
 "use client";
 import React from "react";
-import { Award, Users, Star, ShieldCheck, Clock, CheckCircle2 } from "lucide-react";
-import { AnimatedCounter, FadeIn, FadeInStagger, FadeInStaggerItem } from "@/components/ui/motion";
+import { Users, ShieldCheck, MapPin, Headset, CheckCircle2 } from "lucide-react";
+import { AnimatedCounter, FadeInStagger, FadeInStaggerItem } from "@/components/ui/motion";
 
 export const StatsCounter: React.FC = () => {
-  const stats = [
-    {
-      icon: Clock,
-      target: 12,
-      suffix: "+",
-      label: "Years of Island Craft",
-      desc: "Authentic journeys since 2014",
-    },
-    {
-      icon: Users,
-      target: 15000,
-      suffix: "+",
-      label: "Happy Global Travellers",
-      desc: "From UK, Europe, USA & Australia",
-    },
-    {
-      icon: Star,
-      target: 99.8,
-      decimals: 1,
-      suffix: "%",
-      label: "Five-Star Satisfaction",
-      desc: "Verified reviews on TripAdvisor & Google",
-    },
+  const pillars = [
     {
       icon: ShieldCheck,
       target: 100,
       suffix: "%",
-      label: "SLTDA Certified Guides",
-      desc: "Licensed English & multilingual chauffeurs",
+      label: "Private AC Vehicles",
+      desc: "Dedicated chauffeur transport throughout your journey",
+    },
+    {
+      icon: MapPin,
+      target: 8,
+      suffix: "",
+      label: "UNESCO World Heritage Sites",
+      desc: "Curated cultural triangle and rainforest circuits",
+    },
+    {
+      icon: Users,
+      target: 100,
+      suffix: "%",
+      label: "Custom Tailored Itineraries",
+      desc: "Flexible departure times and customized pace",
+    },
+    {
+      icon: Headset,
+      target: 24,
+      suffix: "/7",
+      label: "Dedicated Support Helpline",
+      desc: "Direct Sri Lankan ground support for guests",
     },
   ];
 
@@ -40,8 +39,8 @@ export const StatsCounter: React.FC = () => {
     <section className="relative -mt-6 z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div className="bg-white rounded-3xl shadow-xl border border-slate-100 p-6 sm:p-8 lg:p-10 backdrop-blur-xl">
         <FadeInStagger className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 divide-y lg:divide-y-0 lg:divide-x divide-slate-100">
-          {stats.map((stat, idx) => {
-            const Icon = stat.icon;
+          {pillars.map((pillar, idx) => {
+            const Icon = pillar.icon;
             return (
               <FadeInStaggerItem
                 key={idx}
@@ -52,23 +51,23 @@ export const StatsCounter: React.FC = () => {
                     <Icon className="w-5 h-5" />
                   </div>
                   <span className="text-[11px] font-bold uppercase tracking-wider text-ceylon-green">
-                    Verified Metric
+                    Core Promise
                   </span>
                 </div>
 
                 <div>
                   <div className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-ceylon-navy tracking-tight flex items-baseline">
                     <AnimatedCounter
-                      target={stat.target}
-                      suffix={stat.suffix}
-                      decimals={stat.decimals || 0}
+                      target={pillar.target}
+                      suffix={pillar.suffix}
+                      decimals={0}
                     />
                   </div>
                   <h4 className="text-xs sm:text-sm font-bold text-ceylon-navy mt-1">
-                    {stat.label}
+                    {pillar.label}
                   </h4>
                   <p className="text-[11px] text-ceylon-muted mt-0.5">
-                    {stat.desc}
+                    {pillar.desc}
                   </p>
                 </div>
               </FadeInStaggerItem>
@@ -79,7 +78,7 @@ export const StatsCounter: React.FC = () => {
         <div className="mt-8 pt-6 border-t border-slate-100 flex flex-wrap items-center justify-between gap-4 text-xs text-slate-500">
           <div className="flex items-center gap-2">
             <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-            <span className="font-semibold text-slate-700">Official Sri Lanka Tourism Development Authority (SLTDA) Partner</span>
+            <span className="font-semibold text-slate-700">Official Sri Lanka Registered Tour Operator Standards</span>
           </div>
           <div className="flex items-center gap-6">
             <span className="flex items-center gap-1.5 font-medium">

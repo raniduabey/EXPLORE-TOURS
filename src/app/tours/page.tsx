@@ -122,6 +122,11 @@ function ToursPageContent() {
     router.replace("/tours", { scroll: false });
   };
 
+  const hasAnyRatings = useMemo(
+    () => tours.some((t) => (t.rating || 0) > 0),
+    [tours]
+  );
+
   const filtered = useMemo(() => {
     return tours
       .filter((t) => {
@@ -342,28 +347,35 @@ function ToursPageContent() {
               />
             </div>
 
-            {/* Min Rating */}
-            <div className="space-y-2">
-              <label className="text-xs font-extrabold text-ceylon-navy block">
-                Minimum Rating
-              </label>
-              <div className="flex gap-2">
-                {[0, 4.8, 4.9].map((r) => (
-                  <button
-                    key={r}
-                    type="button"
-                    onClick={() => setFilters({ ...filters, minRating: r })}
-                    className={`flex-1 py-1.5 rounded-xl text-xs font-bold transition-colors ${
-                      filters.minRating === r
-                        ? "bg-ceylon-navy text-white"
-                        : "bg-slate-50 text-slate-600 hover:bg-slate-100"
-                    }`}
-                  >
-                    {r === 0 ? "All" : `${r}★+`}
-                  </button>
-                ))}
+            {/* Min Rating - only displayed when genuine approved ratings exist */}
+            {hasAnyRatings ? (
+              <div className="space-y-2">
+                <label className="text-xs font-extrabold text-ceylon-navy block">
+                  Minimum Rating
+                </label>
+                <div className="flex gap-2">
+                  {[0, 4.0, 4.5, 4.8].map((r) => (
+                    <button
+                      key={r}
+                      type="button"
+                      onClick={() => setFilters({ ...filters, minRating: r })}
+                      className={`flex-1 py-1.5 rounded-xl text-xs font-bold transition-colors ${
+                        filters.minRating === r
+                          ? "bg-ceylon-navy text-white"
+                          : "bg-slate-50 text-slate-600 hover:bg-slate-100"
+                      }`}
+                    >
+                      {r === 0 ? "All" : `${r}★+`}
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
+            ) : (
+              <div className="p-3 bg-slate-50 rounded-xl border border-slate-100 text-[11px] text-slate-500">
+                <span className="font-semibold text-slate-700 block mb-0.5">Verified Reviews</span>
+                Reviews are collected and verified directly from completed guest bookings.
+              </div>
+            )}
 
             {/* Toggle Flags */}
             <div className="space-y-2 pt-2 border-t border-slate-100">
@@ -392,6 +404,112 @@ function ToursPageContent() {
             </div>
           </div>
         </div>
+
+        {/* Mobile Filters Drawer */}
+        {mobileFiltersOpen && (
+          <div className="fixed inset-0 z-50 lg:hidden flex">
+            <div
+              className="fixed inset-0 bg-black/50 backdrop-blur-xs"
+              onClick={() => setMobileFiltersOpen(false)}
+            />
+            <div className="relative ml-auto w-full max-w-xs bg-white h-full shadow-2xl p-6 overflow-y-auto space-y-6">
+              <div className="flex items-center justify-between pb-4 border-b border-slate-100">
+                <span className="font-extrabold text-sm uppercase tracking-wider text-ceylon-navy flex items-center gap-1.5">
+                  <Filter className="w-4 h-4 text-ceylon-blue" />
+                  Filter Tours
+                </span>
+                <button
+                  onClick={() => setMobileFiltersOpen(false)}
+                  className="p-1 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* Destination */}
+              <div className="space-y-2">
+                <label className="text-xs font-extrabold text-ceylon-navy block">
+                  Destination
+                </label>
+                <select
+                  value={filters.destination}
+                  onChange={(e) => handleDestinationChange(e.target.value)}
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-ceylon-text focus:outline-none"
+                >
+                  {DESTINATION_OPTIONS.map((d) => (
+                    <option key={d.value} value={d.value}>
+                      {d.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Category */}
+              <div className="space-y-2">
+                <label className="text-xs font-extrabold text-ceylon-navy block">
+                  Experience Category
+                </label>
+                <div className="space-y-1.5">
+                  {CATEGORIES.map((cat) => (
+                    <label
+                      key={cat.value}
+                      className={`flex items-center justify-between p-2 rounded-xl text-xs font-medium cursor-pointer transition-colors ${
+                        filters.category === cat.value
+                          ? "bg-ceylon-softblue text-ceylon-blue font-bold"
+                          : "hover:bg-slate-50 text-slate-600"
+                      }`}
+                    >
+                      <span>{cat.label}</span>
+                      <input
+                        type="radio"
+                        name="category-mobile"
+                        checked={filters.category === cat.value}
+                        onChange={() => handleCategoryChange(cat.value)}
+                        className="hidden"
+                      />
+                      {filters.category === cat.value && (
+                        <CheckCircle2 className="w-3.5 h-3.5 text-ceylon-blue" />
+                      )}
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              {/* Max Price Slider */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between text-xs font-extrabold text-ceylon-navy">
+                  <span>Max Price</span>
+                  <span className="text-ceylon-blue">${filters.maxPrice} USD</span>
+                </div>
+                <input
+                  type="range"
+                  min="40"
+                  max="3500"
+                  step="50"
+                  value={filters.maxPrice}
+                  onChange={(e) => setFilters({ ...filters, maxPrice: Number(e.target.value) })}
+                  className="w-full accent-ceylon-blue cursor-pointer"
+                />
+              </div>
+
+              {/* Apply & Reset Buttons */}
+              <div className="pt-4 border-t border-slate-100 flex gap-2">
+                <button
+                  onClick={resetFilters}
+                  className="flex-1 py-2.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-600 hover:bg-slate-50"
+                >
+                  Reset
+                </button>
+                <button
+                  onClick={() => setMobileFiltersOpen(false)}
+                  className="flex-1 py-2.5 rounded-xl bg-ceylon-navy text-white text-xs font-bold hover:bg-ceylon-blue"
+                >
+                  Apply Filters
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Tour Listing Grid */}
         <div className="lg:col-span-3">

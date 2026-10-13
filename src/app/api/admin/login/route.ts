@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
+import prisma from "@/lib/prisma";
 import {
-  verifyAdminCredentials,
+  authenticateAdmin,
   createAdminToken,
   checkLoginRateLimit,
   resetLoginAttempts,
@@ -30,9 +31,9 @@ export async function POST(req: Request) {
       );
     }
 
-    const isValid = verifyAdminCredentials(email, password);
+    const authResult = await authenticateAdmin(email, password);
 
-    if (!isValid) {
+    if (!authResult.success || !authResult.user) {
       return NextResponse.json(
         { error: "Invalid administrative credentials." },
         { status: 401 }
@@ -42,11 +43,26 @@ export async function POST(req: Request) {
     // Reset rate limits upon successful login
     resetLoginAttempts(ip);
 
-    const token = createAdminToken(email, "SUPER_ADMIN");
+    const { email: adminEmail, role, name } = authResult.user;
+    const token = createAdminToken(adminEmail, role, name);
+
+    // Audit log
+    try {
+      await prisma.auditLog.create({
+        data: {
+          adminEmail,
+          action: "ADMIN_LOGIN",
+          entityType: "AdminUser",
+          ipAddress: ip,
+          details: `Admin ${name} (${role}) signed in successfully`,
+        },
+      });
+    } catch (e) {}
 
     const response = NextResponse.json({
       success: true,
       message: "Admin authentication successful",
+      user: { email: adminEmail, role, name },
     });
 
     response.cookies.set({

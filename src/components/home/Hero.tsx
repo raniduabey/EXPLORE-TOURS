@@ -172,6 +172,7 @@ const SearchWidget: React.FC = () => {
           <input
             type="date"
             value={date}
+            min={new Date().toISOString().split("T")[0]}
             onChange={(e) => setDate(e.target.value)}
             className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-semibold text-ceylon-text focus:outline-none focus:border-ceylon-blue transition-colors"
           />
@@ -380,22 +381,6 @@ export const Hero: React.FC<{ onOpenCustomPlanner?: () => void }> = ({ onOpenCus
         </Float>
       </div>
 
-      <div className="hidden xl:block absolute right-16 top-48 z-20 pointer-events-none">
-        <Float duration={6} yOffset={12}>
-          <div className="bg-white/15 backdrop-blur-md border border-white/25 rounded-2xl p-3.5 shadow-2xl flex items-center gap-3 text-white">
-            <div className="flex text-amber-400">
-              <Star className="w-5 h-5 fill-current" />
-            </div>
-            <div>
-              <div className="text-[11px] font-extrabold text-amber-300">
-                4.98 / 5.0 Rating
-              </div>
-              <p className="text-[11px] text-slate-200">TripAdvisor & Google Reviews</p>
-            </div>
-          </div>
-        </Float>
-      </div>
-
       {/* Navigation Arrows */}
       <button
         type="button"
@@ -430,12 +415,8 @@ export const Hero: React.FC<{ onOpenCustomPlanner?: () => void }> = ({ onOpenCus
                 {slide.tagline}
               </span>
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white text-xs font-semibold">
-                <div className="flex text-amber-400">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-3 h-3 fill-current" />
-                  ))}
-                </div>
-                <span>4.9/5 Rated (15,000+ Travellers)</span>
+                <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+                <span>Certified Native Guides & Private Vehicles</span>
               </div>
             </div>
 

@@ -2,30 +2,49 @@ import { NextResponse } from "next/server";
 import { writeFile, mkdir } from "fs/promises";
 import path from "path";
 import { cookies } from "next/headers";
+import prisma from "@/lib/prisma";
 import { verifyAdminToken } from "@/lib/auth";
 
-export async function POST(req: Request) {
+export const dynamic = "force-dynamic";
+
+export async function GET() {
   try {
-    // 1. Authenticate admin
     const cookieStore = cookies();
     const token = cookieStore.get("ceylon_admin_token")?.value;
     const auth = verifyAdminToken(token || "");
 
     if (!auth.valid) {
-      return NextResponse.json(
-        { error: "Unauthorized: Administrator credentials required." },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    const assets = await prisma.mediaAsset.findMany({
+      orderBy: { createdAt: "desc" },
+    });
+
+    return NextResponse.json(assets);
+  } catch (error) {
+    console.error("GET /api/admin/upload error", error);
+    return NextResponse.json({ error: "Failed to fetch media assets" }, { status: 500 });
+  }
+}
+
+export async function POST(req: Request) {
+  try {
+    const cookieStore = cookies();
+    const token = cookieStore.get("ceylon_admin_token")?.value;
+    const auth = verifyAdminToken(token || "");
+
+    // Note: Allow review photo uploads if submitted from client review form or authenticated admin
     const formData = await req.formData();
     const file = formData.get("file") as File | null;
+    const altText = (formData.get("altText") as string) || "";
+    const title = (formData.get("title") as string) || "";
 
     if (!file) {
       return NextResponse.json({ error: "No file provided" }, { status: 400 });
     }
 
-    // 2. Validate MIME type
+    // Validate MIME type
     const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/avif"];
     if (!allowedTypes.includes(file.type)) {
       return NextResponse.json(
@@ -34,11 +53,11 @@ export async function POST(req: Request) {
       );
     }
 
-    // 3. Validate size (Max 5MB)
-    const maxSizeBytes = 5 * 1024 * 1024;
+    // Validate size (Max 8MB)
+    const maxSizeBytes = 8 * 1024 * 1024;
     if (file.size > maxSizeBytes) {
       return NextResponse.json(
-        { error: "File size exceeds maximum allowed limit of 5MB." },
+        { error: "File size exceeds maximum allowed limit of 8MB." },
         { status: 400 }
       );
     }
@@ -51,7 +70,7 @@ export async function POST(req: Request) {
       ? ext.toLowerCase()
       : ".jpg";
 
-    const filename = `upload-${Date.now()}-${Math.floor(Math.random() * 1000)}${safeExt}`;
+    const filename = `media-${Date.now()}-${Math.floor(Math.random() * 1000)}${safeExt}`;
     const uploadDir = path.join(process.cwd(), "public", "uploads");
 
     await mkdir(uploadDir, { recursive: true });
@@ -59,7 +78,24 @@ export async function POST(req: Request) {
     await writeFile(filepath, buffer);
 
     const url = `/uploads/${filename}`;
-    return NextResponse.json({ success: true, url });
+
+    // Track in database MediaAsset
+    try {
+      await prisma.mediaAsset.create({
+        data: {
+          url,
+          filename: file.name,
+          title: title || file.name,
+          altText: altText || "Ceylon Explore Tours Media Asset",
+          fileSize: file.size,
+          mimeType: file.type,
+        },
+      });
+    } catch (dbErr) {
+      console.error("Failed to track media asset in database", dbErr);
+    }
+
+    return NextResponse.json({ success: true, url, filename });
   } catch (error) {
     console.error("File upload error", error);
     return NextResponse.json(

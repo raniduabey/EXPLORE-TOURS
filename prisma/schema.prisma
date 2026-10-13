@@ -7,6 +7,29 @@ generator client {
   provider = "prisma-client-js"
 }
 
+model AdminUser {
+  id           String    @id @default(uuid())
+  email        String    @unique
+  passwordHash String
+  name         String
+  role         String    @default("SUPER_ADMIN") // SUPER_ADMIN, CONTENT_MANAGER, BOOKING_MANAGER
+  active       Boolean   @default(true)
+  lastLoginAt  DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model AuditLog {
+  id         String   @id @default(uuid())
+  adminEmail String
+  action     String
+  entityType String
+  entityId   String?
+  details    String?
+  ipAddress  String?
+  createdAt  DateTime @default(now())
+}
+
 model User {
   id        String    @id @default(uuid())
   email     String    @unique
@@ -20,66 +43,82 @@ model User {
 }
 
 model Destination {
-  id                 String  @id @default(uuid())
-  name               String  @unique
-  slug               String  @unique
+  id                 String   @id @default(uuid())
+  name               String   @unique
+  slug               String   @unique
   shortDesc          String
   longDesc           String
   image              String
-  experienceCount    Int     @default(0)
-  startingPrice      Float   @default(0)
+  experienceCount    Int      @default(0)
+  startingPrice      Float    @default(0)
   popularAttractions String
   bestTimeToVisit    String
-  featured           Boolean @default(false)
+  featured           Boolean  @default(false)
+  status             String   @default("PUBLISHED") // PUBLISHED, DRAFT, ARCHIVED
+  seoTitle           String?
+  seoDescription     String?
   tours              Tour[]
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @default(now()) @updatedAt
 }
 
 model Category {
-  id          String @id @default(uuid())
-  name        String @unique
-  slug        String @unique
+  id          String   @id @default(uuid())
+  name        String   @unique
+  slug        String   @unique
   icon        String
   description String
   image       String
   tours       Tour[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now()) @updatedAt
 }
 
 model Tour {
-  id               String          @id @default(uuid())
-  title            String
-  slug             String          @unique
-  location         String
-  destinationId    String?
-  destination      Destination?    @relation(fields: [destinationId], references: [id])
-  categoryId       String?
-  category         Category?       @relation(fields: [categoryId], references: [id])
-  duration         String
-  durationHours    Int             @default(8)
-  rating           Float           @default(4.9)
-  reviewCount      Int             @default(120)
-  bookedCount      Int             @default(450)
-  price            Float
-  previousPrice    Float?
-  tourType         String
-  badge            String?
-  freeCancellation Boolean         @default(true)
-  instantBook      Boolean         @default(true)
-  pickupAvailable  Boolean         @default(true)
-  guideIncluded    Boolean         @default(true)
-  liveGuide        String          @default("English")
-  description      String
-  highlights       String
-  includes         String
-  excludes         String
-  importantInfo    String?
-  whatToBring      String?
-  featured         Boolean         @default(false)
-  images           TourImage[]
-  itinerary        ItineraryItem[]
-  bookings         Booking[]
-  reviews          Review[]
-  createdAt        DateTime        @default(now())
-  updatedAt        DateTime        @updatedAt
+  id                 String          @id @default(uuid())
+  title              String
+  slug               String          @unique
+  location           String
+  destinationId      String?
+  destination        Destination?    @relation(fields: [destinationId], references: [id])
+  categoryId         String?
+  category           Category?       @relation(fields: [categoryId], references: [id])
+  duration           String
+  durationHours      Int             @default(8)
+  rating             Float           @default(0) // Computed dynamically from approved reviews
+  reviewCount        Int             @default(0) // Count of approved reviews
+  bookedCount        Int             @default(0)
+  price              Float
+  previousPrice      Float?
+  adultPrice         Float?
+  childPrice         Float?
+  tourType           String          @default("Private Tour")
+  badge              String?
+  freeCancellation   Boolean         @default(true)
+  instantBook        Boolean         @default(true)
+  pickupAvailable    Boolean         @default(true)
+  guideIncluded      Boolean         @default(true)
+  liveGuide          String          @default("English")
+  languages          String          @default("English")
+  minTravellers      Int             @default(1)
+  maxTravellers      Int             @default(15)
+  description        String
+  highlights         String
+  includes           String
+  excludes           String
+  importantInfo      String?
+  whatToBring        String?
+  cancellationPolicy String?
+  featured           Boolean         @default(false)
+  status             String          @default("PUBLISHED") // PUBLISHED, DRAFT, ARCHIVED
+  seoTitle           String?
+  seoDescription     String?
+  images             TourImage[]
+  itinerary          ItineraryItem[]
+  bookings           Booking[]
+  reviews            Review[]
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
 }
 
 model TourImage {
@@ -89,6 +128,7 @@ model TourImage {
   url       String
   caption   String?
   isPrimary Boolean @default(false)
+  order     Int     @default(0)
 }
 
 model ItineraryItem {
@@ -103,17 +143,17 @@ model ItineraryItem {
 }
 
 model Booking {
-  id              String   @id @default(uuid())
-  bookingRef      String   @unique
+  id              String             @id @default(uuid())
+  bookingRef      String             @unique
   userId          String?
-  user            User?    @relation(fields: [userId], references: [id])
+  user            User?              @relation(fields: [userId], references: [id])
   tourId          String
-  tour            Tour     @relation(fields: [tourId], references: [id])
+  tour            Tour               @relation(fields: [tourId], references: [id])
   tourDate        String
   tourTime        String
-  adults          Int      @default(1)
-  children        Int      @default(0)
-  infants         Int      @default(0)
+  adults          Int                @default(1)
+  children        Int                @default(0)
+  infants         Int                @default(0)
   guestName       String
   guestEmail      String
   guestPhone      String
@@ -121,20 +161,28 @@ model Booking {
   pickupLocation  String
   specialRequests String?
   totalAmount     Float
-  currency        String   @default("USD")
-  paymentMethod   String   @default("PayHere")
-  paymentStatus   String   @default("CONFIRMED")
-  bookingStatus   String   @default("CONFIRMED")
-  createdAt       DateTime @default(now())
+  currency        String             @default("USD")
+  paymentMethod   String             @default("PayHere")
+  paymentStatus   String             @default("PENDING") // UNPAID, PENDING, PAID, REFUNDED
+  bookingStatus   String             @default("PENDING") // PENDING, CONFIRMED, COMPLETED, CANCELLED
+  adminNotes      String?
+  reviews         Review[]
+  invitations     ReviewInvitation[]
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @default(now()) @updatedAt
 }
 
 model Review {
   id              String   @id @default(uuid())
   tourId          String
   tour            Tour     @relation(fields: [tourId], references: [id], onDelete: Cascade)
+  bookingId       String?
+  booking         Booking? @relation(fields: [bookingId], references: [id])
   userName        String
-  userCountry     String
+  userEmail       String?
+  userCountry     String   @default("International")
   userAvatar      String?
+  photoUrl        String?
   rating          Float
   guideRating     Float    @default(5.0)
   transportRating Float    @default(5.0)
@@ -142,7 +190,23 @@ model Review {
   comment         String
   travelDate      String
   verified        Boolean  @default(true)
+  status          String   @default("PENDING") // PENDING, APPROVED, REJECTED, HIDDEN
+  rejectionReason String?
   createdAt       DateTime @default(now())
+  updatedAt       DateTime @default(now()) @updatedAt
+}
+
+model ReviewInvitation {
+  id         String    @id @default(uuid())
+  token      String    @unique
+  bookingId  String
+  booking    Booking   @relation(fields: [bookingId], references: [id])
+  tourId     String
+  guestEmail String
+  guestName  String
+  expiresAt  DateTime
+  usedAt     DateTime?
+  createdAt  DateTime  @default(now())
 }
 
 model Coupon {
@@ -155,20 +219,27 @@ model Coupon {
   usageCount     Int       @default(0)
   active         Boolean   @default(true)
   expiresAt      DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @default(now()) @updatedAt
 }
 
 model BlogPost {
-  id          String   @id @default(uuid())
-  title       String
-  slug        String   @unique
-  excerpt     String
-  content     String
-  image       String
-  category    String
-  author      String
-  readTime    String   @default("5 min read")
-  featured    Boolean  @default(false)
-  publishedAt DateTime @default(now())
+  id             String   @id @default(uuid())
+  title          String
+  slug           String   @unique
+  excerpt        String
+  content        String
+  image          String
+  category       String
+  author         String
+  readTime       String   @default("5 min read")
+  featured       Boolean  @default(false)
+  status         String   @default("PUBLISHED") // PUBLISHED, DRAFT, ARCHIVED
+  seoTitle       String?
+  seoDescription String?
+  publishedAt    DateTime @default(now())
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @default(now()) @updatedAt
 }
 
 model CustomTripRequest {
@@ -186,8 +257,10 @@ model CustomTripRequest {
   destinations   String
   interests      String
   specialNotes   String?
-  status         String   @default("NEW")
+  status         String   @default("NEW") // NEW, CONTACTED, IN_PROGRESS, CLOSED
+  adminNotes     String?
   createdAt      DateTime @default(now())
+  updatedAt      DateTime @default(now()) @updatedAt
 }
 
 model HeroSlide {
@@ -204,4 +277,35 @@ model HeroSlide {
   orderIndex        Int      @default(0)
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
+}
+
+model FaqItem {
+  id         String   @id @default(uuid())
+  question   String
+  answer     String
+  category   String   @default("General")
+  orderIndex Int      @default(0)
+  active     Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model MediaAsset {
+  id        String   @id @default(uuid())
+  url       String
+  filename  String
+  title     String?
+  altText   String?
+  fileSize  Int?
+  mimeType  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+}
+
+model WebsiteContent {
+  id        String   @id @default(uuid())
+  key       String   @unique
+  value     String
+  category  String   @default("general")
+  updatedAt DateTime @updatedAt
 }

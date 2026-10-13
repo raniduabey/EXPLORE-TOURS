@@ -1,19 +1,45 @@
 import crypto from "crypto";
+import prisma from "@/lib/prisma";
 
 const JWT_SECRET =
   process.env.JWT_SECRET ||
   "ceylon-explore-tours-secure-session-key-change-in-production-2026";
-const ADMIN_EMAIL =
+const DEFAULT_ADMIN_EMAIL =
   process.env.ADMIN_EMAIL || "admin@ceylonexploretours.com";
-const ADMIN_PASSWORD =
+const DEFAULT_ADMIN_PASSWORD =
   process.env.ADMIN_PASSWORD || "Admin@CeylonTours2026!";
 
-// Login rate limiting state (per IP/identifier)
+// Secure Password Hashing with Salt + PBKDF2 (NIST Approved)
+export function hashPassword(password: string): string {
+  const salt = crypto.randomBytes(16).toString("hex");
+  const hash = crypto
+    .pbkdf2Sync(password, salt, 100000, 64, "sha512")
+    .toString("hex");
+  return `${salt}:${hash}`;
+}
+
+export function verifyPassword(password: string, storedHash: string): boolean {
+  if (!password || !storedHash) return false;
+  try {
+    const [salt, key] = storedHash.split(":");
+    if (!salt || !key) return false;
+    const keyBuffer = Buffer.from(key, "hex");
+    const derivedKey = crypto.pbkdf2Sync(password, salt, 100000, 64, "sha512");
+    return crypto.timingSafeEqual(keyBuffer, derivedKey);
+  } catch (err) {
+    return false;
+  }
+}
+
+// In-memory rate limiting state per IP/email
 const loginAttempts: Record<string, { count: number; firstAttempt: number }> = {};
 
-export function checkLoginRateLimit(identifier: string): { allowed: boolean; waitTimeMs?: number } {
+export function checkLoginRateLimit(identifier: string): {
+  allowed: boolean;
+  waitTimeMs?: number;
+} {
   const now = Date.now();
-  const windowMs = 15 * 60 * 1000; // 15 minutes
+  const windowMs = 15 * 60 * 1000; // 15 minutes window
   const maxAttempts = 5;
 
   const record = loginAttempts[identifier];
@@ -40,19 +66,79 @@ export function resetLoginAttempts(identifier: string) {
   delete loginAttempts[identifier];
 }
 
-export function verifyAdminCredentials(email: string, pass: string): boolean {
-  if (!email || !pass) return false;
+// Authenticate Admin (checks DB AdminUser, fallback to ENV default)
+export async function authenticateAdmin(
+  email: string,
+  pass: string
+): Promise<{ success: boolean; user?: { email: string; role: string; name: string } }> {
+  if (!email || !pass) return { success: false };
   const cleanEmail = email.trim().toLowerCase();
-  const expectedEmail = ADMIN_EMAIL.trim().toLowerCase();
-  return cleanEmail === expectedEmail && pass === ADMIN_PASSWORD;
+
+  try {
+    // 1. Check database for AdminUser
+    const dbAdmin = await prisma.adminUser.findUnique({
+      where: { email: cleanEmail },
+    });
+
+    if (dbAdmin && dbAdmin.active) {
+      const match = verifyPassword(pass, dbAdmin.passwordHash);
+      if (match) {
+        // Update last login
+        await prisma.adminUser.update({
+          where: { id: dbAdmin.id },
+          data: { lastLoginAt: new Date() },
+        });
+        return {
+          success: true,
+          user: { email: dbAdmin.email, role: dbAdmin.role, name: dbAdmin.name },
+        };
+      }
+    }
+  } catch (dbErr) {
+    console.error("Database admin check error", dbErr);
+  }
+
+  // 2. Fallback check against provisioned environment credentials
+  if (
+    cleanEmail === DEFAULT_ADMIN_EMAIL.trim().toLowerCase() &&
+    pass === DEFAULT_ADMIN_PASSWORD
+  ) {
+    return {
+      success: true,
+      user: {
+        email: DEFAULT_ADMIN_EMAIL,
+        role: "SUPER_ADMIN",
+        name: "Super Administrator",
+      },
+    };
+  }
+
+  return { success: false };
 }
 
-export function createAdminToken(email: string, role = "ADMIN"): string {
-  const header = Buffer.from(JSON.stringify({ alg: "HS256", typ: "JWT" })).toString("base64url");
+// Legacy helper for simple comparisons
+export function verifyAdminCredentials(email: string, pass: string): boolean {
+  if (!email || !pass) return false;
+  return (
+    email.trim().toLowerCase() === DEFAULT_ADMIN_EMAIL.trim().toLowerCase() &&
+    pass === DEFAULT_ADMIN_PASSWORD
+  );
+}
+
+// Admin Session Token Generation (JWT HS256)
+export function createAdminToken(
+  email: string,
+  role = "SUPER_ADMIN",
+  name = "Administrator"
+): string {
+  const header = Buffer.from(JSON.stringify({ alg: "HS256", typ: "JWT" })).toString(
+    "base64url"
+  );
   const payload = Buffer.from(
     JSON.stringify({
       sub: email,
       role,
+      name,
       iat: Math.floor(Date.now() / 1000),
       exp: Math.floor(Date.now() / 1000) + 24 * 60 * 60, // 24 hours
     })
@@ -66,7 +152,10 @@ export function createAdminToken(email: string, role = "ADMIN"): string {
   return `${header}.${payload}.${signature}`;
 }
 
-export function verifyAdminToken(token: string): { valid: boolean; payload?: any } {
+// Token Verification
+export function verifyAdminToken(
+  token: string
+): { valid: boolean; payload?: { sub: string; role: string; name?: string; exp?: number } } {
   try {
     if (!token) return { valid: false };
     const parts = token.split(".");
@@ -82,7 +171,9 @@ export function verifyAdminToken(token: string): { valid: boolean; payload?: any
       return { valid: false };
     }
 
-    const decoded = JSON.parse(Buffer.from(payload, "base64url").toString("utf-8"));
+    const decoded = JSON.parse(
+      Buffer.from(payload, "base64url").toString("utf-8")
+    );
     const now = Math.floor(Date.now() / 1000);
     if (decoded.exp && decoded.exp < now) {
       return { valid: false };
@@ -92,4 +183,14 @@ export function verifyAdminToken(token: string): { valid: boolean; payload?: any
   } catch (err) {
     return { valid: false };
   }
+}
+
+// Role Authorization Helper
+export function hasAdminRole(
+  userRole: string,
+  requiredRole: "SUPER_ADMIN" | "CONTENT_MANAGER" | "BOOKING_MANAGER"
+): boolean {
+  if (!userRole) return false;
+  if (userRole === "SUPER_ADMIN" || userRole === "ADMIN") return true;
+  return userRole === requiredRole;
 }

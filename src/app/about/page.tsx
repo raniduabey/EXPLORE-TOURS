@@ -7,11 +7,9 @@ import {
   ShieldCheck,
   Award,
   Users,
-  HeartHandshake,
   Compass,
   CheckCircle,
   ArrowRight,
-  MapPin,
   Sparkles,
 } from "lucide-react";
 
@@ -43,7 +41,7 @@ export default function AboutPage() {
       desc: "Upfront pricing with zero hidden fees. We believe in direct partnerships that empower local drivers, trackers, and rural hosts.",
     },
     {
-      icon: HeartHandshake,
+      icon: Compass,
       title: "Responsible Tourism",
       desc: "We prioritize ecological stewardship, ethical wildlife observation distances in national parks, and supporting village communities.",
     },
@@ -51,33 +49,6 @@ export default function AboutPage() {
       icon: Award,
       title: "Safety & Reliability",
       desc: "Modern air-conditioned vehicles, fully insured transport, 24/7 on-trip helpline, and seamless instant booking confirmation vouchers.",
-    },
-  ];
-
-  const team = [
-    {
-      name: "Nalaka Perera",
-      role: "Lead Naturalist & Cultural Historian",
-      location: "Sigiriya & Cultural Triangle",
-      bio: "14+ years sharing ancient fortress architecture and Buddhist temple heritage with international travellers.",
-      image:
-        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=400&auto=format&fit=crop",
-    },
-    {
-      name: "Chaminda Jayawardena",
-      role: "Highland & Wildlife Expedition Specialist",
-      location: "Ella & Yala",
-      bio: "Expert 4x4 safari tracker passionate about Sri Lankan leopard conservation and mountain railway history.",
-      image:
-        "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=400&auto=format&fit=crop",
-    },
-    {
-      name: "Dinithi Silva",
-      role: "Guest Experience & Custom Trip Planner",
-      location: "Colombo Headquarters",
-      bio: "Dedicated to designing personalized island itineraries that balance must-see landmarks with hidden gems.",
-      image:
-        "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=400&auto=format&fit=crop",
     },
   ];
 
@@ -215,57 +186,7 @@ export default function AboutPage() {
         </div>
       </div>
 
-      {/* Meet the Team */}
-      <div className="space-y-8">
-        <div className="text-center max-w-2xl mx-auto space-y-2">
-          <span className="text-xs font-bold text-ceylon-green uppercase tracking-widest block">
-            Local Specialists
-          </span>
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-ceylon-navy tracking-tight">
-            Meet Our Travel Team
-          </h2>
-          <p className="text-xs sm:text-sm text-ceylon-muted">
-            The passionate explorers behind your Sri Lankan memories.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {team.map((member, idx) => (
-            <div
-              key={idx}
-              className="bg-white rounded-2xl overflow-hidden border border-slate-200/80 shadow-card hover:shadow-card-hover transition-all duration-300 flex flex-col"
-            >
-              <div className="relative h-60 w-full bg-slate-100">
-                <Image
-                  src={member.image}
-                  alt={member.name}
-                  fill
-                  className="object-cover"
-                />
-              </div>
-              <div className="p-6 space-y-2 flex-grow flex flex-col justify-between">
-                <div>
-                  <h3 className="text-base font-extrabold text-ceylon-navy">
-                    {member.name}
-                  </h3>
-                  <span className="text-xs font-bold text-ceylon-blue block">
-                    {member.role}
-                  </span>
-                  <div className="flex items-center gap-1 text-[11px] text-ceylon-muted mt-1">
-                    <MapPin className="w-3 h-3 text-slate-400" />
-                    <span>{member.location}</span>
-                  </div>
-                  <p className="text-xs text-slate-600 mt-3 leading-relaxed">
-                    {member.bio}
-                  </p>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* CTA */}
+      {/* CTA Section */}
       <div className="bg-ceylon-softblue rounded-3xl p-8 sm:p-12 text-center space-y-4 border border-ceylon-blue/20">
         <h2 className="text-2xl sm:text-3xl font-extrabold text-ceylon-navy">
           Ready to Plan Your Sri Lanka Journey?

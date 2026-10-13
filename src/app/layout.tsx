@@ -2,7 +2,6 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { siteConfig } from "@/config/site";
 import { CurrencyProvider } from "@/context/CurrencyContext";
-import { WishlistProvider } from "@/context/WishlistContext";
 import { CartProvider } from "@/context/CartContext";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
@@ -128,17 +127,15 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
         />
         <CurrencyProvider>
-          <WishlistProvider>
-            <CartProvider>
-              <Header />
-              <main className="flex-grow pt-20">{children}</main>
-              <Footer />
-              <WhatsAppButton />
-              <StickyMobileCta />
-              <CookieConsent />
-              <AnalyticsScripts />
-            </CartProvider>
-          </WishlistProvider>
+          <CartProvider>
+            <Header />
+            <main className="flex-grow pt-20">{children}</main>
+            <Footer />
+            <WhatsAppButton />
+            <StickyMobileCta />
+            <CookieConsent />
+            <AnalyticsScripts />
+          </CartProvider>
         </CurrencyProvider>
       </body>
     </html>
