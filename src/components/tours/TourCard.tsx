@@ -29,7 +29,7 @@ const fallbackImages: Record<string, string> = {
   colombo: "https://images.unsplash.com/photo-1601050690597-df0568f70950?q=80&w=1000&auto=format&fit=crop",
   sigiriya: "https://images.unsplash.com/photo-1589182373726-e4f658ab50f0?q=80&w=1000&auto=format&fit=crop",
   ella: "https://images.unsplash.com/photo-1546708973-b339540b5162?q=80&w=1000&auto=format&fit=crop",
-  mirissa: "https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?q=80&w=1000&auto=format&fit=crop",
+  mirissa: "https://images.unsplash.com/photo-1580910527739-556eb89f9d65?q=80&w=1000&auto=format&fit=crop",
   yala: "https://images.unsplash.com/photo-1534567153574-2b12153a87f0?q=80&w=1000&auto=format&fit=crop",
 };
 

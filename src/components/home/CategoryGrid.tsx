@@ -40,14 +40,14 @@ export const CategoryGrid: React.FC = () => {
       desc: "Surfing, diving, snorkeling and blue whale cruises.",
       slug: "beaches",
       icon: Waves,
-      image: "https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?q=80&w=800&auto=format&fit=crop"
+      image: "https://images.unsplash.com/photo-1580910527739-556eb89f9d65?q=80&w=800&auto=format&fit=crop"
     },
     {
       title: "Food & Local Life",
       desc: "Authentic curry cooking classes, markets and village life.",
       slug: "food",
       icon: Utensils,
-      image: "https://images.unsplash.com/photo-1601050690597-df0568f70950?q=80&w=800&auto=format&fit=crop"
+      image: "https://images.unsplash.com/photo-1519566335946-e6f65f0f4fdf?q=80&w=800&auto=format&fit=crop"
     },
     {
       title: "Scenic Train Journeys",

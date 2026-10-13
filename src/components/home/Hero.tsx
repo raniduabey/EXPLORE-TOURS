@@ -47,7 +47,7 @@ const defaultSlides = [
     headlineLine1: "Sail with Blue Whales",
     headlineHighlight: "in Mirissa.",
     subtitle: "Witness the majestic giants of the ocean off southern palm-lined beaches with eco-certified marine guides.",
-    image: "https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?q=80&w=1600&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1580910527739-556eb89f9d65?q=80&w=1600&auto=format&fit=crop",
     destination: "Mirissa Ocean Bay",
     ctaText: "Ocean Cruises",
     ctaLink: "/tours?category=beaches"

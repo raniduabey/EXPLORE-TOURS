@@ -92,7 +92,7 @@ export const DESTINATIONS_CATALOG: DestinationData[] = [
     longDesc:
       "Mirissa is the jewel of Sri Lanka's southern shores. Renowned as one of the premier whale watching havens on Earth, Mirissa pairs exhilarating ocean wildlife cruises with laid-back beachside dining, snorkeling around coral reefs, and coconut tree hills overlooking sunset horizons.",
     image:
-      "https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?q=80&w=1200&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1580910527739-556eb89f9d65?q=80&w=1200&auto=format&fit=crop",
     experienceCount: 5,
     startingPrice: 75,
     popularAttractions:
@@ -109,7 +109,7 @@ export const DESTINATIONS_CATALOG: DestinationData[] = [
     longDesc:
       "Nestled in the shadows of Mount Pidurutalagala at 1,868 meters elevation, Nuwara Eliya is the heartland of world-renowned Ceylon tea. With Victorian post offices, manicured golf links, botanical gardens, and dramatic cascades like Ramboda Falls, it offers a refreshing highland retreat.",
     image:
-      "https://images.unsplash.com/photo-1576085898323-218337e3e43c?q=80&w=1200&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1586861635167-e5223aadc9fe?q=80&w=1200&auto=format&fit=crop",
     experienceCount: 4,
     startingPrice: 70,
     popularAttractions:
