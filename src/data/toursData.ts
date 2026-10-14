@@ -616,7 +616,7 @@ export const TOURS_CATALOG: TourData[] = [
     images: [
       {
         id: "img-mir-1",
-        url: "https://images.unsplash.com/photo-1580910527739-556eb89f9d65?q=80&w=1200&auto=format&fit=crop",
+        url: "https://images.unsplash.com/photo-1568430462989-44163eb1752f?q=80&w=1200&auto=format&fit=crop",
         caption: "Majestic Blue Whale fluke diving into deep waters off Mirissa",
         isPrimary: true,
       },
@@ -628,13 +628,13 @@ export const TOURS_CATALOG: TourData[] = [
       },
       {
         id: "img-mir-3",
-        url: "https://images.unsplash.com/photo-1519566335946-e6f65f0f4fdf?q=80&w=1200&auto=format&fit=crop",
+        url: "https://images.unsplash.com/photo-1580910527739-556eb89f9d65?q=80&w=1200&auto=format&fit=crop",
         caption: "Sunset viewpoint from iconic Coconut Tree Hill overlooking Mirissa Bay",
         isPrimary: false,
       },
       {
         id: "img-mir-4",
-        url: "https://images.unsplash.com/photo-1588598198321-9735fd52455b?q=80&w=1200&auto=format&fit=crop",
+        url: "https://images.unsplash.com/photo-1570042707311-667746487ff1?q=80&w=1200&auto=format&fit=crop",
         caption: "Pods of playful spinner dolphins leaping in the Indian Ocean",
         isPrimary: false,
       },
@@ -745,7 +745,7 @@ export const TOURS_CATALOG: TourData[] = [
       },
       {
         id: "img-nuw-2",
-        url: "https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=1200&auto=format&fit=crop",
+        url: "https://images.unsplash.com/photo-1625244724120-1fd1d34d00f6?q=80&w=1200&auto=format&fit=crop",
         caption: "Spectacular cascading double falls of Ramboda Waterfall (109m)",
         isPrimary: false,
       },
@@ -757,7 +757,7 @@ export const TOURS_CATALOG: TourData[] = [
       },
       {
         id: "img-nuw-4",
-        url: "https://images.unsplash.com/photo-1586861635167-e5223aadc9fe?q=80&w=1200&auto=format&fit=crop",
+        url: "https://images.unsplash.com/photo-1544735716-392fe2489ffa?q=80&w=1200&auto=format&fit=crop",
         caption: "Highland mountain pass panorama in central Sri Lanka",
         isPrimary: false,
       },
@@ -886,7 +886,7 @@ export const TOURS_CATALOG: TourData[] = [
       },
       {
         id: "img-6d-4",
-        url: "https://images.unsplash.com/photo-1588598198321-9735fd52455b?q=80&w=1200&auto=format&fit=crop",
+        url: "https://images.unsplash.com/photo-1580835239846-5bb9ce03c8c3?q=80&w=1200&auto=format&fit=crop",
         caption: "Galle Dutch Fort lighthouse and colonial ocean bastions",
         isPrimary: false,
       },
@@ -1457,7 +1457,7 @@ export const TOURS_CATALOG: TourData[] = [
       },
       {
         id: "img-21d-3",
-        url: "https://images.unsplash.com/photo-1567157577867-05ccb1388e66?q=80&w=1200&auto=format&fit=crop",
+        url: "https://images.unsplash.com/photo-1534567153574-2b12153a87f0?q=80&w=1200&auto=format&fit=crop",
         caption: "Wild Leopard prowling through Wilpattu National Park natural lakes",
         isPrimary: false,
       },

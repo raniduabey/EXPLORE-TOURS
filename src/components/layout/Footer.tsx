@@ -152,6 +152,11 @@ export const Footer: React.FC = () => {
                   Privacy & Cookie Policy
                 </Link>
               </li>
+              <li>
+                <Link href="/admin" className="hover:text-ceylon-green transition-colors text-slate-400">
+                  Admin Portal
+                </Link>
+              </li>
             </ul>
 
             <div className="mt-6 pt-4 border-t border-white/10">

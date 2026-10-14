@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
+import { revalidatePath } from "next/cache";
 import prisma from "@/lib/prisma";
 import { verifyAdminToken } from "@/lib/auth";
 
@@ -83,6 +84,12 @@ export async function POST(req: Request) {
       });
     } catch (e) {}
 
+    try {
+      revalidatePath("/destinations");
+      revalidatePath("/");
+      if (newDest.slug) revalidatePath(`/destinations/${newDest.slug}`);
+    } catch (e) {}
+
     return NextResponse.json({ success: true, destination: newDest });
   } catch (error) {
     console.error("Create destination error", error);
@@ -146,6 +153,12 @@ export async function PUT(req: Request) {
       });
     } catch (e) {}
 
+    try {
+      revalidatePath("/destinations");
+      revalidatePath("/");
+      if (updated.slug) revalidatePath(`/destinations/${updated.slug}`);
+    } catch (e) {}
+
     return NextResponse.json({ success: true, destination: updated });
   } catch (error) {
     console.error("Update destination admin error", error);
@@ -174,6 +187,12 @@ export async function DELETE(req: Request) {
       where: { id },
       data: { status: "ARCHIVED" },
     });
+
+    try {
+      revalidatePath("/destinations");
+      revalidatePath("/");
+      if (archived.slug) revalidatePath(`/destinations/${archived.slug}`);
+    } catch (e) {}
 
     return NextResponse.json({ success: true, destination: archived });
   } catch (error) {

@@ -33,7 +33,7 @@ export const CategoryGrid: React.FC = () => {
       desc: "Highland peak climbing, white water rafting and exploration.",
       slug: "adventure",
       icon: Mountain,
-      image: "https://images.unsplash.com/photo-1546708973-b339540b5162?q=80&w=800&auto=format&fit=crop"
+      image: "https://images.unsplash.com/photo-1734279135113-8bd58bc02b69?q=80&w=800&auto=format&fit=crop"
     },
     {
       title: "Beaches & Ocean",
@@ -47,7 +47,7 @@ export const CategoryGrid: React.FC = () => {
       desc: "Authentic curry cooking classes, markets and village life.",
       slug: "food",
       icon: Utensils,
-      image: "https://images.unsplash.com/photo-1519566335946-e6f65f0f4fdf?q=80&w=800&auto=format&fit=crop"
+      image: "https://images.unsplash.com/photo-1626777552726-4a6b54c97e46?q=80&w=800&auto=format&fit=crop"
     },
     {
       title: "Scenic Train Journeys",

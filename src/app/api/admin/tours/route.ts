@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
+import { revalidatePath } from "next/cache";
 import prisma from "@/lib/prisma";
 import { verifyAdminToken } from "@/lib/auth";
 
@@ -232,6 +233,14 @@ export async function POST(req: Request) {
       });
     } catch (e) {}
 
+    try {
+      revalidatePath("/tours");
+      revalidatePath("/");
+      if (newTour.slug) {
+        revalidatePath(`/tours/${newTour.slug}`);
+      }
+    } catch (e) {}
+
     return NextResponse.json({ success: true, tour: newTour });
   } catch (error) {
     console.error("POST /api/admin/tours error", error);
@@ -431,6 +440,14 @@ export async function PUT(req: Request) {
       });
     } catch (e) {}
 
+    try {
+      revalidatePath("/tours");
+      revalidatePath("/");
+      if (updated.slug) {
+        revalidatePath(`/tours/${updated.slug}`);
+      }
+    } catch (e) {}
+
     return NextResponse.json({ success: true, tour: updated });
   } catch (error) {
     console.error("PUT /api/admin/tours error", error);
@@ -473,6 +490,14 @@ export async function DELETE(req: Request) {
           details: `Archived tour: ${archived.title}`,
         },
       });
+    } catch (e) {}
+
+    try {
+      revalidatePath("/tours");
+      revalidatePath("/");
+      if (archived.slug) {
+        revalidatePath(`/tours/${archived.slug}`);
+      }
     } catch (e) {}
 
     return NextResponse.json({ success: true, tour: archived });

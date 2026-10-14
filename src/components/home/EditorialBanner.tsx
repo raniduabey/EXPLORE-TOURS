@@ -10,7 +10,7 @@ export const EditorialBanner: React.FC = () => {
     <section className="relative my-16 mx-4 sm:mx-6 lg:mx-8 max-w-7xl lg:mx-auto rounded-3xl overflow-hidden shadow-2xl">
       <div className="relative min-h-[460px] flex items-center justify-center p-8 sm:p-12 lg:p-16 text-center">
         <Image
-          src="https://images.unsplash.com/photo-1588668214407-6ea9a6d8c272?q=80&w=2000&auto=format&fit=crop"
+          src="https://images.unsplash.com/photo-1546708973-b339540b5162?q=80&w=2000&auto=format&fit=crop"
           alt="Nine Arch Bridge Ella Train"
           fill
           className="object-cover"

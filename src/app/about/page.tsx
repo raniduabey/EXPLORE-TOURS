@@ -107,8 +107,8 @@ export default function AboutPage() {
         <div className="relative">
           <div className="relative h-96 sm:h-[450px] rounded-3xl overflow-hidden shadow-2xl border border-slate-100">
             <Image
-              src="https://images.unsplash.com/photo-1588668214407-6ea9a6d8c272?q=80&w=1200&auto=format&fit=crop"
-              alt="Warm Sri Lankan Hospitality"
+              src="https://images.unsplash.com/photo-1586861635167-e5223aadc9fe?q=80&w=1200&auto=format&fit=crop"
+              alt="Warm Sri Lankan Hospitality and Guides"
               fill
               className="object-cover"
             />
