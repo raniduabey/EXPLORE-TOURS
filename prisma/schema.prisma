@@ -49,6 +49,8 @@ model Destination {
   shortDesc          String
   longDesc           String
   image              String
+  thumbnail          String?
+  gallery            String?
   experienceCount    Int      @default(0)
   startingPrice      Float    @default(0)
   popularAttractions String
@@ -270,6 +272,7 @@ model HeroSlide {
   headlineHighlight String
   subtitle          String
   image             String
+  mobileImage       String?
   destination       String
   ctaText           String
   ctaLink           String
@@ -298,6 +301,9 @@ model MediaAsset {
   altText   String?
   fileSize  Int?
   mimeType  String?
+  data      String?
+  width     Int?
+  height    Int?
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 }

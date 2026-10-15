@@ -35,7 +35,15 @@ import {
   Layers,
   ArrowRight,
   Building2,
-  PhoneCall
+  PhoneCall,
+  Smartphone,
+  Monitor,
+  ArrowUp,
+  ArrowDown,
+  Check,
+  RefreshCw,
+  MoveLeft,
+  MoveRight
 } from "lucide-react";
 import { formatCurrency } from "@/lib/currency";
 
@@ -92,6 +100,27 @@ export default function AdminDashboardPage() {
   const [rejectionReason, setRejectionReason] = useState("");
   const [selectedBookingForNotes, setSelectedBookingForNotes] = useState<any>(null);
 
+  // Media Management Sub-tabs & States
+  const [mediaSubTab, setMediaSubTab] = useState<"banners" | "tours" | "destinations" | "library">("banners");
+  const [selectedTourForMedia, setSelectedTourForMedia] = useState<string>("");
+  const [selectedDestForMedia, setSelectedDestForMedia] = useState<string>("");
+  const [mediaSearch, setMediaSearch] = useState<string>("");
+  const [mediaFilter, setMediaFilter] = useState<"ALL" | "IN_USE" | "UNUSED">("ALL");
+  const [previewSlide, setPreviewSlide] = useState<any | null>(null);
+  const [previewDevice, setPreviewDevice] = useState<"desktop" | "mobile">("desktop");
+  const [lightboxImage, setLightboxImage] = useState<string | null>(null);
+  const [editingAltId, setEditingAltId] = useState<string | null>(null);
+  const [editingAltValue, setEditingAltValue] = useState<string>("");
+
+  // Staged Upload State (Drag & Drop + Preview before publish)
+  const [stagedFile, setStagedFile] = useState<File | null>(null);
+  const [stagedPreviewUrl, setStagedPreviewUrl] = useState<string>("");
+  const [stagedAltText, setStagedAltText] = useState<string>("");
+  const [stagedTitle, setStagedTitle] = useState<string>("");
+  const [uploadError, setUploadError] = useState<string>("");
+  const [uploadSuccess, setUploadSuccess] = useState<string>("");
+  const [uploadProgress, setUploadProgress] = useState<number>(0);
+
   // Load all admin data
   async function loadAllData() {
     try {
@@ -103,7 +132,7 @@ export default function AdminDashboardPage() {
         fetch("/api/admin/destinations"),
         fetch("/api/admin/blog"),
         fetch("/api/admin/inquiries"),
-        fetch("/api/hero-slides"),
+        fetch("/api/hero-slides?all=true"),
         fetch("/api/admin/content?type=faqs"),
         fetch("/api/admin/upload"),
         fetch("/api/business-settings")
@@ -150,30 +179,239 @@ export default function AdminDashboardPage() {
     }
   };
 
-  // Image upload helper
-  const handleFileUpload = async (file: File, callback: (url: string) => void) => {
+  // Image upload helper with strict 8MB limit and clear technical reporting
+  const handleFileUpload = async (
+    file: File,
+    callback?: (url: string, asset?: any) => void,
+    meta?: { altText?: string; title?: string }
+  ) => {
+    const MAX_FILE_SIZE = 8 * 1024 * 1024; // 8 MB in exact bytes
+    if (file.size > MAX_FILE_SIZE) {
+      const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
+      const msg = `Image must be smaller than 8 MB. Selected file is ${sizeMB} MB.`;
+      setUploadError(msg);
+      alert(msg);
+      return null;
+    }
+
+    const allowed = ["image/jpeg", "image/png", "image/webp", "image/avif"];
+    if (file.type && !allowed.includes(file.type.toLowerCase())) {
+      const msg = `Unsupported format '${file.type}'. Please upload JPEG (.jpg, .jpeg), PNG (.png), WebP (.webp), or AVIF (.avif).`;
+      setUploadError(msg);
+      alert(msg);
+      return null;
+    }
+
     setUploading(true);
+    setUploadError("");
+    setUploadSuccess("");
+    setUploadProgress(20);
+
     try {
       const fd = new FormData();
       fd.append("file", file);
+      if (meta?.altText) fd.append("altText", meta.altText);
+      if (meta?.title) fd.append("title", meta.title);
+
+      setUploadProgress(50);
       const res = await fetch("/api/admin/upload", {
         method: "POST",
         body: fd,
       });
+
+      setUploadProgress(80);
+      const data = await res.json().catch(() => ({}));
+
+      if (res.ok && data.url) {
+        setUploadProgress(100);
+        setUploadSuccess("Photograph uploaded and published successfully.");
+        setStatusMsg("Photograph uploaded successfully.");
+        if (callback) callback(data.url, data);
+
+        // Refresh media library
+        const mRes = await fetch("/api/admin/upload");
+        if (mRes.ok) setMediaAssets(await mRes.json());
+        return data.url;
+      } else {
+        const errorMsg = data.error || `Upload failed with HTTP ${res.status}. Please check your connection.`;
+        setUploadError(errorMsg);
+        alert(errorMsg);
+        return null;
+      }
+    } catch (e: any) {
+      const netMsg = `Upload failed due to network error: ${e?.message || "Check your internet connection."}`;
+      setUploadError(netMsg);
+      alert(netMsg);
+      return null;
+    } finally {
+      setUploading(false);
+      setTimeout(() => setUploadProgress(0), 1000);
+    }
+  };
+
+  // Hero Slides Helpers
+  const handleSaveSlide = async (slideData: any) => {
+    try {
+      setUploading(true);
+      const isNew = !slideData.id;
+      const res = await fetch("/api/hero-slides", {
+        method: isNew ? "POST" : "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(slideData),
+      });
       if (res.ok) {
-        const data = await res.json();
-        callback(data.url);
-        setStatusMsg("Photograph uploaded successfully to media storage.");
-        // refresh media library
+        setStatusMsg(isNew ? "Hero banner slide created!" : "Hero banner slide updated!");
+        setEditingSlide(null);
+        const slRes = await fetch("/api/hero-slides?all=true");
+        if (slRes.ok) setSlides(await slRes.json());
+      } else {
+        const d = await res.json().catch(() => ({}));
+        alert(d.error || "Failed to save hero slide.");
+      }
+    } catch (e) {
+      alert("Error saving hero slide.");
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleToggleSlideActive = async (slide: any) => {
+    try {
+      const res = await fetch("/api/hero-slides", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: slide.id, active: !slide.active }),
+      });
+      if (res.ok) {
+        const slRes = await fetch("/api/hero-slides?all=true");
+        if (slRes.ok) setSlides(await slRes.json());
+      }
+    } catch (e) {}
+  };
+
+  const handleMoveSlide = async (index: number, direction: "up" | "down") => {
+    const targetIdx = direction === "up" ? index - 1 : index + 1;
+    if (targetIdx < 0 || targetIdx >= slides.length) return;
+
+    const newSlides = [...slides];
+    const temp = newSlides[index];
+    newSlides[index] = newSlides[targetIdx];
+    newSlides[targetIdx] = temp;
+
+    setSlides(newSlides);
+
+    try {
+      await fetch("/api/hero-slides", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newSlides.map((s, idx) => ({ id: s.id, orderIndex: idx }))),
+      });
+      const slRes = await fetch("/api/hero-slides?all=true");
+      if (slRes.ok) setSlides(await slRes.json());
+    } catch (e) {}
+  };
+
+  const handleDeleteSlide = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this hero banner slide?")) return;
+    try {
+      const res = await fetch(`/api/hero-slides?id=${id}`, { method: "DELETE" });
+      if (res.ok) {
+        setStatusMsg("Hero slide deleted.");
+        const slRes = await fetch("/api/hero-slides?all=true");
+        if (slRes.ok) setSlides(await slRes.json());
+      }
+    } catch (e) {
+      alert("Error deleting hero slide.");
+    }
+  };
+
+  // Tour Media Helpers
+  const handleSaveTourMedia = async (tourId: string, primaryImg: string, gallery: string[]) => {
+    try {
+      setUploading(true);
+      const res = await fetch("/api/admin/tours", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          id: tourId,
+          primaryImage: primaryImg,
+          galleryImages: gallery,
+        }),
+      });
+      if (res.ok) {
+        setStatusMsg("Tour photographs and gallery updated successfully!");
+        const tRes = await fetch("/api/admin/tours");
+        if (tRes.ok) setTours(await tRes.json());
+      } else {
+        const d = await res.json().catch(() => ({}));
+        alert(d.error || "Failed to update tour images.");
+      }
+    } catch (e) {
+      alert("Error saving tour photographs.");
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  // Destination Media Helpers
+  const handleSaveDestMedia = async (destId: string, image: string, thumbnail?: string) => {
+    try {
+      setUploading(true);
+      const res = await fetch("/api/admin/destinations", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          id: destId,
+          image,
+          thumbnail,
+        }),
+      });
+      if (res.ok) {
+        setStatusMsg("Destination photographs saved successfully!");
+        const dRes = await fetch("/api/admin/destinations");
+        if (dRes.ok) setDestinations(await dRes.json());
+      } else {
+        const d = await res.json().catch(() => ({}));
+        alert(d.error || "Failed to update destination media.");
+      }
+    } catch (e) {
+      alert("Error saving destination photographs.");
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  // Media Library Helpers
+  const handleSaveAltText = async (id: string, altText: string) => {
+    try {
+      const res = await fetch("/api/admin/upload", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, altText }),
+      });
+      if (res.ok) {
+        setEditingAltId(null);
+        setStatusMsg("Alt text updated for SEO.");
+        const mRes = await fetch("/api/admin/upload");
+        if (mRes.ok) setMediaAssets(await mRes.json());
+      }
+    } catch (e) {}
+  };
+
+  const handleDeleteMediaAsset = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this media asset?")) return;
+    try {
+      const res = await fetch(`/api/admin/upload?id=${id}`, { method: "DELETE" });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok) {
+        setStatusMsg("Media asset deleted safely.");
         const mRes = await fetch("/api/admin/upload");
         if (mRes.ok) setMediaAssets(await mRes.json());
       } else {
-        alert("Photograph upload failed. Ensure image is under 8MB (JPEG, PNG, WebP).");
+        alert(data.error || "Cannot delete media asset.");
       }
     } catch (e) {
-      alert("Error uploading photograph.");
-    } finally {
-      setUploading(false);
+      alert("Error deleting media asset.");
     }
   };
 
@@ -543,7 +781,7 @@ export default function AdminDashboardPage() {
           { id: "inquiries", label: "Inquiries & Leads", icon: MessageSquare },
           { id: "content", label: "FAQs & Website Content", icon: Globe },
           { id: "contact-settings", label: "Business & Contact Settings", icon: Building2 },
-          { id: "media", label: "Media Storage", icon: ImageIcon },
+          { id: "media", label: "Media Management", icon: ImageIcon },
         ].map((item) => {
           const Icon = item.icon;
           const isActive = tab === item.id;
@@ -1964,55 +2202,1207 @@ export default function AdminDashboardPage() {
       )}
 
       {/* ---------------------------------------------------- */}
-      {/* 9. MEDIA STORAGE TAB */}
+      {/* ---------------------------------------------------- */}
+      {/* 9. MEDIA MANAGEMENT TAB */}
       {/* ---------------------------------------------------- */}
       {tab === "media" && (
         <div className="space-y-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-lg font-extrabold text-ceylon-navy">Media Asset Library</h2>
-              <p className="text-xs text-ceylon-muted">Upload and retrieve optimized photographs for tour packages and destinations.</p>
+          {/* Media Header & Sub-navigation */}
+          <div className="bg-white rounded-3xl p-6 border border-slate-200/90 shadow-sm space-y-4">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div>
+                <h2 className="text-xl font-extrabold text-ceylon-navy flex items-center gap-2">
+                  <ImageIcon className="w-5 h-5 text-ceylon-blue" />
+                  <span>Website Media Management</span>
+                </h2>
+                <p className="text-xs text-ceylon-muted mt-1">
+                  Full control over homepage hero slides, mountain panoramas, tour package galleries, destination photos, and asset library.
+                </p>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-slate-500 font-bold">Total Assets: {mediaAssets.length}</span>
+              </div>
             </div>
-            <label className="px-4 py-2.5 bg-ceylon-blue hover:bg-ceylon-navy text-white text-xs font-extrabold rounded-xl shadow flex items-center gap-2 cursor-pointer">
-              <Upload className="w-4 h-4" />
-              <span>{uploading ? "Uploading..." : "Upload New Asset"}</span>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) handleFileUpload(file, () => {});
-                }}
-                className="hidden"
-                disabled={uploading}
-              />
-            </label>
+
+            {/* Sub-tab Navigation */}
+            <div className="flex flex-wrap gap-2 pt-2 border-t border-slate-100">
+              {[
+                { id: "banners", label: "Homepage Banners", icon: Monitor },
+                { id: "tours", label: "Tour Package Galleries", icon: Compass },
+                { id: "destinations", label: "Destination Media", icon: MapPin },
+                { id: "library", label: "Media Library & Upload", icon: ImageIcon },
+              ].map((sub) => {
+                const SubIcon = sub.icon;
+                const isCurrent = mediaSubTab === sub.id;
+                return (
+                  <button
+                    key={sub.id}
+                    onClick={() => setMediaSubTab(sub.id as any)}
+                    className={`px-4 py-2 rounded-xl text-xs font-extrabold flex items-center gap-2 transition-all ${
+                      isCurrent
+                        ? "bg-ceylon-navy text-white shadow-sm"
+                        : "bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200"
+                    }`}
+                  >
+                    <SubIcon className="w-3.5 h-3.5" />
+                    <span>{sub.label}</span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-            {mediaAssets.map((asset) => (
-              <div key={asset.id} className="bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm flex flex-col justify-between group">
-                <div className="relative h-28 w-full bg-slate-100">
-                  <Image src={asset.url} alt={asset.title || "Media asset"} fill className="object-cover" />
+          {/* ==================================================== */}
+          {/* SUB-TAB 1: HOMEPAGE BANNER MANAGEMENT */}
+          {/* ==================================================== */}
+          {mediaSubTab === "banners" && (
+            <div className="space-y-6">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white rounded-2xl p-5 border border-slate-200">
+                <div>
+                  <h3 className="text-base font-extrabold text-ceylon-navy">Homepage Hero Banner Slider</h3>
+                  <p className="text-xs text-ceylon-muted mt-0.5">
+                    Manage the large background imagery, mountain panoramas, headings, and call-to-actions. Recommended dimensions: 1920 × 1080 px (16:9).
+                  </p>
                 </div>
-                <div className="p-2.5 space-y-1">
-                  <span className="text-[10px] font-bold text-ceylon-navy block truncate" title={asset.filename}>
-                    {asset.filename}
-                  </span>
-                  <button
-                    onClick={() => {
-                      navigator.clipboard.writeText(asset.url);
-                      alert(`Copied URL:\n${asset.url}`);
-                    }}
-                    className="w-full py-1 bg-slate-50 hover:bg-ceylon-softblue text-[10px] font-extrabold text-ceylon-blue rounded border border-slate-200 flex items-center justify-center gap-1"
+                <button
+                  onClick={() => {
+                    setEditingSlide({
+                      tagline: "Explore. Connect. Remember.",
+                      headlineLine1: "Discover Sri Lanka",
+                      headlineHighlight: "Your Way",
+                      subtitle: "Authentic private day tours, wildlife safaris, and highland journeys curated by local travel experts.",
+                      image: "/images/destinations/sigiriya.jpg",
+                      mobileImage: "",
+                      destination: "Sigiriya Rock Citadel",
+                      ctaText: "Explore Tours",
+                      ctaLink: "/tours",
+                      active: true,
+                    });
+                  }}
+                  className="px-4 py-2.5 bg-ceylon-blue hover:bg-ceylon-navy text-white text-xs font-extrabold rounded-xl shadow flex items-center gap-1.5 transition-colors shrink-0"
+                >
+                  <Plus className="w-4 h-4" />
+                  <span>Add New Banner Slide</span>
+                </button>
+              </div>
+
+              {/* Banner Slides List */}
+              <div className="space-y-4">
+                {slides.map((s, idx) => (
+                  <div
+                    key={s.id || idx}
+                    className="bg-white rounded-3xl p-5 sm:p-6 border border-slate-200 shadow-sm flex flex-col lg:flex-row items-start lg:items-center gap-6"
                   >
-                    <Copy className="w-3 h-3" />
-                    <span>Copy URL</span>
+                    {/* Ordering Controls & Thumbnails */}
+                    <div className="flex items-center gap-4 shrink-0">
+                      <div className="flex flex-col items-center gap-1">
+                        <button
+                          disabled={idx === 0}
+                          onClick={() => handleMoveSlide(idx, "up")}
+                          className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 disabled:opacity-30 disabled:cursor-not-allowed"
+                          title="Move Slide Up"
+                        >
+                          <ArrowUp className="w-3.5 h-3.5" />
+                        </button>
+                        <span className="text-xs font-black text-slate-400">#{idx + 1}</span>
+                        <button
+                          disabled={idx === slides.length - 1}
+                          onClick={() => handleMoveSlide(idx, "down")}
+                          className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 disabled:opacity-30 disabled:cursor-not-allowed"
+                          title="Move Slide Down"
+                        >
+                          <ArrowDown className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+
+                      {/* Desktop Banner Thumbnail */}
+                      <div className="relative w-44 h-28 rounded-2xl overflow-hidden border border-slate-200 bg-slate-100 group">
+                        <Image src={s.image} alt={s.destination || "Hero banner"} fill className="object-cover" />
+                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1.5">
+                          <button
+                            onClick={() => setLightboxImage(s.image)}
+                            className="p-1.5 bg-white/90 text-ceylon-navy rounded-lg hover:bg-white text-xs font-bold"
+                            title="Zoom"
+                          >
+                            <Eye className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                        <span className="absolute bottom-1 left-1 px-1.5 py-0.5 rounded bg-black/60 text-[9px] text-white font-mono">
+                          Desktop
+                        </span>
+                      </div>
+
+                      {/* Mobile Banner Thumbnail if configured */}
+                      {s.mobileImage && (
+                        <div className="relative w-16 h-28 rounded-2xl overflow-hidden border border-slate-200 bg-slate-100 group shrink-0 hidden sm:block">
+                          <Image src={s.mobileImage} alt="Mobile banner" fill className="object-cover" />
+                          <span className="absolute bottom-1 left-1 px-1.5 py-0.5 rounded bg-black/60 text-[8px] text-white font-mono">
+                            Mobile
+                          </span>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Content Details */}
+                    <div className="flex-1 space-y-1.5 min-w-0">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800 text-[10px] font-extrabold uppercase border border-emerald-200">
+                          {s.destination || "Sri Lanka"}
+                        </span>
+                        <span
+                          className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase border ${
+                            s.active
+                              ? "bg-blue-50 text-blue-700 border-blue-200"
+                              : "bg-slate-100 text-slate-500 border-slate-200"
+                          }`}
+                        >
+                          {s.active ? "Active Slide" : "Disabled"}
+                        </span>
+                      </div>
+                      <h4 className="text-base font-extrabold text-ceylon-navy truncate">
+                        {s.headlineLine1} <span className="text-emerald-600">{s.headlineHighlight}</span>
+                      </h4>
+                      <p className="text-xs text-slate-500 line-clamp-1">{s.subtitle}</p>
+                      <div className="text-[11px] text-slate-400 font-mono truncate">
+                        Tagline: &quot;{s.tagline}&quot; • CTA: {s.ctaText} → {s.ctaLink}
+                      </div>
+                    </div>
+
+                    {/* Action Buttons */}
+                    <div className="flex flex-wrap lg:flex-col items-end gap-2 shrink-0 w-full lg:w-auto justify-end">
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => setPreviewSlide(s)}
+                          className="px-3 py-1.5 bg-slate-50 hover:bg-slate-100 text-ceylon-navy rounded-xl border border-slate-200 text-xs font-bold flex items-center gap-1"
+                        >
+                          <Eye className="w-3.5 h-3.5" />
+                          <span>Live Preview</span>
+                        </button>
+                        <button
+                          onClick={() => handleToggleSlideActive(s)}
+                          className={`px-3 py-1.5 rounded-xl border text-xs font-bold ${
+                            s.active
+                              ? "bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100"
+                              : "bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100"
+                          }`}
+                        >
+                          {s.active ? "Disable" : "Enable"}
+                        </button>
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                        {/* Quick Replace Desktop Banner Image */}
+                        <label className="px-3 py-1.5 bg-ceylon-blue/10 hover:bg-ceylon-blue/20 text-ceylon-blue rounded-xl text-xs font-bold cursor-pointer flex items-center gap-1">
+                          <Upload className="w-3.5 h-3.5" />
+                          <span>Replace Image</span>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={async (e) => {
+                              const file = e.target.files?.[0];
+                              if (file) {
+                                await handleFileUpload(file, async (url) => {
+                                  await handleSaveSlide({ ...s, image: url });
+                                });
+                              }
+                            }}
+                            className="hidden"
+                          />
+                        </label>
+
+                        <button
+                          onClick={() => setEditingSlide(s)}
+                          className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold flex items-center gap-1"
+                        >
+                          <Edit2 className="w-3.5 h-3.5" />
+                          <span>Edit</span>
+                        </button>
+
+                        <button
+                          onClick={() => handleDeleteSlide(s.id)}
+                          className="p-1.5 text-rose-500 hover:bg-rose-50 rounded-xl transition-colors"
+                          title="Delete Slide"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* ==================================================== */}
+          {/* SUB-TAB 2: TOUR PACKAGE GALLERIES */}
+          {/* ==================================================== */}
+          {mediaSubTab === "tours" && (
+            <div className="space-y-6">
+              <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-4">
+                <div>
+                  <h3 className="text-base font-extrabold text-ceylon-navy">Tour Package Image Management</h3>
+                  <p className="text-xs text-ceylon-muted mt-0.5">
+                    Select a tour package to replace cover photographs, upload multi-image galleries, and reorder photographs.
+                  </p>
+                </div>
+
+                {/* Tour Selector Dropdown */}
+                <div className="max-w-md">
+                  <label className="block text-xs font-bold text-ceylon-navy mb-1.5">Select Tour Package:</label>
+                  <select
+                    value={selectedTourForMedia || (tours[0]?.id || "")}
+                    onChange={(e) => setSelectedTourForMedia(e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-bold text-ceylon-navy"
+                  >
+                    {tours.map((t) => (
+                      <option key={t.id} value={t.id}>
+                        {t.title} ({t.duration} • ${t.price} USD)
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              {/* Selected Tour Image Editor */}
+              {(() => {
+                const tour = tours.find((t) => t.id === (selectedTourForMedia || tours[0]?.id));
+                if (!tour) return <div className="p-8 text-center text-xs text-slate-400">No tour package found.</div>;
+
+                const primaryImg = tour.images?.find((i: any) => i.isPrimary)?.url || tour.images?.[0]?.url || "";
+                const galleryList = (tour.images || [])
+                  .filter((i: any) => !i.isPrimary && i.url !== primaryImg)
+                  .map((i: any) => i.url);
+
+                return (
+                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    {/* Left 2 Cols: Image Controls */}
+                    <div className="lg:col-span-2 space-y-6">
+                      {/* Primary Cover Image Box */}
+                      <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-4">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <h4 className="text-xs font-extrabold uppercase tracking-wider text-ceylon-blue">
+                              1. Primary Cover Photograph
+                            </h4>
+                            <p className="text-xs text-slate-500">
+                              Appears as the main thumbnail in tour search listings and card headers.
+                            </p>
+                          </div>
+                          <label className="px-3.5 py-2 bg-ceylon-blue hover:bg-ceylon-navy text-white text-xs font-extrabold rounded-xl shadow flex items-center gap-1.5 cursor-pointer">
+                            <Upload className="w-3.5 h-3.5" />
+                            <span>Replace Cover</span>
+                            <input
+                              type="file"
+                              accept="image/*"
+                              onChange={async (e) => {
+                                const file = e.target.files?.[0];
+                                if (file) {
+                                  await handleFileUpload(file, async (url) => {
+                                    await handleSaveTourMedia(tour.id, url, galleryList);
+                                  });
+                                }
+                              }}
+                              className="hidden"
+                            />
+                          </label>
+                        </div>
+
+                        {primaryImg ? (
+                          <div className="relative h-64 w-full rounded-2xl overflow-hidden border border-slate-200 bg-slate-100 group">
+                            <Image src={primaryImg} alt={tour.title} fill className="object-cover" />
+                            <div className="absolute top-3 left-3 px-3 py-1 rounded-full bg-emerald-600 text-white text-xs font-bold shadow">
+                              Primary Cover
+                            </div>
+                            <div className="absolute bottom-3 left-3 right-3 p-2 bg-black/70 backdrop-blur-sm rounded-xl text-white text-xs font-mono truncate">
+                              {primaryImg}
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="h-48 rounded-2xl border-2 border-dashed border-slate-200 flex flex-col items-center justify-center text-slate-400 text-xs">
+                            <ImageIcon className="w-8 h-8 mb-2 opacity-50" />
+                            <span>No primary photograph uploaded yet</span>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Photo Gallery Grid */}
+                      <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-4">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <h4 className="text-xs font-extrabold uppercase tracking-wider text-ceylon-blue">
+                              2. Tour Photo Gallery ({galleryList.length} Photos)
+                            </h4>
+                            <p className="text-xs text-slate-500">
+                              Additional photographs displayed in the tour detail page gallery.
+                            </p>
+                          </div>
+                          <label className="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-extrabold rounded-xl shadow flex items-center gap-1.5 cursor-pointer">
+                            <Plus className="w-3.5 h-3.5" />
+                            <span>Add Photo to Gallery</span>
+                            <input
+                              type="file"
+                              accept="image/*"
+                              onChange={async (e) => {
+                                const file = e.target.files?.[0];
+                                if (file) {
+                                  await handleFileUpload(file, async (url) => {
+                                    const updated = [...galleryList, url];
+                                    await handleSaveTourMedia(tour.id, primaryImg, updated);
+                                  });
+                                }
+                              }}
+                              className="hidden"
+                            />
+                          </label>
+                        </div>
+
+                        {galleryList.length > 0 ? (
+                          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                            {galleryList.map((imgUrl: string, gIdx: number) => (
+                              <div
+                                key={gIdx}
+                                className="bg-slate-50 rounded-2xl p-2 border border-slate-200 flex flex-col gap-2 group"
+                              >
+                                <div className="relative h-28 w-full rounded-xl overflow-hidden bg-slate-200">
+                                  <Image src={imgUrl} alt={`Gallery ${gIdx}`} fill className="object-cover" />
+                                </div>
+                                <div className="flex items-center justify-between gap-1">
+                                  <button
+                                    onClick={async () => {
+                                      // Promote this image to primary
+                                      const newGallery = galleryList.filter((_, i) => i !== gIdx);
+                                      if (primaryImg) newGallery.unshift(primaryImg);
+                                      await handleSaveTourMedia(tour.id, imgUrl, newGallery);
+                                    }}
+                                    className="px-2 py-1 bg-white hover:bg-emerald-50 text-emerald-700 rounded text-[10px] font-extrabold border border-slate-200 flex-1 truncate"
+                                  >
+                                    Set Primary
+                                  </button>
+                                  <button
+                                    onClick={async () => {
+                                      const updated = galleryList.filter((_, i) => i !== gIdx);
+                                      await handleSaveTourMedia(tour.id, primaryImg, updated);
+                                    }}
+                                    className="p-1 text-rose-500 hover:bg-rose-50 rounded"
+                                    title="Remove photograph"
+                                  >
+                                    <Trash2 className="w-3.5 h-3.5" />
+                                  </button>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <div className="p-8 text-center border-2 border-dashed border-slate-200 rounded-2xl text-slate-400 text-xs">
+                            No additional gallery photographs added. Click &quot;Add Photo to Gallery&quot; to upload.
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Right Col: Public Tour Card Live Preview */}
+                    <div className="space-y-4">
+                      <div className="bg-white rounded-3xl p-5 border border-slate-200 shadow-sm space-y-4 sticky top-6">
+                        <h4 className="text-xs font-extrabold uppercase tracking-wider text-ceylon-navy flex items-center gap-1.5">
+                          <Eye className="w-4 h-4 text-ceylon-blue" />
+                          <span>Live Public Card Preview</span>
+                        </h4>
+
+                        {/* Public Card Mockup */}
+                        <div className="rounded-2xl border border-slate-200 overflow-hidden bg-white shadow-sm flex flex-col">
+                          <div className="relative h-44 w-full bg-slate-100">
+                            {primaryImg ? (
+                              <Image src={primaryImg} alt={tour.title} fill className="object-cover" />
+                            ) : (
+                              <div className="h-full flex items-center justify-center text-slate-400 text-xs">No Cover Image</div>
+                            )}
+                            {tour.badge && (
+                              <span className="absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded-full bg-amber-500 text-white text-[10px] font-black uppercase shadow">
+                                {tour.badge}
+                              </span>
+                            )}
+                            <div className="absolute bottom-2.5 right-2.5 px-2 py-0.5 rounded-lg bg-black/60 backdrop-blur-sm text-white text-[10px] font-bold">
+                              {tour.duration}
+                            </div>
+                          </div>
+                          <div className="p-4 space-y-2">
+                            <div className="text-[10px] font-extrabold uppercase text-ceylon-blue tracking-wider">
+                              {tour.destination?.name || tour.location}
+                            </div>
+                            <h5 className="text-sm font-extrabold text-ceylon-navy line-clamp-2">{tour.title}</h5>
+                            <div className="flex items-center justify-between pt-2 border-t border-slate-100">
+                              <div>
+                                <span className="text-[10px] text-slate-400 block">From</span>
+                                <span className="text-sm font-black text-ceylon-navy">${tour.price} USD</span>
+                              </div>
+                              <span className="px-3 py-1.5 bg-ceylon-blue text-white rounded-xl text-xs font-bold">
+                                View Tour
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="p-3 rounded-2xl bg-slate-50 border border-slate-200 text-slate-500 text-[11px] space-y-1">
+                          <p className="font-bold text-ceylon-navy">Real-time Public Synchronization</p>
+                          <p>Changes saved here automatically update the tour details page and public search card.</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
+            </div>
+          )}
+
+          {/* ==================================================== */}
+          {/* SUB-TAB 3: DESTINATION IMAGE MANAGEMENT */}
+          {/* ==================================================== */}
+          {mediaSubTab === "destinations" && (
+            <div className="space-y-6">
+              <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-4">
+                <div>
+                  <h3 className="text-base font-extrabold text-ceylon-navy">Destination Photograph Management</h3>
+                  <p className="text-xs text-ceylon-muted mt-0.5">
+                    Update destination cover banners and thumbnail images without modifying database relations or routes.
+                  </p>
+                </div>
+
+                {/* Destination Selector Dropdown */}
+                <div className="max-w-md">
+                  <label className="block text-xs font-bold text-ceylon-navy mb-1.5">Select Destination:</label>
+                  <select
+                    value={selectedDestForMedia || (destinations[0]?.id || "")}
+                    onChange={(e) => setSelectedDestForMedia(e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-bold text-ceylon-navy"
+                  >
+                    {destinations.map((d) => (
+                      <option key={d.id} value={d.id}>
+                        {d.name} ({d.tours?.length || d._count?.tours || 0} tours)
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              {/* Selected Destination Image Editor */}
+              {(() => {
+                const dest = destinations.find((d) => d.id === (selectedDestForMedia || destinations[0]?.id));
+                if (!dest) return <div className="p-8 text-center text-xs text-slate-400">No destination found.</div>;
+
+                return (
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    {/* Destination Cover Banner Box */}
+                    <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-4">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h4 className="text-xs font-extrabold uppercase tracking-wider text-ceylon-blue">
+                            Hero Cover Banner
+                          </h4>
+                          <p className="text-xs text-slate-500">
+                            Large wide background image on /{dest.slug} page.
+                          </p>
+                        </div>
+                        <label className="px-3.5 py-2 bg-ceylon-blue hover:bg-ceylon-navy text-white text-xs font-extrabold rounded-xl shadow flex items-center gap-1.5 cursor-pointer">
+                          <Upload className="w-3.5 h-3.5" />
+                          <span>Replace Cover</span>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={async (e) => {
+                              const file = e.target.files?.[0];
+                              if (file) {
+                                await handleFileUpload(file, async (url) => {
+                                  await handleSaveDestMedia(dest.id, url, dest.thumbnail);
+                                });
+                              }
+                            }}
+                            className="hidden"
+                          />
+                        </label>
+                      </div>
+
+                      <div className="relative h-56 w-full rounded-2xl overflow-hidden border border-slate-200 bg-slate-100">
+                        {dest.image ? (
+                          <Image src={dest.image} alt={dest.name} fill className="object-cover" />
+                        ) : (
+                          <div className="h-full flex items-center justify-center text-slate-400 text-xs">No Cover Image</div>
+                        )}
+                        <div className="absolute bottom-2 left-2 right-2 p-2 bg-black/70 backdrop-blur-sm rounded-xl text-white text-[11px] font-mono truncate">
+                          {dest.image}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Destination Thumbnail Box */}
+                    <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-4">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h4 className="text-xs font-extrabold uppercase tracking-wider text-ceylon-blue">
+                            Destination Thumbnail
+                          </h4>
+                          <p className="text-xs text-slate-500">
+                            Square / card thumbnail used in search picker and destination catalog.
+                          </p>
+                        </div>
+                        <label className="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-extrabold rounded-xl shadow flex items-center gap-1.5 cursor-pointer">
+                          <Upload className="w-3.5 h-3.5" />
+                          <span>Replace Thumbnail</span>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={async (e) => {
+                              const file = e.target.files?.[0];
+                              if (file) {
+                                await handleFileUpload(file, async (url) => {
+                                  await handleSaveDestMedia(dest.id, dest.image, url);
+                                });
+                              }
+                            }}
+                            className="hidden"
+                          />
+                        </label>
+                      </div>
+
+                      <div className="relative h-56 w-full rounded-2xl overflow-hidden border border-slate-200 bg-slate-100">
+                        <Image src={dest.thumbnail || dest.image} alt={dest.name} fill className="object-cover" />
+                        <span className="absolute top-3 left-3 px-2.5 py-0.5 rounded-full bg-black/60 text-white text-[10px] font-bold">
+                          {dest.thumbnail ? "Dedicated Thumbnail" : "Falling back to Cover"}
+                        </span>
+                        <div className="absolute bottom-2 left-2 right-2 p-2 bg-black/70 backdrop-blur-sm rounded-xl text-white text-[11px] font-mono truncate">
+                          {dest.thumbnail || dest.image}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
+            </div>
+          )}
+
+          {/* ==================================================== */}
+          {/* SUB-TAB 4: REUSABLE MEDIA LIBRARY & UPLOAD */}
+          {/* ==================================================== */}
+          {mediaSubTab === "library" && (
+            <div className="space-y-6">
+              {/* Professional Drag & Drop Upload Zone */}
+              <div className="bg-white rounded-3xl p-6 sm:p-8 border-2 border-dashed border-slate-300 hover:border-ceylon-blue transition-colors shadow-sm space-y-4">
+                <div
+                  onDragOver={(e) => e.preventDefault()}
+                  onDrop={(e) => {
+                    e.preventDefault();
+                    const file = e.dataTransfer.files?.[0];
+                    if (file) {
+                      setStagedFile(file);
+                      setStagedPreviewUrl(URL.createObjectURL(file));
+                    }
+                  }}
+                  className="flex flex-col items-center justify-center text-center py-4 space-y-3 cursor-pointer"
+                >
+                  <div className="w-14 h-14 rounded-2xl bg-ceylon-softblue flex items-center justify-center text-ceylon-blue shadow-inner">
+                    <Upload className="w-7 h-7" />
+                  </div>
+                  <div>
+                    <h3 className="text-base font-extrabold text-ceylon-navy">
+                      Drag & Drop Website Image Here or Click to Browse
+                    </h3>
+                    <p className="text-xs text-slate-500 mt-1">
+                      Max file size: <span className="font-bold text-ceylon-navy">8 MB</span>. Supported formats: JPEG (.jpg, .jpeg), PNG (.png), WebP (.webp), AVIF (.avif).
+                    </p>
+                  </div>
+
+                  <label className="px-5 py-2.5 bg-ceylon-blue hover:bg-ceylon-navy text-white text-xs font-extrabold rounded-xl shadow cursor-pointer transition-colors">
+                    <span>Browse Image Files</span>
+                    <input
+                      type="file"
+                      accept="image/jpeg,image/png,image/webp,image/avif"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          setStagedFile(file);
+                          setStagedPreviewUrl(URL.createObjectURL(file));
+                        }
+                      }}
+                      className="hidden"
+                    />
+                  </label>
+                </div>
+
+                {/* Staged File Preview Card before publishing */}
+                {stagedFile && (
+                  <div className="bg-slate-50 rounded-2xl p-4 border border-slate-200 space-y-3">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                      <div className="flex items-center gap-3">
+                        <div className="relative w-16 h-16 rounded-xl overflow-hidden bg-slate-200 border border-slate-300 shrink-0">
+                          {stagedPreviewUrl && (
+                            <Image src={stagedPreviewUrl} alt="Preview" fill className="object-cover" />
+                          )}
+                        </div>
+                        <div>
+                          <span className="text-xs font-extrabold text-ceylon-navy block truncate max-w-xs">
+                            {stagedFile.name}
+                          </span>
+                          <span className="text-[11px] text-slate-500 block">
+                            Size: {(stagedFile.size / 1024).toFixed(1)} KB ({stagedFile.type || "image"})
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => {
+                            setStagedFile(null);
+                            setStagedPreviewUrl("");
+                          }}
+                          className="px-3 py-1.5 bg-white text-slate-600 rounded-xl text-xs font-bold border border-slate-200 hover:bg-slate-100"
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          disabled={uploading}
+                          onClick={async () => {
+                            if (stagedFile) {
+                              await handleFileUpload(stagedFile, () => {
+                                setStagedFile(null);
+                                setStagedPreviewUrl("");
+                                setStagedAltText("");
+                                setStagedTitle("");
+                              }, { altText: stagedAltText, title: stagedTitle });
+                            }
+                          }}
+                          className="px-4 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-extrabold shadow flex items-center gap-1.5 disabled:opacity-50"
+                        >
+                          <Save className="w-3.5 h-3.5" />
+                          <span>{uploading ? "Uploading..." : "Save & Publish to Library"}</span>
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* SEO Metadata Fields for Staged Upload */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-slate-200">
+                      <div>
+                        <label className="block text-[11px] font-bold text-slate-600 mb-1">
+                          Alt Text for SEO & Accessibility:
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="e.g. Scenic Sigiriya Rock Citadel in Sri Lanka"
+                          value={stagedAltText}
+                          onChange={(e) => setStagedAltText(e.target.value)}
+                          className="w-full bg-white border border-slate-200 rounded-xl px-3 py-1.5 text-xs text-slate-800"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[11px] font-bold text-slate-600 mb-1">
+                          Image Title / Caption:
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="e.g. Sigiriya Sunrise View"
+                          value={stagedTitle}
+                          onChange={(e) => setStagedTitle(e.target.value)}
+                          className="w-full bg-white border border-slate-200 rounded-xl px-3 py-1.5 text-xs text-slate-800"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Upload Progress Bar */}
+                    {uploading && (
+                      <div className="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
+                        <div
+                          className="bg-ceylon-blue h-full transition-all duration-300"
+                          style={{ width: `${uploadProgress}%` }}
+                        />
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* Upload Feedback Messages */}
+                {uploadSuccess && (
+                  <div className="p-3 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" />
+                    <span>{uploadSuccess}</span>
+                  </div>
+                )}
+                {uploadError && (
+                  <div className="p-3 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-xs font-bold flex items-center gap-2">
+                    <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+                    <span>{uploadError}</span>
+                  </div>
+                )}
+              </div>
+
+              {/* Media Library Filters & Search */}
+              <div className="bg-white rounded-3xl p-5 border border-slate-200 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div className="flex items-center gap-2 w-full sm:w-auto">
+                  {(["ALL", "IN_USE", "UNUSED"] as const).map((mode) => (
+                    <button
+                      key={mode}
+                      onClick={() => setMediaFilter(mode)}
+                      className={`px-3 py-1.5 rounded-xl text-xs font-extrabold transition-colors ${
+                        mediaFilter === mode
+                          ? "bg-ceylon-navy text-white shadow-sm"
+                          : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                      }`}
+                    >
+                      {mode === "ALL" && `All Images (${mediaAssets.length})`}
+                      {mode === "IN_USE" && `Active on Site (${mediaAssets.filter((a) => a.inUse).length})`}
+                      {mode === "UNUSED" && `Unused (${mediaAssets.filter((a) => !a.inUse).length})`}
+                    </button>
+                  ))}
+                </div>
+
+                <div className="relative w-full sm:w-72">
+                  <Search className="w-3.5 h-3.5 absolute left-3 top-3 text-slate-400" />
+                  <input
+                    type="text"
+                    placeholder="Search by filename, alt text..."
+                    value={mediaSearch}
+                    onChange={(e) => setMediaSearch(e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-8 pr-3 py-2 text-xs text-slate-800"
+                  />
+                </div>
+              </div>
+
+              {/* Media Assets Grid */}
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                {mediaAssets
+                  .filter((a) => {
+                    if (mediaFilter === "IN_USE") return a.inUse;
+                    if (mediaFilter === "UNUSED") return !a.inUse;
+                    return true;
+                  })
+                  .filter((a) => {
+                    if (!mediaSearch) return true;
+                    const q = mediaSearch.toLowerCase();
+                    return (
+                      (a.filename && a.filename.toLowerCase().includes(q)) ||
+                      (a.altText && a.altText.toLowerCase().includes(q)) ||
+                      (a.title && a.title.toLowerCase().includes(q))
+                    );
+                  })
+                  .map((asset) => (
+                    <div
+                      key={asset.id}
+                      className="bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm flex flex-col justify-between group hover:shadow-md transition-shadow"
+                    >
+                      {/* Image Thumbnail with zoom icon */}
+                      <div
+                        onClick={() => setLightboxImage(asset.url)}
+                        className="relative h-32 w-full bg-slate-100 cursor-pointer overflow-hidden"
+                      >
+                        <Image src={asset.url} alt={asset.altText || asset.title || "Media"} fill className="object-cover group-hover:scale-105 transition-transform duration-300" />
+                        <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white">
+                          <Eye className="w-5 h-5" />
+                        </div>
+                        {asset.inUse ? (
+                          <span className="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded bg-emerald-600/90 text-[8px] font-extrabold text-white uppercase shadow">
+                            Active
+                          </span>
+                        ) : (
+                          <span className="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded bg-slate-600/80 text-[8px] font-extrabold text-white uppercase shadow">
+                            Unused
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Info & Metadata */}
+                      <div className="p-3 space-y-2">
+                        <div>
+                          <span className="text-[11px] font-extrabold text-ceylon-navy block truncate" title={asset.filename}>
+                            {asset.filename}
+                          </span>
+                          <span className="text-[10px] text-slate-400 block">
+                            {asset.fileSize ? `${(asset.fileSize / 1024).toFixed(1)} KB` : "Standard"} • {asset.mimeType?.replace("image/", "").toUpperCase() || "JPG"}
+                          </span>
+                        </div>
+
+                        {/* Editable Alt Text for SEO */}
+                        {editingAltId === asset.id ? (
+                          <div className="space-y-1">
+                            <input
+                              type="text"
+                              value={editingAltValue}
+                              onChange={(e) => setEditingAltValue(e.target.value)}
+                              placeholder="SEO alt text..."
+                              className="w-full px-2 py-1 bg-white border border-ceylon-blue rounded text-[10px]"
+                            />
+                            <div className="flex gap-1">
+                              <button
+                                onClick={() => handleSaveAltText(asset.id, editingAltValue)}
+                                className="px-2 py-0.5 bg-emerald-600 text-white rounded text-[9px] font-bold"
+                              >
+                                Save Alt
+                              </button>
+                              <button
+                                onClick={() => setEditingAltId(null)}
+                                className="px-2 py-0.5 bg-slate-200 text-slate-700 rounded text-[9px]"
+                              >
+                                Cancel
+                              </button>
+                            </div>
+                          </div>
+                        ) : (
+                          <div
+                            onClick={() => {
+                              setEditingAltId(asset.id);
+                              setEditingAltValue(asset.altText || "");
+                            }}
+                            className="text-[10px] text-slate-500 bg-slate-50 hover:bg-slate-100 p-1.5 rounded cursor-pointer border border-slate-200/60 truncate"
+                            title="Click to edit alt text for SEO"
+                          >
+                            Alt: {asset.altText || <span className="text-slate-400 italic">Add alt text...</span>}
+                          </div>
+                        )}
+
+                        {/* Action Buttons */}
+                        <div className="flex items-center gap-1 pt-1">
+                          <button
+                            onClick={() => {
+                              navigator.clipboard.writeText(asset.url);
+                              alert(`Copied URL:\n${asset.url}`);
+                            }}
+                            className="flex-1 py-1 bg-slate-50 hover:bg-ceylon-softblue text-[10px] font-extrabold text-ceylon-blue rounded border border-slate-200 flex items-center justify-center gap-1"
+                            title="Copy URL"
+                          >
+                            <Copy className="w-3 h-3" />
+                            <span>Copy</span>
+                          </button>
+
+                          {/* Replace Image Button */}
+                          <label
+                            className="p-1 bg-slate-50 hover:bg-slate-100 text-slate-700 rounded border border-slate-200 cursor-pointer"
+                            title="Replace photograph"
+                          >
+                            <RefreshCw className="w-3 h-3" />
+                            <input
+                              type="file"
+                              accept="image/*"
+                              onChange={async (e) => {
+                                const file = e.target.files?.[0];
+                                if (file) {
+                                  await handleFileUpload(file, async (newUrl) => {
+                                    // Update existing record
+                                    await fetch("/api/admin/upload", {
+                                      method: "PUT",
+                                      headers: { "Content-Type": "application/json" },
+                                      body: JSON.stringify({ id: asset.id, title: file.name }),
+                                    });
+                                  });
+                                }
+                              }}
+                              className="hidden"
+                            />
+                          </label>
+
+                          {/* Delete Button */}
+                          <button
+                            onClick={() => handleDeleteMediaAsset(asset.id)}
+                            className="p-1 bg-slate-50 hover:bg-rose-50 text-rose-500 rounded border border-slate-200"
+                            title="Delete image safely"
+                          >
+                            <Trash2 className="w-3 h-3" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            </div>
+          )}
+
+          {/* ==================================================== */}
+          {/* SLIDE EDIT / CREATE MODAL */}
+          {/* ==================================================== */}
+          {editingSlide && (
+            <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+              <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl space-y-5">
+                <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                  <h3 className="text-base font-extrabold text-ceylon-navy">
+                    {editingSlide.id ? "Edit Homepage Banner Slide" : "Create New Banner Slide"}
+                  </h3>
+                  <button onClick={() => setEditingSlide(null)} className="text-slate-400 hover:text-slate-600 font-bold text-sm">
+                    ✕
+                  </button>
+                </div>
+
+                <div className="space-y-4">
+                  {/* Desktop Banner Image */}
+                  <div>
+                    <label className="block text-xs font-bold text-ceylon-navy mb-1">
+                      Desktop Banner Image URL (1920 × 1080 px recommended) *
+                    </label>
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        value={editingSlide.image || ""}
+                        onChange={(e) => setEditingSlide({ ...editingSlide, image: e.target.value })}
+                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-mono"
+                        required
+                      />
+                      <label className="px-3.5 py-2 bg-ceylon-blue hover:bg-ceylon-navy text-white text-xs font-bold rounded-xl cursor-pointer flex items-center gap-1 shrink-0">
+                        <Upload className="w-3.5 h-3.5" />
+                        <span>Upload</span>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={async (e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                              await handleFileUpload(file, (url) => setEditingSlide({ ...editingSlide, image: url }));
+                            }
+                          }}
+                          className="hidden"
+                        />
+                      </label>
+                    </div>
+                  </div>
+
+                  {/* Optional Mobile Banner Image */}
+                  <div>
+                    <label className="block text-xs font-bold text-ceylon-navy mb-1">
+                      Mobile Banner Image URL (Optional vertical image: 750 × 1100 px)
+                    </label>
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        placeholder="Leave empty to use desktop image on mobile"
+                        value={editingSlide.mobileImage || ""}
+                        onChange={(e) => setEditingSlide({ ...editingSlide, mobileImage: e.target.value })}
+                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-mono"
+                      />
+                      <label className="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl cursor-pointer flex items-center gap-1 shrink-0">
+                        <Upload className="w-3.5 h-3.5" />
+                        <span>Upload</span>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={async (e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                              await handleFileUpload(file, (url) => setEditingSlide({ ...editingSlide, mobileImage: url }));
+                            }
+                          }}
+                          className="hidden"
+                        />
+                      </label>
+                    </div>
+                  </div>
+
+                  {/* Tagline & Destination */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-bold text-ceylon-navy mb-1">Tagline</label>
+                      <input
+                        type="text"
+                        value={editingSlide.tagline || ""}
+                        onChange={(e) => setEditingSlide({ ...editingSlide, tagline: e.target.value })}
+                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-ceylon-navy mb-1">Destination Name</label>
+                      <input
+                        type="text"
+                        value={editingSlide.destination || ""}
+                        onChange={(e) => setEditingSlide({ ...editingSlide, destination: e.target.value })}
+                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Headline Line 1 & Highlight */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-bold text-ceylon-navy mb-1">Headline (First part)</label>
+                      <input
+                        type="text"
+                        value={editingSlide.headlineLine1 || ""}
+                        onChange={(e) => setEditingSlide({ ...editingSlide, headlineLine1: e.target.value })}
+                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-ceylon-navy mb-1">Headline Highlight (Emerald text)</label>
+                      <input
+                        type="text"
+                        value={editingSlide.headlineHighlight || ""}
+                        onChange={(e) => setEditingSlide({ ...editingSlide, headlineHighlight: e.target.value })}
+                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Subtitle */}
+                  <div>
+                    <label className="block text-xs font-bold text-ceylon-navy mb-1">Subtitle / Description</label>
+                    <textarea
+                      rows={2}
+                      value={editingSlide.subtitle || ""}
+                      onChange={(e) => setEditingSlide({ ...editingSlide, subtitle: e.target.value })}
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs"
+                    />
+                  </div>
+
+                  {/* CTA Text & Link */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-bold text-ceylon-navy mb-1">Button Label</label>
+                      <input
+                        type="text"
+                        value={editingSlide.ctaText || ""}
+                        onChange={(e) => setEditingSlide({ ...editingSlide, ctaText: e.target.value })}
+                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-ceylon-navy mb-1">Button Link</label>
+                      <input
+                        type="text"
+                        value={editingSlide.ctaLink || ""}
+                        onChange={(e) => setEditingSlide({ ...editingSlide, ctaLink: e.target.value })}
+                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Active Toggle */}
+                  <div className="flex items-center gap-2 pt-2">
+                    <input
+                      type="checkbox"
+                      id="slideActive"
+                      checked={editingSlide.active !== false}
+                      onChange={(e) => setEditingSlide({ ...editingSlide, active: e.target.checked })}
+                      className="w-4 h-4 rounded text-ceylon-blue"
+                    />
+                    <label htmlFor="slideActive" className="text-xs font-bold text-ceylon-navy cursor-pointer">
+                      Enable slide in live homepage hero slider
+                    </label>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
+                  <button
+                    type="button"
+                    onClick={() => setEditingSlide(null)}
+                    className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleSaveSlide(editingSlide)}
+                    className="px-5 py-2 bg-ceylon-blue hover:bg-ceylon-navy text-white text-xs font-extrabold rounded-xl shadow"
+                  >
+                    Save & Publish Slide
                   </button>
                 </div>
               </div>
-            ))}
-          </div>
+            </div>
+          )}
+
+          {/* ==================================================== */}
+          {/* LIVE HERO BANNER PREVIEW MODAL */}
+          {/* ==================================================== */}
+          {previewSlide && (
+            <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
+              <div className="bg-ceylon-navy rounded-3xl max-w-4xl w-full overflow-hidden shadow-2xl space-y-4 border border-white/20">
+                <div className="flex items-center justify-between p-4 bg-black/30 border-b border-white/10">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-black text-white uppercase tracking-wider">
+                      Live Hero Banner Overlay Mockup
+                    </span>
+                    <span className="px-2 py-0.5 rounded-full bg-white/10 text-slate-300 text-[10px]">
+                      {previewDevice.toUpperCase()}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => setPreviewDevice("desktop")}
+                      className={`px-3 py-1 rounded-lg text-xs font-bold flex items-center gap-1 ${
+                        previewDevice === "desktop" ? "bg-white text-ceylon-navy" : "text-white/70 hover:text-white"
+                      }`}
+                    >
+                      <Monitor className="w-3.5 h-3.5" />
+                      <span>Desktop</span>
+                    </button>
+                    <button
+                      onClick={() => setPreviewDevice("mobile")}
+                      className={`px-3 py-1 rounded-lg text-xs font-bold flex items-center gap-1 ${
+                        previewDevice === "mobile" ? "bg-white text-ceylon-navy" : "text-white/70 hover:text-white"
+                      }`}
+                    >
+                      <Smartphone className="w-3.5 h-3.5" />
+                      <span>Mobile</span>
+                    </button>
+                    <button onClick={() => setPreviewSlide(null)} className="text-white/70 hover:text-white ml-2">
+                      ✕
+                    </button>
+                  </div>
+                </div>
+
+                {/* Banner Simulation Box */}
+                <div className="p-6 flex justify-center">
+                  <div
+                    className={`relative rounded-2xl overflow-hidden shadow-2xl transition-all ${
+                      previewDevice === "desktop" ? "w-full h-[400px]" : "w-[320px] h-[480px]"
+                    }`}
+                  >
+                    {/* Background Image */}
+                    <Image
+                      src={previewDevice === "mobile" && previewSlide.mobileImage ? previewSlide.mobileImage : previewSlide.image}
+                      alt={previewSlide.destination}
+                      fill
+                      className="object-cover"
+                    />
+
+                    {/* Dark Ceylon Navy Gradient Overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-ceylon-navy/95 via-ceylon-navy/75 to-ceylon-navy/40" />
+
+                    {/* Text Overlay */}
+                    <div className="absolute inset-0 p-6 sm:p-10 flex flex-col justify-center space-y-3 text-white">
+                      <span className="px-3 py-1 rounded-full bg-white/10 border border-white/20 text-[10px] font-extrabold uppercase tracking-wider text-emerald-400 w-fit">
+                        {previewSlide.tagline}
+                      </span>
+                      <h2 className="text-2xl sm:text-4xl font-black leading-tight">
+                        {previewSlide.headlineLine1}{" "}
+                        <span className="text-emerald-400">{previewSlide.headlineHighlight}</span>
+                      </h2>
+                      <p className="text-xs sm:text-sm text-slate-200 max-w-lg line-clamp-2">
+                        {previewSlide.subtitle}
+                      </p>
+                      <div className="pt-2">
+                        <span className="px-5 py-2.5 bg-emerald-600 text-white rounded-xl text-xs font-black shadow-lg inline-block">
+                          {previewSlide.ctaText} →
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ==================================================== */}
+          {/* FULLSCREEN LIGHTBOX MODAL */}
+          {/* ==================================================== */}
+          {lightboxImage && (
+            <div
+              onClick={() => setLightboxImage(null)}
+              className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4 cursor-pointer"
+            >
+              <div className="relative max-w-5xl max-h-[85vh] w-full h-full flex items-center justify-center">
+                <Image src={lightboxImage} alt="Fullscreen preview" fill className="object-contain" />
+                <button
+                  onClick={() => setLightboxImage(null)}
+                  className="absolute top-2 right-2 px-3 py-1.5 bg-white/20 hover:bg-white/40 text-white rounded-xl text-xs font-bold"
+                >
+                  Close (ESC)
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       )}
 

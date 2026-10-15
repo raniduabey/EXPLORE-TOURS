@@ -1,15 +1,22 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
-export async function GET() {
+export const dynamic = "force-dynamic";
+
+export async function GET(req: Request) {
   try {
+    const { searchParams } = new URL(req.url);
+    const showAll = searchParams.get("all") === "true";
+
+    const where = showAll ? {} : { active: true };
     const slides = await prisma.heroSlide.findMany({
-      where: { active: true },
+      where,
       orderBy: { orderIndex: "asc" },
     });
+
     return NextResponse.json(slides, {
       headers: {
-        "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300",
+        "Cache-Control": showAll ? "no-store" : "public, s-maxage=60, stale-while-revalidate=300",
       },
     });
   } catch (error) {
@@ -20,30 +27,45 @@ export async function GET() {
 
 export async function POST(req: Request) {
   try {
+    const body = await req.json();
     const {
       tagline,
       headlineLine1,
       headlineHighlight,
       subtitle,
       image,
+      mobileImage,
       destination,
       ctaText,
       ctaLink,
-    } = await req.json();
+      orderIndex,
+      active,
+    } = body;
+
+    if (!image) {
+      return NextResponse.json({ error: "Image URL is required for hero slide." }, { status: 400 });
+    }
+
+    // Determine default orderIndex
+    let nextOrder = Number(orderIndex);
+    if (isNaN(nextOrder)) {
+      const count = await prisma.heroSlide.count();
+      nextOrder = count;
+    }
 
     const slide = await prisma.heroSlide.create({
       data: {
-        tagline: tagline || "Explore. Connect. Remember.",
+        tagline: tagline || "Discover Sri Lanka",
         headlineLine1: headlineLine1 || "Discover Sri Lanka",
         headlineHighlight: headlineHighlight || "Your Way",
-        subtitle: subtitle || "Unforgettable tours and authentic island experiences.",
-        image:
-          image ||
-          "/images/destinations/sigiriya.jpg",
+        subtitle: subtitle || "Unforgettable journeys and authentic island experiences.",
+        image,
+        mobileImage: mobileImage || null,
         destination: destination || "Sri Lanka",
         ctaText: ctaText || "Explore Tours",
         ctaLink: ctaLink || "/tours",
-        active: true,
+        active: active !== undefined ? Boolean(active) : true,
+        orderIndex: nextOrder,
       },
     });
 
@@ -56,6 +78,25 @@ export async function POST(req: Request) {
 
 export async function PUT(req: Request) {
   try {
+    const body = await req.json();
+
+    // Check if bulk reorder array
+    if (Array.isArray(body)) {
+      for (let i = 0; i < body.length; i++) {
+        const item = body[i];
+        if (item.id) {
+          await prisma.heroSlide.update({
+            where: { id: item.id },
+            data: { orderIndex: i },
+          });
+        }
+      }
+      const updatedList = await prisma.heroSlide.findMany({
+        orderBy: { orderIndex: "asc" },
+      });
+      return NextResponse.json(updatedList);
+    }
+
     const {
       id,
       tagline,
@@ -63,24 +104,32 @@ export async function PUT(req: Request) {
       headlineHighlight,
       subtitle,
       image,
+      mobileImage,
       destination,
       ctaText,
       ctaLink,
       active,
-    } = await req.json();
+      orderIndex,
+    } = body;
+
+    if (!id) {
+      return NextResponse.json({ error: "Slide ID is required" }, { status: 400 });
+    }
 
     const updated = await prisma.heroSlide.update({
       where: { id },
       data: {
-        tagline,
-        headlineLine1,
-        headlineHighlight,
-        subtitle,
-        image,
-        destination,
-        ctaText,
-        ctaLink,
-        active,
+        ...(tagline !== undefined && { tagline }),
+        ...(headlineLine1 !== undefined && { headlineLine1 }),
+        ...(headlineHighlight !== undefined && { headlineHighlight }),
+        ...(subtitle !== undefined && { subtitle }),
+        ...(image !== undefined && { image }),
+        ...(mobileImage !== undefined && { mobileImage: mobileImage || null }),
+        ...(destination !== undefined && { destination }),
+        ...(ctaText !== undefined && { ctaText }),
+        ...(ctaLink !== undefined && { ctaLink }),
+        ...(active !== undefined && { active: Boolean(active) }),
+        ...(orderIndex !== undefined && { orderIndex: Number(orderIndex) }),
       },
     });
 

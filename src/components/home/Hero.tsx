@@ -101,6 +101,7 @@ export const Hero: React.FC<{ onOpenCustomPlanner?: () => void }> = ({ onOpenCus
               idx === current ? "opacity-100" : "opacity-0 pointer-events-none"
             }`}
           >
+            {/* Desktop / Default Image */}
             <Image
               src={s.image}
               alt={s.destination || "Sri Lanka"}
@@ -109,9 +110,23 @@ export const Hero: React.FC<{ onOpenCustomPlanner?: () => void }> = ({ onOpenCus
               priority={idx === 0}
               quality={85}
               className={`object-cover object-center transition-transform duration-[7000ms] ease-out ${
-                idx === current ? "scale-105" : "scale-100"
-              }`}
+                s.mobileImage ? "hidden sm:block" : ""
+              } ${idx === current ? "scale-105" : "scale-100"}`}
             />
+            {/* Optional Mobile-Specific Banner Image */}
+            {s.mobileImage && (
+              <Image
+                src={s.mobileImage}
+                alt={s.destination || "Sri Lanka"}
+                fill
+                sizes="100vw"
+                priority={idx === 0}
+                quality={85}
+                className={`sm:hidden object-cover object-center transition-transform duration-[7000ms] ease-out ${
+                  idx === current ? "scale-105" : "scale-100"
+                }`}
+              />
+            )}
             <div className="absolute inset-0 bg-gradient-to-r from-ceylon-navy/95 via-ceylon-navy/75 to-ceylon-navy/40" />
           </div>
         ))}

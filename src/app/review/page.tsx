@@ -104,6 +104,13 @@ function ReviewFormContent() {
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
+    const MAX_FILE_SIZE = 8 * 1024 * 1024; // 8 MB limit
+    if (file.size > MAX_FILE_SIZE) {
+      alert("Image must be smaller than 8 MB.");
+      return;
+    }
+
     setUploading(true);
     try {
       const fd = new FormData();
@@ -112,14 +119,14 @@ function ReviewFormContent() {
         method: "POST",
         body: fd,
       });
-      if (res.ok) {
-        const data = await res.json();
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.url) {
         setPhotoUrl(data.url);
       } else {
-        alert("Photo upload failed. You may still submit your written review.");
+        alert(data.error || "Photo upload failed. You may still submit your written review.");
       }
-    } catch (e) {
-      alert("Error uploading photograph.");
+    } catch (e: any) {
+      alert(`Error uploading photograph: ${e?.message || "Please check connection."}`);
     } finally {
       setUploading(false);
     }
