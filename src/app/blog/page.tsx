@@ -15,7 +15,7 @@ const FALLBACK_POSTS = [
     author: "Nalaka Perera",
     readTime: "7 Min Read",
     publishedAt: new Date("2026-08-15"),
-    image: "https://images.unsplash.com/photo-1589182373726-e4f658ab50f0?q=80&w=1000&auto=format&fit=crop"
+    image: "/images/destinations/sigiriya.jpg"
   },
   {
     id: "post-2",
@@ -26,7 +26,7 @@ const FALLBACK_POSTS = [
     author: "Duminda Silva",
     readTime: "5 Min Read",
     publishedAt: new Date("2026-08-20"),
-    image: "https://images.unsplash.com/photo-1546708973-b339540b5162?q=80&w=1000&auto=format&fit=crop"
+    image: "/images/destinations/ella.jpg"
   },
   {
     id: "post-3",
@@ -37,7 +37,7 @@ const FALLBACK_POSTS = [
     author: "Pradeep Jayasuriya",
     readTime: "6 Min Read",
     publishedAt: new Date("2026-08-24"),
-    image: "https://images.unsplash.com/photo-1534567153574-2b12153a87f0?q=80&w=1000&auto=format&fit=crop"
+    image: "/images/destinations/yala.jpg"
   }
 ];
 

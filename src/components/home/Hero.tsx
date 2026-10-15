@@ -14,7 +14,7 @@ const defaultSlides = [
     headlineLine1: "Your Journey,",
     headlineHighlight: "Expertly Guided.",
     subtitle: "Discover ancient palaces, local village stories, and unforgettable island experiences with a Sri Lankan guide who cares.",
-    image: "https://images.unsplash.com/photo-1589182373726-e4f658ab50f0?q=80&w=1600&auto=format&fit=crop",
+    image: "/images/destinations/sigiriya.jpg",
     destination: "Sigiriya Rock Citadel",
     ctaText: "Explore Tours",
     ctaLink: "/tours?category=cultural"
@@ -25,7 +25,7 @@ const defaultSlides = [
     headlineLine1: "Ride the World’s Most",
     headlineHighlight: "Scenic Train.",
     subtitle: "Chug through emerald tea estates, mist-covered valleys, and iconic stone arch bridges deep in the Ella mountains.",
-    image: "https://images.unsplash.com/photo-1546708973-b339540b5162?q=80&w=1600&auto=format&fit=crop",
+    image: "/images/destinations/ella.jpg",
     destination: "Ella Nine Arch Bridge",
     ctaText: "Book Train Experience",
     ctaLink: "/tours"
@@ -36,7 +36,7 @@ const defaultSlides = [
     headlineLine1: "Track Leopards in",
     headlineHighlight: "Wild Yala.",
     subtitle: "Venture on customized open-top 4x4 safaris across coastal scrublands home to wild elephants, bears, and leopards.",
-    image: "https://images.unsplash.com/photo-1534567153574-2b12153a87f0?q=80&w=1600&auto=format&fit=crop",
+    image: "/images/destinations/yala.jpg",
     destination: "Yala National Park",
     ctaText: "Explore Safaris",
     ctaLink: "/tours?category=wildlife"
@@ -47,7 +47,7 @@ const defaultSlides = [
     headlineLine1: "Sail with Blue Whales",
     headlineHighlight: "in Mirissa.",
     subtitle: "Witness the majestic giants of the ocean off southern palm-lined beaches with eco-certified marine guides.",
-    image: "https://images.unsplash.com/photo-1568430462989-44163eb1752f?q=80&w=1600&auto=format&fit=crop",
+    image: "/images/destinations/mirissa.jpg",
     destination: "Mirissa Ocean Bay",
     ctaText: "Ocean Cruises",
     ctaLink: "/tours?category=beaches"

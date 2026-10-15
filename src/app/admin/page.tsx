@@ -178,7 +178,7 @@ export default function AdminDashboardPage() {
       excludes: ["Site entrance tickets", "Gratuities"],
       featured: false,
       status: "PUBLISHED",
-      primaryImage: "https://images.unsplash.com/photo-1589182373726-e4f658ab50f0?q=80&w=1200&auto=format&fit=crop",
+      primaryImage: "/images/destinations/sigiriya.jpg",
       galleryImages: [],
       itinerary: [
         { stepNumber: 1, title: "Morning Departure & Guided Tour", description: "Pickup from hotel and journey to destination.", location: "Central Province", duration: "4 Hours" }
@@ -668,7 +668,7 @@ export default function AdminDashboardPage() {
                       const primaryImg =
                         tour.images?.find((img: any) => img.isPrimary)?.url ||
                         tour.primaryImage ||
-                        "https://images.unsplash.com/photo-1589182373726-e4f658ab50f0?q=80&w=300&auto=format&fit=crop";
+                        "/images/destinations/sigiriya.jpg";
                       return (
                         <tr key={tour.id} className="hover:bg-slate-50/60 transition-colors">
                           <td className="py-3 px-4">
@@ -1436,7 +1436,7 @@ export default function AdminDashboardPage() {
                   slug: "",
                   shortDesc: "",
                   longDesc: "",
-                  image: "https://images.unsplash.com/photo-1589182373726-e4f658ab50f0?q=80&w=1200&auto=format&fit=crop",
+                  image: "/images/destinations/sigiriya.jpg",
                   startingPrice: 65,
                   popularAttractions: "",
                   bestTimeToVisit: "December to April",
@@ -1580,7 +1580,7 @@ export default function AdminDashboardPage() {
                   slug: "",
                   excerpt: "",
                   content: "",
-                  image: "https://images.unsplash.com/photo-1546708973-b339540b5162?q=80&w=1200&auto=format&fit=crop",
+                  image: "/images/destinations/ella.jpg",
                   category: "Travel Guides",
                   author: "Ceylon Explore Tours",
                   readTime: "5 min read",

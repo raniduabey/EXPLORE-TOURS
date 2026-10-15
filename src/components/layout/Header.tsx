@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { Globe, ChevronDown, ShoppingBag, User, X, Menu } from "lucide-react";
+import { Globe, ChevronDown, ShoppingBag, User, X, Menu, ShieldCheck } from "lucide-react";
 import { useCurrency } from "@/context/CurrencyContext";
 import { useCart } from "@/context/CartContext";
 import { currencies } from "@/lib/currency";
@@ -144,10 +144,20 @@ export const Header: React.FC = () => {
             {/* Account / My Booking */}
             <Link
               href="/account"
-              className="flex items-center gap-1.5 px-3.5 py-1.5 bg-ceylon-navy hover:bg-ceylon-blue text-white rounded-xl text-xs font-bold transition-colors shadow-sm"
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-ceylon-navy hover:bg-ceylon-blue text-white rounded-xl text-xs font-bold transition-colors shadow-sm"
             >
               <User className="w-3.5 h-3.5" />
               <span>My Booking</span>
+            </Link>
+
+            {/* Admin Portal Button */}
+            <Link
+              href="/admin"
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-ceylon-navy rounded-xl text-xs font-bold transition-colors border border-slate-200 shadow-sm"
+              title="Admin Portal"
+            >
+              <ShieldCheck className="w-3.5 h-3.5 text-ceylon-blue" />
+              <span>Admin</span>
             </Link>
           </div>
 
@@ -208,6 +218,14 @@ export const Header: React.FC = () => {
                 >
                   <User className="w-4 h-4 text-ceylon-blue" />
                   <span>My Booking / Vouchers</span>
+                </Link>
+                <Link
+                  href="/admin"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="text-xs font-bold px-3 py-2 rounded-xl bg-slate-100 text-ceylon-navy hover:bg-slate-200 flex items-center gap-2 border border-slate-200"
+                >
+                  <ShieldCheck className="w-4 h-4 text-ceylon-blue" />
+                  <span>Admin Dashboard</span>
                 </Link>
               </div>
 

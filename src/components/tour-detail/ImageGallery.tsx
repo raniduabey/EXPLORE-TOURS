@@ -24,7 +24,7 @@ export const ImageGallery: React.FC<ImageGalleryProps> = ({ images, title }) => 
       : [
           {
             id: "1",
-            url: "https://images.unsplash.com/photo-1589182373726-e4f658ab50f0?q=80&w=1200&auto=format&fit=crop",
+            url: "/images/destinations/sigiriya.jpg",
             caption: title,
           },
         ];

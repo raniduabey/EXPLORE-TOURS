@@ -160,7 +160,7 @@ export default async function TourDetailPage({
         instantBook: t.instantBook,
         primaryImage:
           t.images[0]?.url ||
-          "https://images.unsplash.com/photo-1589182373726-e4f658ab50f0?q=80&w=800&auto=format&fit=crop",
+          "/images/destinations/sigiriya.jpg",
       }));
     }
   } catch (e) {}
@@ -394,7 +394,7 @@ export default async function TourDetailPage({
               tourSlug={tour.slug}
               tourImage={
                 tour.images?.[0]?.url ||
-                "https://images.unsplash.com/photo-1589182373726-e4f658ab50f0?q=80&w=800&auto=format&fit=crop"
+                "/images/destinations/sigiriya.jpg"
               }
               location={tour.location}
               price={tour.price}

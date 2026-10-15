@@ -21,7 +21,7 @@ const defaultPosts: BlogPostItem[] = [
     title: "10 Essential Things to Know Before Climbing Sigiriya Lion Rock",
     slug: "ultimate-10-day-sri-lanka-itinerary",
     excerpt: "Everything about ticket prices, morning sunrise climbs, stairs, hornets, and camera gear advice.",
-    image: "https://images.unsplash.com/photo-1589182373726-e4f658ab50f0?q=80&w=800&auto=format&fit=crop",
+    image: "/images/destinations/sigiriya.jpg",
     category: "Travel Guide",
     readTime: "5 min read"
   },
@@ -30,7 +30,7 @@ const defaultPosts: BlogPostItem[] = [
     title: "How to Secure Scenic Train Tickets from Kandy to Ella",
     slug: "kandy-to-ella-train-guide",
     excerpt: "The ultimate guide to first, second, and third-class reserved seats on the iconic blue hill country railway.",
-    image: "https://images.unsplash.com/photo-1546708973-b339540b5162?q=80&w=800&auto=format&fit=crop",
+    image: "/images/destinations/ella.jpg",
     category: "Train Guide",
     readTime: "6 min read"
   },
@@ -39,7 +39,7 @@ const defaultPosts: BlogPostItem[] = [
     title: "The Best Time of Year for Wildlife Safaris in Yala & Udawalawe",
     slug: "yala-safari-leopard-guide",
     excerpt: "Seasonal wildlife migration, leopard sighting spots, waterhole activity, and choosing open-top 4x4 safaris.",
-    image: "https://images.unsplash.com/photo-1534567153574-2b12153a87f0?q=80&w=800&auto=format&fit=crop",
+    image: "/images/destinations/yala.jpg",
     category: "Wildlife",
     readTime: "4 min read"
   }

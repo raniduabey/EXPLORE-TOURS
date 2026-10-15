@@ -19,7 +19,7 @@ const defaultTours: TourCardData[] = [
     badge: "Bestseller Circuit",
     freeCancellation: true,
     instantBook: true,
-    primaryImage: "https://images.unsplash.com/photo-1546708973-b339540b5162?q=80&w=800&auto=format&fit=crop"
+    primaryImage: "/images/destinations/ella.jpg"
   },
   {
     id: "tour-sigiriya",
@@ -34,7 +34,7 @@ const defaultTours: TourCardData[] = [
     badge: "Bestseller",
     freeCancellation: true,
     instantBook: true,
-    primaryImage: "https://images.unsplash.com/photo-1589182373726-e4f658ab50f0?q=80&w=800&auto=format&fit=crop"
+    primaryImage: "/images/destinations/sigiriya.jpg"
   },
   {
     id: "tour-14day-grand",
@@ -49,7 +49,7 @@ const defaultTours: TourCardData[] = [
     badge: "Most Comprehensive",
     freeCancellation: true,
     instantBook: true,
-    primaryImage: "https://images.unsplash.com/photo-1567157577867-05ccb1388e66?q=80&w=800&auto=format&fit=crop"
+    primaryImage: "/images/destinations/anuradhapura.jpg"
   },
   {
     id: "tour-ella",
@@ -64,7 +64,7 @@ const defaultTours: TourCardData[] = [
     badge: "Popular Experience",
     freeCancellation: true,
     instantBook: true,
-    primaryImage: "https://images.unsplash.com/photo-1546708973-b339540b5162?q=80&w=800&auto=format&fit=crop"
+    primaryImage: "/images/destinations/ella.jpg"
   },
   {
     id: "tour-yala",
@@ -79,7 +79,7 @@ const defaultTours: TourCardData[] = [
     badge: "Top Wildlife",
     freeCancellation: true,
     instantBook: true,
-    primaryImage: "https://images.unsplash.com/photo-1534567153574-2b12153a87f0?q=80&w=800&auto=format&fit=crop"
+    primaryImage: "/images/destinations/yala.jpg"
   }
 ];
 

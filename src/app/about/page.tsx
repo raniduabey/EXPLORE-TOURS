@@ -107,8 +107,8 @@ export default function AboutPage() {
         <div className="relative">
           <div className="relative h-96 sm:h-[450px] rounded-3xl overflow-hidden shadow-2xl border border-slate-100">
             <Image
-              src="https://images.unsplash.com/photo-1586861635167-e5223aadc9fe?q=80&w=1200&auto=format&fit=crop"
-              alt="Warm Sri Lankan Hospitality and Guides"
+              src="/images/destinations/nuwara-eliya.jpg"
+              alt="Warm Sri Lankan Hospitality and Ceylon Highlands"
               fill
               className="object-cover"
             />
