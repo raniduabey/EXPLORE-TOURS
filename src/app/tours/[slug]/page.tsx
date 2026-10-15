@@ -243,73 +243,81 @@ export default async function TourDetailPage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <div className="min-h-screen py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-8">
+      <div className="min-h-screen py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-10">
         <div className="space-y-3">
-          <div className="flex items-center gap-2 text-xs text-ceylon-muted">
-            <span className="font-semibold text-ceylon-blue">
+          <div className="flex items-center gap-2 text-xs font-serif text-luxury-charcoal/60">
+            <span className="font-semibold text-luxury-forest">
               {tour.destination?.name || tour.location}
             </span>
             <span>/</span>
-            <span>{tour.category?.name || "Tours"}</span>
+            <span>{tour.category?.name || "Journeys"}</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-ceylon-navy tracking-tight leading-tight">
+          <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-normal text-luxury-forest tracking-tight leading-[1.1]">
             {tour.title}
           </h1>
           <div className="flex flex-wrap items-center gap-3 text-xs">
             {hasReviews && (
               <>
-                <div className="flex items-center text-amber-400">
+                <div className="flex items-center text-luxury-gold">
                   <Star className="w-4 h-4 fill-current" />
-                  <span className="font-extrabold text-ceylon-navy ml-1">
+                  <span className="font-serif font-bold text-luxury-forest ml-1">
                     {tour.rating.toFixed(1)}
                   </span>
-                  <span className="text-ceylon-muted ml-1">
+                  <span className="text-luxury-charcoal/60 font-sans ml-1 text-[11px]">
                     ({tour.reviewCount} verified {tour.reviewCount === 1 ? "review" : "reviews"})
                   </span>
                 </div>
-                <span className="text-slate-300">•</span>
+                <span className="text-luxury-sand">•</span>
               </>
             )}
-            <div className="flex items-center gap-1 text-emerald-700 font-bold bg-emerald-50 px-2.5 py-0.5 rounded-full">
-              <ShieldCheck className="w-3.5 h-3.5" />
-              <span>Verified Private Experience</span>
+            <div className="flex items-center gap-1 text-luxury-forest font-mono text-[10px] uppercase tracking-wider bg-luxury-sand/40 border border-luxury-sand px-3 py-1 rounded-full">
+              <ShieldCheck className="w-3.5 h-3.5 text-luxury-gold" />
+              <span>SLTDA Certified Chauffeur Tour</span>
             </div>
-            <span className="text-slate-300">•</span>
-            <span className="text-slate-500 font-medium">
-              100% Tailored Sri Lanka Itinerary
+            <span className="text-luxury-sand">•</span>
+            <span className="text-luxury-charcoal/70 font-sans text-xs">
+              100% Bespoke Private Journey
             </span>
           </div>
         </div>
 
         <ImageGallery images={tour.images || []} title={tour.title} />
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 p-4 rounded-2xl bg-white border border-slate-200/80 shadow-sm">
-          <div className="flex items-center gap-3">
-            <Clock className="w-5 h-5 text-ceylon-blue" />
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 p-5 rounded-3xl bg-[#FAF8F5] border border-luxury-sand/80 shadow-sm">
+          <div className="flex items-center gap-3.5">
+            <div className="w-10 h-10 rounded-2xl bg-white border border-luxury-sand flex items-center justify-center shrink-0">
+              <Clock className="w-5 h-5 text-luxury-gold" />
+            </div>
             <div>
-              <span className="text-[10px] text-slate-400 font-bold uppercase block">Duration</span>
-              <span className="text-xs font-bold text-ceylon-navy">{tour.duration}</span>
+              <span className="text-[10px] font-mono text-luxury-charcoal/50 uppercase tracking-wider block">Duration</span>
+              <span className="text-xs font-serif font-semibold text-luxury-forest">{tour.duration}</span>
             </div>
           </div>
-          <div className="flex items-center gap-3">
-            <Users className="w-5 h-5 text-ceylon-blue" />
+          <div className="flex items-center gap-3.5">
+            <div className="w-10 h-10 rounded-2xl bg-white border border-luxury-sand flex items-center justify-center shrink-0">
+              <Users className="w-5 h-5 text-luxury-gold" />
+            </div>
             <div>
-              <span className="text-[10px] text-slate-400 font-bold uppercase block">Tour Type</span>
-              <span className="text-xs font-bold text-ceylon-navy">{tour.tourType}</span>
+              <span className="text-[10px] font-mono text-luxury-charcoal/50 uppercase tracking-wider block">Journey Type</span>
+              <span className="text-xs font-serif font-semibold text-luxury-forest">{tour.tourType}</span>
             </div>
           </div>
-          <div className="flex items-center gap-3">
-            <Languages className="w-5 h-5 text-ceylon-blue" />
+          <div className="flex items-center gap-3.5">
+            <div className="w-10 h-10 rounded-2xl bg-white border border-luxury-sand flex items-center justify-center shrink-0">
+              <Languages className="w-5 h-5 text-luxury-gold" />
+            </div>
             <div>
-              <span className="text-[10px] text-slate-400 font-bold uppercase block">Live Guide</span>
-              <span className="text-xs font-bold text-ceylon-navy">{tour.liveGuide || "English"}</span>
+              <span className="text-[10px] font-mono text-luxury-charcoal/50 uppercase tracking-wider block">Chauffeur Guide</span>
+              <span className="text-xs font-serif font-semibold text-luxury-forest">{tour.liveGuide || "English (Native)"}</span>
             </div>
           </div>
-          <div className="flex items-center gap-3">
-            <CheckCircle className="w-5 h-5 text-ceylon-green" />
+          <div className="flex items-center gap-3.5">
+            <div className="w-10 h-10 rounded-2xl bg-white border border-luxury-sand flex items-center justify-center shrink-0">
+              <CheckCircle className="w-5 h-5 text-luxury-gold" />
+            </div>
             <div>
-              <span className="text-[10px] text-slate-400 font-bold uppercase block">Cancellation</span>
-              <span className="text-xs font-bold text-ceylon-green">Free up to 24h</span>
+              <span className="text-[10px] font-mono text-luxury-charcoal/50 uppercase tracking-wider block">Cancellation</span>
+              <span className="text-xs font-serif font-semibold text-luxury-forest">Free up to 24h</span>
             </div>
           </div>
         </div>
@@ -317,21 +325,24 @@ export default async function TourDetailPage({
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
           <div className="lg:col-span-2 space-y-10">
             <div className="space-y-4">
-              <h3 className="text-xl font-extrabold text-ceylon-navy tracking-tight">Overview</h3>
-              <p className="text-sm text-slate-700 leading-relaxed font-normal whitespace-pre-line">
+              <h3 className="font-serif text-2xl font-normal text-luxury-forest tracking-tight">Overview</h3>
+              <p className="text-sm sm:text-base text-luxury-charcoal/80 font-light leading-relaxed whitespace-pre-line">
                 {tour.description}
               </p>
             </div>
 
             {highlights.length > 0 && (
-              <div className="space-y-4 bg-ceylon-softblue/60 p-6 rounded-3xl border border-ceylon-blue/20">
-                <h3 className="text-lg font-extrabold text-ceylon-navy tracking-tight">
-                  Experience Highlights
+              <div className="space-y-4 bg-luxury-forest text-luxury-ivory p-7 sm:p-8 rounded-3xl border border-luxury-gold/30 shadow-xl">
+                <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-luxury-gold block">
+                  Curator&apos;s Highlights
+                </span>
+                <h3 className="font-serif text-xl sm:text-2xl font-normal tracking-wide text-luxury-ivory">
+                  Signature Experiences Included
                 </h3>
-                <ul className="space-y-2.5">
+                <ul className="space-y-3 pt-1">
                   {highlights.map((h, i) => (
-                    <li key={i} className="flex items-start gap-2.5 text-xs font-semibold text-ceylon-navy">
-                      <CheckCircle className="w-4 h-4 text-ceylon-green shrink-0 mt-0.5" />
+                    <li key={i} className="flex items-start gap-3 text-xs sm:text-sm font-light text-luxury-sand/90">
+                      <CheckCircle className="w-4 h-4 text-luxury-gold shrink-0 mt-0.5" />
                       <span>{h}</span>
                     </li>
                   ))}
@@ -342,9 +353,9 @@ export default async function TourDetailPage({
             <ItineraryTimeline items={tour.itinerary || []} />
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm space-y-3">
-                <h4 className="font-extrabold text-sm text-ceylon-navy flex items-center gap-1.5">
-                  <CheckCircle className="w-4 h-4 text-ceylon-green" />
+              <div className="bg-white p-6 rounded-3xl border border-luxury-sand/80 shadow-sm space-y-3">
+                <h4 className="font-serif text-base font-semibold text-luxury-forest flex items-center gap-2">
+                  <CheckCircle className="w-4 h-4 text-luxury-gold" />
                   What&apos;s Included
                 </h4>
                 <ul className="space-y-2 text-xs text-slate-600">

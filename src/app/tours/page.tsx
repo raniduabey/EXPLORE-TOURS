@@ -183,67 +183,68 @@ function ToursPageContent() {
   return (
     <div className="min-h-screen py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-8">
       {/* Banner */}
-      <div className="bg-ceylon-navy rounded-3xl p-8 sm:p-10 text-white relative overflow-hidden shadow-xl">
-        <div className="relative z-10 max-w-2xl space-y-3">
-          <span className="text-xs font-bold text-emerald-400 uppercase tracking-widest block">
-            Tour Discovery Marketplace
+      <div className="bg-luxury-forest rounded-3xl p-8 sm:p-12 text-luxury-ivory relative overflow-hidden shadow-2xl border border-luxury-gold/30">
+        <div className="absolute -right-16 -bottom-16 w-80 h-80 rounded-full bg-luxury-gold/10 blur-3xl pointer-events-none" />
+        <div className="relative z-10 max-w-3xl space-y-3">
+          <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-luxury-gold block">
+            Curated Island Portfolios
           </span>
-          <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
-            Sri Lanka Tours & Activities
+          <h1 className="font-serif text-3xl sm:text-5xl font-normal tracking-tight text-luxury-ivory">
+            Sri Lankan Journeys & Expeditions
           </h1>
-          <p className="text-xs sm:text-sm text-slate-300">
-            Book top-rated day trips, wildlife safaris, scenic mountain trains, and authentic cultural journeys led by licensed native guides.
+          <p className="text-sm sm:text-base text-luxury-sand/85 font-light leading-relaxed">
+            Private chauffeur circuits, wildlife safaris, scenic colonial rail journeys, and immersive heritage explorations crafted with Sri Lanka&apos;s foremost guides.
           </p>
         </div>
       </div>
 
       {/* Filter and Controls Header */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 bg-[#FAF8F5] p-4 sm:p-5 rounded-2xl border border-luxury-sand/80 shadow-sm">
         <div className="flex items-center gap-3">
-          <span className="text-xs font-extrabold text-ceylon-navy">
-            {filtered.length} {filtered.length === 1 ? "Experience" : "Experiences"} Found
+          <span className="font-serif text-sm font-semibold text-luxury-forest">
+            {filtered.length} {filtered.length === 1 ? "Curated Journey" : "Curated Journeys"} Available
           </span>
           <button
             onClick={() => setMobileFiltersOpen(!mobileFiltersOpen)}
-            className="lg:hidden flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 text-xs font-bold text-ceylon-navy"
+            className="lg:hidden flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white text-xs font-serif font-medium text-luxury-forest border border-luxury-sand"
           >
-            <SlidersHorizontal className="w-3.5 h-3.5" />
-            <span>Filters ({activeFilterCount})</span>
+            <SlidersHorizontal className="w-3.5 h-3.5 text-luxury-gold" />
+            <span>Refine ({activeFilterCount})</span>
           </button>
           {activeFilterCount > 0 && (
             <button
               onClick={resetFilters}
-              className="text-xs font-bold text-rose-600 hover:underline flex items-center gap-1"
+              className="text-xs font-serif font-semibold text-rose-700 hover:underline flex items-center gap-1"
             >
               <RotateCcw className="w-3 h-3" />
-              <span>Reset</span>
+              <span>Reset Filters</span>
             </button>
           )}
         </div>
 
         <div className="flex items-center gap-3 self-end sm:self-auto">
           {/* Sorting */}
-          <div className="flex items-center gap-1.5 text-xs text-ceylon-muted">
-            <ArrowUpDown className="w-3.5 h-3.5" />
+          <div className="flex items-center gap-2 text-xs text-luxury-charcoal/70">
+            <ArrowUpDown className="w-3.5 h-3.5 text-luxury-gold" />
             <select
               value={sort}
               onChange={(e) => setSort(e.target.value)}
-              className="bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-1.5 text-xs font-bold text-ceylon-navy focus:outline-none"
+              className="bg-white border border-luxury-sand/80 rounded-xl px-3 py-1.5 text-xs font-serif text-luxury-forest focus:outline-none focus:border-luxury-gold"
             >
-              <option value="recommended">Recommended</option>
-              <option value="top-rated">Highest Rated</option>
-              <option value="popular">Most Booked</option>
+              <option value="recommended">Curator&apos;s Recommendation</option>
+              <option value="top-rated">Highest Guest Rating</option>
+              <option value="popular">Most Traveled</option>
               <option value="price-low">Price: Low to High</option>
               <option value="price-high">Price: High to Low</option>
             </select>
           </div>
 
           {/* Grid / List View Toggle */}
-          <div className="hidden sm:flex items-center border border-slate-200 rounded-xl p-0.5 bg-slate-50">
+          <div className="hidden sm:flex items-center border border-luxury-sand/80 rounded-xl p-0.5 bg-white">
             <button
               onClick={() => setViewMode("grid")}
-              className={`p-1.5 rounded-lg ${
-                viewMode === "grid" ? "bg-white shadow text-ceylon-blue" : "text-slate-400"
+              className={`p-1.5 rounded-lg transition-colors ${
+                viewMode === "grid" ? "bg-luxury-gold/20 text-luxury-forest" : "text-luxury-charcoal/40"
               }`}
               title="Grid View"
             >
@@ -251,8 +252,8 @@ function ToursPageContent() {
             </button>
             <button
               onClick={() => setViewMode("list")}
-              className={`p-1.5 rounded-lg ${
-                viewMode === "list" ? "bg-white shadow text-ceylon-blue" : "text-slate-400"
+              className={`p-1.5 rounded-lg transition-colors ${
+                viewMode === "list" ? "bg-luxury-gold/20 text-luxury-forest" : "text-luxury-charcoal/40"
               }`}
               title="List View"
             >
@@ -265,16 +266,16 @@ function ToursPageContent() {
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
         {/* Desktop Sidebar Filters */}
         <div className="hidden lg:block space-y-6">
-          <div className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-sm space-y-6">
-            <div className="flex items-center justify-between pb-4 border-b border-slate-100">
-              <span className="font-extrabold text-xs uppercase tracking-wider text-ceylon-navy flex items-center gap-1.5">
-                <Filter className="w-4 h-4 text-ceylon-blue" />
-                Filter Tours
+          <div className="bg-white rounded-3xl p-6 sm:p-7 border border-luxury-sand/80 shadow-[0_10px_30px_rgba(16,45,36,0.06)] space-y-6">
+            <div className="flex items-center justify-between pb-4 border-b border-luxury-sand/70">
+              <span className="font-serif font-semibold text-xs uppercase tracking-widest text-luxury-forest flex items-center gap-2">
+                <Filter className="w-4 h-4 text-luxury-gold" />
+                Refine Itineraries
               </span>
               {activeFilterCount > 0 && (
                 <button
                   onClick={resetFilters}
-                  className="text-[11px] font-bold text-rose-600 hover:underline"
+                  className="text-[11px] font-serif font-medium text-rose-700 hover:underline"
                 >
                   Clear All
                 </button>

@@ -59,28 +59,28 @@ export const CategoryGrid: React.FC = () => {
   ];
 
   return (
-    <section className="py-16 px-4 sm:px-6 lg:px-8 bg-ceylon-softblue/50">
+    <section className="py-24 px-4 sm:px-6 lg:px-8 bg-[#FAF8F5] border-y border-luxury-sand/80">
       <div className="max-w-7xl mx-auto">
-        <FadeIn className="text-center max-w-2xl mx-auto mb-12">
-          <span className="text-xs font-bold text-ceylon-green uppercase tracking-wider block mb-1">
-            Find What You Love
-          </span>
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-ceylon-navy tracking-tight">
-            Browse by Experience Category
+        <FadeIn className="text-center max-w-2xl mx-auto mb-14">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-luxury-forest/5 text-luxury-gold text-[10px] font-mono uppercase tracking-[0.25em] border border-luxury-gold/30 mb-3">
+            <span>Specialized Travel Styles</span>
+          </div>
+          <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-normal text-luxury-forest tracking-tight">
+            Curated By Interest
           </h2>
-          <p className="text-sm text-ceylon-muted mt-2">
-            Tailor your Sri Lankan vacation around your unique passions and travel style.
+          <p className="text-sm sm:text-base text-luxury-charcoal/70 font-light mt-2 max-w-xl mx-auto leading-relaxed">
+            Tailor your Sri Lankan itinerary around your private passions, from ancient monastic trails to wild safari expeditions.
           </p>
         </FadeIn>
 
-        <FadeInStagger className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <FadeInStagger className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7">
           {categories.map((c) => {
             const Icon = c.icon;
             return (
               <FadeInStaggerItem key={c.slug}>
                 <Link
                   href={`/tours?category=${c.slug}`}
-                  className="group relative h-64 rounded-2xl overflow-hidden shadow-card hover:shadow-card-hover transition-all duration-300 transform hover:-translate-y-1 block"
+                  className="group relative h-72 rounded-3xl overflow-hidden shadow-[0_12px_30px_rgba(16,45,36,0.08)] hover:shadow-[0_20px_45px_rgba(16,45,36,0.15)] border border-luxury-sand/60 transition-all duration-500 transform hover:-translate-y-1.5 block"
                 >
                   <Image
                     src={c.image}
@@ -88,15 +88,17 @@ export const CategoryGrid: React.FC = () => {
                     fill
                     className="object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-ceylon-navy/95 via-ceylon-navy/40 to-transparent" />
-                  <div className="absolute top-4 left-4 w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center text-white">
-                    <Icon className="w-5 h-5" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-luxury-forest/95 via-luxury-forest/40 to-transparent" />
+                  <div className="absolute top-4 left-4 w-10 h-10 rounded-xl bg-luxury-forest/80 backdrop-blur-md border border-luxury-gold/30 flex items-center justify-center text-luxury-gold shadow-sm">
+                    <Icon className="w-4 h-4" />
                   </div>
-                  <div className="absolute bottom-0 left-0 right-0 p-5 text-white">
-                    <h3 className="text-lg font-bold tracking-tight text-white group-hover:text-emerald-300 transition-colors">
+                  <div className="absolute bottom-0 left-0 right-0 p-6 text-luxury-ivory">
+                    <h3 className="font-serif text-xl font-normal tracking-wide text-luxury-ivory group-hover:text-luxury-gold transition-colors">
                       {c.title}
                     </h3>
-                    <p className="text-xs text-slate-200 mt-1 line-clamp-2">{c.desc}</p>
+                    <p className="text-xs text-luxury-sand/85 font-light mt-1.5 line-clamp-2 leading-relaxed">
+                      {c.desc}
+                    </p>
                   </div>
                 </Link>
               </FadeInStaggerItem>

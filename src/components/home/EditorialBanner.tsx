@@ -7,32 +7,33 @@ import { FadeIn, ScaleIn } from "@/components/ui/motion";
 
 export const EditorialBanner: React.FC = () => {
   return (
-    <section className="relative my-16 mx-4 sm:mx-6 lg:mx-8 max-w-7xl lg:mx-auto rounded-3xl overflow-hidden shadow-2xl">
-      <div className="relative min-h-[460px] flex items-center justify-center p-8 sm:p-12 lg:p-16 text-center">
+    <section className="relative my-20 mx-4 sm:mx-6 lg:mx-8 max-w-7xl lg:mx-auto rounded-3xl overflow-hidden shadow-2xl border border-luxury-gold/30">
+      <div className="relative min-h-[480px] flex items-center justify-center p-8 sm:p-14 lg:p-20 text-center">
         <Image
           src="/images/destinations/ella.jpg"
-          alt="Nine Arch Bridge Ella Train"
+          alt="Nine Arch Bridge Ella Sri Lanka"
           fill
           className="object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-ceylon-navy/90 via-ceylon-navy/70 to-ceylon-navy/90" />
-        <FadeIn className="relative z-10 max-w-2xl mx-auto space-y-6 text-white">
-          <span className="text-xs font-extrabold uppercase tracking-widest text-emerald-400 block">
-            Featured Island Editorial
+        <div className="absolute inset-0 bg-gradient-to-r from-luxury-forest/95 via-luxury-forest/80 to-luxury-forest/95" />
+        <FadeIn className="relative z-10 max-w-2xl mx-auto space-y-6 text-luxury-ivory">
+          <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-luxury-gold block">
+            The Island of Serendipity
           </span>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-tight">
-            The Island Is Waiting.
+          <h2 className="font-serif text-3xl sm:text-5xl lg:text-6xl font-normal tracking-tight text-luxury-ivory leading-tight">
+            Your Island Story, <br />
+            <span className="italic text-luxury-gold">Beautifully Told.</span>
           </h2>
-          <p className="text-sm sm:base text-slate-200 leading-relaxed font-normal">
-            Ancient kingdoms. Wild elephants. Scenic train rides. Golden beaches. Discover hand-crafted experiences that turn a Sri Lankan holiday into a story worth remembering.
+          <p className="text-sm sm:text-base text-luxury-sand/90 leading-relaxed font-light max-w-xl mx-auto">
+            From misty cloud forests and ancient royal rock citadels to private naturalist safaris and secluded ocean sanctuaries. Handcrafted journeys that linger in memory forever.
           </p>
           <div className="pt-2">
             <Link
               href="/tours"
-              className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-extrabold text-sm text-ceylon-navy bg-white hover:bg-emerald-400 transition-all transform hover:-translate-y-0.5 shadow-lg group"
+              className="inline-flex items-center gap-2.5 px-9 py-4 rounded-full font-serif font-semibold text-xs uppercase tracking-[0.2em] text-luxury-forest bg-gradient-to-r from-[#DFBE82] via-[#C9A86A] to-[#A88647] hover:brightness-110 transition-all transform hover:-translate-y-0.5 shadow-xl group"
             >
-              <span>Explore All Tours & Packages</span>
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              <span>Explore All Curated Journeys</span>
+              <ArrowRight className="w-4 h-4 text-luxury-forest group-hover:translate-x-1 transition-transform" />
             </Link>
           </div>
         </FadeIn>

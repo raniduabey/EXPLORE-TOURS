@@ -55,39 +55,39 @@ export const ReviewsSection: React.FC = () => {
 
   return (
     <>
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-ceylon-softblue/40 border-y border-slate-100">
+      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-[#FAF8F5] border-y border-luxury-sand/80">
         <div className="max-w-7xl mx-auto">
-          <FadeIn className="text-center max-w-2xl mx-auto mb-12">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-ceylon-green text-xs font-extrabold uppercase tracking-widest border border-emerald-100 mb-3">
-              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-              <span>Verified Customer Reviews</span>
+          <FadeIn className="text-center max-w-2xl mx-auto mb-14">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-luxury-forest/5 text-luxury-gold text-[10px] font-mono uppercase tracking-[0.25em] border border-luxury-gold/30 mb-3">
+              <CheckCircle2 className="w-3.5 h-3.5 text-luxury-gold" />
+              <span>Verified Guest Reflections</span>
             </div>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-ceylon-navy tracking-tight">
-              Traveller Experiences
+            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-normal text-luxury-forest tracking-tight">
+              Traveller Perspectives
             </h2>
-            <p className="text-sm text-ceylon-muted mt-2">
-              Read verified feedback from genuine guests who completed Ceylon Explore Tours journeys.
+            <p className="text-sm sm:text-base text-luxury-charcoal/70 font-light mt-2 max-w-xl mx-auto leading-relaxed">
+              Authentic stories and feedback from travellers who have journeyed across Sri Lanka with Ceylon Explore Tours.
             </p>
 
             {reviews.length > 0 && (
-              <div className="flex flex-wrap items-center justify-center gap-3 mt-4 text-xs font-bold text-slate-700">
-                <div className="flex text-amber-400">
+              <div className="flex flex-wrap items-center justify-center gap-3 mt-4 text-xs font-serif text-luxury-forest">
+                <div className="flex text-luxury-gold">
                   {[...Array(5)].map((_, i) => (
                     <Star
                       key={i}
                       className={`w-4 h-4 ${
                         i < Math.round(Number(averageRating))
-                          ? "fill-current text-amber-400"
-                          : "text-slate-200"
+                          ? "fill-current text-luxury-gold"
+                          : "text-luxury-sand"
                       }`}
                     />
                   ))}
                 </div>
-                <span className="font-extrabold text-ceylon-navy text-sm ml-1">
+                <span className="font-serif font-bold text-luxury-forest text-base ml-1">
                   {averageRating} / 5.0
                 </span>
-                <span className="text-slate-400">•</span>
-                <span className="text-slate-600 font-medium">
+                <span className="text-luxury-sand">•</span>
+                <span className="text-luxury-charcoal/70 font-sans text-xs">
                   Based on {reviews.length} verified {reviews.length === 1 ? "review" : "reviews"}
                 </span>
               </div>
@@ -98,33 +98,33 @@ export const ReviewsSection: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setModalOpen(true)}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white hover:bg-slate-50 text-ceylon-navy text-xs font-bold border border-slate-200/90 shadow-sm transition-all hover:scale-105"
+                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-white hover:bg-luxury-forest hover:text-luxury-ivory text-luxury-forest text-xs font-serif font-semibold uppercase tracking-wider border border-luxury-sand/80 hover:border-luxury-forest shadow-sm transition-all"
               >
-                <PenLine className="w-3.5 h-3.5 text-ceylon-blue" />
-                <span>Write a Review</span>
+                <PenLine className="w-3.5 h-3.5 text-luxury-gold" />
+                <span>Write a Reflection</span>
               </button>
             </div>
           </FadeIn>
 
           {reviews.length === 0 ? (
-            <div className="bg-white rounded-3xl p-8 sm:p-12 border border-slate-200/80 shadow-sm text-center max-w-xl mx-auto space-y-4">
-              <div className="w-14 h-14 rounded-2xl bg-ceylon-softblue text-ceylon-blue flex items-center justify-center mx-auto shadow-sm">
+            <div className="bg-white rounded-3xl p-8 sm:p-12 border border-luxury-sand/80 shadow-[0_10px_30px_rgba(16,45,36,0.06)] text-center max-w-xl mx-auto space-y-4">
+              <div className="w-14 h-14 rounded-2xl bg-luxury-forest/5 text-luxury-gold border border-luxury-gold/25 flex items-center justify-center mx-auto shadow-sm">
                 <MessageSquarePlus className="w-7 h-7" />
               </div>
-              <h3 className="text-lg font-extrabold text-ceylon-navy">
-                Be the First to Share Your Experience
+              <h3 className="font-serif text-xl font-normal text-luxury-forest">
+                Share Your Island Journey
               </h3>
-              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                Have you explored Sri Lanka with Ceylon Explore Tours? We welcome genuine feedback from all our travellers. Share your memories to help future guests plan their trips.
+              <p className="text-xs sm:text-sm text-luxury-charcoal/70 font-light leading-relaxed">
+                Have you explored Sri Lanka with Ceylon Explore Tours? We welcome genuine reflections from our guests to guide future travellers.
               </p>
               <div className="pt-2">
                 <button
                   type="button"
                   onClick={() => setModalOpen(true)}
-                  className="px-6 py-2.5 bg-ceylon-navy hover:bg-ceylon-blue text-white rounded-xl text-xs font-bold transition-all shadow-sm inline-flex items-center gap-2"
+                  className="px-7 py-3 bg-luxury-forest hover:bg-luxury-emerald text-luxury-ivory rounded-full text-xs font-serif font-semibold uppercase tracking-wider transition-all shadow-md inline-flex items-center gap-2"
                 >
-                  <PenLine className="w-3.5 h-3.5" />
-                  <span>Share Your Review</span>
+                  <PenLine className="w-3.5 h-3.5 text-luxury-gold" />
+                  <span>Share Your Experience</span>
                 </button>
               </div>
             </div>
@@ -132,28 +132,28 @@ export const ReviewsSection: React.FC = () => {
             <FadeInStagger className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {reviews.map((r) => (
                 <FadeInStaggerItem key={r.id}>
-                  <div className="bg-white rounded-3xl p-6 sm:p-7 shadow-card hover:shadow-card-hover border border-slate-100 flex flex-col justify-between relative h-full transition-shadow duration-300">
-                    <Quote className="w-8 h-8 text-ceylon-softblue fill-current absolute top-6 right-6" />
+                  <div className="bg-white rounded-3xl p-7 shadow-[0_10px_30px_rgba(16,45,36,0.06)] hover:shadow-[0_20px_40px_rgba(16,45,36,0.1)] border border-luxury-sand/80 flex flex-col justify-between relative h-full transition-all duration-300">
+                    <Quote className="w-8 h-8 text-luxury-sand/40 fill-current absolute top-6 right-6" />
                     <div className="space-y-3 relative z-10">
-                      <div className="flex text-amber-400">
+                      <div className="flex text-luxury-gold">
                         {[...Array(5)].map((_, i) => (
                           <Star
                             key={i}
                             className={`w-4 h-4 ${
                               i < Math.floor(r.rating)
-                                ? "fill-current text-amber-400"
-                                : "text-slate-200"
+                                ? "fill-current text-luxury-gold"
+                                : "text-luxury-sand"
                             }`}
                           />
                         ))}
                       </div>
 
-                      <p className="text-xs sm:text-sm text-slate-700 italic leading-relaxed pt-1">
+                      <p className="text-xs sm:text-sm text-luxury-charcoal/80 font-serif italic leading-relaxed pt-1">
                         &ldquo;{r.comment}&rdquo;
                       </p>
 
                       {r.photoUrl && (
-                        <div className="relative h-36 w-full rounded-2xl overflow-hidden mt-3 border border-slate-100">
+                        <div className="relative h-36 w-full rounded-2xl overflow-hidden mt-3 border border-luxury-sand/60">
                           <Image
                             src={r.photoUrl}
                             alt={`Photo shared by ${r.userName}`}
@@ -164,24 +164,24 @@ export const ReviewsSection: React.FC = () => {
                       )}
                     </div>
 
-                    <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
+                    <div className="mt-6 pt-4 border-t border-luxury-sand/70 flex items-center justify-between">
                       <div>
-                        <h4 className="text-xs font-extrabold text-ceylon-navy flex items-center gap-1">
+                        <h4 className="font-serif text-sm font-semibold text-luxury-forest flex items-center gap-1.5">
                           <span>{r.userName}</span>
-                          <CheckCircle2 className="w-3.5 h-3.5 text-ceylon-green" />
+                          <CheckCircle2 className="w-3.5 h-3.5 text-luxury-gold" />
                         </h4>
-                        <span className="text-[11px] text-ceylon-muted block">
+                        <span className="text-[11px] text-luxury-charcoal/60 font-sans block mt-0.5">
                           {r.userCountry || "International Traveller"} • {r.travelDate}
                         </span>
                         {r.tour?.title && (
-                          <span className="text-[10px] text-ceylon-blue font-semibold block line-clamp-1 mt-0.5">
+                          <span className="text-[10px] text-luxury-forest font-serif italic block line-clamp-1 mt-0.5">
                             {r.tour.title}
                           </span>
                         )}
                       </div>
                       {r.verified !== false && (
-                        <span className="text-[10px] font-bold text-emerald-800 bg-emerald-50 border border-emerald-200/60 px-2.5 py-1 rounded-full shrink-0">
-                          Verified Booking
+                        <span className="text-[9px] font-mono uppercase tracking-wider text-luxury-forest bg-luxury-sand/40 border border-luxury-sand px-2.5 py-1 rounded-full shrink-0">
+                          Verified Guest
                         </span>
                       )}
                     </div>

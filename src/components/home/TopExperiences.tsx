@@ -97,46 +97,46 @@ export const TopExperiences: React.FC<{ tours?: TourCardData[] }> = ({ tours: pr
   const list = propTours && propTours.length > 0 ? propTours : defaultTours;
 
   return (
-    <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-8">
-      <FadeIn className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+    <section className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-10">
+      <FadeIn className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 text-amber-900 text-xs font-bold mb-2">
-            <Sparkles className="w-3.5 h-3.5 text-amber-600" />
-            <span>Featured Experiences Slideshow</span>
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-luxury-forest/5 border border-luxury-gold/30 text-luxury-gold text-[10px] font-mono uppercase tracking-[0.25em] mb-3">
+            <Sparkles className="w-3.5 h-3.5 text-luxury-gold" />
+            <span>Curated Island Journeys</span>
           </div>
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-ceylon-navy tracking-tight">
-            Top Experiences in Sri Lanka
+          <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-normal text-luxury-forest tracking-tight">
+            Exceptional Sri Lankan Experiences
           </h2>
-          <p className="text-sm text-ceylon-muted mt-2 max-w-xl">
-            Handpicked Sri Lankan journeys with certified local guides, private vehicles, and instant booking confirmation.
+          <p className="text-sm sm:text-base text-luxury-charcoal/70 font-light mt-2 max-w-2xl leading-relaxed">
+            Thoughtfully designed itineraries led by licensed private chauffeur-guides, featuring boutique heritage stays, seamless logistics, and intimate island encounters.
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
             <button
               type="button"
               onClick={() => scroll("left")}
-              className="w-10 h-10 rounded-full bg-white border border-slate-200 hover:border-ceylon-blue hover:bg-ceylon-softblue text-ceylon-navy flex items-center justify-center shadow-sm transition-colors"
-              title="Slide Left"
+              className="w-11 h-11 rounded-full bg-white border border-luxury-sand/90 hover:border-luxury-gold hover:text-luxury-gold text-luxury-forest flex items-center justify-center shadow-sm transition-all"
+              title="Previous Experience"
             >
-              <ChevronLeft className="w-5 h-5 text-ceylon-blue" />
+              <ChevronLeft className="w-5 h-5" />
             </button>
             <button
               type="button"
               onClick={() => scroll("right")}
-              className="w-10 h-10 rounded-full bg-white border border-slate-200 hover:border-ceylon-blue hover:bg-ceylon-softblue text-ceylon-navy flex items-center justify-center shadow-sm transition-colors"
-              title="Slide Right"
+              className="w-11 h-11 rounded-full bg-white border border-luxury-sand/90 hover:border-luxury-gold hover:text-luxury-gold text-luxury-forest flex items-center justify-center shadow-sm transition-all"
+              title="Next Experience"
             >
-              <ChevronRight className="w-5 h-5 text-ceylon-blue" />
+              <ChevronRight className="w-5 h-5" />
             </button>
           </div>
           <Link
             href="/tours"
-            className="inline-flex items-center gap-1.5 text-xs font-bold text-ceylon-blue hover:text-ceylon-navy transition-colors pl-2"
+            className="inline-flex items-center gap-1.5 font-serif text-xs font-semibold uppercase tracking-wider text-luxury-forest hover:text-luxury-gold transition-colors pl-2"
           >
-            <span>View All Experiences</span>
-            <ArrowRight className="w-4 h-4" />
+            <span>View All Journeys</span>
+            <ArrowRight className="w-4 h-4 text-luxury-gold" />
           </Link>
         </div>
       </FadeIn>

@@ -84,42 +84,43 @@ export default function ContactPage() {
   return (
     <div className="min-h-screen py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-12">
       {/* Header Banner */}
-      <div className="bg-ceylon-navy text-white rounded-3xl p-8 sm:p-12 relative overflow-hidden shadow-2xl space-y-3">
-        <span className="text-xs font-bold text-emerald-400 uppercase tracking-widest block">
-          Get in Touch
+      <div className="bg-luxury-forest text-luxury-ivory rounded-3xl p-8 sm:p-14 relative overflow-hidden shadow-2xl border border-luxury-gold/30 space-y-3">
+        <div className="absolute -right-16 -bottom-16 w-80 h-80 rounded-full bg-luxury-gold/10 blur-3xl pointer-events-none" />
+        <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-luxury-gold block">
+          Private Concierge & Reservations
         </span>
-        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight">
-          We&apos;re Here to Help Plan Your Sri Lanka Journey
+        <h1 className="font-serif text-3xl sm:text-5xl lg:text-6xl font-normal tracking-tight text-luxury-ivory">
+          Begin Your Sri Lanka Journey
         </h1>
-        <p className="text-xs sm:text-sm text-slate-300 max-w-2xl leading-relaxed">
-          Have questions regarding an upcoming tour, train reservations, private chauffeur hire, or custom island itineraries? Our local travel team responds promptly 24/7.
+        <p className="text-sm sm:text-base text-luxury-sand/85 max-w-2xl font-light leading-relaxed">
+          Whether you desire a tailored private itinerary, reserved hill country train seats, luxury chauffeur transit, or safari guidance, our dedicated island concierge is at your service.
         </p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
         {/* Contact Info & Channels */}
         <div className="lg:col-span-1 space-y-6">
-          <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-card space-y-6">
-            <h3 className="text-base font-extrabold text-ceylon-navy tracking-tight">
-              Direct Contact Channels
+          <div className="bg-white rounded-3xl p-6 sm:p-8 border border-luxury-sand/80 shadow-[0_10px_30px_rgba(16,45,36,0.06)] space-y-6">
+            <h3 className="font-serif text-base font-semibold text-luxury-forest tracking-wide">
+              Direct Concierge Lines
             </h3>
 
-            <div className="space-y-4 text-xs text-slate-600">
+            <div className="space-y-4 text-xs text-luxury-charcoal/80">
               <div className="flex items-start gap-3">
-                <div className="w-9 h-9 rounded-xl bg-ceylon-softblue text-ceylon-blue flex items-center justify-center shrink-0">
+                <div className="w-9 h-9 rounded-xl bg-luxury-forest/5 text-luxury-gold border border-luxury-gold/25 flex items-center justify-center shrink-0">
                   <MapPin className="w-4 h-4" />
                 </div>
                 <div className="space-y-1">
-                  <span className="font-bold text-ceylon-navy block">Head Office:</span>
+                  <span className="font-serif font-semibold text-luxury-forest block">Registered Office:</span>
                   <span className="block leading-relaxed">{address}</span>
                   {mapsUrl && (
                     <a
                       href={mapsUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-[11px] font-bold text-ceylon-blue hover:underline pt-0.5"
+                      className="inline-flex items-center gap-1 text-[11px] font-serif font-medium text-luxury-gold hover:underline pt-0.5"
                     >
-                      <span>Open in Google Maps</span>
+                      <span>Locate on Google Maps</span>
                       <ExternalLink className="w-3 h-3" />
                     </a>
                   )}
@@ -127,21 +128,21 @@ export default function ContactPage() {
               </div>
 
               <div className="flex items-start gap-3">
-                <div className="w-9 h-9 rounded-xl bg-ceylon-softblue text-ceylon-blue flex items-center justify-center shrink-0">
+                <div className="w-9 h-9 rounded-xl bg-luxury-forest/5 text-luxury-gold border border-luxury-gold/25 flex items-center justify-center shrink-0">
                   <Phone className="w-4 h-4" />
                 </div>
                 <div>
-                  <span className="font-bold text-ceylon-navy block">Primary Hotline:</span>
+                  <span className="font-serif font-semibold text-luxury-forest block">Direct Hotline:</span>
                   <a
                     href={`tel:${primaryPhone}`}
-                    className="hover:text-ceylon-blue transition-colors font-medium block"
+                    className="hover:text-luxury-gold transition-colors font-sans block"
                   >
-                    {primaryPhone} (24/7 Direct)
+                    {primaryPhone} (24/7 Concierge)
                   </a>
                   {secondaryPhone && (
                     <a
                       href={`tel:${secondaryPhone}`}
-                      className="text-slate-500 hover:text-ceylon-blue transition-colors font-medium block mt-0.5"
+                      className="text-luxury-charcoal/60 hover:text-luxury-gold transition-colors font-sans block mt-0.5"
                     >
                       {secondaryPhone} (Secondary line)
                     </a>
@@ -150,31 +151,31 @@ export default function ContactPage() {
               </div>
 
               <div className="flex items-start gap-3">
-                <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+                <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-200/60 flex items-center justify-center shrink-0">
                   <MessageSquare className="w-4 h-4" />
                 </div>
                 <div>
-                  <span className="font-bold text-ceylon-navy block">WhatsApp 24/7 Support:</span>
+                  <span className="font-serif font-semibold text-luxury-forest block">WhatsApp Instant Support:</span>
                   <a
                     href={whatsappHref}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-emerald-700 font-semibold hover:underline block"
+                    className="text-emerald-800 font-sans font-medium hover:underline block"
                   >
-                    {whatsappNumber} (Chat Now)
+                    {whatsappNumber} (Chat Directly)
                   </a>
                 </div>
               </div>
 
               <div className="flex items-start gap-3">
-                <div className="w-9 h-9 rounded-xl bg-ceylon-softblue text-ceylon-blue flex items-center justify-center shrink-0">
+                <div className="w-9 h-9 rounded-xl bg-luxury-forest/5 text-luxury-gold border border-luxury-gold/25 flex items-center justify-center shrink-0">
                   <Mail className="w-4 h-4" />
                 </div>
                 <div>
-                  <span className="font-bold text-ceylon-navy block">Email Support:</span>
+                  <span className="font-serif font-semibold text-luxury-forest block">Email Dispatch:</span>
                   <a
                     href={`mailto:${email}`}
-                    className="hover:text-ceylon-blue transition-colors"
+                    className="hover:text-luxury-gold transition-colors font-sans"
                   >
                     {email}
                   </a>
@@ -182,22 +183,22 @@ export default function ContactPage() {
               </div>
 
               <div className="flex items-start gap-3">
-                <div className="w-9 h-9 rounded-xl bg-ceylon-softblue text-ceylon-blue flex items-center justify-center shrink-0">
+                <div className="w-9 h-9 rounded-xl bg-luxury-forest/5 text-luxury-gold border border-luxury-gold/25 flex items-center justify-center shrink-0">
                   <Clock className="w-4 h-4" />
                 </div>
                 <div>
-                  <span className="font-bold text-ceylon-navy block">Operating Hours:</span>
-                  <span>{operatingHours}</span>
+                  <span className="font-serif font-semibold text-luxury-forest block">Operating Hours:</span>
+                  <span className="font-sans">{operatingHours}</span>
                 </div>
               </div>
             </div>
 
-            <div className="pt-4 border-t border-slate-100">
+            <div className="pt-4 border-t border-luxury-sand/70">
               <a
                 href={whatsappHref}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full inline-flex items-center justify-center gap-2 py-3 bg-[#25D366] hover:bg-[#20ba5a] text-white text-xs font-extrabold rounded-xl shadow transition-colors"
+                className="w-full inline-flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-[#DFBE82] via-[#C9A86A] to-[#A88647] hover:brightness-110 text-luxury-forest text-xs font-serif font-semibold uppercase tracking-wider rounded-full shadow transition-all"
               >
                 <MessageSquare className="w-4 h-4 fill-current" />
                 <span>Instant WhatsApp Inquiry</span>
@@ -208,13 +209,16 @@ export default function ContactPage() {
 
         {/* Contact Form */}
         <div className="lg:col-span-2">
-          <div className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200/90 shadow-card space-y-6">
+          <div className="bg-white rounded-3xl p-7 sm:p-11 border border-luxury-sand/80 shadow-[0_10px_30px_rgba(16,45,36,0.06)] space-y-6">
             <div>
-              <h2 className="text-xl sm:text-2xl font-extrabold text-ceylon-navy tracking-tight">
-                Send Us a Message
+              <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-luxury-gold block mb-1">
+                Bespoke Inquiries
+              </span>
+              <h2 className="font-serif text-2xl sm:text-3xl font-normal text-luxury-forest tracking-tight">
+                Send Us Your Travel Vision
               </h2>
-              <p className="text-xs text-ceylon-muted mt-1">
-                Fill out the form below with your travel plans, and our local travel specialists will craft recommendations for you.
+              <p className="text-xs sm:text-sm text-luxury-charcoal/70 font-light mt-1">
+                Share your dates, interests, and party size. Our island specialists will draft a personalized proposal within 24 hours.
               </p>
             </div>
 

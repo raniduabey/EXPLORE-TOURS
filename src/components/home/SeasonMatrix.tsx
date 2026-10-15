@@ -171,38 +171,38 @@ export const SeasonMatrix: React.FC = () => {
   const data = MONTHS[selectedIdx] || MONTHS[0];
 
   return (
-    <section className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-      <FadeIn className="text-center max-w-3xl mx-auto mb-10">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 text-amber-800 text-xs font-extrabold uppercase tracking-widest border border-amber-100 mb-3">
-          <Sun className="w-3.5 h-3.5 text-amber-500" />
-          <span>Island Climate Guide</span>
+    <section className="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <FadeIn className="text-center max-w-3xl mx-auto mb-12">
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-luxury-forest/5 text-luxury-gold text-[10px] font-mono uppercase tracking-[0.25em] border border-luxury-gold/30 mb-3">
+          <Sun className="w-3.5 h-3.5 text-luxury-gold" />
+          <span>Microclimate Almanac</span>
         </div>
-        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-ceylon-navy tracking-tight">
-          When to Visit Sri Lanka
+        <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-normal text-luxury-forest tracking-tight">
+          When to Journey Through Sri Lanka
         </h2>
-        <p className="text-sm sm:text-base text-ceylon-muted mt-3 leading-relaxed">
-          Because of Sri Lanka's dual monsoon pattern, there is <strong className="text-ceylon-navy">always glorious sunshine and calm seas somewhere on the island</strong> at any time of year. Select a month to see where to go!
+        <p className="text-sm sm:text-base text-luxury-charcoal/70 font-light mt-3 leading-relaxed">
+          Thanks to the island&apos;s dual monsoon microclimates, there is <strong className="text-luxury-forest font-serif">always pristine sunshine, calm waters, and sublime weather</strong> in Sri Lanka year-round. Select any month to view optimum regions.
         </p>
       </FadeIn>
 
       {/* Month Bar */}
-      <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-4 mb-8 scrollbar-none justify-start md:justify-center">
+      <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-4 mb-10 scrollbar-none justify-start md:justify-center">
         {MONTHS.map((m, idx) => {
           const isSelected = idx === selectedIdx;
           return (
             <button
               key={m.month}
               onClick={() => setSelectedIdx(idx)}
-              className={`relative px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold shrink-0 transition-all ${
+              className={`relative px-4 py-2 rounded-xl text-xs sm:text-sm font-serif uppercase tracking-wider shrink-0 transition-all ${
                 isSelected
-                  ? "text-white shadow-md shadow-ceylon-blue/20"
-                  : "text-slate-600 bg-white hover:bg-slate-100 border border-slate-200/80"
+                  ? "text-luxury-forest font-semibold shadow-sm"
+                  : "text-luxury-charcoal/70 bg-white hover:bg-slate-50 border border-luxury-sand/80"
               }`}
             >
               {isSelected && (
                 <motion.div
                   layoutId="activeMonth"
-                  className="absolute inset-0 bg-ceylon-blue rounded-xl -z-10"
+                  className="absolute inset-0 bg-luxury-gold/25 border border-luxury-gold rounded-xl -z-10"
                   transition={{ type: "spring", stiffness: 400, damping: 30 }}
                 />
               )}
@@ -213,7 +213,7 @@ export const SeasonMatrix: React.FC = () => {
       </div>
 
       {/* Selected Month Interactive Details */}
-      <div className="bg-white rounded-3xl p-6 sm:p-8 lg:p-10 border border-slate-200/80 shadow-xl">
+      <div className="bg-white rounded-3xl p-7 sm:p-9 lg:p-11 border border-luxury-sand/80 shadow-[0_20px_50px_rgba(16,45,36,0.08)]">
         <AnimatePresence mode="wait">
           <motion.div
             key={data.month}
@@ -221,89 +221,89 @@ export const SeasonMatrix: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -12 }}
             transition={{ duration: 0.3 }}
-            className="space-y-6"
+            className="space-y-7"
           >
             {/* Header info */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-100">
-              <div className="space-y-1">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-luxury-sand/70">
+              <div className="space-y-1.5">
                 <div className="flex items-center gap-3">
-                  <h3 className="text-2xl sm:text-3xl font-extrabold text-ceylon-navy">
+                  <h3 className="font-serif text-2xl sm:text-3xl font-normal text-luxury-forest">
                     {data.month} in Sri Lanka
                   </h3>
                   <span
-                    className={`px-3 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-wide border ${data.badgeColor}`}
+                    className="px-3 py-1 rounded-full text-[10px] font-mono uppercase tracking-wider bg-luxury-gold/15 text-luxury-forest border border-luxury-gold/30"
                   >
                     {data.seasonType}
                   </span>
                 </div>
-                <p className="text-xs sm:text-sm text-slate-500">
+                <p className="text-xs sm:text-sm text-luxury-charcoal/70 font-light">
                   {data.recommendation}
                 </p>
               </div>
 
-              <div className="bg-slate-50 px-4 py-2.5 rounded-2xl border border-slate-100 shrink-0 flex items-center gap-3">
-                <Sun className="w-5 h-5 text-amber-500" />
+              <div className="bg-[#FAF8F5] px-4 py-2.5 rounded-2xl border border-luxury-sand/80 shrink-0 flex items-center gap-3">
+                <Sun className="w-5 h-5 text-luxury-gold" />
                 <div>
-                  <span className="text-[10px] text-slate-400 font-bold uppercase block">Avg Temperature</span>
-                  <span className="text-xs font-bold text-ceylon-navy">{data.averageTemp}</span>
+                  <span className="text-[10px] font-mono text-luxury-charcoal/50 uppercase tracking-wider block">Average Climate</span>
+                  <span className="text-xs font-serif font-medium text-luxury-forest">{data.averageTemp}</span>
                 </div>
               </div>
             </div>
 
             {/* 3 Detail columns */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-slate-50/70 p-5 rounded-2xl border border-slate-100 space-y-3">
-                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-ceylon-navy">
-                  <Sun className="w-4 h-4 text-amber-500" />
-                  Best Regions for Sun
+              <div className="bg-[#FAF8F5] p-6 rounded-2xl border border-luxury-sand/80 space-y-3">
+                <div className="flex items-center gap-2 text-[10px] font-mono uppercase tracking-[0.18em] text-luxury-forest">
+                  <Sun className="w-4 h-4 text-luxury-gold" />
+                  Sunniest Regions
                 </div>
                 <div className="space-y-2">
                   {data.sunnyRegions.map((region, i) => (
-                    <div key={i} className="flex items-start gap-2 text-xs text-slate-700">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 mt-0.5 shrink-0" />
+                    <div key={i} className="flex items-start gap-2 text-xs text-luxury-charcoal/80 font-sans">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-luxury-gold mt-0.5 shrink-0" />
                       <span>{region}</span>
                     </div>
                   ))}
                 </div>
               </div>
 
-              <div className="bg-slate-50/70 p-5 rounded-2xl border border-slate-100 space-y-3">
-                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-ceylon-navy">
-                  <Waves className="w-4 h-4 text-ceylon-blue" />
-                  Ocean & Sea State
+              <div className="bg-[#FAF8F5] p-6 rounded-2xl border border-luxury-sand/80 space-y-3">
+                <div className="flex items-center gap-2 text-[10px] font-mono uppercase tracking-[0.18em] text-luxury-forest">
+                  <Waves className="w-4 h-4 text-luxury-gold" />
+                  Coastal Waters
                 </div>
-                <p className="text-xs text-slate-700 leading-relaxed">
+                <p className="text-xs text-luxury-charcoal/80 font-sans leading-relaxed">
                   {data.seaCondition}
                 </p>
               </div>
 
-              <div className="bg-slate-50/70 p-5 rounded-2xl border border-slate-100 space-y-3">
-                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-ceylon-navy">
-                  <Sparkles className="w-4 h-4 text-emerald-600" />
-                  Top Wildlife Highlight
+              <div className="bg-[#FAF8F5] p-6 rounded-2xl border border-luxury-sand/80 space-y-3">
+                <div className="flex items-center gap-2 text-[10px] font-mono uppercase tracking-[0.18em] text-luxury-forest">
+                  <Sparkles className="w-4 h-4 text-luxury-gold" />
+                  Wildlife Spectacle
                 </div>
-                <p className="text-xs text-slate-700 leading-relaxed">
+                <p className="text-xs text-luxury-charcoal/80 font-sans leading-relaxed">
                   {data.wildlifeHighlight}
                 </p>
               </div>
             </div>
 
             {/* Recommended itinerary for month */}
-            <div className="pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4 bg-ceylon-softblue/50 p-4 sm:p-5 rounded-2xl">
+            <div className="pt-4 border-t border-luxury-sand/70 flex flex-col sm:flex-row items-center justify-between gap-5 bg-luxury-forest text-luxury-ivory p-6 rounded-3xl border border-luxury-gold/30">
               <div>
-                <span className="text-[11px] font-bold text-ceylon-blue uppercase tracking-wider block">
-                  Top Recommended Package for {data.month}
+                <span className="text-[10px] font-mono uppercase tracking-widest text-luxury-gold block">
+                  Recommended Circuit for {data.month}
                 </span>
-                <span className="text-sm font-extrabold text-ceylon-navy">
+                <span className="font-serif text-base sm:text-lg font-medium text-luxury-ivory mt-0.5 block">
                   {data.recommendedTourName}
                 </span>
               </div>
               <Link
                 href={data.recommendedTourSlug}
-                className="w-full sm:w-auto px-5 py-2.5 bg-ceylon-navy hover:bg-ceylon-blue text-white rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 shrink-0 shadow-md group"
+                className="w-full sm:w-auto px-7 py-3.5 bg-gradient-to-r from-[#DFBE82] via-[#C9A86A] to-[#A88647] hover:brightness-110 text-luxury-forest rounded-full text-xs font-serif font-semibold uppercase tracking-wider transition-all flex items-center justify-center gap-2 shrink-0 shadow-lg group"
               >
-                <span>View Recommended Itinerary</span>
-                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                <span>Discover Itinerary</span>
+                <ArrowRight className="w-3.5 h-3.5 text-luxury-forest group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
           </motion.div>

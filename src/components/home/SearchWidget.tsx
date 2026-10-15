@@ -225,34 +225,34 @@ export const SearchWidget: React.FC = () => {
   return (
     <div
       ref={widgetRef}
-      className="w-full max-w-5xl mx-auto bg-white rounded-3xl p-3 sm:p-5 shadow-2xl border border-slate-200/90 relative z-40 transition-shadow duration-300"
+      className="w-full max-w-5xl mx-auto bg-luxury-ivory/95 backdrop-blur-xl rounded-3xl p-3 sm:p-5 shadow-[0_20px_50px_rgba(16,45,36,0.2)] border border-luxury-gold/35 relative z-40 transition-shadow duration-300"
     >
       <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
         {/* ============================================================ */}
         {/* 1. DESTINATION SELECTOR */}
         {/* ============================================================ */}
         <div className="relative md:col-span-3">
-          <label className="block text-[11px] font-extrabold text-ceylon-navy uppercase tracking-wider mb-1 flex items-center gap-1.5">
-            <MapPin className="w-3.5 h-3.5 text-ceylon-blue shrink-0" />
+          <label className="block text-[11px] font-serif font-semibold text-luxury-forest uppercase tracking-[0.14em] mb-1 flex items-center gap-1.5">
+            <MapPin className="w-3.5 h-3.5 text-luxury-gold shrink-0" />
             <span>Destination</span>
           </label>
           <button
             type="button"
             onClick={() => toggleDropdown("destination")}
-            className={`w-full h-12 bg-slate-50 hover:bg-slate-100/80 border rounded-xl px-3.5 text-left text-xs font-semibold cursor-pointer flex items-center justify-between transition-all ${
+            className={`w-full h-12 bg-white hover:bg-slate-50 border rounded-xl px-3.5 text-left text-xs font-serif cursor-pointer flex items-center justify-between transition-all ${
               activeDropdown === "destination"
-                ? "border-ceylon-blue ring-2 ring-ceylon-blue/15 bg-white shadow-xs"
-                : "border-slate-200 hover:border-slate-300"
+                ? "border-luxury-gold ring-2 ring-luxury-gold/20 bg-white shadow-xs"
+                : "border-luxury-sand/80 hover:border-luxury-gold/50"
             }`}
             aria-haspopup="listbox"
             aria-expanded={activeDropdown === "destination"}
           >
-            <span className={`truncate mr-2 ${destination ? "text-ceylon-navy font-bold" : "text-slate-400"}`}>
-              {selectedDestinationObj ? selectedDestinationObj.name : "Where would you like to go?"}
+            <span className={`truncate mr-2 ${destination ? "text-luxury-forest font-semibold" : "text-luxury-charcoal/50"}`}>
+              {selectedDestinationObj ? selectedDestinationObj.name : "Where would you like to explore?"}
             </span>
             <ChevronDown
-              className={`w-4 h-4 text-slate-400 shrink-0 transition-transform duration-200 ${
-                activeDropdown === "destination" ? "rotate-180 text-ceylon-blue" : ""
+              className={`w-4 h-4 text-luxury-gold shrink-0 transition-transform duration-200 ${
+                activeDropdown === "destination" ? "rotate-180 text-luxury-forest" : ""
               }`}
             />
           </button>
@@ -388,27 +388,27 @@ export const SearchWidget: React.FC = () => {
         {/* 2. ACTIVITY TYPE SELECTOR */}
         {/* ============================================================ */}
         <div className="relative md:col-span-3">
-          <label className="block text-[11px] font-extrabold text-ceylon-navy uppercase tracking-wider mb-1 flex items-center gap-1.5">
-            <Compass className="w-3.5 h-3.5 text-ceylon-blue shrink-0" />
+          <label className="block text-[11px] font-serif font-semibold text-luxury-forest uppercase tracking-[0.14em] mb-1 flex items-center gap-1.5">
+            <Compass className="w-3.5 h-3.5 text-luxury-gold shrink-0" />
             <span>Activity Type</span>
           </label>
           <button
             type="button"
             onClick={() => toggleDropdown("activity")}
-            className={`w-full h-12 bg-slate-50 hover:bg-slate-100/80 border rounded-xl px-3.5 text-left text-xs font-semibold cursor-pointer flex items-center justify-between transition-all ${
+            className={`w-full h-12 bg-white hover:bg-slate-50 border rounded-xl px-3.5 text-left text-xs font-serif cursor-pointer flex items-center justify-between transition-all ${
               activeDropdown === "activity"
-                ? "border-ceylon-blue ring-2 ring-ceylon-blue/15 bg-white shadow-xs"
-                : "border-slate-200 hover:border-slate-300"
+                ? "border-luxury-gold ring-2 ring-luxury-gold/20 bg-white shadow-xs"
+                : "border-luxury-sand/80 hover:border-luxury-gold/50"
             }`}
             aria-haspopup="listbox"
             aria-expanded={activeDropdown === "activity"}
           >
-            <span className={`truncate mr-2 ${category ? "text-ceylon-navy font-bold" : "text-slate-400"}`}>
-              {selectedCategoryObj ? selectedCategoryObj.label : "What would you like to do?"}
+            <span className={`truncate mr-2 ${category ? "text-luxury-forest font-semibold" : "text-luxury-charcoal/50"}`}>
+              {selectedCategoryObj ? selectedCategoryObj.label : "What would you like to experience?"}
             </span>
             <ChevronDown
-              className={`w-4 h-4 text-slate-400 shrink-0 transition-transform duration-200 ${
-                activeDropdown === "activity" ? "rotate-180 text-ceylon-blue" : ""
+              className={`w-4 h-4 text-luxury-gold shrink-0 transition-transform duration-200 ${
+                activeDropdown === "activity" ? "rotate-180 text-luxury-forest" : ""
               }`}
             />
           </button>
@@ -478,27 +478,27 @@ export const SearchWidget: React.FC = () => {
         {/* 3. TRAVEL DATE SELECTOR (PREMIUM DATE PICKER) */}
         {/* ============================================================ */}
         <div className="relative md:col-span-3">
-          <label className="block text-[11px] font-extrabold text-ceylon-navy uppercase tracking-wider mb-1 flex items-center gap-1.5">
-            <CalendarIcon className="w-3.5 h-3.5 text-ceylon-blue shrink-0" />
+          <label className="block text-[11px] font-serif font-semibold text-luxury-forest uppercase tracking-[0.14em] mb-1 flex items-center gap-1.5">
+            <CalendarIcon className="w-3.5 h-3.5 text-luxury-gold shrink-0" />
             <span>Travel Date</span>
           </label>
           <button
             type="button"
             onClick={() => toggleDropdown("date")}
-            className={`w-full h-12 bg-slate-50 hover:bg-slate-100/80 border rounded-xl px-3.5 text-left text-xs font-semibold cursor-pointer flex items-center justify-between transition-all ${
+            className={`w-full h-12 bg-white hover:bg-slate-50 border rounded-xl px-3.5 text-left text-xs font-serif cursor-pointer flex items-center justify-between transition-all ${
               activeDropdown === "date"
-                ? "border-ceylon-blue ring-2 ring-ceylon-blue/15 bg-white shadow-xs"
-                : "border-slate-200 hover:border-slate-300"
+                ? "border-luxury-gold ring-2 ring-luxury-gold/20 bg-white shadow-xs"
+                : "border-luxury-sand/80 hover:border-luxury-gold/50"
             }`}
             aria-haspopup="dialog"
             aria-expanded={activeDropdown === "date"}
           >
-            <span className={`truncate mr-2 ${date ? "text-ceylon-navy font-bold" : "text-slate-400"}`}>
+            <span className={`truncate mr-2 ${date ? "text-luxury-forest font-semibold" : "text-luxury-charcoal/50"}`}>
               {formattedDisplayDate || "Select travel date"}
             </span>
             <CalendarIcon
-              className={`w-4 h-4 text-slate-400 shrink-0 ${
-                activeDropdown === "date" ? "text-ceylon-blue" : ""
+              className={`w-4 h-4 text-luxury-gold shrink-0 ${
+                activeDropdown === "date" ? "text-luxury-forest" : ""
               }`}
             />
           </button>
@@ -645,27 +645,27 @@ export const SearchWidget: React.FC = () => {
         {/* ============================================================ */}
         <div className="relative md:col-span-3 flex items-end gap-2">
           <div className="relative flex-1">
-            <label className="block text-[11px] font-extrabold text-ceylon-navy uppercase tracking-wider mb-1 flex items-center gap-1.5">
-              <Users className="w-3.5 h-3.5 text-ceylon-blue shrink-0" />
+            <label className="block text-[11px] font-serif font-semibold text-luxury-forest uppercase tracking-[0.14em] mb-1 flex items-center gap-1.5">
+              <Users className="w-3.5 h-3.5 text-luxury-gold shrink-0" />
               <span>Travellers</span>
             </label>
             <button
               type="button"
               onClick={() => toggleDropdown("travellers")}
-              className={`w-full h-12 bg-slate-50 hover:bg-slate-100/80 border rounded-xl px-3.5 text-left text-xs font-semibold cursor-pointer flex items-center justify-between transition-all ${
+              className={`w-full h-12 bg-white hover:bg-slate-50 border rounded-xl px-3.5 text-left text-xs font-serif cursor-pointer flex items-center justify-between transition-all ${
                 activeDropdown === "travellers"
-                  ? "border-ceylon-blue ring-2 ring-ceylon-blue/15 bg-white shadow-xs"
-                  : "border-slate-200 hover:border-slate-300"
+                  ? "border-luxury-gold ring-2 ring-luxury-gold/20 bg-white shadow-xs"
+                  : "border-luxury-sand/80 hover:border-luxury-gold/50"
               }`}
               aria-haspopup="dialog"
               aria-expanded={activeDropdown === "travellers"}
             >
-              <span className="truncate mr-1 text-ceylon-navy font-bold">
+              <span className="truncate mr-1 text-luxury-forest font-semibold">
                 {formattedTravellers}
               </span>
               <ChevronDown
-                className={`w-4 h-4 text-slate-400 shrink-0 transition-transform duration-200 ${
-                  activeDropdown === "travellers" ? "rotate-180 text-ceylon-blue" : ""
+                className={`w-4 h-4 text-luxury-gold shrink-0 transition-transform duration-200 ${
+                  activeDropdown === "travellers" ? "rotate-180 text-luxury-forest" : ""
                 }`}
               />
             </button>
@@ -791,7 +791,7 @@ export const SearchWidget: React.FC = () => {
                     <button
                       type="button"
                       onClick={closeDropdown}
-                      className="w-full py-2.5 bg-ceylon-navy hover:bg-ceylon-blue text-white rounded-xl text-xs font-extrabold transition-colors shadow-sm"
+                      className="w-full py-2.5 bg-luxury-forest hover:bg-luxury-emerald text-luxury-ivory rounded-xl text-xs font-serif uppercase tracking-wider font-semibold transition-colors shadow-sm"
                     >
                       Apply Travellers
                     </button>
@@ -804,50 +804,50 @@ export const SearchWidget: React.FC = () => {
           {/* Search Action Button */}
           <button
             type="submit"
-            className="h-12 px-6 bg-ceylon-green hover:bg-ceylon-darkgreen text-white font-extrabold text-xs rounded-xl shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 shrink-0 active:scale-95"
-            aria-label="Search tours"
+            className="h-12 px-6 bg-gradient-to-r from-[#DFBE82] via-[#C9A86A] to-[#A88647] hover:brightness-105 text-luxury-forest font-serif font-bold text-xs tracking-wider uppercase rounded-xl shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 shrink-0 active:scale-95"
+            aria-label="Search journeys"
           >
-            <Search className="w-4 h-4" />
+            <Search className="w-4 h-4 stroke-[2.5]" />
             <span className="hidden sm:inline">Search</span>
           </button>
         </div>
       </form>
 
       {/* Popular Trending Search Chips */}
-      <div className="mt-3.5 pt-3 border-t border-slate-100 flex flex-wrap items-center gap-2 text-xs">
-        <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1">
-          <Sparkles className="w-3 h-3 text-amber-500" />
-          Popular:
+      <div className="mt-3.5 pt-3 border-t border-luxury-sand/60 flex flex-wrap items-center gap-2 text-xs">
+        <span className="text-[11px] font-serif font-medium text-luxury-charcoal/60 uppercase tracking-widest flex items-center gap-1">
+          <Sparkles className="w-3 h-3 text-luxury-gold" />
+          Curated:
         </span>
         <Link
           href="/tours/8-day-splendour-of-sri-lanka-classical-circuit"
-          className="px-2.5 py-1 rounded-lg bg-slate-50 hover:bg-ceylon-softblue text-slate-700 hover:text-ceylon-blue font-medium text-[11px] transition-colors border border-slate-200/60"
+          className="px-3 py-1 rounded-full bg-white hover:bg-luxury-sand/50 text-luxury-forest font-serif text-[11px] transition-colors border border-luxury-sand/80"
         >
-          🔥 8-Day Classical
+          ✦ 8-Day Classical Circuit
         </Link>
         <Link
           href="/tours/sigiriya-rock-fortress-dambulla-day-tour"
-          className="px-2.5 py-1 rounded-lg bg-slate-50 hover:bg-ceylon-softblue text-slate-700 hover:text-ceylon-blue font-medium text-[11px] transition-colors border border-slate-200/60"
+          className="px-3 py-1 rounded-full bg-white hover:bg-luxury-sand/50 text-luxury-forest font-serif text-[11px] transition-colors border border-luxury-sand/80"
         >
-          🏰 Sigiriya Fortress
+          ✦ Sigiriya Citadel
         </Link>
         <Link
           href="/tours/kandy-to-ella-scenic-train-journey"
-          className="px-2.5 py-1 rounded-lg bg-slate-50 hover:bg-ceylon-softblue text-slate-700 hover:text-ceylon-blue font-medium text-[11px] transition-colors border border-slate-200/60"
+          className="px-3 py-1 rounded-full bg-white hover:bg-luxury-sand/50 text-luxury-forest font-serif text-[11px] transition-colors border border-luxury-sand/80"
         >
-          🚂 Ella Scenic Train
+          ✦ Ella Scenic Rail
         </Link>
         <Link
           href="/tours/yala-national-park-private-safari"
-          className="px-2.5 py-1 rounded-lg bg-slate-50 hover:bg-ceylon-softblue text-slate-700 hover:text-ceylon-blue font-medium text-[11px] transition-colors border border-slate-200/60"
+          className="px-3 py-1 rounded-full bg-white hover:bg-luxury-sand/50 text-luxury-forest font-serif text-[11px] transition-colors border border-luxury-sand/80"
         >
-          🐆 Yala Safari
+          ✦ Yala Private Safari
         </Link>
         <Link
           href="/tours?category=multiday"
-          className="px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold text-[11px] transition-colors border border-emerald-200"
+          className="px-3 py-1 rounded-full bg-luxury-gold/15 hover:bg-luxury-gold/25 text-luxury-forest font-serif font-semibold text-[11px] transition-colors border border-luxury-gold/40"
         >
-          ✨ Multi-Day Packages
+          ✨ Multi-Day Journeys
         </Link>
       </div>
     </div>

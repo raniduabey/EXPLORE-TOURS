@@ -34,11 +34,11 @@ export const WhyUs: React.FC = () => {
   ];
 
   return (
-    <section className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+    <section className="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 items-center">
         <FadeIn direction="right" className="relative">
-          <div className="grid grid-cols-2 gap-4">
-            <div className="relative h-80 rounded-2xl overflow-hidden shadow-card group">
+          <div className="grid grid-cols-2 gap-5">
+            <div className="relative h-88 rounded-3xl overflow-hidden shadow-[0_20px_40px_rgba(16,45,36,0.12)] border border-luxury-sand/60 group">
               <Image
                 src="/images/destinations/elephant.jpg"
                 alt="Sri Lanka Wildlife and Elephant Safari"
@@ -47,7 +47,7 @@ export const WhyUs: React.FC = () => {
                 className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
               />
             </div>
-            <div className="relative h-80 rounded-2xl overflow-hidden shadow-card mt-8 group">
+            <div className="relative h-88 rounded-3xl overflow-hidden shadow-[0_20px_40px_rgba(16,45,36,0.12)] border border-luxury-sand/60 mt-10 group">
               <Image
                 src="/images/destinations/nuwara-eliya.jpg"
                 alt="Ceylon Tea Plantation Guide"
@@ -57,40 +57,40 @@ export const WhyUs: React.FC = () => {
               />
             </div>
           </div>
-          <div className="absolute -bottom-4 left-6 bg-white p-4 rounded-2xl shadow-xl border border-slate-100 flex items-center gap-3 max-w-xs">
-            <div className="w-10 h-10 rounded-full bg-ceylon-green/10 text-ceylon-green flex items-center justify-center shrink-0">
-              <ShieldCheck className="w-6 h-6" />
+          <div className="absolute -bottom-5 left-6 bg-luxury-forest text-luxury-ivory p-4 rounded-2xl shadow-2xl border border-luxury-gold/30 flex items-center gap-3.5 max-w-xs backdrop-blur-md">
+            <div className="w-10 h-10 rounded-xl bg-luxury-gold/20 text-luxury-gold flex items-center justify-center shrink-0 border border-luxury-gold/30">
+              <ShieldCheck className="w-5 h-5" />
             </div>
             <div>
-              <h4 className="text-xs font-bold text-ceylon-navy">Verified Local Guides</h4>
-              <p className="text-[10px] text-ceylon-muted">SLTDA registered chauffeur guides</p>
+              <h4 className="text-xs font-serif font-semibold text-luxury-ivory tracking-wide">Verified Native Guides</h4>
+              <p className="text-[10px] text-luxury-sand/80 font-sans">SLTDA registered chauffeur-guides</p>
             </div>
           </div>
         </FadeIn>
 
         <FadeIn direction="left" className="space-y-6">
           <div>
-            <span className="text-xs font-bold text-ceylon-green uppercase tracking-wider block mb-1">
-              Why {siteConfig.name}
-            </span>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-ceylon-navy tracking-tight leading-tight">
-              Travel Deeper. <br />
-              <span className="text-ceylon-blue">Experience Sri Lanka Locally.</span>
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-luxury-forest/5 border border-luxury-gold/30 text-luxury-gold text-[10px] font-mono uppercase tracking-[0.25em] mb-3">
+              <span>The Ceylon Explore Standard</span>
+            </div>
+            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-normal text-luxury-forest tracking-tight leading-tight">
+              Extraordinary Journeys. <br />
+              <span className="italic text-luxury-gold">Authentically Ceylon.</span>
             </h2>
           </div>
-          <p className="text-sm text-ceylon-muted leading-relaxed">
-            We bridge the gap between global travellers seeking seamless, reliable online bookings and Sri Lanka&apos;s most authentic, passionate local guides and tour providers.
+          <p className="text-sm sm:text-base text-luxury-charcoal/70 font-light leading-relaxed">
+            We curate intimate island journeys with Sri Lanka&apos;s most accomplished native chauffeur-guides, combining seamless private logistics with privileged access to the island&apos;s cultural and natural heritage.
           </p>
-          <FadeInStagger className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+          <FadeInStagger className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-3">
             {points.map((p, idx) => (
               <FadeInStaggerItem
                 key={idx}
-                className="flex items-start gap-3 p-3.5 rounded-2xl bg-slate-50 border border-slate-100/80 hover:bg-white hover:shadow-sm transition-all"
+                className="flex items-start gap-3.5 p-4 rounded-2xl bg-[#FAF8F5] border border-luxury-sand/80 hover:bg-white hover:border-luxury-gold/40 hover:shadow-[0_10px_25px_rgba(16,45,36,0.06)] transition-all"
               >
-                <CheckCircle2 className="w-5 h-5 text-ceylon-green shrink-0 mt-0.5" />
+                <CheckCircle2 className="w-4 h-4 text-luxury-gold shrink-0 mt-0.5" />
                 <div>
-                  <h4 className="text-xs font-bold text-ceylon-navy">{p.title}</h4>
-                  <p className="text-[11px] text-ceylon-muted mt-0.5 leading-snug">
+                  <h4 className="font-serif text-xs font-semibold text-luxury-forest tracking-wide">{p.title}</h4>
+                  <p className="text-[11px] text-luxury-charcoal/70 mt-1 leading-relaxed">
                     {p.desc}
                   </p>
                 </div>

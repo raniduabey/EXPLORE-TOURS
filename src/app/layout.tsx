@@ -130,7 +130,7 @@ export default function RootLayout({
           <CartProvider>
             <BusinessProvider>
               <Header />
-              <main className="flex-grow pt-20">{children}</main>
+              <main className="flex-grow">{children}</main>
               <Footer />
               <WhatsAppButton />
               <StickyMobileCta />

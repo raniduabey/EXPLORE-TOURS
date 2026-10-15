@@ -59,52 +59,52 @@ export const HomeFaqSection: React.FC = () => {
   };
 
   return (
-    <section className="py-20 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
-      <FadeIn className="text-center max-w-2xl mx-auto mb-12">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-ceylon-softblue text-ceylon-blue text-xs font-extrabold uppercase tracking-widest border border-ceylon-blue/20 mb-3">
-          <HelpCircle className="w-3.5 h-3.5" />
-          <span>Frequently Asked Questions</span>
+    <section className="py-24 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
+      <FadeIn className="text-center max-w-2xl mx-auto mb-14">
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-luxury-forest/5 text-luxury-gold text-[10px] font-mono uppercase tracking-[0.25em] border border-luxury-gold/30 mb-3">
+          <HelpCircle className="w-3.5 h-3.5 text-luxury-gold" />
+          <span>Curated Travel Insights</span>
         </div>
-        <h2 className="text-3xl sm:text-4xl font-extrabold text-ceylon-navy tracking-tight">
+        <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-normal text-luxury-forest tracking-tight">
           Everything You Need to Know
         </h2>
-        <p className="text-sm text-ceylon-muted mt-2">
-          Clear answers to common questions about travelling Sri Lanka with private guides, booking train seats, and flexible cancellation.
+        <p className="text-sm sm:text-base text-luxury-charcoal/70 font-light mt-2 max-w-xl mx-auto leading-relaxed">
+          Comprehensive guidance on private chauffeur journeys, reserved train seats, visas, and island etiquette.
         </p>
       </FadeIn>
 
-      <div className="space-y-3.5">
+      <div className="space-y-4">
         {FAQS.map((faq, idx) => {
           const isOpen = openIdx === idx;
           return (
             <motion.div
               key={idx}
               initial={false}
-              className={`rounded-2xl border transition-all duration-200 overflow-hidden ${
+              className={`rounded-2xl border transition-all duration-300 overflow-hidden ${
                 isOpen
-                  ? "bg-white border-ceylon-blue/40 shadow-md ring-1 ring-ceylon-blue/20"
-                  : "bg-white/80 border-slate-200/80 hover:border-slate-300"
+                  ? "bg-white border-luxury-gold/60 shadow-[0_10px_30px_rgba(16,45,36,0.06)] ring-1 ring-luxury-gold/20"
+                  : "bg-[#FAF8F5] border-luxury-sand/80 hover:border-luxury-gold/40"
               }`}
             >
               <button
                 type="button"
                 onClick={() => toggle(idx)}
-                className="w-full p-5 sm:p-6 text-left flex items-center justify-between gap-4 focus:outline-none"
+                className="w-full p-6 text-left flex items-center justify-between gap-4 focus:outline-none"
               >
-                <div className="space-y-1">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-ceylon-blue block">
+                <div className="space-y-1.5">
+                  <span className="text-[10px] font-mono uppercase tracking-widest text-luxury-gold block">
                     {faq.tag}
                   </span>
-                  <span className="text-sm sm:text-base font-extrabold text-ceylon-navy">
+                  <span className="font-serif text-base sm:text-lg font-medium text-luxury-forest">
                     {faq.question}
                   </span>
                 </div>
                 <motion.div
                   animate={{ rotate: isOpen ? 180 : 0 }}
                   transition={{ duration: 0.25, ease: "easeInOut" }}
-                  className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 shrink-0"
+                  className="w-9 h-9 rounded-full bg-white border border-luxury-sand/80 flex items-center justify-center text-luxury-forest shrink-0 shadow-xs"
                 >
-                  <ChevronDown className="w-4 h-4" />
+                  <ChevronDown className="w-4 h-4 text-luxury-gold" />
                 </motion.div>
               </button>
 
@@ -117,7 +117,7 @@ export const HomeFaqSection: React.FC = () => {
                     exit={{ height: 0, opacity: 0 }}
                     transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
                   >
-                    <div className="px-5 sm:px-6 pb-6 pt-1 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-100">
+                    <div className="px-6 pb-6 pt-1 text-xs sm:text-sm text-luxury-charcoal/80 leading-relaxed border-t border-luxury-sand/60">
                       {faq.answer}
                     </div>
                   </motion.div>
@@ -128,23 +128,23 @@ export const HomeFaqSection: React.FC = () => {
         })}
       </div>
 
-      <div className="mt-10 p-6 rounded-2xl bg-slate-50 border border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+      <div className="mt-12 p-8 rounded-3xl bg-luxury-forest text-luxury-ivory border border-luxury-gold/30 shadow-2xl flex flex-col sm:flex-row items-center justify-between gap-6 text-center sm:text-left">
         <div>
-          <h4 className="text-xs sm:text-sm font-bold text-ceylon-navy">
-            Have a custom travel question or specific itinerary request?
+          <h4 className="font-serif text-lg font-medium text-luxury-ivory">
+            Seeking a bespoke route or have a special request?
           </h4>
-          <p className="text-[11px] sm:text-xs text-slate-500 mt-0.5">
-            Our local travel team is available 24/7 on WhatsApp for free advice.
+          <p className="text-xs text-luxury-sand/80 mt-1 font-light leading-relaxed">
+            Our private island travel concierge is available 24/7 on WhatsApp to craft your itinerary.
           </p>
         </div>
         <a
           href={`https://wa.me/${siteConfig.contact.whatsapp}?text=Hi%20${encodeURIComponent(siteConfig.name)},%20I%20have%20a%20question%20about%20traveling%20in%20Sri%20Lanka.`}
           target="_blank"
           rel="noopener noreferrer"
-          className="px-5 py-2.5 bg-[#25D366] hover:bg-[#20ba5a] text-white rounded-xl text-xs font-bold transition-all flex items-center gap-2 shrink-0 shadow-md"
+          className="px-7 py-3.5 bg-gradient-to-r from-[#DFBE82] via-[#C9A86A] to-[#A88647] hover:brightness-110 text-luxury-forest rounded-full text-xs font-serif font-semibold uppercase tracking-wider transition-all flex items-center gap-2 shrink-0 shadow-lg"
         >
           <MessageCircle className="w-4 h-4 fill-current" />
-          <span>Ask on WhatsApp</span>
+          <span>Connect With Concierge</span>
         </a>
       </div>
     </section>

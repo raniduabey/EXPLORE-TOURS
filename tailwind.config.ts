@@ -21,6 +21,16 @@ const config: Config = {
           border: "#E2E8F0",
           card: "#FFFFFF",
         },
+        luxury: {
+          forest: "#102D24",
+          emerald: "#1E4D3D",
+          ivory: "#F8F6F0",
+          gold: "#C9A86A",
+          sand: "#E9E3D8",
+          charcoal: "#222A25",
+          accent: "#D4AF37",
+          dark: "#0B1E18",
+        },
       },
       fontFamily: {
         sans: ["Plus Jakarta Sans", "Inter", "sans-serif"],
