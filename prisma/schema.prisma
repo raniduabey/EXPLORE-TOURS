@@ -174,8 +174,8 @@ model Booking {
 
 model Review {
   id              String   @id @default(uuid())
-  tourId          String
-  tour            Tour     @relation(fields: [tourId], references: [id], onDelete: Cascade)
+  tourId          String?
+  tour            Tour?    @relation(fields: [tourId], references: [id], onDelete: Cascade)
   bookingId       String?
   booking         Booking? @relation(fields: [bookingId], references: [id])
   userName        String
@@ -189,7 +189,7 @@ model Review {
   valueRating     Float    @default(5.0)
   comment         String
   travelDate      String
-  verified        Boolean  @default(true)
+  verified        Boolean  @default(false)
   status          String   @default("PENDING") // PENDING, APPROVED, REJECTED, HIDDEN
   rejectionReason String?
   createdAt       DateTime @default(now())
@@ -309,3 +309,17 @@ model WebsiteContent {
   category  String   @default("general")
   updatedAt DateTime @updatedAt
 }
+
+model BusinessSettings {
+  id             String   @id @default("default")
+  companyName    String   @default("Ceylon Explore Tours")
+  address        String   @default("No. 45, Temple Road, Colombo 03, Sri Lanka")
+  email          String   @default("info@ceylonexploretours.com")
+  primaryPhone   String   @default("+94 77 123 4567")
+  secondaryPhone String   @default("+94 11 234 5678")
+  whatsapp       String   @default("+94 77 123 4567")
+  mapsUrl        String   @default("https://maps.google.com/?q=Colombo+Sri+Lanka")
+  operatingHours String   @default("Mon - Sun: 06:00 AM - 10:00 PM (24/7 Hotline)")
+  updatedAt      DateTime @updatedAt
+}
+

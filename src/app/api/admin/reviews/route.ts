@@ -77,23 +77,25 @@ export async function PUT(req: Request) {
     });
 
     // Automatically recalculate the associated tour's average rating and review count from approved reviews only!
-    const approvedReviews = await prisma.review.findMany({
-      where: { tourId: review.tourId, status: "APPROVED" },
-    });
+    if (review.tourId) {
+      const approvedReviews = await prisma.review.findMany({
+        where: { tourId: review.tourId, status: "APPROVED" },
+      });
 
-    const totalApproved = approvedReviews.length;
-    const avgRating =
-      totalApproved > 0
-        ? approvedReviews.reduce((sum, r) => sum + r.rating, 0) / totalApproved
-        : 0;
+      const totalApproved = approvedReviews.length;
+      const avgRating =
+        totalApproved > 0
+          ? approvedReviews.reduce((sum, r) => sum + r.rating, 0) / totalApproved
+          : 0;
 
-    await prisma.tour.update({
-      where: { id: review.tourId },
-      data: {
-        rating: Number(avgRating.toFixed(2)),
-        reviewCount: totalApproved,
-      },
-    });
+      await prisma.tour.update({
+        where: { id: review.tourId },
+        data: {
+          rating: Number(avgRating.toFixed(2)),
+          reviewCount: totalApproved,
+        },
+      });
+    }
 
     // Create Audit Log
     try {
@@ -116,3 +118,48 @@ export async function PUT(req: Request) {
     return NextResponse.json({ error: "Failed to update review status" }, { status: 500 });
   }
 }
+
+// DELETE /api/admin/reviews - Permanently delete a review
+export async function DELETE(req: Request) {
+  try {
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get("id");
+
+    if (!id) {
+      return NextResponse.json({ error: "Review ID is required" }, { status: 400 });
+    }
+
+    const review = await prisma.review.findUnique({ where: { id } });
+    if (!review) {
+      return NextResponse.json({ error: "Review not found" }, { status: 404 });
+    }
+
+    await prisma.review.delete({ where: { id } });
+
+    // Recalculate tour rating if applicable
+    if (review.tourId) {
+      const approvedReviews = await prisma.review.findMany({
+        where: { tourId: review.tourId, status: "APPROVED" },
+      });
+      const totalApproved = approvedReviews.length;
+      const avgRating =
+        totalApproved > 0
+          ? approvedReviews.reduce((sum, r) => sum + r.rating, 0) / totalApproved
+          : 0;
+
+      await prisma.tour.update({
+        where: { id: review.tourId },
+        data: {
+          rating: Number(avgRating.toFixed(2)),
+          reviewCount: totalApproved,
+        },
+      });
+    }
+
+    return NextResponse.json({ success: true, message: "Review deleted successfully" });
+  } catch (error) {
+    console.error("DELETE /api/admin/reviews error", error);
+    return NextResponse.json({ error: "Failed to delete review" }, { status: 500 });
+  }
+}
+

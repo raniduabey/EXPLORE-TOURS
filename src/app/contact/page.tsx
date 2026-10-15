@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { siteConfig } from "@/config/site";
+import { useBusinessSettings } from "@/context/BusinessContext";
 import {
   MapPin,
   Phone,
@@ -10,10 +11,11 @@ import {
   Send,
   CheckCircle2,
   AlertCircle,
-  HelpCircle,
+  ExternalLink,
 } from "lucide-react";
 
 export default function ContactPage() {
+  const { settings } = useBusinessSettings();
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -65,8 +67,18 @@ export default function ContactPage() {
     }
   };
 
-  const whatsappHref = `https://wa.me/${siteConfig.contact.whatsapp}?text=${encodeURIComponent(
-    "Hi Ceylon Explore Tours, I would like to inquire about planning a trip to Sri Lanka!"
+  const address = settings.address || `${siteConfig.contact.address.street}, ${siteConfig.contact.address.city}, ${siteConfig.contact.address.country}`;
+  const primaryPhone = settings.primaryPhone || siteConfig.contact.phone;
+  const secondaryPhone = settings.secondaryPhone;
+  const whatsappNumber = settings.whatsapp || siteConfig.contact.whatsapp;
+  const cleanWhatsapp = whatsappNumber.replace(/[^0-9]/g, "");
+  const email = settings.email || siteConfig.contact.email;
+  const operatingHours = settings.operatingHours || siteConfig.contact.operatingHours;
+  const mapsUrl = settings.mapsUrl || "https://maps.google.com/?q=Colombo+Sri+Lanka";
+  const companyName = settings.companyName || siteConfig.name;
+
+  const whatsappHref = `https://wa.me/${cleanWhatsapp}?text=${encodeURIComponent(
+    `Hi ${companyName}, I would like to inquire about planning a trip to Sri Lanka!`
   )}`;
 
   return (
@@ -97,12 +109,20 @@ export default function ContactPage() {
                 <div className="w-9 h-9 rounded-xl bg-ceylon-softblue text-ceylon-blue flex items-center justify-center shrink-0">
                   <MapPin className="w-4 h-4" />
                 </div>
-                <div>
+                <div className="space-y-1">
                   <span className="font-bold text-ceylon-navy block">Head Office:</span>
-                  <span>
-                    {siteConfig.contact.address.street}, {siteConfig.contact.address.city},{" "}
-                    {siteConfig.contact.address.country}
-                  </span>
+                  <span className="block leading-relaxed">{address}</span>
+                  {mapsUrl && (
+                    <a
+                      href={mapsUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 text-[11px] font-bold text-ceylon-blue hover:underline pt-0.5"
+                    >
+                      <span>Open in Google Maps</span>
+                      <ExternalLink className="w-3 h-3" />
+                    </a>
+                  )}
                 </div>
               </div>
 
@@ -111,13 +131,21 @@ export default function ContactPage() {
                   <Phone className="w-4 h-4" />
                 </div>
                 <div>
-                  <span className="font-bold text-ceylon-navy block">Phone Hotline:</span>
+                  <span className="font-bold text-ceylon-navy block">Primary Hotline:</span>
                   <a
-                    href={`tel:${siteConfig.contact.phone}`}
-                    className="hover:text-ceylon-blue transition-colors font-medium"
+                    href={`tel:${primaryPhone}`}
+                    className="hover:text-ceylon-blue transition-colors font-medium block"
                   >
-                    {siteConfig.contact.phoneDisplay}
+                    {primaryPhone} (24/7 Direct)
                   </a>
+                  {secondaryPhone && (
+                    <a
+                      href={`tel:${secondaryPhone}`}
+                      className="text-slate-500 hover:text-ceylon-blue transition-colors font-medium block mt-0.5"
+                    >
+                      {secondaryPhone} (Secondary line)
+                    </a>
+                  )}
                 </div>
               </div>
 
@@ -131,9 +159,9 @@ export default function ContactPage() {
                     href={whatsappHref}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-emerald-700 font-semibold hover:underline"
+                    className="text-emerald-700 font-semibold hover:underline block"
                   >
-                    {siteConfig.contact.whatsappDisplay} (Chat Now)
+                    {whatsappNumber} (Chat Now)
                   </a>
                 </div>
               </div>
@@ -145,10 +173,10 @@ export default function ContactPage() {
                 <div>
                   <span className="font-bold text-ceylon-navy block">Email Support:</span>
                   <a
-                    href={`mailto:${siteConfig.contact.email}`}
+                    href={`mailto:${email}`}
                     className="hover:text-ceylon-blue transition-colors"
                   >
-                    {siteConfig.contact.email}
+                    {email}
                   </a>
                 </div>
               </div>
@@ -159,7 +187,7 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <span className="font-bold text-ceylon-navy block">Operating Hours:</span>
-                  <span>{siteConfig.contact.operatingHours}</span>
+                  <span>{operatingHours}</span>
                 </div>
               </div>
             </div>
@@ -198,7 +226,7 @@ export default function ContactPage() {
                     Message Received Successfully!
                   </h4>
                   <p className="leading-relaxed">
-                    Thank you for contacting {siteConfig.name}. One of our local Sri Lanka travel specialists will review your inquiry and email you within a few hours.
+                    Thank you for contacting {companyName}. One of our local Sri Lanka travel specialists will review your inquiry and email you within a few hours.
                   </p>
                   <button
                     onClick={() => setSuccess(false)}

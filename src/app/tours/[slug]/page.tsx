@@ -384,6 +384,8 @@ export default async function TourDetailPage({
               rating={tour.rating}
               reviewCount={tour.reviewCount}
               reviews={tour.reviews || []}
+              tourId={tour.id}
+              tourTitle={tour.title}
             />
           </div>
 

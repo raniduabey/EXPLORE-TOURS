@@ -33,14 +33,31 @@ import {
   Calendar,
   Users,
   Layers,
-  ArrowRight
+  ArrowRight,
+  Building2,
+  PhoneCall
 } from "lucide-react";
 import { formatCurrency } from "@/lib/currency";
 
 export default function AdminDashboardPage() {
   const [tab, setTab] = useState<
-    "overview" | "tours" | "bookings" | "reviews" | "destinations" | "blog" | "inquiries" | "content" | "media"
+    "overview" | "tours" | "bookings" | "reviews" | "destinations" | "blog" | "inquiries" | "content" | "media" | "contact-settings"
   >("overview");
+
+  // Business / Contact Settings
+  const [businessSettings, setBusinessSettings] = useState({
+    companyName: "Ceylon Explore Tours",
+    address: "No. 45, Temple Road, Colombo 03, Sri Lanka",
+    email: "info@ceylonexploretours.com",
+    primaryPhone: "+94 77 123 4567",
+    secondaryPhone: "+94 11 234 5678",
+    whatsapp: "+94 77 123 4567",
+    mapsUrl: "https://maps.google.com/?q=Colombo+Sri+Lanka",
+    operatingHours: "Mon - Sun: 06:00 AM - 10:00 PM (24/7 Hotline)",
+  });
+  const [savingSettings, setSavingSettings] = useState(false);
+  const [settingsSuccess, setSettingsSuccess] = useState("");
+  const [settingsError, setSettingsError] = useState("");
 
   // Overview Stats
   const [statsData, setStatsData] = useState<any>(null);
@@ -78,7 +95,7 @@ export default function AdminDashboardPage() {
   // Load all admin data
   async function loadAllData() {
     try {
-      const [sRes, tRes, bRes, rRes, dRes, blRes, inqRes, slRes, fRes, mRes] = await Promise.all([
+      const [sRes, tRes, bRes, rRes, dRes, blRes, inqRes, slRes, fRes, mRes, bsRes] = await Promise.all([
         fetch("/api/admin/stats"),
         fetch("/api/admin/tours"),
         fetch("/api/admin/bookings"),
@@ -88,7 +105,8 @@ export default function AdminDashboardPage() {
         fetch("/api/admin/inquiries"),
         fetch("/api/hero-slides"),
         fetch("/api/admin/content?type=faqs"),
-        fetch("/api/admin/upload")
+        fetch("/api/admin/upload"),
+        fetch("/api/business-settings")
       ]);
 
       if (sRes.ok) setStatsData(await sRes.json());
@@ -101,6 +119,19 @@ export default function AdminDashboardPage() {
       if (slRes.ok) setSlides(await slRes.json());
       if (fRes.ok) setFaqs(await fRes.json());
       if (mRes.ok) setMediaAssets(await mRes.json());
+      if (bsRes.ok) {
+        const bsData = await bsRes.json();
+        setBusinessSettings({
+          companyName: bsData.companyName || "Ceylon Explore Tours",
+          address: bsData.address || "",
+          email: bsData.email || "",
+          primaryPhone: bsData.primaryPhone || "",
+          secondaryPhone: bsData.secondaryPhone || "",
+          whatsapp: bsData.whatsapp || "",
+          mapsUrl: bsData.mapsUrl || "",
+          operatingHours: bsData.operatingHours || "",
+        });
+      }
     } catch (e) {
       console.error("Admin data loading error", e);
     }
@@ -283,6 +314,78 @@ export default function AdminDashboardPage() {
     }
   };
 
+  const deleteReview = async (id: string) => {
+    if (!confirm("Are you sure you want to permanently delete this review? This action cannot be undone.")) {
+      return;
+    }
+    try {
+      const res = await fetch(`/api/admin/reviews?id=${id}`, {
+        method: "DELETE",
+      });
+      if (res.ok) {
+        setStatusMsg("Review permanently deleted.");
+        loadAllData();
+      } else {
+        alert("Failed to delete review.");
+      }
+    } catch (e) {
+      console.error(e);
+      alert("Error deleting review.");
+    }
+  };
+
+  // ----------------------------------------------------
+  // BUSINESS & CONTACT SETTINGS ACTIONS
+  // ----------------------------------------------------
+  const saveBusinessSettings = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSettingsError("");
+    setSettingsSuccess("");
+
+    if (!businessSettings.address.trim()) {
+      setSettingsError("Physical business address is required.");
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!businessSettings.email.trim() || !emailRegex.test(businessSettings.email.trim())) {
+      setSettingsError("Please provide a valid business email address (e.g. info@ceylonexploretours.com).");
+      return;
+    }
+
+    if (!businessSettings.primaryPhone.trim()) {
+      setSettingsError("Primary contact hotline number is required.");
+      return;
+    }
+
+    if (!businessSettings.whatsapp.trim()) {
+      setSettingsError("WhatsApp contact number is required.");
+      return;
+    }
+
+    setSavingSettings(true);
+    try {
+      const res = await fetch("/api/business-settings", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(businessSettings),
+      });
+
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setSettingsSuccess("Business information and contact settings successfully updated! Changes are now live across the website, footer, and WhatsApp chat.");
+        setStatusMsg("Business information and contact settings updated successfully!");
+        loadAllData();
+      } else {
+        setSettingsError(data.error || "Failed to update business contact information.");
+      }
+    } catch (err) {
+      setSettingsError("Network error occurred while saving contact settings.");
+    } finally {
+      setSavingSettings(false);
+    }
+  };
+
   // ----------------------------------------------------
   // DESTINATIONS ACTIONS
   // ----------------------------------------------------
@@ -439,6 +542,7 @@ export default function AdminDashboardPage() {
           { id: "blog", label: "Travel Guides & Blog", icon: BookOpen },
           { id: "inquiries", label: "Inquiries & Leads", icon: MessageSquare },
           { id: "content", label: "FAQs & Website Content", icon: Globe },
+          { id: "contact-settings", label: "Business & Contact Settings", icon: Building2 },
           { id: "media", label: "Media Storage", icon: ImageIcon },
         ].map((item) => {
           const Icon = item.icon;
@@ -1409,6 +1513,14 @@ export default function AdminDashboardPage() {
                           Hide
                         </button>
                       )}
+                      <button
+                        onClick={() => deleteReview(rev.id)}
+                        className="px-3 py-1.5 bg-white hover:bg-rose-50 text-rose-600 border border-rose-200 rounded-xl text-xs font-bold flex items-center gap-1 transition-colors"
+                        title="Permanently delete review"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                        <span>Delete</span>
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -1900,6 +2012,263 @@ export default function AdminDashboardPage() {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      )}
+
+      {/* ---------------------------------------------------- */}
+      {/* 10. BUSINESS INFORMATION / CONTACT SETTINGS TAB */}
+      {/* ---------------------------------------------------- */}
+      {tab === "contact-settings" && (
+        <div className="space-y-6">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div>
+              <div className="flex items-center gap-2">
+                <Building2 className="w-5 h-5 text-ceylon-blue" />
+                <h2 className="text-lg font-extrabold text-ceylon-navy">
+                  Business Information & Contact Settings
+                </h2>
+              </div>
+              <p className="text-xs text-ceylon-muted mt-1">
+                Manage official company address, support hotlines, WhatsApp numbers, Google Maps location, and operating hours. Updates immediately reflect across the website footer, contact page, and WhatsApp contact buttons.
+              </p>
+            </div>
+          </div>
+
+          {settingsSuccess && (
+            <div className="p-4 bg-emerald-50 border border-emerald-200 text-emerald-900 text-xs font-bold rounded-2xl flex items-center justify-between shadow-sm">
+              <div className="flex items-center gap-2">
+                <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" />
+                <span>{settingsSuccess}</span>
+              </div>
+              <button
+                onClick={() => setSettingsSuccess("")}
+                className="text-emerald-900 font-extrabold text-sm ml-4"
+              >
+                ✕
+              </button>
+            </div>
+          )}
+
+          {settingsError && (
+            <div className="p-4 bg-rose-50 border border-rose-200 text-rose-800 text-xs font-bold rounded-2xl flex items-center justify-between shadow-sm">
+              <div className="flex items-center gap-2">
+                <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+                <span>{settingsError}</span>
+              </div>
+              <button
+                onClick={() => setSettingsError("")}
+                className="text-rose-900 font-extrabold text-sm ml-4"
+              >
+                ✕
+              </button>
+            </div>
+          )}
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Edit Form */}
+            <div className="lg:col-span-2">
+              <form
+                onSubmit={saveBusinessSettings}
+                className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-6"
+              >
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  <div className="sm:col-span-2">
+                    <label className="block text-xs font-extrabold text-ceylon-navy mb-1.5">
+                      Company / Brand Name *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={businessSettings.companyName}
+                      onChange={(e) =>
+                        setBusinessSettings({ ...businessSettings, companyName: e.target.value })
+                      }
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-ceylon-navy font-semibold focus:outline-none focus:border-ceylon-blue"
+                      placeholder="e.g. Ceylon Explore Tours"
+                    />
+                  </div>
+
+                  <div className="sm:col-span-2">
+                    <label className="block text-xs font-extrabold text-ceylon-navy mb-1.5">
+                      Physical Head Office Address *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={businessSettings.address}
+                      onChange={(e) =>
+                        setBusinessSettings({ ...businessSettings, address: e.target.value })
+                      }
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-ceylon-navy font-semibold focus:outline-none focus:border-ceylon-blue"
+                      placeholder="e.g. No. 45, Temple Road, Colombo 03, Sri Lanka"
+                    />
+                    <span className="text-[11px] text-slate-400 block mt-1">
+                      Displayed on the website footer and contact us page.
+                    </span>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-extrabold text-ceylon-navy mb-1.5">
+                      Support Email Address *
+                    </label>
+                    <input
+                      type="email"
+                      required
+                      value={businessSettings.email}
+                      onChange={(e) =>
+                        setBusinessSettings({ ...businessSettings, email: e.target.value })
+                      }
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-ceylon-navy font-semibold focus:outline-none focus:border-ceylon-blue"
+                      placeholder="e.g. info@ceylonexploretours.com"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-extrabold text-ceylon-navy mb-1.5">
+                      Primary Contact Hotline *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={businessSettings.primaryPhone}
+                      onChange={(e) =>
+                        setBusinessSettings({ ...businessSettings, primaryPhone: e.target.value })
+                      }
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-ceylon-navy font-semibold focus:outline-none focus:border-ceylon-blue"
+                      placeholder="e.g. +94 77 123 4567"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-extrabold text-ceylon-navy mb-1.5">
+                      Secondary Contact Number (Optional)
+                    </label>
+                    <input
+                      type="text"
+                      value={businessSettings.secondaryPhone}
+                      onChange={(e) =>
+                        setBusinessSettings({ ...businessSettings, secondaryPhone: e.target.value })
+                      }
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-ceylon-navy font-semibold focus:outline-none focus:border-ceylon-blue"
+                      placeholder="e.g. +94 11 234 5678"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-extrabold text-ceylon-navy mb-1.5">
+                      WhatsApp Contact Number *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={businessSettings.whatsapp}
+                      onChange={(e) =>
+                        setBusinessSettings({ ...businessSettings, whatsapp: e.target.value })
+                      }
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-ceylon-navy font-semibold focus:outline-none focus:border-ceylon-blue"
+                      placeholder="e.g. +94 77 123 4567"
+                    />
+                    <span className="text-[11px] text-slate-400 block mt-1">
+                      Powers the floating WhatsApp chat button and instant inquiry links.
+                    </span>
+                  </div>
+
+                  <div className="sm:col-span-2">
+                    <label className="block text-xs font-extrabold text-ceylon-navy mb-1.5">
+                      Google Maps Location URL (Optional)
+                    </label>
+                    <input
+                      type="url"
+                      value={businessSettings.mapsUrl}
+                      onChange={(e) =>
+                        setBusinessSettings({ ...businessSettings, mapsUrl: e.target.value })
+                      }
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-ceylon-navy font-semibold focus:outline-none focus:border-ceylon-blue"
+                      placeholder="e.g. https://maps.google.com/?q=Colombo+Sri+Lanka"
+                    />
+                  </div>
+
+                  <div className="sm:col-span-2">
+                    <label className="block text-xs font-extrabold text-ceylon-navy mb-1.5">
+                      Business Operating Hours *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={businessSettings.operatingHours}
+                      onChange={(e) =>
+                        setBusinessSettings({ ...businessSettings, operatingHours: e.target.value })
+                      }
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-ceylon-navy font-semibold focus:outline-none focus:border-ceylon-blue"
+                      placeholder="e.g. Mon - Sun: 06:00 AM - 10:00 PM (24/7 Hotline)"
+                    />
+                  </div>
+                </div>
+
+                <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
+                  <span className="text-xs text-slate-400">
+                    Saved directly to database. Survives server restarts and refreshes.
+                  </span>
+                  <button
+                    type="submit"
+                    disabled={savingSettings}
+                    className="px-6 py-2.5 bg-ceylon-blue hover:bg-ceylon-navy text-white text-xs font-extrabold rounded-xl shadow transition-colors flex items-center gap-2"
+                  >
+                    <Save className="w-4 h-4" />
+                    <span>{savingSettings ? "Saving Settings..." : "Save Business Settings"}</span>
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            {/* Live Preview Card */}
+            <div className="lg:col-span-1 space-y-4">
+              <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-4">
+                <span className="text-[11px] font-extrabold uppercase tracking-wider text-ceylon-blue block">
+                  Live Public Preview
+                </span>
+                <div className="border-t border-slate-100 pt-3 space-y-3 text-xs text-slate-600">
+                  <div>
+                    <span className="font-bold text-ceylon-navy block">Company:</span>
+                    <span>{businessSettings.companyName}</span>
+                  </div>
+                  <div>
+                    <span className="font-bold text-ceylon-navy block">Address:</span>
+                    <span>{businessSettings.address}</span>
+                  </div>
+                  <div>
+                    <span className="font-bold text-ceylon-navy block">Primary Hotline:</span>
+                    <span>{businessSettings.primaryPhone}</span>
+                  </div>
+                  {businessSettings.secondaryPhone && (
+                    <div>
+                      <span className="font-bold text-ceylon-navy block">Secondary Phone:</span>
+                      <span>{businessSettings.secondaryPhone}</span>
+                    </div>
+                  )}
+                  <div>
+                    <span className="font-bold text-ceylon-navy block">WhatsApp:</span>
+                    <span className="text-emerald-700 font-semibold">{businessSettings.whatsapp}</span>
+                  </div>
+                  <div>
+                    <span className="font-bold text-ceylon-navy block">Email:</span>
+                    <span>{businessSettings.email}</span>
+                  </div>
+                  <div>
+                    <span className="font-bold text-ceylon-navy block">Hours:</span>
+                    <span>{businessSettings.operatingHours}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-4 bg-ceylon-softblue/50 rounded-2xl border border-slate-200/80 text-xs text-slate-600 space-y-2">
+                <span className="font-bold text-ceylon-navy block">Automatic Synchronization:</span>
+                <p className="leading-relaxed text-[11px]">
+                  When you click &ldquo;Save Business Settings&rdquo;, this data is saved to the SQLite database and served via <code className="bg-white px-1 py-0.5 rounded text-ceylon-blue font-mono text-[10px]">/api/business-settings</code>, automatically updating the Footer, Contact Us page, and floating WhatsApp buttons in real time.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       )}

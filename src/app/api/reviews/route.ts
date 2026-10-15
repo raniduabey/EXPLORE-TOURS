@@ -123,13 +123,58 @@ export async function POST(req: Request) {
         );
       }
     } else {
-      return NextResponse.json(
-        {
-          error:
-            "Please provide a valid review invitation token or your completed booking reference and email.",
+      // Path C: Direct website review submission from visitors / past travellers
+      if (!userName || userName.trim().length < 2) {
+        return NextResponse.json(
+          { error: "Please enter your name." },
+          { status: 400 }
+        );
+      }
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const emailToValidate = (guestEmail || body.email || "").trim();
+      if (!emailToValidate || !emailRegex.test(emailToValidate)) {
+        return NextResponse.json(
+          { error: "Please provide a valid email address." },
+          { status: 400 }
+        );
+      }
+
+      // Check if tourId was passed
+      let selectedTourId: string | null = null;
+      if (body.tourId && body.tourId !== "general") {
+        const foundTour = await prisma.tour.findUnique({
+          where: { id: body.tourId },
+        });
+        if (foundTour) {
+          selectedTourId = foundTour.id;
+        }
+      }
+
+      const newDirectReview = await prisma.review.create({
+        data: {
+          tourId: selectedTourId,
+          userName: userName.trim(),
+          userEmail: emailToValidate.toLowerCase(),
+          userCountry: (userCountry || body.country || "International").trim(),
+          rating: Number(rating),
+          guideRating: Number(guideRating) || Number(rating),
+          transportRating: Number(transportRating) || Number(rating),
+          valueRating: Number(valueRating) || Number(rating),
+          comment: comment.trim(),
+          photoUrl: photoUrl || null,
+          travelDate: body.travelDate || new Date().toISOString().split("T")[0],
+          verified: false,
+          status: "PENDING",
         },
-        { status: 400 }
-      );
+      });
+
+      return NextResponse.json({
+        success: true,
+        message:
+          "Thank you! Your review has been submitted successfully and is pending administrative moderation before publication.",
+        reviewId: newDirectReview.id,
+      });
     }
 
     // Limit to 1 active submission per booking

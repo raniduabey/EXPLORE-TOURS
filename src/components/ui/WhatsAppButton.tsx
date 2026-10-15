@@ -1,15 +1,22 @@
 "use client";
 import React from "react";
 import { MessageCircle } from "lucide-react";
+import { useBusinessSettings } from "@/context/BusinessContext";
 import { siteConfig } from "@/config/site";
 
 export const WhatsAppButton: React.FC<{ tourTitle?: string }> = ({ tourTitle }) => {
+  const { settings } = useBusinessSettings();
+
+  const rawNumber = settings.whatsapp || siteConfig.contact.whatsapp;
+  const cleanNumber = rawNumber.replace(/[^0-9]/g, "");
+  const company = settings.companyName || siteConfig.name;
+
   const text = encodeURIComponent(
     tourTitle
-      ? `Hi ${siteConfig.name}, I'm interested in booking the "${tourTitle}". Could you provide more details and availability?`
-      : `Hi ${siteConfig.name}, I'm interested in planning a Sri Lanka tour experience!`
+      ? `Hi ${company}, I'm interested in booking the "${tourTitle}". Could you provide more details and availability?`
+      : `Hi ${company}, I'm interested in planning a Sri Lanka tour experience!`
   );
-  const link = `https://wa.me/${siteConfig.contact.whatsapp}?text=${text}`;
+  const link = `https://wa.me/${cleanNumber}?text=${text}`;
 
   return (
     <a
@@ -17,7 +24,7 @@ export const WhatsAppButton: React.FC<{ tourTitle?: string }> = ({ tourTitle }) 
       target="_blank"
       rel="noopener noreferrer"
       className="fixed bottom-6 right-6 z-40 bg-[#25D366] hover:bg-[#20ba5a] text-white p-3.5 rounded-full shadow-2xl transition-all transform hover:scale-105 flex items-center justify-center group"
-      title={`Plan Your Sri Lanka Trip on WhatsApp with ${siteConfig.name}`}
+      title={`Plan Your Sri Lanka Trip on WhatsApp with ${company}`}
       aria-label="Chat on WhatsApp"
     >
       <MessageCircle className="w-6 h-6 fill-current" />

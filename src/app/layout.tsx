@@ -8,7 +8,7 @@ import { Footer } from "@/components/layout/Footer";
 import { WhatsAppButton } from "@/components/ui/WhatsAppButton";
 import { StickyMobileCta } from "@/components/ui/StickyMobileCta";
 import { CookieConsent } from "@/components/ui/CookieConsent";
-import { AnalyticsScripts } from "@/components/analytics/AnalyticsScripts";
+import { BusinessProvider } from "@/context/BusinessContext";
 
 export const viewport: Viewport = {
   themeColor: "#0D2C54",
@@ -128,13 +128,14 @@ export default function RootLayout({
         />
         <CurrencyProvider>
           <CartProvider>
-            <Header />
-            <main className="flex-grow pt-20">{children}</main>
-            <Footer />
-            <WhatsAppButton />
-            <StickyMobileCta />
-            <CookieConsent />
-            <AnalyticsScripts />
+            <BusinessProvider>
+              <Header />
+              <main className="flex-grow pt-20">{children}</main>
+              <Footer />
+              <WhatsAppButton />
+              <StickyMobileCta />
+              <CookieConsent />
+            </BusinessProvider>
           </CartProvider>
         </CurrencyProvider>
       </body>

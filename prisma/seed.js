@@ -1021,7 +1021,24 @@ async function main() {
     create: { key: 'office_address', value: 'No. 42, Galle Road, Colombo 03, Sri Lanka', category: 'contact' },
   });
 
-  console.log('Database successfully seeded with 10 authentic tour packages, categories, destinations, admin, FAQs, and articles!');
+  // 9. Business Settings
+  await prisma.businessSettings.upsert({
+    where: { id: 'default' },
+    update: {},
+    create: {
+      id: 'default',
+      companyName: 'Ceylon Explore Tours',
+      address: 'No. 45, Temple Road, Colombo 03, Sri Lanka',
+      email: 'info@ceylonexploretours.com',
+      primaryPhone: '+94 77 123 4567',
+      secondaryPhone: '+94 11 234 5678',
+      whatsapp: '+94 77 123 4567',
+      mapsUrl: 'https://maps.google.com/?q=Colombo+Sri+Lanka',
+      operatingHours: 'Mon - Sun: 06:00 AM - 10:00 PM (24/7 Hotline)',
+    },
+  });
+
+  console.log('Database successfully seeded with 10 authentic tour packages, categories, destinations, admin, FAQs, business settings, and articles!');
 }
 
 main()
