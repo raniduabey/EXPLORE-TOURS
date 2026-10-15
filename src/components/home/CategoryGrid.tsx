@@ -12,49 +12,49 @@ export const CategoryGrid: React.FC = () => {
       desc: "Comprehensive 6 to 21-day private island circuits with certified chauffeur guides.",
       slug: "multiday",
       icon: CalendarRange,
-      image: "https://images.unsplash.com/photo-1546708973-b339540b5162?q=80&w=800&auto=format&fit=crop"
+      image: "/images/categories/multiday.jpg"
     },
     {
       title: "Cultural Experiences",
       desc: "Temples, ancient kingdoms and UNESCO heritage.",
       slug: "cultural",
       icon: Landmark,
-      image: "https://images.unsplash.com/photo-1589182373726-e4f658ab50f0?q=80&w=800&auto=format&fit=crop"
+      image: "/images/categories/cultural.jpg"
     },
     {
       title: "Wildlife & Safari",
       desc: "Yala leopards, wild elephant herds and bird sanctuaries.",
       slug: "wildlife",
       icon: Compass,
-      image: "https://images.unsplash.com/photo-1534567153574-2b12153a87f0?q=80&w=800&auto=format&fit=crop"
+      image: "/images/categories/wildlife.jpg"
     },
     {
       title: "Adventure & Hiking",
       desc: "Highland peak climbing, white water rafting and exploration.",
       slug: "adventure",
       icon: Mountain,
-      image: "https://images.unsplash.com/photo-1734279135113-8bd58bc02b69?q=80&w=800&auto=format&fit=crop"
+      image: "/images/categories/adventure.jpg"
     },
     {
       title: "Beaches & Ocean",
       desc: "Surfing, diving, snorkeling and blue whale cruises.",
       slug: "beaches",
       icon: Waves,
-      image: "https://images.unsplash.com/photo-1580910527739-556eb89f9d65?q=80&w=800&auto=format&fit=crop"
+      image: "/images/categories/beaches.jpg"
     },
     {
       title: "Food & Local Life",
       desc: "Authentic curry cooking classes, markets and village life.",
       slug: "food",
       icon: Utensils,
-      image: "https://images.unsplash.com/photo-1626777552726-4a6b54c97e46?q=80&w=800&auto=format&fit=crop"
+      image: "/images/destinations/galle-street.jpg"
     },
     {
       title: "Scenic Train Journeys",
       desc: "Mountain blue trains, tea estates and valley bridges.",
       slug: "scenic",
       icon: TrainTrack,
-      image: "https://images.unsplash.com/photo-1586861635167-e5223aadc9fe?q=80&w=800&auto=format&fit=crop"
+      image: "/images/categories/scenic.jpg"
     }
   ];
 

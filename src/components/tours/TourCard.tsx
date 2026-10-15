@@ -24,12 +24,12 @@ export interface TourCardData {
 }
 
 const fallbackImages: Record<string, string> = {
-  galle: "https://images.unsplash.com/photo-1580835239846-5bb9ce03c8c3?q=80&w=1000&auto=format&fit=crop",
-  colombo: "https://images.unsplash.com/photo-1601050690597-df0568f70950?q=80&w=1000&auto=format&fit=crop",
-  sigiriya: "https://images.unsplash.com/photo-1589182373726-e4f658ab50f0?q=80&w=1000&auto=format&fit=crop",
-  ella: "https://images.unsplash.com/photo-1546708973-b339540b5162?q=80&w=1000&auto=format&fit=crop",
-  mirissa: "https://images.unsplash.com/photo-1580910527739-556eb89f9d65?q=80&w=1000&auto=format&fit=crop",
-  yala: "https://images.unsplash.com/photo-1534567153574-2b12153a87f0?q=80&w=1000&auto=format&fit=crop",
+  galle: "/images/destinations/galle.jpg",
+  colombo: "/images/destinations/colombo.jpg",
+  sigiriya: "/images/destinations/sigiriya.jpg",
+  ella: "/images/destinations/ella.jpg",
+  mirissa: "/images/destinations/mirissa.jpg",
+  yala: "/images/destinations/yala.jpg",
 };
 
 export const TourCard: React.FC<{ tour: TourCardData }> = ({ tour }) => {
@@ -38,8 +38,8 @@ export const TourCard: React.FC<{ tour: TourCardData }> = ({ tour }) => {
 
   const locLower = tour.location?.toLowerCase() || "";
   const imageUrl = imgError
-    ? fallbackImages[locLower] || "https://images.unsplash.com/photo-1589182373726-e4f658ab50f0?q=80&w=1000&auto=format&fit=crop"
-    : tour.primaryImage || "https://images.unsplash.com/photo-1589182373726-e4f658ab50f0?q=80&w=1000&auto=format&fit=crop";
+    ? fallbackImages[locLower] || "/images/destinations/sigiriya.jpg"
+    : tour.primaryImage || "/images/destinations/sigiriya.jpg";
 
   const hasGenuineReviews = (tour.reviewCount ?? 0) > 0 && (tour.rating ?? 0) > 0;
 

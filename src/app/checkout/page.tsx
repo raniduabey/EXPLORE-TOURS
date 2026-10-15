@@ -388,7 +388,7 @@ export default function CheckoutPage() {
             <div className="flex gap-3">
               <div className="relative w-20 h-20 rounded-xl overflow-hidden bg-slate-100 shrink-0">
                 <Image
-                  src={item.tourImage || "https://images.unsplash.com/photo-1589182373726-e4f658ab50f0?q=80&w=800&auto=format&fit=crop"}
+                  src={item.tourImage || "/images/destinations/sigiriya.jpg"}
                   alt={item.tourTitle || "Tour"}
                   fill
                   className="object-cover"

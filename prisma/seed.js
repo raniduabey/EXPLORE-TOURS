@@ -34,7 +34,7 @@ async function main() {
       slug: 'cultural',
       icon: 'Landmark',
       description: 'Ancient citadels, sacred Buddhist temples, and UNESCO World Heritage sites.',
-      image: 'https://images.unsplash.com/photo-1589182373726-e4f658ab50f0?q=80&w=800&auto=format&fit=crop',
+      image: '/images/destinations/sigiriya.jpg',
     },
   });
 
@@ -46,7 +46,7 @@ async function main() {
       slug: 'wildlife',
       icon: 'Compass',
       description: 'Leopard safaris, elephant gatherings, and marine mammal expeditions.',
-      image: 'https://images.unsplash.com/photo-1534567153574-2b12153a87f0?q=80&w=800&auto=format&fit=crop',
+      image: '/images/destinations/yala.jpg',
     },
   });
 
@@ -58,7 +58,7 @@ async function main() {
       slug: 'adventure',
       icon: 'Mountain',
       description: 'Mountain ridge ascents, scenic railway trails, and cloud forest treks.',
-      image: 'https://images.unsplash.com/photo-1546708973-b339540b5162?q=80&w=800&auto=format&fit=crop',
+      image: '/images/destinations/ella.jpg',
     },
   });
 
@@ -70,7 +70,7 @@ async function main() {
       slug: 'multiday',
       icon: 'CalendarRange',
       description: 'Comprehensive 6 to 21-day private island circuits with certified chauffeur guides.',
-      image: 'https://images.unsplash.com/photo-1546708973-b339540b5162?q=80&w=800&auto=format&fit=crop',
+      image: '/images/destinations/ella.jpg',
     },
   });
 
@@ -78,14 +78,14 @@ async function main() {
   const sigiriya = await prisma.destination.upsert({
     where: { slug: 'sigiriya' },
     update: {
-      image: 'https://images.unsplash.com/photo-1589182373726-e4f658ab50f0?q=80&w=1200&auto=format&fit=crop',
+      image: '/images/destinations/sigiriya.jpg',
     },
     create: {
       name: 'Sigiriya & Cultural Triangle',
       slug: 'sigiriya',
       shortDesc: 'Ancient 5th-century rock citadels, gilded cave temples, and royal water gardens.',
       longDesc: 'The Cultural Triangle forms the cradle of ancient Sri Lankan civilization with Sigiriya and Dambulla at its core.',
-      image: 'https://images.unsplash.com/photo-1589182373726-e4f658ab50f0?q=80&w=1200&auto=format&fit=crop',
+      image: '/images/destinations/sigiriya.jpg',
       experienceCount: 8,
       startingPrice: 85,
       popularAttractions: 'Sigiriya Lion Rock, Dambulla Cave Temple, Pidurangala Rock, Minneriya Safari',
@@ -98,14 +98,14 @@ async function main() {
   const ella = await prisma.destination.upsert({
     where: { slug: 'ella' },
     update: {
-      image: 'https://images.unsplash.com/photo-1546708973-b339540b5162?q=80&w=1200&auto=format&fit=crop',
+      image: '/images/destinations/ella.jpg',
     },
     create: {
       name: 'Ella & Mountain Highlands',
       slug: 'ella',
       shortDesc: 'Misty mountain peaks, emerald tea estates, and the world-famous blue train journey.',
       longDesc: 'Perched high in Sri Lanka central highlands, Ella is a tranquil mountain haven surrounded by waterfalls and tea gardens.',
-      image: 'https://images.unsplash.com/photo-1546708973-b339540b5162?q=80&w=1200&auto=format&fit=crop',
+      image: '/images/destinations/ella.jpg',
       experienceCount: 6,
       startingPrice: 65,
       popularAttractions: 'Nine Arches Bridge, Little Adams Peak, Ella Rock, Ravana Falls',
@@ -118,14 +118,14 @@ async function main() {
   const yala = await prisma.destination.upsert({
     where: { slug: 'yala' },
     update: {
-      image: 'https://images.unsplash.com/photo-1534567153574-2b12153a87f0?q=80&w=1200&auto=format&fit=crop',
+      image: '/images/destinations/yala.jpg',
     },
     create: {
       name: 'Yala Wildlife Safaris',
       slug: 'yala',
       shortDesc: 'Home to the world highest density of leopards and wild elephant herds.',
       longDesc: 'Yala National Park is Sri Lanka premier wildlife sanctuary bordering the Indian Ocean.',
-      image: 'https://images.unsplash.com/photo-1534567153574-2b12153a87f0?q=80&w=1200&auto=format&fit=crop',
+      image: '/images/destinations/yala.jpg',
       experienceCount: 5,
       startingPrice: 95,
       popularAttractions: 'Block 1 Leopard Safari, Elephant Herd Waterholes, Sloth Bear Tracking',
@@ -138,14 +138,14 @@ async function main() {
   const galle = await prisma.destination.upsert({
     where: { slug: 'galle' },
     update: {
-      image: 'https://images.unsplash.com/photo-1580835239846-5bb9ce03c8c3?q=80&w=1200&auto=format&fit=crop',
+      image: '/images/destinations/galle.jpg',
     },
     create: {
       name: 'Galle Dutch Fort',
       slug: 'galle',
       shortDesc: '17th-century oceanfront ramparts, cobblestone alleys, and Dutch colonial architecture.',
       longDesc: 'Built in the 16th and 17th centuries, Galle Fort is Asia best-preserved fortified sea bastion.',
-      image: 'https://images.unsplash.com/photo-1580835239846-5bb9ce03c8c3?q=80&w=1200&auto=format&fit=crop',
+      image: '/images/destinations/galle.jpg',
       experienceCount: 4,
       startingPrice: 45,
       popularAttractions: 'Galle Lighthouse, Dutch Reformed Church, Sea Wall Ramparts, Maritime Museum',
@@ -158,14 +158,14 @@ async function main() {
   const mirissa = await prisma.destination.upsert({
     where: { slug: 'mirissa' },
     update: {
-      image: 'https://images.unsplash.com/photo-1580910527739-556eb89f9d65?q=80&w=1200&auto=format&fit=crop',
+      image: '/images/destinations/mirissa.jpg',
     },
     create: {
       name: 'Mirissa & Southern Coast',
       slug: 'mirissa',
       shortDesc: 'Golden crescent beaches, coral reefs, and world-class blue whale expeditions.',
       longDesc: 'Mirissa is renowned globally as one of the premier whale watching havens on Earth.',
-      image: 'https://images.unsplash.com/photo-1580910527739-556eb89f9d65?q=80&w=1200&auto=format&fit=crop',
+      image: '/images/destinations/mirissa.jpg',
       experienceCount: 5,
       startingPrice: 75,
       popularAttractions: 'Mirissa Whale Watching, Coconut Tree Hill, Parrot Rock, Secret Beach',
@@ -178,14 +178,14 @@ async function main() {
   const nuwaraEliya = await prisma.destination.upsert({
     where: { slug: 'nuwara-eliya' },
     update: {
-      image: 'https://images.unsplash.com/photo-1586861635167-e5223aadc9fe?q=80&w=1200&auto=format&fit=crop',
+      image: '/images/destinations/nuwara-eliya.jpg',
     },
     create: {
       name: 'Nuwara Eliya Highlands',
       slug: 'nuwara-eliya',
       shortDesc: 'Misty colonial hill station enveloped by Ceylon tea gardens and waterfalls.',
       longDesc: 'Nestled beneath Mount Pedro at 1,868m elevation, Nuwara Eliya is the heartland of Ceylon tea.',
-      image: 'https://images.unsplash.com/photo-1586861635167-e5223aadc9fe?q=80&w=1200&auto=format&fit=crop',
+      image: '/images/destinations/nuwara-eliya.jpg',
       experienceCount: 4,
       startingPrice: 70,
       popularAttractions: 'Historic Tea Factory, Lake Gregory, Ramboda Falls, Victoria Park',
@@ -205,7 +205,7 @@ async function main() {
           headlineLine1: 'Discover Sri Lanka',
           headlineHighlight: 'Your Way',
           subtitle: 'Authentic private day tours, wildlife safaris, and highland journeys curated by local travel experts.',
-          image: 'https://images.unsplash.com/photo-1589182373726-e4f658ab50f0?q=80&w=1600&auto=format&fit=crop',
+          image: '/images/destinations/sigiriya.jpg',
           destination: 'Sigiriya Rock Fortress',
           ctaText: 'Explore All Tours',
           ctaLink: '/tours',
@@ -217,7 +217,7 @@ async function main() {
           headlineLine1: 'Ride the Iconic Blue Train',
           headlineHighlight: 'Through Ella',
           subtitle: 'Breathtaking mountain passes, Nine Arches viaducts, and Ceylon tea plantation vistas.',
-          image: 'https://images.unsplash.com/photo-1546708973-b339540b5162?q=80&w=1600&auto=format&fit=crop',
+          image: '/images/destinations/ella.jpg',
           destination: 'Ella Highlands',
           ctaText: 'View Train Experiences',
           ctaLink: '/tours?category=adventure',
@@ -229,7 +229,7 @@ async function main() {
           headlineLine1: 'Track Royal Leopards',
           headlineHighlight: 'In Yala',
           subtitle: 'Expert 4x4 open safari jeeps with SLTDA registered wildlife trackers.',
-          image: 'https://images.unsplash.com/photo-1534567153574-2b12153a87f0?q=80&w=1600&auto=format&fit=crop',
+          image: '/images/destinations/yala.jpg',
           destination: 'Yala National Park',
           ctaText: 'Browse Safaris',
           ctaLink: '/tours?category=wildlife',
@@ -327,8 +327,8 @@ async function main() {
       ]),
       images: {
         create: [
-          { url: 'https://images.unsplash.com/photo-1589182373726-e4f658ab50f0?q=80&w=1200&auto=format&fit=crop', caption: 'Sigiriya Ancient Citadel', isPrimary: true },
-          { url: 'https://images.unsplash.com/photo-1580835239846-5bb9ce03c8c3?q=80&w=1200&auto=format&fit=crop', caption: 'Cultural Heritage', isPrimary: false },
+          { url: '/images/destinations/sigiriya.jpg', caption: 'Sigiriya Ancient Citadel', isPrimary: true },
+          { url: '/images/destinations/galle.jpg', caption: 'Cultural Heritage', isPrimary: false },
         ],
       },
     },
@@ -393,8 +393,8 @@ async function main() {
       ]),
       images: {
         create: [
-          { url: 'https://images.unsplash.com/photo-1546708973-b339540b5162?q=80&w=1200&auto=format&fit=crop', caption: 'Blue Train at Nine Arches Bridge', isPrimary: true },
-          { url: 'https://images.unsplash.com/photo-1586861635167-e5223aadc9fe?q=80&w=1200&auto=format&fit=crop', caption: 'Ceylon Tea Plantation', isPrimary: false },
+          { url: '/images/destinations/ella.jpg', caption: 'Blue Train at Nine Arches Bridge', isPrimary: true },
+          { url: '/images/destinations/nuwara-eliya.jpg', caption: 'Ceylon Tea Plantation', isPrimary: false },
         ],
       },
     },
@@ -458,8 +458,8 @@ async function main() {
       ]),
       images: {
         create: [
-          { url: 'https://images.unsplash.com/photo-1534567153574-2b12153a87f0?q=80&w=1200&auto=format&fit=crop', caption: 'Leopard on rocky outcrop in Yala', isPrimary: true },
-          { url: 'https://images.unsplash.com/photo-1588668214407-6ea9a6d8c272?q=80&w=1200&auto=format&fit=crop', caption: 'Asian Elephant Herd', isPrimary: false },
+          { url: '/images/destinations/yala.jpg', caption: 'Leopard on rocky outcrop in Yala', isPrimary: true },
+          { url: '/images/destinations/elephant.jpg', caption: 'Asian Elephant Herd', isPrimary: false },
         ],
       },
     },
@@ -522,7 +522,7 @@ async function main() {
       ]),
       images: {
         create: [
-          { url: 'https://images.unsplash.com/photo-1580835239846-5bb9ce03c8c3?q=80&w=1200&auto=format&fit=crop', caption: 'Galle Dutch Fort Ramparts', isPrimary: true },
+          { url: '/images/destinations/galle.jpg', caption: 'Galle Dutch Fort Ramparts', isPrimary: true },
         ],
       },
     },
@@ -587,7 +587,7 @@ async function main() {
       ]),
       images: {
         create: [
-          { url: 'https://images.unsplash.com/photo-1580910527739-556eb89f9d65?q=80&w=1200&auto=format&fit=crop', caption: 'Southern Sri Lanka Ocean Waters', isPrimary: true },
+          { url: '/images/destinations/mirissa.jpg', caption: 'Southern Sri Lanka Ocean Waters', isPrimary: true },
         ],
       },
     },
@@ -651,7 +651,7 @@ async function main() {
       ]),
       images: {
         create: [
-          { url: 'https://images.unsplash.com/photo-1586861635167-e5223aadc9fe?q=80&w=1200&auto=format&fit=crop', caption: 'Highland Tea Estate in Nuwara Eliya', isPrimary: true },
+          { url: '/images/destinations/nuwara-eliya.jpg', caption: 'Highland Tea Estate in Nuwara Eliya', isPrimary: true },
         ],
       },
     },
@@ -709,8 +709,8 @@ async function main() {
       ]),
       images: {
         create: [
-          { url: 'https://images.unsplash.com/photo-1589182373726-e4f658ab50f0?q=80&w=1200&auto=format&fit=crop', caption: 'Sunrise at Sigiriya Lion Rock Citadel', isPrimary: true },
-          { url: 'https://images.unsplash.com/photo-1546708973-b339540b5162?q=80&w=1200&auto=format&fit=crop', caption: 'Demodara Nine Arch Bridge in Ella', isPrimary: false },
+          { url: '/images/destinations/sigiriya.jpg', caption: 'Sunrise at Sigiriya Lion Rock Citadel', isPrimary: true },
+          { url: '/images/destinations/ella.jpg', caption: 'Demodara Nine Arch Bridge in Ella', isPrimary: false },
         ],
       },
     },
@@ -770,8 +770,8 @@ async function main() {
       ]),
       images: {
         create: [
-          { url: 'https://images.unsplash.com/photo-1546708973-b339540b5162?q=80&w=1200&auto=format&fit=crop', caption: 'Scenic Blue Train crossing Nine Arch Bridge', isPrimary: true },
-          { url: 'https://images.unsplash.com/photo-1534567153574-2b12153a87f0?q=80&w=1200&auto=format&fit=crop', caption: 'Leopard Safari in Yala National Park', isPrimary: false },
+          { url: '/images/destinations/ella.jpg', caption: 'Scenic Blue Train crossing Nine Arch Bridge', isPrimary: true },
+          { url: '/images/destinations/yala.jpg', caption: 'Leopard Safari in Yala National Park', isPrimary: false },
         ],
       },
     },
@@ -832,8 +832,8 @@ async function main() {
       ]),
       images: {
         create: [
-          { url: 'https://images.unsplash.com/photo-1567157577867-05ccb1388e66?q=80&w=1200&auto=format&fit=crop', caption: 'Sacred Ruwanwelisaya Stupa in Anuradhapura', isPrimary: true },
-          { url: 'https://images.unsplash.com/photo-1589182373726-e4f658ab50f0?q=80&w=1200&auto=format&fit=crop', caption: 'Sigiriya Rock Citadel Aerial Vista', isPrimary: false },
+          { url: '/images/destinations/anuradhapura.jpg', caption: 'Sacred Ruwanwelisaya Stupa in Anuradhapura', isPrimary: true },
+          { url: '/images/destinations/sigiriya.jpg', caption: 'Sigiriya Rock Citadel Aerial Vista', isPrimary: false },
         ],
       },
     },
@@ -894,8 +894,8 @@ async function main() {
       ]),
       images: {
         create: [
-          { url: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?q=80&w=1200&auto=format&fit=crop', caption: 'Pigeon Island Marine Sanctuary in Nilaveli', isPrimary: true },
-          { url: 'https://images.unsplash.com/photo-1564349683136-77e08dba1ef7?q=80&w=1200&auto=format&fit=crop', caption: 'Wilpattu National Park Wilderness', isPrimary: false },
+          { url: '/images/destinations/beaches.jpg', caption: 'Pigeon Island Marine Sanctuary in Nilaveli', isPrimary: true },
+          { url: '/images/destinations/yala.jpg', caption: 'Wilpattu National Park Wilderness', isPrimary: false },
         ],
       },
     },
@@ -963,7 +963,7 @@ async function main() {
           slug: 'ultimate-guide-kandy-to-ella-scenic-train',
           excerpt: 'Everything you need to know about booking tickets, scenic viaduct photo stops, and what to expect on the world’s most picturesque mountain railway ride.',
           content: 'The train journey from Kandy to Ella is hailed across the globe as one of the most mesmerizing railway journeys on Earth. As the cobalt blue train winds its way up through cloud forests, emerald carpeted tea hills, cascading mountain torrents, and colonial viaducts, every bend in the track reveals a fresh visual miracle...',
-          image: 'https://images.unsplash.com/photo-1546708973-b339540b5162?q=80&w=1200&auto=format&fit=crop',
+          image: '/images/destinations/ella.jpg',
           category: 'Highlands & Rail',
           author: 'Ceylon Explore Editorial',
           readTime: '6 min read',
@@ -975,7 +975,7 @@ async function main() {
           slug: 'unesco-world-heritage-sites-sri-lanka-complete-overview',
           excerpt: 'From the sky-scraping 5th-century citadel of Sigiriya to the subterranean golden caves of Dambulla and the ramparts of Galle Fort.',
           content: 'For an island spanning just 65,610 square kilometers, Sri Lanka boasts an astounding concentration of UNESCO World Heritage Sites. Six cultural landmarks and two natural reserves illustrate more than 2,500 years of documented royal civilization, spiritual traditions, and pristine ecological biodiversity...',
-          image: 'https://images.unsplash.com/photo-1589182373726-e4f658ab50f0?q=80&w=1200&auto=format&fit=crop',
+          image: '/images/destinations/sigiriya.jpg',
           category: 'Culture & Heritage',
           author: 'Ceylon Explore Editorial',
           readTime: '8 min read',
@@ -987,7 +987,7 @@ async function main() {
           slug: 'wildlife-safari-season-yala-spot-leopards',
           excerpt: 'Tips from licensed wildlife trackers on visiting Yala National Park, tracking Panthera pardus kotiya, and respecting park conservation guidelines.',
           content: 'Yala National Park is home to one of the highest densities of leopards anywhere on planet Earth. The Sri Lankan leopard (Panthera pardus kotiya) is an apex predator unthreatened by lions or tigers, making them bolder and more frequently visible across rocky outcrops and coastal scrubland...',
-          image: 'https://images.unsplash.com/photo-1534567153574-2b12153a87f0?q=80&w=1200&auto=format&fit=crop',
+          image: '/images/destinations/yala.jpg',
           category: 'Wildlife & Safari',
           author: 'Ceylon Explore Editorial',
           readTime: '5 min read',

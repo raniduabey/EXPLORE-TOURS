@@ -45,7 +45,7 @@ export async function GET() {
           instantBook: e.instantBook,
           primaryImage:
             e.images[0]?.url ||
-            "https://images.unsplash.com/photo-1589182373726-e4f658ab50f0?q=80&w=800&auto=format&fit=crop",
+            "/images/destinations/sigiriya.jpg",
         }));
       }
     } catch (dbErr) {

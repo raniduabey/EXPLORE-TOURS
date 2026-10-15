@@ -40,8 +40,8 @@ export const WhyUs: React.FC = () => {
           <div className="grid grid-cols-2 gap-4">
             <div className="relative h-80 rounded-2xl overflow-hidden shadow-card group">
               <Image
-                src="https://images.unsplash.com/photo-1588668214407-6ea9a6d8c272?q=80&w=800&auto=format&fit=crop"
-                alt="Sri Lanka Local Hospitality"
+                src="/images/destinations/elephant.jpg"
+                alt="Sri Lanka Wildlife and Elephant Safari"
                 fill
                 sizes="(max-width: 768px) 50vw, 300px"
                 className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
@@ -49,7 +49,7 @@ export const WhyUs: React.FC = () => {
             </div>
             <div className="relative h-80 rounded-2xl overflow-hidden shadow-card mt-8 group">
               <Image
-                src="https://images.unsplash.com/photo-1586861635167-e5223aadc9fe?q=80&w=800&auto=format&fit=crop"
+                src="/images/destinations/nuwara-eliya.jpg"
                 alt="Ceylon Tea Plantation Guide"
                 fill
                 sizes="(max-width: 768px) 50vw, 300px"

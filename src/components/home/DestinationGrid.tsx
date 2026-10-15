@@ -17,13 +17,13 @@ export interface DestinationItem {
 }
 
 const fallbackImages: Record<string, string> = {
-  sigiriya: "https://images.unsplash.com/photo-1589182373726-e4f658ab50f0?q=80&w=1000&auto=format&fit=crop",
-  ella: "https://images.unsplash.com/photo-1546708973-b339540b5162?q=80&w=1000&auto=format&fit=crop",
-  kandy: "https://images.unsplash.com/photo-1586861635167-e5223aadc9fe?q=80&w=1000&auto=format&fit=crop",
-  galle: "https://images.unsplash.com/photo-1580835239846-5bb9ce03c8c3?q=80&w=1000&auto=format&fit=crop",
-  mirissa: "https://images.unsplash.com/photo-1580910527739-556eb89f9d65?q=80&w=1000&auto=format&fit=crop",
-  yala: "https://images.unsplash.com/photo-1534567153574-2b12153a87f0?q=80&w=1000&auto=format&fit=crop",
-  colombo: "https://images.unsplash.com/photo-1588668214407-6ea9a6d8c272?q=80&w=1000&auto=format&fit=crop",
+  sigiriya: "/images/destinations/sigiriya.jpg",
+  ella: "/images/destinations/ella.jpg",
+  kandy: "/images/destinations/kandy.jpg",
+  galle: "/images/destinations/galle.jpg",
+  mirissa: "/images/destinations/mirissa.jpg",
+  yala: "/images/destinations/yala.jpg",
+  colombo: "/images/destinations/colombo.jpg",
 };
 
 const defaultDestinations: DestinationItem[] = [

@@ -21,8 +21,7 @@ export const DESTINATIONS_CATALOG: DestinationData[] = [
       "Ancient 5th-century rock citadels, gilded cave temples, and royal water gardens rising dramatically from Sri Lanka's emerald central plains.",
     longDesc:
       "The Cultural Triangle forms the cradle of ancient Sri Lankan civilization. Anchored by the UNESCO World Heritage Lion Rock Citadel of Sigiriya and the subterranean Buddhist shrines of Dambulla, this region invites travelers into an awe-inspiring world of 2,500-year-old hydraulic engineering, vibrant frescoes, and spiritual serenity.",
-    image:
-      "https://images.unsplash.com/photo-1589182373726-e4f658ab50f0?q=80&w=1200&auto=format&fit=crop",
+    image: "/images/destinations/sigiriya.jpg",
     experienceCount: 8,
     startingPrice: 85,
     popularAttractions:
@@ -39,8 +38,7 @@ export const DESTINATIONS_CATALOG: DestinationData[] = [
       "Misty mountain peaks, emerald tea estates, Nine Arches Bridge, and the world's most famous scenic blue train journey.",
     longDesc:
       "Perched high in Sri Lanka's central highlands, Ella is a tranquil mountain haven surrounded by cascading waterfalls, tea gardens, and dramatic hill passes. Famed for Little Adam's Peak, Ella Rock, and the architectural masterpiece of the colonial Nine Arches Viaduct.",
-    image:
-      "https://images.unsplash.com/photo-1546708973-b339540b5162?q=80&w=1200&auto=format&fit=crop",
+    image: "/images/destinations/ella.jpg",
     experienceCount: 6,
     startingPrice: 65,
     popularAttractions:
@@ -56,8 +54,7 @@ export const DESTINATIONS_CATALOG: DestinationData[] = [
       "Home to the world's highest density of leopards, wild elephants, sloth bears, and crocodiles across dramatic coastal dry zone wilderness.",
     longDesc:
       "Yala National Park is Sri Lanka's premier wildlife sanctuary, bordering the Indian Ocean in the southeast. Experienced local safari trackers navigate rugged scrubland and freshwater lagoons in 4x4 open-top jeeps in search of the elusive Ceylon leopard.",
-    image:
-      "https://images.unsplash.com/photo-1534567153574-2b12153a87f0?q=80&w=1200&auto=format&fit=crop",
+    image: "/images/destinations/yala.jpg",
     experienceCount: 5,
     startingPrice: 95,
     popularAttractions:
@@ -74,8 +71,7 @@ export const DESTINATIONS_CATALOG: DestinationData[] = [
       "17th-century oceanfront ramparts, cobblestone alleys, Dutch colonial architecture, boutique villas, and tropical coastal charm.",
     longDesc:
       "Built by Portuguese and Dutch colonizers between the 16th and 17th centuries, Galle Fort is Asia's best-preserved fortified sea bastion. Stroll past whitewashed ramparts, colonial clock towers, spice merchants, and charming seaside gelato parlors.",
-    image:
-      "https://images.unsplash.com/photo-1580835239846-5bb9ce03c8c3?q=80&w=1200&auto=format&fit=crop",
+    image: "/images/destinations/galle.jpg",
     experienceCount: 4,
     startingPrice: 45,
     popularAttractions:
@@ -91,8 +87,7 @@ export const DESTINATIONS_CATALOG: DestinationData[] = [
       "Golden crescent beaches, swaying palm groves, vibrant surf breaks, and world-class blue whale expeditions in the Indian Ocean.",
     longDesc:
       "Mirissa is the jewel of Sri Lanka's southern shores. Renowned as one of the premier whale watching havens on Earth, Mirissa pairs exhilarating ocean wildlife cruises with laid-back beachside dining, snorkeling around coral reefs, and coconut tree hills overlooking sunset horizons.",
-    image:
-      "https://images.unsplash.com/photo-1580910527739-556eb89f9d65?q=80&w=1200&auto=format&fit=crop",
+    image: "/images/destinations/mirissa.jpg",
     experienceCount: 5,
     startingPrice: 75,
     popularAttractions:
@@ -108,8 +103,7 @@ export const DESTINATIONS_CATALOG: DestinationData[] = [
       "Misty colonial hill station known as 'Little England', enveloped by verdant Ceylon tea gardens, waterfalls, and cool mountain breezes.",
     longDesc:
       "Nestled in the shadows of Mount Pidurutalagala at 1,868 meters elevation, Nuwara Eliya is the heartland of world-renowned Ceylon tea. With Victorian post offices, manicured golf links, botanical gardens, and dramatic cascades like Ramboda Falls, it offers a refreshing highland retreat.",
-    image:
-      "https://images.unsplash.com/photo-1586861635167-e5223aadc9fe?q=80&w=1200&auto=format&fit=crop",
+    image: "/images/destinations/nuwara-eliya.jpg",
     experienceCount: 4,
     startingPrice: 70,
     popularAttractions:
