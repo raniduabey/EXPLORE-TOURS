@@ -54,245 +54,7 @@ const defaultSlides = [
   }
 ];
 
-import { DESTINATIONS_CATALOG } from "@/data/destinationsData";
-
-const categories = [
-  { label: "All Activities", value: "" },
-  { label: "Multi-Day Tour Packages", value: "multiday" },
-  { label: "Cultural Heritage", value: "cultural" },
-  { label: "Wildlife Safaris", value: "wildlife" },
-  { label: "Adventure & Hiking", value: "adventure" },
-];
-
-const SearchWidget: React.FC = () => {
-  const router = useRouter();
-  const [destination, setDestination] = useState("");
-  const [category, setCategory] = useState("");
-  const [date, setDate] = useState("");
-  const [adults, setAdults] = useState(2);
-  const [children, setChildren] = useState(0);
-  const [destOpen, setDestOpen] = useState(false);
-  const [catOpen, setCatOpen] = useState(false);
-  const [travOpen, setTravOpen] = useState(false);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const params = new URLSearchParams();
-    if (destination) params.append("destination", destination);
-    if (category) params.append("category", category);
-    if (date) params.append("date", date);
-    if (adults > 0) params.append("adults", adults.toString());
-    router.push(`/tours?${params.toString()}`);
-  };
-
-  return (
-    <div className="w-full max-w-5xl mx-auto bg-white rounded-2xl p-4 sm:p-5 shadow-card border border-slate-100">
-      <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-4 gap-4 items-center">
-        <div className="relative">
-          <label className="block text-[11px] font-bold text-ceylon-navy uppercase tracking-wider mb-1 flex items-center gap-1">
-            <MapPin className="w-3.5 h-3.5 text-ceylon-blue" />
-            Destination
-          </label>
-          <div
-            onClick={() => setDestOpen(!destOpen)}
-            className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-semibold text-ceylon-text cursor-pointer flex items-center justify-between hover:border-ceylon-blue transition-colors"
-          >
-            <span className={destination ? "text-ceylon-text" : "text-slate-400"}>
-              {DESTINATIONS_CATALOG.find((d) => d.slug === destination)?.name || "Where do you want to go?"}
-            </span>
-            <ChevronDown className="w-4 h-4 text-slate-400" />
-          </div>
-          {destOpen && (
-            <div className="absolute left-0 top-full mt-2 w-full bg-white rounded-xl shadow-dropdown border border-slate-100 py-2 z-50 max-h-56 overflow-y-auto">
-              <div
-                onClick={() => {
-                  setDestination("");
-                  setDestOpen(false);
-                }}
-                className="px-4 py-2 text-xs font-medium text-slate-500 hover:bg-ceylon-softblue cursor-pointer"
-              >
-                All Sri Lanka Destinations
-              </div>
-              {DESTINATIONS_CATALOG.map((d) => (
-                <div
-                  key={d.slug}
-                  onClick={() => {
-                    setDestination(d.slug);
-                    setDestOpen(false);
-                  }}
-                  className={`px-4 py-2 text-xs font-semibold hover:bg-ceylon-softblue cursor-pointer flex items-center justify-between ${
-                    destination === d.slug ? "text-ceylon-blue bg-ceylon-softblue" : "text-ceylon-text"
-                  }`}
-                >
-                  <span>{d.name}</span>
-                  {destination === d.slug && <Check className="w-3.5 h-3.5 text-ceylon-blue" />}
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        <div className="relative">
-          <label className="block text-[11px] font-bold text-ceylon-navy uppercase tracking-wider mb-1 flex items-center gap-1">
-            <Compass className="w-3.5 h-3.5 text-ceylon-blue" />
-            Activity Type
-          </label>
-          <div
-            onClick={() => setCatOpen(!catOpen)}
-            className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-semibold text-ceylon-text cursor-pointer flex items-center justify-between hover:border-ceylon-blue transition-colors"
-          >
-            <span className={category ? "text-ceylon-text" : "text-slate-400"}>
-              {categories.find((c) => c.value === category)?.label || "What would you like to do?"}
-            </span>
-            <ChevronDown className="w-4 h-4 text-slate-400" />
-          </div>
-          {catOpen && (
-            <div className="absolute left-0 top-full mt-2 w-full bg-white rounded-xl shadow-dropdown border border-slate-100 py-2 z-50 max-h-56 overflow-y-auto">
-              {categories.map((c) => (
-                <div
-                  key={c.label}
-                  onClick={() => { setCategory(c.value); setCatOpen(false); }}
-                  className={`px-4 py-2 text-xs font-semibold hover:bg-ceylon-softblue cursor-pointer flex items-center justify-between ${
-                    category === c.value ? "text-ceylon-blue bg-ceylon-softblue" : "text-ceylon-text"
-                  }`}
-                >
-                  <span>{c.label}</span>
-                  {category === c.value && <Check className="w-3.5 h-3.5 text-ceylon-blue" />}
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        <div>
-          <label className="block text-[11px] font-bold text-ceylon-navy uppercase tracking-wider mb-1 flex items-center gap-1">
-            <Calendar className="w-3.5 h-3.5 text-ceylon-blue" />
-            Travel Date
-          </label>
-          <input
-            type="date"
-            value={date}
-            min={new Date().toISOString().split("T")[0]}
-            onChange={(e) => setDate(e.target.value)}
-            className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-semibold text-ceylon-text focus:outline-none focus:border-ceylon-blue transition-colors"
-          />
-        </div>
-
-        <div className="flex items-end gap-2">
-          <div className="relative flex-1">
-            <label className="block text-[11px] font-bold text-ceylon-navy uppercase tracking-wider mb-1 flex items-center gap-1">
-              <Users className="w-3.5 h-3.5 text-ceylon-blue" />
-              Travellers
-            </label>
-            <div
-              onClick={() => setTravOpen(!travOpen)}
-              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-semibold text-ceylon-text cursor-pointer flex items-center justify-between hover:border-ceylon-blue transition-colors"
-            >
-              <span>{adults} Adults{children > 0 ? `, ${children} Kids` : ""}</span>
-              <ChevronDown className="w-4 h-4 text-slate-400" />
-            </div>
-            {travOpen && (
-              <div className="absolute right-0 top-full mt-2 w-56 bg-white rounded-xl shadow-dropdown border border-slate-100 p-4 z-50 space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-semibold text-ceylon-text">Adults (12+ yrs)</span>
-                  <div className="flex items-center gap-2">
-                    <button
-                      type="button"
-                      onClick={() => setAdults(Math.max(1, adults - 1))}
-                      className="w-6 h-6 rounded bg-slate-100 flex items-center justify-center font-bold text-xs"
-                    >
-                      -
-                    </button>
-                    <span className="text-xs font-bold w-4 text-center">{adults}</span>
-                    <button
-                      type="button"
-                      onClick={() => setAdults(adults + 1)}
-                      className="w-6 h-6 rounded bg-slate-100 flex items-center justify-center font-bold text-xs"
-                    >
-                      +
-                    </button>
-                  </div>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-semibold text-ceylon-text">Children (2-11 yrs)</span>
-                  <div className="flex items-center gap-2">
-                    <button
-                      type="button"
-                      onClick={() => setChildren(Math.max(0, children - 1))}
-                      className="w-6 h-6 rounded bg-slate-100 flex items-center justify-center font-bold text-xs"
-                    >
-                      -
-                    </button>
-                    <span className="text-xs font-bold w-4 text-center">{children}</span>
-                    <button
-                      type="button"
-                      onClick={() => setChildren(children + 1)}
-                      className="w-6 h-6 rounded bg-slate-100 flex items-center justify-center font-bold text-xs"
-                    >
-                      +
-                    </button>
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setTravOpen(false)}
-                  className="w-full mt-2 py-1.5 bg-ceylon-blue text-white rounded-lg text-xs font-bold"
-                >
-                  Apply
-                </button>
-              </div>
-            )}
-          </div>
-          <button
-            type="submit"
-            className="px-6 py-2.5 bg-ceylon-green hover:bg-ceylon-darkgreen text-white font-bold text-xs rounded-xl shadow-md transition-all flex items-center gap-1.5 h-[42px]"
-          >
-            <Search className="w-4 h-4" />
-            <span>Search</span>
-          </button>
-        </div>
-      </form>
-
-      {/* Trending Search Chips */}
-      <div className="mt-3.5 pt-3 border-t border-slate-100 flex flex-wrap items-center gap-2 text-xs">
-        <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1">
-          <Sparkles className="w-3 h-3 text-amber-500" />
-          Popular:
-        </span>
-        <Link
-          href="/tours/8-day-splendour-of-sri-lanka-classical-circuit"
-          className="px-2.5 py-1 rounded-lg bg-slate-50 hover:bg-ceylon-softblue text-slate-700 hover:text-ceylon-blue font-medium text-[11px] transition-colors border border-slate-200/60"
-        >
-          🔥 8-Day Classical
-        </Link>
-        <Link
-          href="/tours/sigiriya-rock-fortress-dambulla-day-tour"
-          className="px-2.5 py-1 rounded-lg bg-slate-50 hover:bg-ceylon-softblue text-slate-700 hover:text-ceylon-blue font-medium text-[11px] transition-colors border border-slate-200/60"
-        >
-          🏰 Sigiriya Fortress
-        </Link>
-        <Link
-          href="/tours/kandy-to-ella-scenic-train-journey"
-          className="px-2.5 py-1 rounded-lg bg-slate-50 hover:bg-ceylon-softblue text-slate-700 hover:text-ceylon-blue font-medium text-[11px] transition-colors border border-slate-200/60"
-        >
-          🚂 Ella Scenic Train
-        </Link>
-        <Link
-          href="/tours/yala-national-park-private-safari"
-          className="px-2.5 py-1 rounded-lg bg-slate-50 hover:bg-ceylon-softblue text-slate-700 hover:text-ceylon-blue font-medium text-[11px] transition-colors border border-slate-200/60"
-        >
-          🐆 Yala Safari
-        </Link>
-        <Link
-          href="/tours?category=multiday"
-          className="px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold text-[11px] transition-colors border border-emerald-200"
-        >
-          ✨ Multi-Day Packages
-        </Link>
-      </div>
-    </div>
-  );
-};
+import { SearchWidget } from "./SearchWidget";
 
 export const Hero: React.FC<{ onOpenCustomPlanner?: () => void }> = ({ onOpenCustomPlanner }) => {
   const [slides, setSlides] = useState(defaultSlides);
@@ -326,31 +88,34 @@ export const Hero: React.FC<{ onOpenCustomPlanner?: () => void }> = ({ onOpenCus
 
   return (
     <section
-      className="relative min-h-[680px] lg:min-h-[760px] flex flex-col justify-between pt-8 pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden bg-ceylon-navy"
+      className="relative z-30 min-h-[680px] lg:min-h-[760px] flex flex-col justify-between pt-8 pb-16 px-4 sm:px-6 lg:px-8 bg-ceylon-navy overflow-visible"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      {slides.map((s, idx) => (
-        <div
-          key={s.id || idx}
-          className={`absolute inset-0 z-0 transition-opacity duration-1000 ease-in-out ${
-            idx === current ? "opacity-100" : "opacity-0 pointer-events-none"
-          }`}
-        >
-          <Image
-            src={s.image}
-            alt={s.destination || "Sri Lanka"}
-            fill
-            sizes="100vw"
-            priority={idx === 0}
-            quality={85}
-            className={`object-cover object-center transition-transform duration-[7000ms] ease-out ${
-              idx === current ? "scale-105" : "scale-100"
+      {/* Background Slider Container — Confines scaled images while allowing dropdown popovers to overflow freely */}
+      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+        {slides.map((s, idx) => (
+          <div
+            key={s.id || idx}
+            className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+              idx === current ? "opacity-100" : "opacity-0 pointer-events-none"
             }`}
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-ceylon-navy/95 via-ceylon-navy/75 to-ceylon-navy/40" />
-        </div>
-      ))}
+          >
+            <Image
+              src={s.image}
+              alt={s.destination || "Sri Lanka"}
+              fill
+              sizes="100vw"
+              priority={idx === 0}
+              quality={85}
+              className={`object-cover object-center transition-transform duration-[7000ms] ease-out ${
+                idx === current ? "scale-105" : "scale-100"
+              }`}
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-ceylon-navy/95 via-ceylon-navy/75 to-ceylon-navy/40" />
+          </div>
+        ))}
+      </div>
 
       {/* Slide Progress Timer Bar */}
       <div className="absolute top-0 left-0 right-0 z-20 h-1 bg-white/10">
@@ -508,7 +273,7 @@ export const Hero: React.FC<{ onOpenCustomPlanner?: () => void }> = ({ onOpenCus
         </div>
       </div>
 
-      <div className="relative z-20 mt-10">
+      <div className="relative z-40 mt-10">
         <SearchWidget />
       </div>
     </section>
