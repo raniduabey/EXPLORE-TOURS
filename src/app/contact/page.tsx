@@ -13,6 +13,7 @@ import {
   AlertCircle,
   ExternalLink,
 } from "lucide-react";
+import { CountrySelect } from "@/components/ui/CountrySelect";
 
 export default function ContactPage() {
   const { settings } = useBusinessSettings();
@@ -314,15 +315,12 @@ export default function ContactPage() {
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold text-ceylon-navy mb-1">
-                      Country of Residence
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="e.g. United Kingdom"
+                    <CountrySelect
+                      label="Country of Residence"
                       value={formData.country}
-                      onChange={(e) => setFormData({ ...formData, country: e.target.value })}
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-ceylon-text focus:outline-none focus:border-ceylon-blue"
+                      onChange={(val) => setFormData({ ...formData, country: val })}
+                      placeholder="Select country of residence..."
+                      required
                     />
                   </div>
                 </div>

@@ -5,6 +5,7 @@ import Image from "next/image";
 import { ArrowLeft, Lock, Trash2, ShieldCheck, Ticket } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useCurrency } from "@/context/CurrencyContext";
+import { CountrySelect } from "@/components/ui/CountrySelect";
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -228,14 +229,12 @@ export default function CheckoutPage() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-bold text-ceylon-navy mb-1">
-                    Nationality
-                  </label>
-                  <input
-                    type="text"
+                  <CountrySelect
+                    label="Nationality / Country of Residence"
                     value={country}
-                    onChange={(e) => setCountry(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-semibold text-ceylon-text focus:outline-none focus:border-ceylon-blue"
+                    onChange={(val) => setCountry(val)}
+                    placeholder="Select nationality..."
+                    required
                   />
                 </div>
                 <div>

@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { Star, ShieldCheck, MessageSquare, PenLine } from "lucide-react";
 import { WriteReviewModal } from "@/components/reviews/WriteReviewModal";
+import { getCountryName, getCountryFlag } from "@/data/countriesData";
 
 interface Review {
   id: string;
@@ -152,7 +153,7 @@ export const ReviewsBreakdown: React.FC<ReviewsBreakdownProps> = ({
                       <ShieldCheck className="w-3.5 h-3.5 text-ceylon-green fill-current" />
                     </h4>
                     <span className="text-[11px] text-ceylon-muted">
-                      {rev.userCountry || "International Guest"} • Traveled {rev.travelDate}
+                      {getCountryFlag(rev.userCountry)} {getCountryName(rev.userCountry, "International Guest")} • Traveled {rev.travelDate}
                     </span>
                   </div>
                 </div>

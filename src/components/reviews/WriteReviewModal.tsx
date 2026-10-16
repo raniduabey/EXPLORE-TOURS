@@ -11,11 +11,11 @@ import {
   Calendar,
   User,
   Mail,
-  MapPin,
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { CountrySelect } from "@/components/ui/CountrySelect";
 
 interface WriteReviewModalProps {
   isOpen: boolean;
@@ -416,19 +416,13 @@ export const WriteReviewModal: React.FC<WriteReviewModalProps> = ({
               {/* Country & Travel Date */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-bold text-ceylon-navy mb-1">
-                    Country of Origin
-                  </label>
-                  <div className="relative">
-                    <MapPin className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-3" />
-                    <input
-                      type="text"
-                      placeholder="e.g. United Kingdom"
-                      value={country}
-                      onChange={(e) => setCountry(e.target.value)}
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-8 pr-3 py-2 text-xs text-ceylon-navy focus:outline-none focus:border-ceylon-blue"
-                    />
-                  </div>
+                  <CountrySelect
+                    label="Country of Origin"
+                    value={country}
+                    onChange={(val) => setCountry(val)}
+                    placeholder="Select country of origin..."
+                    required
+                  />
                 </div>
 
                 <div className="relative" ref={calendarRef}>

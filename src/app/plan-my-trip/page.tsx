@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { Sparkles, CheckCircle, Phone, Users, Calendar, MapPin, Check, Send } from "lucide-react";
 import { siteConfig } from "@/config/site";
+import { CountrySelect } from "@/components/ui/CountrySelect";
 
 export default function PlanMyTripPage() {
   const [submitted, setSubmitted] = useState(false);
@@ -163,14 +164,12 @@ export default function PlanMyTripPage() {
                 />
               </div>
               <div>
-                <label className="block text-xs font-bold text-ceylon-navy mb-1">
-                  Country of Origin
-                </label>
-                <input
-                  type="text"
+                <CountrySelect
+                  label="Country of Origin"
                   value={country}
-                  onChange={(e) => setCountry(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-semibold"
+                  onChange={(val) => setCountry(val)}
+                  placeholder="Select country of origin..."
+                  required
                 />
               </div>
             </div>

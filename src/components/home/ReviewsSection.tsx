@@ -4,6 +4,7 @@ import Image from "next/image";
 import { Quote, Star, CheckCircle2, MessageSquarePlus, PenLine, RefreshCw, AlertCircle } from "lucide-react";
 import { FadeIn, FadeInStagger, FadeInStaggerItem } from "@/components/ui/motion";
 import { WriteReviewModal } from "@/components/reviews/WriteReviewModal";
+import { getCountryName, getCountryFlag } from "@/data/countriesData";
 
 export interface ApprovedReview {
   id: string;
@@ -280,7 +281,7 @@ export const ReviewsSection: React.FC<ReviewsSectionProps> = ({ initialReviews =
                           <CheckCircle2 className="w-3.5 h-3.5 text-luxury-gold" />
                         </h4>
                         <span className="text-[11px] text-luxury-charcoal/60 font-sans block mt-0.5">
-                          {r.userCountry || "International Traveller"}
+                          {getCountryFlag(r.userCountry)} {getCountryName(r.userCountry, "International Traveller")}
                           {r.travelDate ? ` • ${formatVisitDate(r.travelDate)}` : ""}
                         </span>
                         <span className="text-[10px] text-luxury-forest font-serif italic block line-clamp-1 mt-0.5">

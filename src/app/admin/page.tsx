@@ -63,6 +63,7 @@ import { DynamicIcon, AVAILABLE_TOUR_ICONS } from "@/components/common/DynamicIc
 import { TourEditorModal } from "@/components/admin/TourEditorModal";
 import { DestinationEditorModal } from "@/components/admin/DestinationEditorModal";
 import { AdminTabErrorBoundary } from "@/components/admin/AdminTabErrorBoundary";
+import { getCountryName, getCountryFlag } from "@/data/countriesData";
 import { getBadgeLabel } from "@/components/tours/TourCard";
 
 export default function AdminDashboardPage() {
@@ -1576,7 +1577,7 @@ export default function AdminDashboardPage() {
                           <td className="py-3 px-4">
                             <span className="font-bold text-ceylon-navy block">{b.guestName}</span>
                             <span className="text-slate-500 text-[11px] block">{b.guestEmail}</span>
-                            <span className="text-slate-400 text-[10px] block">{b.guestPhone || "No phone"} • {b.guestCountry}</span>
+                            <span className="text-slate-400 text-[10px] block">{b.guestPhone || "No phone"} • {getCountryFlag(b.guestCountry)} {getCountryName(b.guestCountry)}</span>
                           </td>
                           <td className="py-3 px-4">
                             <span className="font-semibold text-ceylon-navy block line-clamp-1 max-w-xs">
@@ -1724,7 +1725,7 @@ export default function AdminDashboardPage() {
                           </span>
                         </div>
                         <span className="text-[11px] text-slate-400 block mt-0.5">
-                          {rev.userEmail || "No email"} • {rev.userCountry || "International"} • Tour: {rev.tour?.title || "General Sri Lanka Journey"}
+                          {rev.userEmail || "No email"} • {getCountryFlag(rev.userCountry)} {getCountryName(rev.userCountry, "International")} • Tour: {rev.tour?.title || "General Sri Lanka Journey"}
                         </span>
                       </div>
 
@@ -2030,7 +2031,7 @@ export default function AdminDashboardPage() {
                         </span>
                       </div>
                       <span className="text-[11px] text-slate-400 block mt-0.5">
-                        {inq.email} • {inq.phone || "No phone"} • {inq.country}
+                        {inq.email} • {inq.phone || "No phone"} • {getCountryFlag(inq.country)} {getCountryName(inq.country)}
                       </span>
                     </div>
                     <div className="flex items-center gap-2">
