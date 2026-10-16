@@ -274,15 +274,10 @@ export const CountrySelect: React.FC<CountrySelectProps> = ({
       {label && (
         <label
           htmlFor={id}
-          className="block text-xs font-bold text-ceylon-navy mb-1 flex items-center justify-between"
+          className="block text-xs font-bold text-ceylon-navy mb-1"
         >
-          <span>
-            {label}
-            {required && <span className="text-rose-500 ml-0.5">*</span>}
-          </span>
-          <span className="text-[10px] text-slate-400 font-normal">
-            249 Countries Supported
-          </span>
+          {label}
+          {required && <span className="text-rose-500 ml-0.5">*</span>}
         </label>
       )}
 
@@ -315,9 +310,6 @@ export const CountrySelect: React.FC<CountrySelectProps> = ({
               </span>
               <span className="font-semibold text-ceylon-navy truncate">
                 {selectedCountry.name}
-              </span>
-              <span className="text-[10px] font-mono text-slate-400 uppercase bg-slate-200/60 px-1.5 py-0.5 rounded shrink-0">
-                {selectedCountry.code}
               </span>
             </>
           ) : (
@@ -373,7 +365,7 @@ export const CountrySelect: React.FC<CountrySelectProps> = ({
                   setHighlightedIndex(0);
                 }}
                 onKeyDown={handleKeyDown}
-                placeholder="Search 249 countries or code (e.g. Sri, UK, +94)..."
+                placeholder="Search for your country..."
                 className="w-full bg-transparent text-xs text-ceylon-navy placeholder-slate-400 focus:outline-none py-1"
               />
               {searchQuery && (
@@ -420,7 +412,7 @@ export const CountrySelect: React.FC<CountrySelectProps> = ({
                       aria-selected={isSelected}
                       onClick={() => handleSelectCountry(country)}
                       onMouseEnter={() => setHighlightedIndex(index)}
-                      className={`px-3 py-2 text-xs flex items-center justify-between cursor-pointer transition-colors duration-100 ${
+                      className={`px-3.5 py-2.5 text-xs flex items-center justify-between cursor-pointer transition-colors duration-100 ${
                         isSelected
                           ? "bg-luxury-forest text-luxury-ivory font-semibold"
                           : isHighlighted
@@ -435,42 +427,14 @@ export const CountrySelect: React.FC<CountrySelectProps> = ({
                         <span className="truncate">{country.name}</span>
                       </div>
 
-                      <div className="flex items-center gap-1.5 shrink-0">
-                        <span
-                          className={`text-[10px] font-mono px-1.5 py-0.5 rounded ${
-                            isSelected
-                              ? "bg-white/20 text-white"
-                              : "bg-slate-100 text-slate-500"
-                          }`}
-                        >
-                          {country.code}
-                        </span>
-                        <span
-                          className={`text-[10px] font-sans ${
-                            isSelected ? "text-luxury-sand" : "text-slate-400"
-                          }`}
-                        >
-                          {country.dialCode}
-                        </span>
-                        {isSelected && (
-                          <Check className="w-3.5 h-3.5 text-luxury-gold ml-1 shrink-0" />
-                        )}
-                      </div>
+                      {isSelected && (
+                        <Check className="w-3.5 h-3.5 text-luxury-gold shrink-0 ml-2" />
+                      )}
                     </li>
                   );
                 })
               )}
             </ul>
-
-            {/* Footer with dataset status */}
-            <div className="px-3 py-1.5 bg-[#FAF8F5] border-t border-slate-100 flex items-center justify-between text-[10px] text-slate-400">
-              <span>
-                Showing {filteredCountries.length} of {COUNTRIES.length} entries
-              </span>
-              <span className="font-mono uppercase text-[9px] text-luxury-forest/60">
-                ISO 3166-1 Global
-              </span>
-            </div>
           </div>,
           document.body
         )}
