@@ -43,7 +43,10 @@ import {
   Check,
   RefreshCw,
   MoveLeft,
-  MoveRight
+  MoveRight,
+  Loader2,
+  Sparkles,
+  FolderOpen
 } from "lucide-react";
 import { formatCurrency } from "@/lib/currency";
 
@@ -121,6 +124,12 @@ export default function AdminDashboardPage() {
   const [uploadSuccess, setUploadSuccess] = useState<string>("");
   const [uploadProgress, setUploadProgress] = useState<number>(0);
 
+  // Tour Gallery & Multi-Photo Upload State
+  const [mediaPickerTarget, setMediaPickerTarget] = useState<"tourPrimary" | "tourGallery" | null>(null);
+  const [tourGalleryUploadProgress, setTourGalleryUploadProgress] = useState<{ current: number; total: number } | null>(null);
+  const [isDraggingTourGallery, setIsDraggingTourGallery] = useState(false);
+  const [newGalleryUrlInput, setNewGalleryUrlInput] = useState("");
+
   // Load all admin data
   async function loadAllData() {
     try {
@@ -179,7 +188,7 @@ export default function AdminDashboardPage() {
     }
   };
 
-  // Image upload helper with strict 8MB limit and clear technical reporting
+  // Image upload helper with strict 8MB limit and timeout protection
   const handleFileUpload = async (
     file: File,
     callback?: (url: string, asset?: any) => void,
@@ -194,9 +203,20 @@ export default function AdminDashboardPage() {
       return null;
     }
 
-    const allowed = ["image/jpeg", "image/png", "image/webp", "image/avif"];
-    if (file.type && !allowed.includes(file.type.toLowerCase())) {
-      const msg = `Unsupported format '${file.type}'. Please upload JPEG (.jpg, .jpeg), PNG (.png), WebP (.webp), or AVIF (.avif).`;
+    const allowed = [
+      "image/jpeg",
+      "image/jpg",
+      "image/png",
+      "image/webp",
+      "image/avif",
+      "image/pjpeg",
+      "image/x-png",
+    ];
+    const fileExt = file.name ? file.name.slice(file.name.lastIndexOf(".")).toLowerCase() : "";
+    const allowedExts = [".jpg", ".jpeg", ".png", ".webp", ".avif"];
+
+    if (file.type && !allowed.includes(file.type.toLowerCase()) && !allowedExts.includes(fileExt)) {
+      const msg = `Unsupported format '${file.type || fileExt}'. Please upload JPEG (.jpg, .jpeg), PNG (.png), WebP (.webp), or AVIF (.avif).`;
       setUploadError(msg);
       alert(msg);
       return null;
@@ -214,11 +234,16 @@ export default function AdminDashboardPage() {
       if (meta?.title) fd.append("title", meta.title);
 
       setUploadProgress(50);
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 35000);
+
       const res = await fetch("/api/admin/upload", {
         method: "POST",
         body: fd,
+        signal: controller.signal,
       });
 
+      clearTimeout(timeoutId);
       setUploadProgress(80);
       const data = await res.json().catch(() => ({}));
 
@@ -239,13 +264,79 @@ export default function AdminDashboardPage() {
         return null;
       }
     } catch (e: any) {
-      const netMsg = `Upload failed due to network error: ${e?.message || "Check your internet connection."}`;
+      const isTimeout = e?.name === "AbortError";
+      const netMsg = isTimeout
+        ? "Upload timed out after 35 seconds. Please check your network connection or try a smaller image."
+        : `Upload failed: ${e?.message || "Check your internet connection."}`;
       setUploadError(netMsg);
       alert(netMsg);
       return null;
     } finally {
       setUploading(false);
       setTimeout(() => setUploadProgress(0), 1000);
+    }
+  };
+
+  // Multiple Tour Photo Uploader (Multi-file select & Drag & Drop)
+  const handleMultipleTourFiles = async (
+    files: FileList | File[],
+    onComplete: (newUrls: string[]) => void
+  ) => {
+    const fileArray = Array.from(files);
+    if (fileArray.length === 0) return;
+
+    const MAX_FILE_SIZE = 8 * 1024 * 1024;
+    const uploadedUrls: string[] = [];
+
+    setUploading(true);
+    setTourGalleryUploadProgress({ current: 0, total: fileArray.length });
+
+    for (let i = 0; i < fileArray.length; i++) {
+      const file = fileArray[i];
+      setTourGalleryUploadProgress({ current: i + 1, total: fileArray.length });
+
+      if (file.size > MAX_FILE_SIZE) {
+        alert(`Photograph "${file.name}" exceeds the 8 MB upload limit and was skipped.`);
+        continue;
+      }
+
+      try {
+        const fd = new FormData();
+        fd.append("file", file);
+        fd.append("title", file.name);
+
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 35000);
+
+        const res = await fetch("/api/admin/upload", {
+          method: "POST",
+          body: fd,
+          signal: controller.signal,
+        });
+
+        clearTimeout(timeoutId);
+        const data = await res.json().catch(() => ({}));
+
+        if (res.ok && data.url) {
+          uploadedUrls.push(data.url);
+        } else {
+          console.warn(`Upload failed for ${file.name}:`, data?.error);
+        }
+      } catch (err) {
+        console.warn(`Network error uploading ${file.name}:`, err);
+      }
+    }
+
+    setUploading(false);
+    setTourGalleryUploadProgress(null);
+
+    if (uploadedUrls.length > 0) {
+      onComplete(uploadedUrls);
+      setStatusMsg(`Successfully added ${uploadedUrls.length} photograph(s) to tour package!`);
+      fetch("/api/admin/upload")
+        .then((r) => r.json())
+        .then((assets) => Array.isArray(assets) && setMediaAssets(assets))
+        .catch(() => {});
     }
   };
 
@@ -1267,35 +1358,345 @@ export default function AdminDashboardPage() {
                     </div>
                   </div>
 
-                  {/* Media */}
-                  <div className="space-y-4 pt-4 border-t border-slate-100">
-                    <h4 className="text-xs font-extrabold uppercase tracking-wider text-ceylon-blue">
-                      3. Media & Photographs
-                    </h4>
-                    <div>
-                      <label className="block text-xs font-bold text-ceylon-navy mb-1">Primary Featured Image URL *</label>
-                      <div className="flex gap-2">
-                        <input
-                          type="text"
-                          value={editingTour.primaryImage || ""}
-                          onChange={(e) => setEditingTour({ ...editingTour, primaryImage: e.target.value })}
-                          className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-mono text-slate-700"
-                          required
-                        />
-                        <label className="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-xs font-bold text-ceylon-navy rounded-xl cursor-pointer flex items-center gap-1 shrink-0">
-                          <Upload className="w-3.5 h-3.5" />
-                          <span>Upload</span>
+                  {/* 3. Media & Photographs (Featured + Full Tour Gallery) */}
+                  <div className="space-y-6 pt-5 border-t border-slate-200">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                      <div>
+                        <h4 className="text-xs font-extrabold uppercase tracking-wider text-ceylon-blue flex items-center gap-1.5">
+                          <Camera className="w-3.5 h-3.5 text-luxury-gold" />
+                          <span>3. Media & Photographs (Primary + Tour Gallery)</span>
+                        </h4>
+                        <p className="text-[11px] text-slate-500 mt-0.5">
+                          Manage the prominent hero photograph and the rich interactive gallery collection for this journey.
+                        </p>
+                      </div>
+                      <span className="text-[11px] font-mono text-slate-500 bg-slate-100 px-2.5 py-1 rounded-full border border-slate-200 shrink-0">
+                        Total Gallery: <strong className="text-ceylon-navy font-bold">{1 + (editingTour.galleryImages || []).length}</strong> Photos
+                      </span>
+                    </div>
+
+                    {/* A. Primary Featured Image Card */}
+                    <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-3">
+                      <div className="flex items-center justify-between">
+                        <label className="text-xs font-bold text-ceylon-navy flex items-center gap-1.5">
+                          <Sparkles className="w-3.5 h-3.5 text-luxury-gold" />
+                          <span>Primary Featured / Cover Image *</span>
+                        </label>
+                        <span className="text-[10px] font-semibold text-amber-700 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full">
+                          Used on Tour Cards & Public Hero
+                        </span>
+                      </div>
+
+                      <div className="flex flex-col sm:flex-row gap-3 items-start">
+                        {/* Preview thumbnail */}
+                        <div className="relative w-full sm:w-40 h-28 rounded-xl overflow-hidden bg-slate-200 border border-slate-300 shrink-0 shadow-inner">
+                          {editingTour.primaryImage ? (
+                            <Image
+                              src={editingTour.primaryImage}
+                              alt="Featured tour cover"
+                              fill
+                              unoptimized
+                              className="object-cover"
+                            />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center text-slate-400 text-xs font-medium">
+                              No Cover Image
+                            </div>
+                          )}
+                        </div>
+
+                        {/* URL input and action buttons */}
+                        <div className="flex-1 w-full space-y-2">
+                          <input
+                            type="text"
+                            placeholder="Enter image URL or upload below..."
+                            value={editingTour.primaryImage || ""}
+                            onChange={(e) => setEditingTour({ ...editingTour, primaryImage: e.target.value })}
+                            className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-mono text-slate-700 focus:outline-none focus:border-ceylon-blue"
+                            required
+                          />
+                          <div className="flex flex-wrap gap-2">
+                            <label className="px-3 py-1.5 bg-ceylon-navy hover:bg-ceylon-blue text-white rounded-xl text-xs font-bold cursor-pointer flex items-center gap-1.5 shadow transition-colors">
+                              {uploading ? (
+                                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                              ) : (
+                                <Upload className="w-3.5 h-3.5" />
+                              )}
+                              <span>{uploading ? "Uploading..." : "Upload New Cover"}</span>
+                              <input
+                                type="file"
+                                accept="image/jpeg,image/png,image/webp,image/avif"
+                                disabled={uploading}
+                                onChange={async (e) => {
+                                  const file = e.target.files?.[0];
+                                  if (file) {
+                                    await handleFileUpload(file, (url) => {
+                                      setEditingTour({ ...editingTour, primaryImage: url });
+                                    });
+                                  }
+                                }}
+                                className="hidden"
+                              />
+                            </label>
+
+                            <button
+                              type="button"
+                              onClick={() => setMediaPickerTarget("tourPrimary")}
+                              className="px-3 py-1.5 bg-white hover:bg-slate-100 text-slate-700 rounded-xl text-xs font-bold border border-slate-200 flex items-center gap-1.5 shadow-sm transition-colors"
+                            >
+                              <FolderOpen className="w-3.5 h-3.5 text-luxury-gold" />
+                              <span>Select from Media Library</span>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* B. Tour Gallery Photographs (Multi-Photo) */}
+                    <div className="space-y-4 p-4 bg-slate-50/80 rounded-2xl border border-slate-200">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <div>
+                          <label className="text-xs font-bold text-ceylon-navy flex items-center gap-1.5">
+                            <Layers className="w-3.5 h-3.5 text-ceylon-blue" />
+                            <span>Additional Tour Gallery Photos</span>
+                          </label>
+                          <p className="text-[11px] text-slate-500">
+                            Upload at least 8–15 photos. Guests can browse them in the luxury full-screen lightbox.
+                          </p>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => setMediaPickerTarget("tourGallery")}
+                          className="px-3 py-1 bg-white hover:bg-slate-100 text-slate-700 rounded-xl text-xs font-bold border border-slate-200 flex items-center gap-1.5 self-start sm:self-auto shadow-sm"
+                        >
+                          <FolderOpen className="w-3.5 h-3.5 text-luxury-gold" />
+                          <span>Add from Library</span>
+                        </button>
+                      </div>
+
+                      {/* Multi-Photo Drag & Drop Upload Zone */}
+                      <div
+                        onDragOver={(e) => {
+                          e.preventDefault();
+                          setIsDraggingTourGallery(true);
+                        }}
+                        onDragLeave={() => setIsDraggingTourGallery(false)}
+                        onDrop={async (e) => {
+                          e.preventDefault();
+                          setIsDraggingTourGallery(false);
+                          if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                            await handleMultipleTourFiles(e.dataTransfer.files, (newUrls) => {
+                              const existing = editingTour.galleryImages || [];
+                              setEditingTour({
+                                ...editingTour,
+                                galleryImages: [...existing, ...newUrls],
+                              });
+                            });
+                          }
+                        }}
+                        className={`rounded-2xl p-5 border-2 border-dashed transition-all text-center flex flex-col items-center justify-center space-y-2 ${
+                          isDraggingTourGallery
+                            ? "border-ceylon-blue bg-blue-50/60"
+                            : "border-slate-300 bg-white hover:border-ceylon-blue/60"
+                        }`}
+                      >
+                        <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-ceylon-blue">
+                          <Upload className="w-5 h-5" />
+                        </div>
+                        <div>
+                          <p className="text-xs font-bold text-ceylon-navy">
+                            Drag & Drop Multiple Photographs Here or Browse
+                          </p>
+                          <p className="text-[10px] text-slate-400 mt-0.5">
+                            Strict 8 MB max per image • JPEG, PNG, WebP, AVIF • Select multiple files at once
+                          </p>
+                        </div>
+
+                        <label className="px-4 py-2 bg-ceylon-blue hover:bg-ceylon-navy text-white text-xs font-extrabold rounded-xl shadow cursor-pointer transition-colors inline-flex items-center gap-1.5">
+                          {uploading && tourGalleryUploadProgress ? (
+                            <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                          ) : (
+                            <Plus className="w-3.5 h-3.5" />
+                          )}
+                          <span>
+                            {uploading && tourGalleryUploadProgress
+                              ? `Uploading (${tourGalleryUploadProgress.current}/${tourGalleryUploadProgress.total})...`
+                              : "Browse & Upload Multiple Photos"}
+                          </span>
                           <input
                             type="file"
-                            accept="image/*"
-                            onChange={(e) => {
-                              const file = e.target.files?.[0];
-                              if (file) handleFileUpload(file, (url) => setEditingTour({ ...editingTour, primaryImage: url }));
+                            multiple
+                            accept="image/jpeg,image/png,image/webp,image/avif"
+                            disabled={uploading}
+                            onChange={async (e) => {
+                              const files = e.target.files;
+                              if (files && files.length > 0) {
+                                await handleMultipleTourFiles(files, (newUrls) => {
+                                  const existing = editingTour.galleryImages || [];
+                                  setEditingTour({
+                                    ...editingTour,
+                                    galleryImages: [...existing, ...newUrls],
+                                  });
+                                });
+                              }
                             }}
                             className="hidden"
                           />
                         </label>
                       </div>
+
+                      {/* Direct URL input bar */}
+                      <div className="flex gap-2">
+                        <input
+                          type="url"
+                          placeholder="Or paste an image URL to add directly..."
+                          value={newGalleryUrlInput}
+                          onChange={(e) => setNewGalleryUrlInput(e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                              e.preventDefault();
+                              if (newGalleryUrlInput.trim()) {
+                                const existing = editingTour.galleryImages || [];
+                                setEditingTour({
+                                  ...editingTour,
+                                  galleryImages: [...existing, newGalleryUrlInput.trim()],
+                                });
+                                setNewGalleryUrlInput("");
+                              }
+                            }
+                          }}
+                          className="flex-1 bg-white border border-slate-200 rounded-xl px-3 py-1.5 text-xs text-slate-700 focus:outline-none focus:border-ceylon-blue"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (newGalleryUrlInput.trim()) {
+                              const existing = editingTour.galleryImages || [];
+                              setEditingTour({
+                                ...editingTour,
+                                galleryImages: [...existing, newGalleryUrlInput.trim()],
+                              });
+                              setNewGalleryUrlInput("");
+                            }
+                          }}
+                          className="px-3.5 py-1.5 bg-slate-200 hover:bg-slate-300 text-xs font-bold text-slate-700 rounded-xl"
+                        >
+                          Add URL
+                        </button>
+                      </div>
+
+                      {/* Interactive Gallery Thumbnails Grid */}
+                      {(editingTour.galleryImages || []).length > 0 ? (
+                        <div className="space-y-2">
+                          <span className="text-[11px] font-bold text-slate-600 block">
+                            Current Gallery Collection ({editingTour.galleryImages.length} photos):
+                          </span>
+                          <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-2.5">
+                            {editingTour.galleryImages.map((imgUrl: string, idx: number) => (
+                              <div
+                                key={`${imgUrl}-${idx}`}
+                                className="relative group rounded-xl overflow-hidden bg-white border border-slate-200 shadow-sm aspect-[4/3] flex flex-col justify-between"
+                              >
+                                <Image
+                                  src={imgUrl}
+                                  alt={`Gallery ${idx + 1}`}
+                                  fill
+                                  unoptimized
+                                  className="object-cover"
+                                />
+
+                                {/* Index badge */}
+                                <div className="absolute top-1 left-1 bg-black/70 text-white font-mono text-[9px] font-bold px-1.5 py-0.5 rounded shadow">
+                                  #{idx + 1}
+                                </div>
+
+                                {/* Hover Overlay Actions */}
+                                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-between p-1.5">
+                                  {/* Top row: Set as Featured button */}
+                                  <div className="flex justify-end">
+                                    <button
+                                      type="button"
+                                      onClick={() => {
+                                        // Swap this photo with primaryImage
+                                        const oldPrimary = editingTour.primaryImage;
+                                        const newGallery = [...editingTour.galleryImages];
+                                        newGallery.splice(idx, 1);
+                                        if (oldPrimary) newGallery.unshift(oldPrimary);
+                                        setEditingTour({
+                                          ...editingTour,
+                                          primaryImage: imgUrl,
+                                          galleryImages: newGallery,
+                                        });
+                                      }}
+                                      className="px-1.5 py-0.5 bg-amber-500 hover:bg-amber-600 text-white text-[9px] font-extrabold rounded shadow flex items-center gap-0.5"
+                                      title="Set this photograph as the primary cover"
+                                    >
+                                      <Star className="w-2.5 h-2.5 fill-current" />
+                                      <span>Feature</span>
+                                    </button>
+                                  </div>
+
+                                  {/* Bottom row: Move & Delete controls */}
+                                  <div className="flex items-center justify-between">
+                                    <div className="flex gap-1">
+                                      <button
+                                        type="button"
+                                        disabled={idx === 0}
+                                        onClick={() => {
+                                          if (idx > 0) {
+                                            const arr = [...editingTour.galleryImages];
+                                            const temp = arr[idx];
+                                            arr[idx] = arr[idx - 1];
+                                            arr[idx - 1] = temp;
+                                            setEditingTour({ ...editingTour, galleryImages: arr });
+                                          }
+                                        }}
+                                        className="p-1 bg-white/90 hover:bg-white text-slate-800 rounded disabled:opacity-30"
+                                        title="Move earlier"
+                                      >
+                                        <MoveLeft className="w-3 h-3" />
+                                      </button>
+                                      <button
+                                        type="button"
+                                        disabled={idx === editingTour.galleryImages.length - 1}
+                                        onClick={() => {
+                                          if (idx < editingTour.galleryImages.length - 1) {
+                                            const arr = [...editingTour.galleryImages];
+                                            const temp = arr[idx];
+                                            arr[idx] = arr[idx + 1];
+                                            arr[idx + 1] = temp;
+                                            setEditingTour({ ...editingTour, galleryImages: arr });
+                                          }
+                                        }}
+                                        className="p-1 bg-white/90 hover:bg-white text-slate-800 rounded disabled:opacity-30"
+                                        title="Move later"
+                                      >
+                                        <MoveRight className="w-3 h-3" />
+                                      </button>
+                                    </div>
+
+                                    <button
+                                      type="button"
+                                      onClick={() => {
+                                        const arr = editingTour.galleryImages.filter((_: any, i: number) => i !== idx);
+                                        setEditingTour({ ...editingTour, galleryImages: arr });
+                                      }}
+                                      className="p-1 bg-rose-600/90 hover:bg-rose-600 text-white rounded"
+                                      title="Remove from gallery"
+                                    >
+                                      <Trash2 className="w-3 h-3" />
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="py-4 text-center rounded-xl bg-white border border-slate-200 text-slate-400 text-xs">
+                          No additional gallery photos added yet. Upload or browse multiple photos above to build an immersive tour gallery.
+                        </div>
+                      )}
                     </div>
                   </div>
 
@@ -2834,7 +3235,7 @@ export default function AdminDashboardPage() {
                       <div className="flex items-center gap-3">
                         <div className="relative w-16 h-16 rounded-xl overflow-hidden bg-slate-200 border border-slate-300 shrink-0">
                           {stagedPreviewUrl && (
-                            <Image src={stagedPreviewUrl} alt="Preview" fill className="object-cover" />
+                            <Image src={stagedPreviewUrl} alt="Preview" fill unoptimized className="object-cover" />
                           )}
                         </div>
                         <div>
@@ -2991,7 +3392,7 @@ export default function AdminDashboardPage() {
                         onClick={() => setLightboxImage(asset.url)}
                         className="relative h-32 w-full bg-slate-100 cursor-pointer overflow-hidden"
                       >
-                        <Image src={asset.url} alt={asset.altText || asset.title || "Media"} fill className="object-cover group-hover:scale-105 transition-transform duration-300" />
+                        <Image src={asset.url} alt={asset.altText || asset.title || "Media"} fill unoptimized className="object-cover group-hover:scale-105 transition-transform duration-300" />
                         <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white">
                           <Eye className="w-5 h-5" />
                         </div>
@@ -3393,7 +3794,7 @@ export default function AdminDashboardPage() {
               className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4 cursor-pointer"
             >
               <div className="relative max-w-5xl max-h-[85vh] w-full h-full flex items-center justify-center">
-                <Image src={lightboxImage} alt="Fullscreen preview" fill className="object-contain" />
+                <Image src={lightboxImage} alt="Fullscreen preview" fill unoptimized className="object-contain" />
                 <button
                   onClick={() => setLightboxImage(null)}
                   className="absolute top-2 right-2 px-3 py-1.5 bg-white/20 hover:bg-white/40 text-white rounded-xl text-xs font-bold"
@@ -3658,6 +4059,124 @@ export default function AdminDashboardPage() {
                   When you click &ldquo;Save Business Settings&rdquo;, this data is saved to the SQLite database and served via <code className="bg-white px-1 py-0.5 rounded text-ceylon-blue font-mono text-[10px]">/api/business-settings</code>, automatically updating the Footer, Contact Us page, and floating WhatsApp buttons in real time.
                 </p>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ---------------------------------------------------- */}
+      {/* REUSABLE MEDIA LIBRARY ASSET PICKER MODAL */}
+      {/* ---------------------------------------------------- */}
+      {mediaPickerTarget && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white max-w-4xl w-full rounded-3xl p-6 sm:p-8 space-y-5 shadow-2xl max-h-[90vh] flex flex-col">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-4 shrink-0">
+              <div>
+                <h3 className="text-base font-extrabold text-ceylon-navy flex items-center gap-2">
+                  <FolderOpen className="w-5 h-5 text-luxury-gold" />
+                  <span>Choose from Media Asset Library</span>
+                </h3>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  {mediaPickerTarget === "tourPrimary"
+                    ? "Click an image to set as the primary cover photo."
+                    : "Click an image to add it to the tour gallery."}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setMediaPickerTarget(null)}
+                className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center"
+              >
+                <XCircle className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Quick Filter Search */}
+            <div className="relative shrink-0">
+              <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <input
+                type="text"
+                placeholder="Search library assets by title, filename, or alt text..."
+                value={mediaSearch}
+                onChange={(e) => setMediaSearch(e.target.value)}
+                className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-700 focus:outline-none focus:border-ceylon-blue"
+              />
+            </div>
+
+            {/* Media Grid */}
+            <div className="flex-1 overflow-y-auto min-h-[300px] pr-1">
+              {mediaAssets.length === 0 ? (
+                <div className="py-16 text-center text-slate-400 text-xs">
+                  No images in media library yet. Upload images in the &ldquo;Media Library&rdquo; tab or upload a new file.
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-3">
+                  {mediaAssets
+                    .filter((a) => {
+                      if (!mediaSearch) return true;
+                      const q = mediaSearch.toLowerCase();
+                      return (
+                        a.filename.toLowerCase().includes(q) ||
+                        (a.title && a.title.toLowerCase().includes(q)) ||
+                        (a.altText && a.altText.toLowerCase().includes(q))
+                      );
+                    })
+                    .map((asset) => (
+                      <button
+                        type="button"
+                        key={asset.id}
+                        onClick={() => {
+                          if (mediaPickerTarget === "tourPrimary") {
+                            setEditingTour({ ...editingTour, primaryImage: asset.url });
+                          } else if (mediaPickerTarget === "tourGallery") {
+                            const current = editingTour.galleryImages || [];
+                            if (!current.includes(asset.url)) {
+                              setEditingTour({
+                                ...editingTour,
+                                galleryImages: [...current, asset.url],
+                              });
+                            }
+                          }
+                          setMediaPickerTarget(null);
+                        }}
+                        className="group text-left rounded-2xl overflow-hidden bg-slate-50 border border-slate-200 hover:border-ceylon-blue hover:shadow-md transition-all flex flex-col justify-between"
+                      >
+                        <div className="relative h-28 w-full bg-slate-200 overflow-hidden">
+                          <Image
+                            src={asset.url}
+                            alt={asset.altText || asset.title || "Media"}
+                            fill
+                            unoptimized
+                            className="object-cover group-hover:scale-105 transition-transform duration-300"
+                          />
+                          <div className="absolute inset-0 bg-ceylon-blue/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white">
+                            <span className="bg-ceylon-navy text-[10px] font-extrabold px-2 py-1 rounded shadow">
+                              Select
+                            </span>
+                          </div>
+                        </div>
+                        <div className="p-2 space-y-0.5">
+                          <span className="text-[11px] font-bold text-ceylon-navy block truncate" title={asset.title || asset.filename}>
+                            {asset.title || asset.filename}
+                          </span>
+                          <span className="text-[9px] text-slate-400 block">
+                            {asset.fileSize ? `${(asset.fileSize / 1024).toFixed(0)} KB` : "Asset"} • Click to use
+                          </span>
+                        </div>
+                      </button>
+                    ))}
+                </div>
+              )}
+            </div>
+
+            <div className="pt-3 border-t border-slate-100 flex justify-end shrink-0">
+              <button
+                type="button"
+                onClick={() => setMediaPickerTarget(null)}
+                className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl"
+              >
+                Close Picker
+              </button>
             </div>
           </div>
         </div>

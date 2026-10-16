@@ -24,7 +24,20 @@ const nextConfig = {
         protocol: "https",
         hostname: "api.qrserver.com",
       },
+      {
+        protocol: "https",
+        hostname: "*.public.blob.vercel-storage.com",
+      },
+      {
+        protocol: "https",
+        hostname: "blob.vercel-storage.com",
+      },
     ],
+  },
+  experimental: {
+    outputFileTracingIncludes: {
+      "/api/**/*": ["./prisma/dev.db"],
+    },
   },
   async headers() {
     return [

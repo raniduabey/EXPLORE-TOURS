@@ -86,7 +86,7 @@ export default async function TourDetailPage({
     tour = await prisma.tour.findUnique({
       where: { slug: params.slug },
       include: {
-        images: true,
+        images: { orderBy: [{ isPrimary: "desc" }, { order: "asc" }] },
         itinerary: { orderBy: { stepNumber: "asc" } },
         reviews: { orderBy: { createdAt: "desc" } },
         destination: true,

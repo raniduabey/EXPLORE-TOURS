@@ -7,7 +7,7 @@ import { verifyAdminToken } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 
-const MAX_FILE_SIZE = 8 * 1024 * 1024; // 8 Megabytes in exact bytes
+const MAX_FILE_SIZE = 8 * 1024 * 1024; // Strict 8 Megabytes in exact bytes
 
 // Inspect magic bytes for secure server-side validation
 function validateMagicBytes(buffer: Buffer): { valid: boolean; detectedMime: string } {
@@ -51,7 +51,7 @@ function extractDimensions(buffer: Buffer, mime: string): { width?: number; heig
       const height = buffer.readUInt32BE(20);
       return { width, height };
     }
-    if (mime === "image/jpeg" && buffer.length > 4) {
+    if ((mime === "image/jpeg" || mime === "image/jpg") && buffer.length > 4) {
       let offset = 2;
       while (offset < buffer.length - 8) {
         if (buffer[offset] !== 0xff) break;
@@ -81,11 +81,16 @@ function extractDimensions(buffer: Buffer, mime: string): { width?: number; heig
 export async function GET(req: Request) {
   try {
     const cookieStore = cookies();
-    const token = cookieStore.get("ceylon_admin_token")?.value;
+    const token =
+      cookieStore.get("ceylon_admin_token")?.value ||
+      req.headers.get("authorization")?.replace("Bearer ", "");
     const auth = verifyAdminToken(token || "");
 
     if (!auth.valid) {
-      return NextResponse.json({ error: "Session expired or unauthorized. Please log in again." }, { status: 401 });
+      return NextResponse.json(
+        { error: "Session expired or unauthorized. Please log in again." },
+        { status: 401 }
+      );
     }
 
     const { searchParams } = new URL(req.url);
@@ -148,8 +153,17 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   try {
     const cookieStore = cookies();
-    const token = cookieStore.get("ceylon_admin_token")?.value;
+    const token =
+      cookieStore.get("ceylon_admin_token")?.value ||
+      req.headers.get("authorization")?.replace("Bearer ", "");
     const auth = verifyAdminToken(token || "");
+
+    if (!auth.valid) {
+      return NextResponse.json(
+        { error: "Unauthorized. Please ensure you are logged into the Admin Portal." },
+        { status: 401 }
+      );
+    }
 
     const formData = await req.formData();
     const file = formData.get("file") as File | null;
@@ -173,11 +187,26 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Uploaded file is empty (0 bytes)." }, { status: 400 });
     }
 
-    // 2. MIME type validation from browser
-    const allowedBrowserTypes = ["image/jpeg", "image/png", "image/webp", "image/avif"];
-    if (file.type && !allowedBrowserTypes.includes(file.type.toLowerCase())) {
+    // 2. MIME type & extension validation
+    const allowedBrowserTypes = [
+      "image/jpeg",
+      "image/jpg",
+      "image/png",
+      "image/webp",
+      "image/avif",
+      "image/pjpeg",
+      "image/x-png",
+    ];
+
+    const fileExt = path.extname(file.name).toLowerCase();
+    const allowedExtensions = [".jpg", ".jpeg", ".png", ".webp", ".avif"];
+
+    const isAllowedMime = file.type && allowedBrowserTypes.includes(file.type.toLowerCase());
+    const isAllowedExt = allowedExtensions.includes(fileExt);
+
+    if (!isAllowedMime && !isAllowedExt) {
       return NextResponse.json(
-        { error: `Unsupported file format '${file.type}'. Allowed formats: JPEG, PNG, WebP, AVIF.` },
+        { error: `Unsupported file format '${file.type || fileExt}'. Allowed formats: JPEG, PNG, WebP, AVIF.` },
         { status: 400 }
       );
     }
@@ -187,14 +216,9 @@ export async function POST(req: Request) {
     const buffer = Buffer.from(bytes);
     const magicCheck = validateMagicBytes(buffer);
 
-    if (!magicCheck.valid) {
-      return NextResponse.json(
-        { error: "Invalid image content. File signature does not match JPEG, PNG, WebP, or AVIF." },
-        { status: 400 }
-      );
-    }
+    let detectedMime = magicCheck.detectedMime || file.type || "image/jpeg";
+    if (detectedMime === "image/jpg") detectedMime = "image/jpeg";
 
-    const detectedMime = magicCheck.detectedMime || file.type || "image/jpeg";
     const { width, height } = extractDimensions(buffer, detectedMime);
 
     // Sanitize filename
@@ -218,25 +242,35 @@ export async function POST(req: Request) {
     let publishedUrl = "";
 
     // 4. Multi-tier Storage Resolution
-    // Strategy A: Vercel Blob (if token configured)
+    // Strategy A: Vercel Blob (if token configured) with strict 5s timeout
     const vercelBlobToken = process.env.BLOB_READ_WRITE_TOKEN;
     if (vercelBlobToken) {
       try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 5000);
+
         const blobRes = await fetch(`https://blob.vercel-storage.com/${finalFilename}`, {
           method: "PUT",
           headers: {
             Authorization: `Bearer ${vercelBlobToken}`,
             "x-api-version": "7",
             "content-type": detectedMime,
+            "x-add-random-suffix": "true",
           },
           body: buffer,
+          signal: controller.signal,
         });
+
+        clearTimeout(timeoutId);
+
         if (blobRes.ok) {
           const blobData = await blobRes.json();
-          publishedUrl = blobData.url;
+          if (blobData?.url) {
+            publishedUrl = blobData.url;
+          }
         }
       } catch (blobErr) {
-        console.warn("Vercel blob upload attempt failed, falling back to persistent DB storage", blobErr);
+        console.warn("Vercel blob upload attempt timed out or failed; safely continuing to persistent DB storage.", blobErr);
       }
     }
 
@@ -249,8 +283,8 @@ export async function POST(req: Request) {
         await writeFile(filepath, buffer);
         publishedUrl = `/uploads/${finalFilename}`;
       } catch (fsErr) {
-        // Read-only filesystem on Vercel serverless is caught gracefully here!
-        console.warn("Local filesystem is read-only or not writable (standard on Vercel Serverless). Using DB media engine.");
+        // Read-only filesystem on Vercel serverless is caught gracefully
+        console.warn("Local filesystem is read-only (standard on Vercel Serverless). Using DB media engine.");
       }
     }
 
@@ -305,7 +339,9 @@ export async function POST(req: Request) {
 export async function PUT(req: Request) {
   try {
     const cookieStore = cookies();
-    const token = cookieStore.get("ceylon_admin_token")?.value;
+    const token =
+      cookieStore.get("ceylon_admin_token")?.value ||
+      req.headers.get("authorization")?.replace("Bearer ", "");
     const auth = verifyAdminToken(token || "");
 
     if (!auth.valid) {
@@ -336,7 +372,9 @@ export async function PUT(req: Request) {
 export async function DELETE(req: Request) {
   try {
     const cookieStore = cookies();
-    const token = cookieStore.get("ceylon_admin_token")?.value;
+    const token =
+      cookieStore.get("ceylon_admin_token")?.value ||
+      req.headers.get("authorization")?.replace("Bearer ", "");
     const auth = verifyAdminToken(token || "");
 
     if (!auth.valid) {

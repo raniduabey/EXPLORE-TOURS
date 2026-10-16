@@ -42,7 +42,7 @@ export async function GET(req: Request) {
       include: {
         destination: { select: { id: true, name: true, slug: true } },
         category: { select: { id: true, name: true, slug: true } },
-        images: { orderBy: { order: "asc" } },
+        images: { orderBy: [{ isPrimary: "desc" }, { order: "asc" }] },
         itinerary: { orderBy: { stepNumber: "asc" } },
         _count: { select: { bookings: true, reviews: true } },
       },
@@ -367,42 +367,64 @@ export async function PUT(req: Request) {
       },
     });
 
-    // Update primary image if passed
-    if (primaryImage) {
-      const existingPrimary = await prisma.tourImage.findFirst({
-        where: { tourId: id, isPrimary: true },
-      });
-      if (existingPrimary) {
-        await prisma.tourImage.update({
-          where: { id: existingPrimary.id },
-          data: { url: primaryImage },
-        });
-      } else {
-        await prisma.tourImage.create({
-          data: { tourId: id, url: primaryImage, isPrimary: true, order: 0 },
-        });
-      }
-    }
+    // Synchronize primary & gallery images cleanly
+    if (primaryImage !== undefined || Array.isArray(galleryImages)) {
+      const targetPrimary = primaryImage || (Array.isArray(galleryImages) ? (typeof galleryImages[0] === "string" ? galleryImages[0] : galleryImages[0]?.url) : null);
 
-    // Update gallery images if array passed
-    if (Array.isArray(galleryImages)) {
-      await prisma.tourImage.deleteMany({
-        where: { tourId: id, isPrimary: false },
-      });
-      for (let i = 0; i < galleryImages.length; i++) {
-        const item = galleryImages[i];
-        const imgUrl = typeof item === "string" ? item : item.url;
-        const caption = typeof item === "object" ? item.caption : null;
-        if (imgUrl && imgUrl !== primaryImage) {
+      if (targetPrimary) {
+        // Demote previous primary flags
+        await prisma.tourImage.updateMany({
+          where: { tourId: id },
+          data: { isPrimary: false },
+        });
+
+        const existingPrimaryRecord = await prisma.tourImage.findFirst({
+          where: { tourId: id, url: targetPrimary },
+        });
+
+        if (existingPrimaryRecord) {
+          await prisma.tourImage.update({
+            where: { id: existingPrimaryRecord.id },
+            data: { isPrimary: true, order: 0 },
+          });
+        } else {
           await prisma.tourImage.create({
             data: {
               tourId: id,
-              url: imgUrl,
-              caption: caption || null,
-              isPrimary: false,
-              order: i + 1,
+              url: targetPrimary,
+              caption: "Primary Featured Photo",
+              isPrimary: true,
+              order: 0,
             },
           });
+        }
+      }
+
+      if (Array.isArray(galleryImages)) {
+        // Remove non-primary photos and recreate with exact new sequence
+        await prisma.tourImage.deleteMany({
+          where: { tourId: id, isPrimary: false },
+        });
+
+        const seenUrls = new Set<string>();
+        if (targetPrimary) seenUrls.add(targetPrimary);
+
+        let orderIdx = 1;
+        for (const item of galleryImages) {
+          const imgUrl = typeof item === "string" ? item : item?.url;
+          const caption = typeof item === "object" ? item?.caption : null;
+          if (imgUrl && !seenUrls.has(imgUrl)) {
+            seenUrls.add(imgUrl);
+            await prisma.tourImage.create({
+              data: {
+                tourId: id,
+                url: imgUrl,
+                caption: caption || null,
+                isPrimary: false,
+                order: orderIdx++,
+              },
+            });
+          }
         }
       }
     }
