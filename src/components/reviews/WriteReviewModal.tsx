@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import {
   X,
   Star,
@@ -12,6 +12,8 @@ import {
   User,
   Mail,
   MapPin,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -45,6 +47,108 @@ export const WriteReviewModal: React.FC<WriteReviewModalProps> = ({
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [success, setSuccess] = useState(false);
+
+  // Premium Calendar Popover state
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+  const [calendarViewDate, setCalendarViewDate] = useState<Date>(() => new Date());
+  const calendarRef = useRef<HTMLDivElement>(null);
+
+  // Sync calendar view month with selected date if changed
+  useEffect(() => {
+    if (travelDate) {
+      const [y, m, d] = travelDate.split("-").map(Number);
+      if (y && m) {
+        setCalendarViewDate(new Date(y, m - 1, 1));
+      }
+    }
+  }, [travelDate]);
+
+  // Close calendar if modal closes
+  useEffect(() => {
+    if (!isOpen) {
+      setIsCalendarOpen(false);
+    }
+  }, [isOpen]);
+
+  // Close calendar on outside click or Escape key
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (calendarRef.current && !calendarRef.current.contains(event.target as Node)) {
+        setIsCalendarOpen(false);
+      }
+    }
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setIsCalendarOpen(false);
+      }
+    }
+    if (isCalendarOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+      document.addEventListener("keydown", handleKeyDown);
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+        document.removeEventListener("keydown", handleKeyDown);
+      };
+    }
+  }, [isCalendarOpen]);
+
+  const today = useMemo(() => new Date(), []);
+  const todayYear = today.getFullYear();
+  const todayMonth = today.getMonth();
+  const todayStr = useMemo(() => {
+    const t = new Date();
+    return `${t.getFullYear()}-${String(t.getMonth() + 1).padStart(2, "0")}-${String(t.getDate()).padStart(2, "0")}`;
+  }, []);
+
+  const viewYear = calendarViewDate.getFullYear();
+  const viewMonth = calendarViewDate.getMonth();
+
+  // Disable future month navigation
+  const isCurrentMonthAndYear =
+    viewYear > todayYear || (viewYear === todayYear && viewMonth >= todayMonth);
+
+  const handlePrevMonth = () => {
+    setCalendarViewDate(new Date(viewYear, viewMonth - 1, 1));
+  };
+
+  const handleNextMonth = () => {
+    if (isCurrentMonthAndYear) return;
+    setCalendarViewDate(new Date(viewYear, viewMonth + 1, 1));
+  };
+
+  const getDaysInMonth = (year: number, month: number) => {
+    return new Date(year, month + 1, 0).getDate();
+  };
+
+  const getFirstDayOfMonth = (year: number, month: number) => {
+    return new Date(year, month, 1).getDay();
+  };
+
+  const totalDays = getDaysInMonth(viewYear, viewMonth);
+  const firstDay = getFirstDayOfMonth(viewYear, viewMonth);
+
+  const monthName = calendarViewDate.toLocaleDateString("en-US", {
+    month: "long",
+  });
+
+  // Formatted date string for the input display: e.g. "15 October 2026"
+  const formattedDisplayDate = useMemo(() => {
+    if (!travelDate) return "";
+    const [y, m, d] = travelDate.split("-").map(Number);
+    if (!y || !m || !d) return travelDate;
+    const dObj = new Date(y, m - 1, d);
+    return dObj.toLocaleDateString("en-GB", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    });
+  }, [travelDate]);
+
+  // Year options for fast past-year navigation (current year down to 7 years past)
+  const yearOptions = useMemo(() => {
+    const currentYr = new Date().getFullYear();
+    return Array.from({ length: 8 }, (_, i) => currentYr - i);
+  }, []);
 
   // Load tour packages for the dropdown
   useEffect(() => {
@@ -327,19 +431,192 @@ export const WriteReviewModal: React.FC<WriteReviewModalProps> = ({
                   </div>
                 </div>
 
-                <div>
+                <div className="relative" ref={calendarRef}>
                   <label className="block text-xs font-bold text-ceylon-navy mb-1">
                     Month / Date Visited
                   </label>
-                  <div className="relative">
-                    <Calendar className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-3" />
-                    <input
-                      type="date"
-                      value={travelDate}
-                      onChange={(e) => setTravelDate(e.target.value)}
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-8 pr-3 py-2 text-xs text-ceylon-navy focus:outline-none focus:border-ceylon-blue"
-                    />
-                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setIsCalendarOpen((prev) => !prev)}
+                    className={`w-full bg-slate-50 border rounded-xl pl-3.5 pr-3 py-2 text-xs text-left cursor-pointer flex items-center justify-between transition-all ${
+                      isCalendarOpen
+                        ? "border-emerald-600 ring-2 ring-emerald-500/20 bg-white shadow-xs"
+                        : "border-slate-200 hover:border-slate-300"
+                    }`}
+                    aria-haspopup="dialog"
+                    aria-expanded={isCalendarOpen}
+                  >
+                    <div className="flex items-center gap-2 truncate mr-1">
+                      <Calendar
+                        className={`w-3.5 h-3.5 shrink-0 transition-colors ${
+                          isCalendarOpen || travelDate
+                            ? "text-emerald-600"
+                            : "text-slate-400"
+                        }`}
+                      />
+                      <span
+                        className={`truncate ${
+                          travelDate
+                            ? "text-ceylon-navy font-semibold"
+                            : "text-slate-400"
+                        }`}
+                      >
+                        {formattedDisplayDate || "Select month / date visited"}
+                      </span>
+                    </div>
+                  </button>
+
+                  {/* Premium Date Picker Popover */}
+                  <AnimatePresence>
+                    {isCalendarOpen && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 8, scale: 0.98 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 8, scale: 0.98 }}
+                        transition={{ duration: 0.18, ease: "easeOut" }}
+                        className="absolute right-0 top-full mt-2 w-[295px] sm:w-[320px] bg-white rounded-3xl shadow-2xl border border-slate-200/90 p-4 sm:p-5 z-50 space-y-4"
+                      >
+                        {/* Header: Month & Year with Navigation Arrows & Fast Year Selector */}
+                        <div className="flex items-center justify-between">
+                          <button
+                            type="button"
+                            onClick={handlePrevMonth}
+                            className="p-1.5 rounded-xl hover:bg-slate-100 text-slate-600 transition-colors"
+                            aria-label="Previous Month"
+                          >
+                            <ChevronLeft className="w-5 h-5" />
+                          </button>
+
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-xs sm:text-sm font-extrabold text-ceylon-navy tracking-tight">
+                              {monthName}
+                            </span>
+                            <select
+                              value={viewYear}
+                              onChange={(e) => {
+                                const newYear = Number(e.target.value);
+                                setCalendarViewDate(new Date(newYear, viewMonth, 1));
+                              }}
+                              className="text-xs sm:text-sm font-extrabold text-ceylon-navy bg-slate-100 hover:bg-slate-200/80 rounded-lg px-2 py-0.5 border border-slate-200/60 cursor-pointer focus:outline-none focus:ring-1 focus:ring-emerald-500 transition-all"
+                              aria-label="Select Year"
+                            >
+                              {yearOptions.map((yr) => (
+                                <option key={yr} value={yr}>
+                                  {yr}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+
+                          <button
+                            type="button"
+                            onClick={handleNextMonth}
+                            disabled={isCurrentMonthAndYear}
+                            className="p-1.5 rounded-xl hover:bg-slate-100 text-slate-600 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                            aria-label="Next Month"
+                          >
+                            <ChevronRight className="w-5 h-5" />
+                          </button>
+                        </div>
+
+                        {/* Weekday Row */}
+                        <div className="grid grid-cols-7 gap-1 text-center">
+                          {["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"].map((dayName) => (
+                            <span
+                              key={dayName}
+                              className="text-[10px] font-bold text-slate-400 tracking-wider py-1"
+                            >
+                              {dayName}
+                            </span>
+                          ))}
+                        </div>
+
+                        {/* Calendar Days 7-Col Grid */}
+                        <div className="grid grid-cols-7 gap-1 text-center">
+                          {/* Empty cells before 1st day of month */}
+                          {Array.from({ length: firstDay }).map((_, idx) => (
+                            <div key={`blank-${idx}`} className="h-8 sm:h-9 w-full" />
+                          ))}
+
+                          {/* Day numbers */}
+                          {Array.from({ length: totalDays }).map((_, idx) => {
+                            const dayNum = idx + 1;
+                            const cellDateStr = `${viewYear}-${String(viewMonth + 1).padStart(2, "0")}-${String(dayNum).padStart(2, "0")}`;
+                            const isFuture = cellDateStr > todayStr;
+                            const isToday = cellDateStr === todayStr;
+                            const isSelected = cellDateStr === travelDate;
+
+                            return (
+                              <button
+                                type="button"
+                                key={dayNum}
+                                disabled={isFuture}
+                                onClick={() => {
+                                  setTravelDate(cellDateStr);
+                                  setIsCalendarOpen(false);
+                                }}
+                                className={`h-8 sm:h-9 w-full rounded-full flex items-center justify-center text-xs font-semibold transition-all ${
+                                  isSelected
+                                    ? "bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold shadow-sm scale-105"
+                                    : isFuture
+                                    ? "text-slate-300 cursor-not-allowed pointer-events-none"
+                                    : isToday
+                                    ? "ring-1.5 ring-emerald-500 text-emerald-800 font-bold hover:bg-emerald-50"
+                                    : "text-slate-700 hover:bg-emerald-50 hover:text-emerald-900 cursor-pointer"
+                                }`}
+                              >
+                                {dayNum}
+                              </button>
+                            );
+                          })}
+                        </div>
+
+                        {/* Quick Shortcuts & Clear Action */}
+                        <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+                          <div className="flex gap-1.5">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const now = new Date();
+                                const tStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+                                setTravelDate(tStr);
+                                setIsCalendarOpen(false);
+                              }}
+                              className="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-emerald-50 text-slate-700 hover:text-emerald-800 text-[11px] font-bold transition-colors"
+                            >
+                              Today
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const lastMonth = new Date();
+                                lastMonth.setMonth(lastMonth.getMonth() - 1);
+                                const lmStr = `${lastMonth.getFullYear()}-${String(lastMonth.getMonth() + 1).padStart(2, "0")}-${String(lastMonth.getDate()).padStart(2, "0")}`;
+                                setTravelDate(lmStr);
+                                setIsCalendarOpen(false);
+                              }}
+                              className="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-emerald-50 text-slate-700 hover:text-emerald-800 text-[11px] font-bold transition-colors"
+                            >
+                              Last Month
+                            </button>
+                          </div>
+
+                          {travelDate && (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setTravelDate("");
+                                setIsCalendarOpen(false);
+                              }}
+                              className="text-[11px] font-bold text-rose-600 hover:underline"
+                            >
+                              Clear
+                            </button>
+                          )}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
               </div>
 
