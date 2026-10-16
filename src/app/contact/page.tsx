@@ -100,17 +100,20 @@ export default function ContactPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
         {/* Contact Info & Channels */}
         <div className="lg:col-span-1 space-y-6">
-          <div className="bg-white rounded-3xl p-6 sm:p-8 border border-luxury-sand/80 shadow-[0_10px_30px_rgba(16,45,36,0.06)] space-y-6">
-            <h3 className="font-serif text-base font-semibold text-luxury-forest tracking-wide">
-              Direct Concierge Lines
-            </h3>
+          <div className="bg-white rounded-3xl p-6 sm:p-8 border border-luxury-sand/80 shadow-[0_10px_30px_rgba(16,45,36,0.06)] space-y-7">
+            <div className="pb-2 border-b border-luxury-sand/50">
+              <h3 className="font-serif text-base font-semibold text-luxury-forest tracking-wide">
+                Direct Concierge Lines
+              </h3>
+            </div>
 
-            <div className="space-y-4 text-xs text-luxury-charcoal/80">
-              <div className="flex items-start gap-3">
-                <div className="w-9 h-9 rounded-xl bg-luxury-forest/5 text-luxury-gold border border-luxury-gold/25 flex items-center justify-center shrink-0">
+            <div className="space-y-6 sm:space-y-7 text-xs text-luxury-charcoal/80">
+              {/* Registered Office */}
+              <div className="flex items-start gap-3.5">
+                <div className="w-9 h-9 rounded-xl bg-luxury-forest/5 text-luxury-gold border border-luxury-gold/25 flex items-center justify-center shrink-0 mt-0.5">
                   <MapPin className="w-4 h-4" />
                 </div>
-                <div className="space-y-1">
+                <div className="space-y-1.5 flex-1 min-w-0">
                   <span className="font-serif font-semibold text-luxury-forest block">Registered Office:</span>
                   <span className="block leading-relaxed">{address}</span>
                   {mapsUrl && (
@@ -118,7 +121,7 @@ export default function ContactPage() {
                       href={mapsUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-[11px] font-serif font-medium text-luxury-gold hover:underline pt-0.5"
+                      className="inline-flex items-center gap-1.5 text-[11px] font-serif font-medium text-luxury-gold hover:underline pt-1"
                     >
                       <span>Locate on Google Maps</span>
                       <ExternalLink className="w-3 h-3" />
@@ -127,73 +130,79 @@ export default function ContactPage() {
                 </div>
               </div>
 
-              <div className="flex items-start gap-3">
-                <div className="w-9 h-9 rounded-xl bg-luxury-forest/5 text-luxury-gold border border-luxury-gold/25 flex items-center justify-center shrink-0">
+              {/* Direct Hotline */}
+              <div className="flex items-start gap-3.5">
+                <div className="w-9 h-9 rounded-xl bg-luxury-forest/5 text-luxury-gold border border-luxury-gold/25 flex items-center justify-center shrink-0 mt-0.5">
                   <Phone className="w-4 h-4" />
                 </div>
-                <div>
+                <div className="space-y-1.5 flex-1 min-w-0">
                   <span className="font-serif font-semibold text-luxury-forest block">Direct Hotline:</span>
-                  <a
-                    href={`tel:${primaryPhone}`}
-                    className="hover:text-luxury-gold transition-colors font-sans block"
-                  >
-                    {primaryPhone} (24/7 Concierge)
-                  </a>
-                  {secondaryPhone && (
+                  <div className="space-y-1">
                     <a
-                      href={`tel:${secondaryPhone}`}
-                      className="text-luxury-charcoal/60 hover:text-luxury-gold transition-colors font-sans block mt-0.5"
+                      href={`tel:${primaryPhone}`}
+                      className="hover:text-luxury-gold transition-colors font-sans block leading-relaxed"
                     >
-                      {secondaryPhone} (Secondary line)
+                      {primaryPhone} <span className="text-luxury-charcoal/60 text-[11px] font-serif">(24/7 Concierge)</span>
                     </a>
-                  )}
+                    {secondaryPhone && (
+                      <a
+                        href={`tel:${secondaryPhone}`}
+                        className="text-luxury-charcoal/70 hover:text-luxury-gold transition-colors font-sans block leading-relaxed"
+                      >
+                        {secondaryPhone} <span className="text-luxury-charcoal/50 text-[11px] font-serif">(Secondary line)</span>
+                      </a>
+                    )}
+                  </div>
                 </div>
               </div>
 
-              <div className="flex items-start gap-3">
-                <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-200/60 flex items-center justify-center shrink-0">
+              {/* WhatsApp Instant Support */}
+              <div className="flex items-start gap-3.5">
+                <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-200/60 flex items-center justify-center shrink-0 mt-0.5">
                   <MessageSquare className="w-4 h-4" />
                 </div>
-                <div>
+                <div className="space-y-1.5 flex-1 min-w-0">
                   <span className="font-serif font-semibold text-luxury-forest block">WhatsApp Instant Support:</span>
                   <a
                     href={whatsappHref}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-emerald-800 font-sans font-medium hover:underline block"
+                    className="text-emerald-800 font-sans font-medium hover:underline block leading-relaxed"
                   >
-                    {whatsappNumber} (Chat Directly)
+                    {whatsappNumber} <span className="text-emerald-600/80 text-[11px] font-serif">(Chat Directly)</span>
                   </a>
                 </div>
               </div>
 
-              <div className="flex items-start gap-3">
-                <div className="w-9 h-9 rounded-xl bg-luxury-forest/5 text-luxury-gold border border-luxury-gold/25 flex items-center justify-center shrink-0">
+              {/* Email Dispatch */}
+              <div className="flex items-start gap-3.5">
+                <div className="w-9 h-9 rounded-xl bg-luxury-forest/5 text-luxury-gold border border-luxury-gold/25 flex items-center justify-center shrink-0 mt-0.5">
                   <Mail className="w-4 h-4" />
                 </div>
-                <div>
+                <div className="space-y-1.5 flex-1 min-w-0">
                   <span className="font-serif font-semibold text-luxury-forest block">Email Dispatch:</span>
                   <a
                     href={`mailto:${email}`}
-                    className="hover:text-luxury-gold transition-colors font-sans"
+                    className="hover:text-luxury-gold transition-colors font-sans block leading-relaxed"
                   >
                     {email}
                   </a>
                 </div>
               </div>
 
-              <div className="flex items-start gap-3">
-                <div className="w-9 h-9 rounded-xl bg-luxury-forest/5 text-luxury-gold border border-luxury-gold/25 flex items-center justify-center shrink-0">
+              {/* Operating Hours */}
+              <div className="flex items-start gap-3.5">
+                <div className="w-9 h-9 rounded-xl bg-luxury-forest/5 text-luxury-gold border border-luxury-gold/25 flex items-center justify-center shrink-0 mt-0.5">
                   <Clock className="w-4 h-4" />
                 </div>
-                <div>
+                <div className="space-y-1.5 flex-1 min-w-0">
                   <span className="font-serif font-semibold text-luxury-forest block">Operating Hours:</span>
-                  <span className="font-sans">{operatingHours}</span>
+                  <span className="font-sans block leading-relaxed">{operatingHours}</span>
                 </div>
               </div>
             </div>
 
-            <div className="pt-4 border-t border-luxury-sand/70">
+            <div className="pt-6 border-t border-luxury-sand/70">
               <a
                 href={whatsappHref}
                 target="_blank"
