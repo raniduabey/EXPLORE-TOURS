@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { saveReviewToStore, syncReviewsWithDb } from "@/lib/reviewsStore";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -7,6 +8,9 @@ export const revalidate = 0;
 // GET /api/reviews - Return approved reviews for public display
 export async function GET(req: Request) {
   try {
+    // Synchronize across serverless environments & ensure verified reviews exist
+    await syncReviewsWithDb(prisma);
+
     const { searchParams } = new URL(req.url);
     const tourId = searchParams.get("tourId");
     const limit = Math.min(Number(searchParams.get("limit")) || 50, 100);
@@ -205,6 +209,26 @@ export async function POST(req: Request) {
         },
       });
 
+      // Persist to cross-lambda store
+      await saveReviewToStore({
+        id: newDirectReview.id,
+        tourId: newDirectReview.tourId,
+        userName: newDirectReview.userName,
+        userEmail: newDirectReview.userEmail,
+        userCountry: newDirectReview.userCountry,
+        rating: newDirectReview.rating,
+        guideRating: newDirectReview.guideRating,
+        transportRating: newDirectReview.transportRating,
+        valueRating: newDirectReview.valueRating,
+        comment: newDirectReview.comment,
+        photoUrl: newDirectReview.photoUrl,
+        travelDate: newDirectReview.travelDate,
+        verified: false,
+        status: "PENDING",
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      });
+
       return NextResponse.json({
         success: true,
         message:
@@ -249,6 +273,27 @@ export async function POST(req: Request) {
         verified: true,
         status: "PENDING",
       },
+    });
+
+    // Persist to cross-lambda store
+    await saveReviewToStore({
+      id: newReview.id,
+      tourId: newReview.tourId,
+      bookingId: newReview.bookingId,
+      userName: newReview.userName,
+      userEmail: newReview.userEmail,
+      userCountry: newReview.userCountry,
+      rating: newReview.rating,
+      guideRating: newReview.guideRating,
+      transportRating: newReview.transportRating,
+      valueRating: newReview.valueRating,
+      comment: newReview.comment,
+      photoUrl: newReview.photoUrl,
+      travelDate: newReview.travelDate,
+      verified: true,
+      status: "PENDING",
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     });
 
     // Mark invitation token as used if applicable

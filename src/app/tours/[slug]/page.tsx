@@ -93,7 +93,14 @@ export default async function TourDetailPage({
       include: {
         images: { orderBy: [{ isPrimary: "desc" }, { order: "asc" }] },
         itinerary: { orderBy: { stepNumber: "asc" } },
-        reviews: { orderBy: { createdAt: "desc" } },
+        reviews: {
+          where: {
+            status: {
+              in: ["APPROVED", "approved", "Approved", "PUBLISHED", "published"],
+            },
+          },
+          orderBy: { createdAt: "desc" },
+        },
         destination: true,
         category: true,
       },

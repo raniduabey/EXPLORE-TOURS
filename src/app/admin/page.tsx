@@ -116,6 +116,7 @@ export default function AdminDashboardPage() {
   const [editingSlide, setEditingSlide] = useState<any>(null);
   const [editingFaq, setEditingFaq] = useState<any>(null);
   const [rejectingReviewId, setRejectingReviewId] = useState<string | null>(null);
+  const [moderatingReviewId, setModeratingReviewId] = useState<string | null>(null);
   const [rejectionReason, setRejectionReason] = useState("");
   const [selectedBookingForNotes, setSelectedBookingForNotes] = useState<any>(null);
 
@@ -827,12 +828,19 @@ export default function AdminDashboardPage() {
   // REVIEWS MODERATION ACTIONS
   // ----------------------------------------------------
   const moderateReview = async (id: string, status: "APPROVED" | "REJECTED" | "HIDDEN", reason?: string) => {
+    const cleanId = String(id || "").trim();
+    if (!cleanId) {
+      alert("Invalid review identifier.");
+      return;
+    }
+
     try {
+      setModeratingReviewId(cleanId);
       setStatusMsg(`Updating review status to ${status}...`);
       const res = await fetch("/api/admin/reviews", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id, status, rejectionReason: reason }),
+        body: JSON.stringify({ id: cleanId, status, rejectionReason: reason }),
       });
       const data = await res.json().catch(() => ({}));
       if (res.ok) {
@@ -845,6 +853,16 @@ export default function AdminDashboardPage() {
         setRejectionReason("");
         await loadAllData();
       } else {
+        if (res.status === 401) {
+          alert("Your administrator session has expired. Please log in again.");
+          window.location.href = "/admin/login";
+          return;
+        }
+        if (res.status === 404) {
+          alert(`Review not found in database (ID: ${cleanId}). The moderation dashboard has been refreshed.`);
+          await loadAllData();
+          return;
+        }
         alert(data.error || `Failed to update review status to ${status}.`);
         setStatusMsg(`Failed: ${data.error || "Review update error"}`);
       }
@@ -852,26 +870,34 @@ export default function AdminDashboardPage() {
       console.error(e);
       alert(`Error updating review: ${e?.message || e}`);
       setStatusMsg("Error updating review.");
+    } finally {
+      setModeratingReviewId(null);
     }
   };
 
   const deleteReview = async (id: string) => {
+    const cleanId = String(id || "").trim();
+    if (!cleanId) return;
     if (!confirm("Are you sure you want to permanently delete this review? This action cannot be undone.")) {
       return;
     }
     try {
-      const res = await fetch(`/api/admin/reviews?id=${id}`, {
+      setModeratingReviewId(cleanId);
+      const res = await fetch(`/api/admin/reviews?id=${encodeURIComponent(cleanId)}`, {
         method: "DELETE",
       });
+      const data = await res.json().catch(() => ({}));
       if (res.ok) {
         setStatusMsg("Review permanently deleted.");
-        loadAllData();
+        await loadAllData();
       } else {
-        alert("Failed to delete review.");
+        alert(data.error || "Failed to delete review.");
       }
     } catch (e) {
       console.error(e);
       alert("Error deleting review.");
+    } finally {
+      setModeratingReviewId(null);
     }
   };
 
@@ -1770,36 +1796,49 @@ export default function AdminDashboardPage() {
                       <div className="flex items-center gap-2">
                         {statusUpper !== "APPROVED" && statusUpper !== "PUBLISHED" && (
                           <button
+                            disabled={moderatingReviewId === rev.id}
                             onClick={() => moderateReview(rev.id, "APPROVED")}
-                            className="px-4 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-extrabold shadow flex items-center gap-1.5"
+                            className="px-4 py-1.5 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white rounded-xl text-xs font-extrabold shadow flex items-center gap-1.5 transition-all"
                           >
-                            <CheckCircle className="w-3.5 h-3.5" />
-                            <span>Approve & Publish</span>
+                            {moderatingReviewId === rev.id ? (
+                              <>
+                                <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                                <span>Publishing...</span>
+                              </>
+                            ) : (
+                              <>
+                                <CheckCircle className="w-3.5 h-3.5" />
+                                <span>Approve & Publish</span>
+                              </>
+                            )}
                           </button>
                         )}
                         {(statusUpper === "APPROVED" || statusUpper === "PUBLISHED") && (
                           <button
+                            disabled={moderatingReviewId === rev.id}
                             onClick={() => moderateReview(rev.id, "HIDDEN", "Moderator unpublished")}
-                            className="px-3 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 rounded-xl text-xs font-bold"
+                            className="px-3 py-1.5 bg-amber-50 hover:bg-amber-100 disabled:opacity-50 text-amber-800 border border-amber-200 rounded-xl text-xs font-bold transition-all"
                             title="Unpublish this review from the public website"
                           >
-                            Unpublish (Hide)
+                            {moderatingReviewId === rev.id ? "Updating..." : "Unpublish (Hide)"}
                           </button>
                         )}
                         {statusUpper !== "REJECTED" && (
                           <button
+                            disabled={moderatingReviewId === rev.id}
                             onClick={() => {
                               const reason = prompt("Enter rejection reason (e.g. spam, inappropriate content, promotional link):");
                               if (reason !== null && reason.trim()) moderateReview(rev.id, "REJECTED", reason.trim());
                             }}
-                            className="px-4 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 rounded-xl text-xs font-bold"
+                            className="px-4 py-1.5 bg-rose-50 hover:bg-rose-100 disabled:opacity-50 text-rose-700 border border-rose-200 rounded-xl text-xs font-bold transition-all"
                           >
                             Reject as Spam
                           </button>
                         )}
                         <button
+                          disabled={moderatingReviewId === rev.id}
                           onClick={() => deleteReview(rev.id)}
-                          className="px-3 py-1.5 bg-white hover:bg-rose-50 text-rose-600 border border-rose-200 rounded-xl text-xs font-bold flex items-center gap-1 transition-colors"
+                          className="px-3 py-1.5 bg-white hover:bg-rose-50 disabled:opacity-50 text-rose-600 border border-rose-200 rounded-xl text-xs font-bold flex items-center gap-1 transition-colors"
                           title="Permanently delete review"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
