@@ -37,16 +37,15 @@ export const Footer: React.FC = () => {
             {/* Column 1: Brand & Contact Info */}
             <div className="lg:col-span-2 space-y-5">
               <Link href="/" className="inline-flex items-center gap-3.5 group">
-                <div className="bg-white rounded-full p-1.5 sm:p-2 inline-flex items-center shadow-xl border border-[#C9A86A]/50 group-hover:scale-105 group-hover:border-[#DFBE82] transition-all duration-300 shrink-0">
-                  <div className="relative w-14 h-14 sm:w-16 sm:h-16">
-                    <Image
-                      src="/images/logo.png"
-                      alt={`${settings.companyName || siteConfig.name} Logo`}
-                      fill
-                      className="object-contain p-0.5"
-                      priority
-                    />
-                  </div>
+                <div className="relative w-14 h-14 sm:w-16 sm:h-16 shrink-0 group-hover:scale-105 transition-transform duration-300">
+                  <Image
+                    src="/images/logo.png"
+                    alt={`${settings.companyName || siteConfig.name} Logo`}
+                    fill
+                    sizes="(max-width: 640px) 56px, 64px"
+                    className="object-contain"
+                    priority
+                  />
                 </div>
                 <div>
                   <span className="font-editorial text-xl sm:text-2xl text-white font-bold tracking-wide block">

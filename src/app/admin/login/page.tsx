@@ -52,7 +52,7 @@ function AdminLoginForm() {
     <div className="min-h-screen py-20 px-4 sm:px-6 lg:px-8 flex items-center justify-center bg-slate-50">
       <div className="max-w-md w-full space-y-6 bg-white p-8 sm:p-10 rounded-3xl border border-slate-200 shadow-xl">
         <div className="text-center space-y-3">
-          <div className="relative w-20 h-20 mx-auto rounded-full overflow-hidden bg-white p-2 border border-slate-200 shadow-md">
+          <div className="relative w-20 h-20 mx-auto">
             <Image
               src="/images/logo.png"
               alt={siteConfig.name}

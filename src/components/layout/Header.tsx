@@ -65,13 +65,13 @@ export const Header: React.FC = () => {
               className="inline-flex items-center gap-3 sm:gap-3.5 group shrink-0"
               title={siteConfig.name}
             >
-              <div className="relative w-11 h-11 sm:w-13 sm:h-13 md:w-14 md:h-14 rounded-full bg-white shadow-[0_4px_18px_rgba(0,0,0,0.22)] border border-[#C9A86A]/50 group-hover:scale-105 group-hover:border-[#DFBE82] transition-all duration-300 shrink-0 p-1">
+              <div className="relative w-12 h-12 sm:w-[50px] sm:h-[50px] md:w-16 md:h-16 shrink-0 group-hover:scale-105 transition-transform duration-300">
                 <Image
                   src="/images/logo.png"
                   alt={`${siteConfig.name} Logo`}
                   fill
-                  sizes="(max-width: 640px) 44px, (max-width: 768px) 52px, 56px"
-                  className="object-contain p-0.5"
+                  sizes="(max-width: 640px) 48px, (max-width: 768px) 50px, 64px"
+                  className="object-contain"
                   priority
                 />
               </div>

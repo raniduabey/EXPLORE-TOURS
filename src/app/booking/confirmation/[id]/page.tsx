@@ -196,7 +196,7 @@ export default function BookingConfirmationPage({
       <div className="bg-white rounded-3xl border-2 border-ceylon-blue/20 shadow-xl overflow-hidden print:border-none print:shadow-none">
         <div className="bg-ceylon-navy text-white p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="relative w-14 h-14 rounded-full overflow-hidden bg-white p-1 border border-white/30 shadow-sm shrink-0">
+            <div className="relative w-14 h-14 shrink-0">
               <Image
                 src="/images/logo.png"
                 alt={siteConfig.name}
