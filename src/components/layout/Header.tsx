@@ -57,64 +57,68 @@ export const Header: React.FC = () => {
             : "bg-[#102D24]/95 backdrop-blur-md text-white py-3 border-b border-[#C9A86A]/20 shadow-xl"
         }`}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between gap-4">
-            {/* Logo & Brand Name */}
-            <Link
-              href="/"
-              className="inline-flex items-center gap-3 sm:gap-3.5 group shrink-0"
-              title={siteConfig.name}
-            >
-              <div className="relative w-12 h-12 sm:w-[50px] sm:h-[50px] md:w-16 md:h-16 shrink-0 group-hover:scale-105 transition-transform duration-300">
-                <Image
-                  src="/images/logo.png"
-                  alt={`${siteConfig.name} Logo`}
-                  fill
-                  sizes="(max-width: 640px) 48px, (max-width: 768px) 50px, 64px"
-                  className="object-contain"
-                  priority
-                />
-              </div>
-              <div className="flex flex-col justify-center">
-                <span className="font-editorial text-base sm:text-lg md:text-xl text-white font-bold tracking-wide leading-tight whitespace-nowrap block group-hover:text-luxury-sand transition-colors">
-                  Ceylon Explore Tours
-                </span>
-                <span className="text-[9px] sm:text-[10px] font-medium tracking-[0.22em] uppercase block mt-0.5 whitespace-nowrap text-[#C9A86A]">
-                  Curated Sri Lanka Journeys
-                </span>
-              </div>
-            </Link>
+        <div className="w-full px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 xl:grid-cols-[auto_1fr_auto] 2xl:grid-cols-[1fr_auto_1fr] items-center gap-4 w-full">
+            {/* 1. Left: Logo & Brand Name */}
+            <div className="flex items-center justify-start shrink-0">
+              <Link
+                href="/"
+                className="inline-flex items-center gap-3 sm:gap-3.5 group shrink-0"
+                title={siteConfig.name}
+              >
+                <div className="relative w-12 h-12 sm:w-[50px] sm:h-[50px] md:w-16 md:h-16 shrink-0 group-hover:scale-105 transition-transform duration-300">
+                  <Image
+                    src="/images/logo.png"
+                    alt={`${siteConfig.name} Logo`}
+                    fill
+                    sizes="(max-width: 640px) 48px, (max-width: 768px) 50px, 64px"
+                    className="object-contain"
+                    priority
+                  />
+                </div>
+                <div className="flex flex-col justify-center">
+                  <span className="font-editorial text-base sm:text-lg md:text-xl text-white font-bold tracking-wide leading-tight whitespace-nowrap block group-hover:text-luxury-sand transition-colors">
+                    Ceylon Explore Tours
+                  </span>
+                  <span className="text-[9px] sm:text-[10px] font-medium tracking-[0.22em] uppercase block mt-0.5 whitespace-nowrap text-[#C9A86A]">
+                    Curated Sri Lanka Journeys
+                  </span>
+                </div>
+              </Link>
+            </div>
 
-            {/* Desktop Navigation Links — Minimalist Single-Line */}
-            <nav className="hidden xl:flex items-center space-x-7 shrink-0">
-              {navLinks.map((link) => {
-                const active =
-                  pathname === link.href ||
-                  (link.href !== "/" && pathname.startsWith(link.href));
-                return (
-                  <Link
-                    key={link.name}
-                    href={link.href}
-                    className={`text-[12px] uppercase tracking-[0.14em] font-medium whitespace-nowrap transition-all duration-200 relative py-1.5 ${
-                      active
-                        ? "text-[#C9A86A] font-semibold"
-                        : "text-white/85 hover:text-[#C9A86A]"
-                    }`}
-                  >
-                    {link.name}
-                    {active && (
-                      <motion.span
-                        layoutId="activeNavIndicator"
-                        className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#C9A86A] to-transparent rounded-full"
-                      />
-                    )}
-                  </Link>
-                );
-              })}
-            </nav>
+            {/* 2. Centre: Main Navigation Links */}
+            <div className="hidden xl:flex items-center justify-center min-w-0">
+              <nav className="flex items-center space-x-6 2xl:space-x-7 shrink-0">
+                {navLinks.map((link) => {
+                  const active =
+                    pathname === link.href ||
+                    (link.href !== "/" && pathname.startsWith(link.href));
+                  return (
+                    <Link
+                      key={link.name}
+                      href={link.href}
+                      className={`text-[12px] uppercase tracking-[0.14em] font-medium whitespace-nowrap transition-all duration-200 relative py-1.5 ${
+                        active
+                          ? "text-[#C9A86A] font-semibold"
+                          : "text-white/85 hover:text-[#C9A86A]"
+                      }`}
+                    >
+                      {link.name}
+                      {active && (
+                        <motion.span
+                          layoutId="activeNavIndicator"
+                          className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#C9A86A] to-transparent rounded-full"
+                        />
+                      )}
+                    </Link>
+                  );
+                })}
+              </nav>
+            </div>
 
-            {/* Header Action Buttons & Icons */}
-            <div className="hidden lg:flex items-center space-x-3 shrink-0">
+            {/* 3. Right: Header Action Buttons & Icons (Desktop) */}
+            <div className="hidden xl:flex items-center justify-end space-x-3 shrink-0 justify-self-end">
               {/* Currency Selector */}
               <div className="relative">
                 <button
@@ -178,7 +182,7 @@ export const Header: React.FC = () => {
               {/* My Booking Button */}
               <Link
                 href="/account"
-                className="px-3.5 py-1.5 bg-[#1E4D3D] hover:bg-[#102D24] text-white border border-[#C9A86A]/40 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all duration-300 shadow-sm hover:shadow"
+                className="px-3.5 py-1.5 bg-[#1E4D3D] hover:bg-[#102D24] text-white border border-[#C9A86A]/40 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all duration-300 shadow-sm hover:shadow whitespace-nowrap"
               >
                 My Booking
               </Link>
@@ -186,15 +190,15 @@ export const Header: React.FC = () => {
               {/* Admin Button */}
               <Link
                 href="/admin"
-                className="px-2.5 py-1.5 bg-white/10 hover:bg-white/20 text-white/90 border border-white/20 rounded-xl text-xs font-medium transition-colors"
+                className="px-2.5 py-1.5 bg-white/10 hover:bg-white/20 text-white/90 border border-white/20 rounded-xl text-xs font-medium transition-colors whitespace-nowrap"
                 title="Admin Dashboard Portal"
               >
                 Admin
               </Link>
             </div>
 
-            {/* Mobile Menu Toggle Button */}
-            <div className="flex items-center gap-2 xl:hidden">
+            {/* Mobile Menu Toggle Button (< xl) */}
+            <div className="flex items-center justify-end gap-2 xl:hidden justify-self-end">
               <Link
                 href="/checkout"
                 className="relative p-2 rounded-xl bg-white/10 text-white border border-white/15"
