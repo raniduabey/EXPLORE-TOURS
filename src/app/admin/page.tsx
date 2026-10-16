@@ -1078,7 +1078,7 @@ export default function AdminDashboardPage() {
       {/* Top Header & Role Badge */}
       <div className="bg-ceylon-navy rounded-3xl p-6 sm:p-8 text-white flex flex-col md:flex-row items-start md:items-center justify-between gap-6 shadow-xl">
         <div className="flex items-center gap-4">
-          <div className="relative w-16 h-16 rounded-2xl overflow-hidden bg-white p-1 border border-white/20 shrink-0">
+          <div className="relative w-16 h-16 rounded-full overflow-hidden bg-white p-1.5 border border-white/30 shadow-md shrink-0">
             <Image
               src="/images/logo.png"
               alt="Ceylon Explore Tours Logo"

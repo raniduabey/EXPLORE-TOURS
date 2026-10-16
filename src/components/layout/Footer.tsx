@@ -37,8 +37,8 @@ export const Footer: React.FC = () => {
             {/* Column 1: Brand & Contact Info */}
             <div className="lg:col-span-2 space-y-5">
               <Link href="/" className="inline-flex items-center gap-3.5 group">
-                <div className="bg-white/95 rounded-2xl p-2 inline-flex items-center shadow-lg border border-[#C9A86A]/40 group-hover:scale-105 transition-transform duration-300">
-                  <div className="relative w-12 h-12 sm:w-14 sm:h-14">
+                <div className="bg-white rounded-full p-1.5 sm:p-2 inline-flex items-center shadow-xl border border-[#C9A86A]/50 group-hover:scale-105 group-hover:border-[#DFBE82] transition-all duration-300 shrink-0">
+                  <div className="relative w-14 h-14 sm:w-16 sm:h-16">
                     <Image
                       src="/images/logo.png"
                       alt={`${settings.companyName || siteConfig.name} Logo`}

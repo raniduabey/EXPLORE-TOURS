@@ -62,23 +62,24 @@ export const Header: React.FC = () => {
             {/* Logo & Brand Name */}
             <Link
               href="/"
-              className="inline-flex items-center gap-3 group shrink-0"
+              className="inline-flex items-center gap-3 sm:gap-3.5 group shrink-0"
               title={siteConfig.name}
             >
-              <div className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-xl overflow-hidden bg-white/95 p-1 shadow-md border border-[#C9A86A]/40 group-hover:scale-105 transition-transform duration-300 shrink-0">
+              <div className="relative w-11 h-11 sm:w-13 sm:h-13 md:w-14 md:h-14 rounded-full bg-white shadow-[0_4px_18px_rgba(0,0,0,0.22)] border border-[#C9A86A]/50 group-hover:scale-105 group-hover:border-[#DFBE82] transition-all duration-300 shrink-0 p-1">
                 <Image
                   src="/images/logo.png"
                   alt={`${siteConfig.name} Logo`}
                   fill
+                  sizes="(max-width: 640px) 44px, (max-width: 768px) 52px, 56px"
                   className="object-contain p-0.5"
                   priority
                 />
               </div>
               <div className="flex flex-col justify-center">
-                <span className="font-editorial text-base sm:text-lg text-white font-bold tracking-wide leading-none whitespace-nowrap block">
+                <span className="font-editorial text-base sm:text-lg md:text-xl text-white font-bold tracking-wide leading-tight whitespace-nowrap block group-hover:text-luxury-sand transition-colors">
                   Ceylon Explore Tours
                 </span>
-                <span className="text-[9px] font-medium tracking-[0.2em] uppercase block mt-1 whitespace-nowrap text-[#C9A86A]">
+                <span className="text-[9px] sm:text-[10px] font-medium tracking-[0.22em] uppercase block mt-0.5 whitespace-nowrap text-[#C9A86A]">
                   Curated Sri Lanka Journeys
                 </span>
               </div>
