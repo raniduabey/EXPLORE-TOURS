@@ -1,49 +1,96 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
-import { Quote, Star, CheckCircle2, MessageSquarePlus, PenLine } from "lucide-react";
+import { Quote, Star, CheckCircle2, MessageSquarePlus, PenLine, RefreshCw, AlertCircle } from "lucide-react";
 import { FadeIn, FadeInStagger, FadeInStaggerItem } from "@/components/ui/motion";
 import { WriteReviewModal } from "@/components/reviews/WriteReviewModal";
 
-interface ApprovedReview {
+export interface ApprovedReview {
   id: string;
   userName: string;
   userCountry?: string;
   rating: number;
   comment: string;
-  travelDate: string;
+  travelDate?: string | null;
   photoUrl?: string | null;
-  tour?: { title: string; slug: string };
+  tour?: { title: string; slug: string } | null;
   verified?: boolean;
+  createdAt?: string;
 }
 
-export const ReviewsSection: React.FC = () => {
-  const [reviews, setReviews] = useState<ApprovedReview[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [modalOpen, setModalOpen] = useState(false);
+interface ReviewsSectionProps {
+  initialReviews?: ApprovedReview[];
+}
 
-  useEffect(() => {
-    async function loadApprovedReviews() {
-      try {
-        const res = await fetch("/api/reviews");
-        if (res.ok) {
-          const data = await res.json();
-          if (Array.isArray(data)) {
-            setReviews(data);
-          }
-        }
-      } catch (err) {
-        console.error("Failed to fetch verified reviews", err);
-      } finally {
-        setLoading(false);
+function formatVisitDate(dateStr?: string | null): string {
+  if (!dateStr) return "";
+  try {
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    if (/^\d{4}-\d{2}-\d{2}/.test(dateStr)) {
+      const [y, m, d] = dateStr.split("T")[0].split("-").map(Number);
+      if (y && m && d) {
+        return `${d} ${months[m - 1]} ${y}`;
+      }
+      if (y && m) {
+        return `${months[m - 1]} ${y}`;
       }
     }
-    loadApprovedReviews();
-  }, []);
-
-  if (loading) {
-    return null;
+    const d = new Date(dateStr);
+    if (!isNaN(d.getTime())) {
+      return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+    }
+  } catch {
+    // fallback
   }
+  return dateStr;
+}
+
+export const ReviewsSection: React.FC<ReviewsSectionProps> = ({ initialReviews = [] }) => {
+  const [reviews, setReviews] = useState<ApprovedReview[]>(initialReviews);
+  const [loading, setLoading] = useState<boolean>(initialReviews.length === 0);
+  const [fetchError, setFetchError] = useState<boolean>(false);
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const loadApprovedReviews = useCallback(async () => {
+    try {
+      setFetchError(false);
+      const res = await fetch(`/api/reviews?_t=${Date.now()}`, {
+        cache: "no-store",
+        headers: {
+          "Cache-Control": "no-cache",
+        },
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data)) {
+          setReviews(data);
+        }
+      } else {
+        if (reviews.length === 0) {
+          setFetchError(true);
+        }
+      }
+    } catch (err) {
+      console.error("Failed to fetch verified reviews", err);
+      if (reviews.length === 0) {
+        setFetchError(true);
+      }
+    } finally {
+      setLoading(false);
+    }
+  }, [reviews.length]);
+
+  useEffect(() => {
+    loadApprovedReviews();
+  }, [loadApprovedReviews]);
+
+  // Sync if initialReviews changes from parent
+  useEffect(() => {
+    if (initialReviews && initialReviews.length > 0) {
+      setReviews(initialReviews);
+      setLoading(false);
+    }
+  }, [initialReviews]);
 
   const averageRating =
     reviews.length > 0
@@ -106,7 +153,66 @@ export const ReviewsSection: React.FC = () => {
             </div>
           </FadeIn>
 
-          {reviews.length === 0 ? (
+          {/* Loading Skeleton */}
+          {loading && reviews.length === 0 && (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[1, 2, 3].map((n) => (
+                <div
+                  key={n}
+                  className="bg-white rounded-3xl p-7 border border-luxury-sand/80 shadow-[0_10px_30px_rgba(16,45,36,0.04)] animate-pulse flex flex-col justify-between h-64"
+                >
+                  <div className="space-y-4">
+                    <div className="flex gap-1.5">
+                      {[...Array(5)].map((_, i) => (
+                        <div key={i} className="w-4 h-4 bg-luxury-sand/40 rounded" />
+                      ))}
+                    </div>
+                    <div className="h-4 bg-luxury-sand/40 rounded w-full" />
+                    <div className="h-4 bg-luxury-sand/30 rounded w-5/6" />
+                    <div className="h-4 bg-luxury-sand/20 rounded w-2/3" />
+                  </div>
+                  <div className="pt-4 border-t border-luxury-sand/60 flex items-center justify-between">
+                    <div className="space-y-2">
+                      <div className="h-4 bg-luxury-sand/40 rounded w-28" />
+                      <div className="h-3 bg-luxury-sand/30 rounded w-36" />
+                    </div>
+                    <div className="h-6 bg-luxury-sand/30 rounded-full w-24" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Error State with Retry */}
+          {!loading && fetchError && reviews.length === 0 && (
+            <div className="bg-white rounded-3xl p-8 sm:p-12 border border-luxury-sand/80 shadow-[0_10px_30px_rgba(16,45,36,0.06)] text-center max-w-xl mx-auto space-y-4">
+              <div className="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 border border-amber-200 flex items-center justify-center mx-auto shadow-sm">
+                <AlertCircle className="w-6 h-6" />
+              </div>
+              <h3 className="font-serif text-xl font-normal text-luxury-forest">
+                Unable to Load Reviews
+              </h3>
+              <p className="text-xs sm:text-sm text-luxury-charcoal/70 font-light leading-relaxed">
+                We encountered a temporary connection issue while retrieving our latest guest reflections.
+              </p>
+              <div className="pt-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setLoading(true);
+                    loadApprovedReviews();
+                  }}
+                  className="px-6 py-2.5 bg-luxury-forest hover:bg-luxury-emerald text-luxury-ivory rounded-full text-xs font-serif font-semibold uppercase tracking-wider transition-all shadow-md inline-flex items-center gap-2"
+                >
+                  <RefreshCw className="w-3.5 h-3.5 text-luxury-gold" />
+                  <span>Retry Loading</span>
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Empty State */}
+          {!loading && !fetchError && reviews.length === 0 && (
             <div className="bg-white rounded-3xl p-8 sm:p-12 border border-luxury-sand/80 shadow-[0_10px_30px_rgba(16,45,36,0.06)] text-center max-w-xl mx-auto space-y-4">
               <div className="w-14 h-14 rounded-2xl bg-luxury-forest/5 text-luxury-gold border border-luxury-gold/25 flex items-center justify-center mx-auto shadow-sm">
                 <MessageSquarePlus className="w-7 h-7" />
@@ -128,7 +234,10 @@ export const ReviewsSection: React.FC = () => {
                 </button>
               </div>
             </div>
-          ) : (
+          )}
+
+          {/* Populated Reviews Grid */}
+          {reviews.length > 0 && (
             <FadeInStagger className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {reviews.map((r) => (
                 <FadeInStaggerItem key={r.id}>
@@ -165,19 +274,18 @@ export const ReviewsSection: React.FC = () => {
                     </div>
 
                     <div className="mt-6 pt-4 border-t border-luxury-sand/70 flex items-center justify-between">
-                      <div>
+                      <div className="pr-2">
                         <h4 className="font-serif text-sm font-semibold text-luxury-forest flex items-center gap-1.5">
                           <span>{r.userName}</span>
                           <CheckCircle2 className="w-3.5 h-3.5 text-luxury-gold" />
                         </h4>
                         <span className="text-[11px] text-luxury-charcoal/60 font-sans block mt-0.5">
-                          {r.userCountry || "International Traveller"} • {r.travelDate}
+                          {r.userCountry || "International Traveller"}
+                          {r.travelDate ? ` • ${formatVisitDate(r.travelDate)}` : ""}
                         </span>
-                        {r.tour?.title && (
-                          <span className="text-[10px] text-luxury-forest font-serif italic block line-clamp-1 mt-0.5">
-                            {r.tour.title}
-                          </span>
-                        )}
+                        <span className="text-[10px] text-luxury-forest font-serif italic block line-clamp-1 mt-0.5">
+                          {r.tour?.title || "General Sri Lanka Journey"}
+                        </span>
                       </div>
                       {r.verified !== false && (
                         <span className="text-[9px] font-mono uppercase tracking-wider text-luxury-forest bg-luxury-sand/40 border border-luxury-sand px-2.5 py-1 rounded-full shrink-0">
@@ -193,7 +301,13 @@ export const ReviewsSection: React.FC = () => {
         </div>
       </section>
 
-      <WriteReviewModal isOpen={modalOpen} onClose={() => setModalOpen(false)} />
+      <WriteReviewModal
+        isOpen={modalOpen}
+        onClose={() => {
+          setModalOpen(false);
+          loadApprovedReviews();
+        }}
+      />
     </>
   );
 };

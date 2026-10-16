@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import prisma from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 // GET /api/admin/reviews
 export async function GET(req: Request) {
@@ -13,7 +15,16 @@ export async function GET(req: Request) {
 
     const where: any = {};
     if (status && status !== "ALL") {
-      where.status = status;
+      const upperStatus = status.toUpperCase();
+      if (upperStatus === "APPROVED") {
+        where.status = { in: ["APPROVED", "approved", "Approved", "PUBLISHED", "published"] };
+      } else if (upperStatus === "PENDING") {
+        where.status = { in: ["PENDING", "pending", "Pending"] };
+      } else if (upperStatus === "REJECTED") {
+        where.status = { in: ["REJECTED", "rejected", "Rejected"] };
+      } else {
+        where.status = status;
+      }
     }
     if (tourId) {
       where.tourId = tourId;
@@ -44,14 +55,21 @@ export async function GET(req: Request) {
       orderBy: { createdAt: "desc" },
     });
 
-    return NextResponse.json(reviews);
+    return NextResponse.json(reviews, {
+      status: 200,
+      headers: {
+        "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0",
+        Pragma: "no-cache",
+        Expires: "0",
+      },
+    });
   } catch (error) {
     console.error("GET /api/admin/reviews error", error);
     return NextResponse.json({ error: "Failed to fetch reviews" }, { status: 500 });
   }
 }
 
-// PUT /api/admin/reviews - Moderate review (APPROVE, REJECT, HIDE)
+// PUT /api/admin/reviews - Moderate review (APPROVE, REJECT, HIDE, PENDING)
 export async function PUT(req: Request) {
   try {
     const { id, status, rejectionReason } = await req.json();
@@ -62,24 +80,31 @@ export async function PUT(req: Request) {
 
     const review = await prisma.review.findUnique({
       where: { id },
+      include: { tour: { select: { id: true, slug: true } } },
     });
 
     if (!review) {
       return NextResponse.json({ error: "Review not found" }, { status: 404 });
     }
 
+    // Always persist standard uppercase status for consistency
+    const normalizedStatus = String(status).toUpperCase();
+
     const updated = await prisma.review.update({
       where: { id },
       data: {
-        status,
-        rejectionReason: status === "REJECTED" ? rejectionReason || "Policy violation" : null,
+        status: normalizedStatus,
+        rejectionReason: normalizedStatus === "REJECTED" ? rejectionReason || "Policy violation" : null,
       },
     });
 
     // Automatically recalculate the associated tour's average rating and review count from approved reviews only!
     if (review.tourId) {
       const approvedReviews = await prisma.review.findMany({
-        where: { tourId: review.tourId, status: "APPROVED" },
+        where: {
+          tourId: review.tourId,
+          status: { in: ["APPROVED", "approved", "Approved", "PUBLISHED", "published"] },
+        },
       });
 
       const totalApproved = approvedReviews.length;
@@ -97,15 +122,27 @@ export async function PUT(req: Request) {
       });
     }
 
+    // Invalidate Next.js static / ISR caches so the homepage and tours show approved reviews immediately!
+    try {
+      revalidatePath("/");
+      revalidatePath("/tours");
+      revalidatePath("/review");
+      if (review.tour?.slug) {
+        revalidatePath(`/tours/${review.tour.slug}`);
+      }
+    } catch (revalErr) {
+      console.warn("revalidatePath error in PUT /api/admin/reviews:", revalErr);
+    }
+
     // Create Audit Log
     try {
       await prisma.auditLog.create({
         data: {
           adminEmail: "admin@ceylonexploretours.com",
-          action: `REVIEW_${status}`,
+          action: `REVIEW_${normalizedStatus}`,
           entityType: "Review",
           entityId: id,
-          details: `Updated review status to ${status}${
+          details: `Updated review status to ${normalizedStatus}${
             rejectionReason ? `: ${rejectionReason}` : ""
           }`,
         },
@@ -129,7 +166,10 @@ export async function DELETE(req: Request) {
       return NextResponse.json({ error: "Review ID is required" }, { status: 400 });
     }
 
-    const review = await prisma.review.findUnique({ where: { id } });
+    const review = await prisma.review.findUnique({
+      where: { id },
+      include: { tour: { select: { id: true, slug: true } } },
+    });
     if (!review) {
       return NextResponse.json({ error: "Review not found" }, { status: 404 });
     }
@@ -139,7 +179,10 @@ export async function DELETE(req: Request) {
     // Recalculate tour rating if applicable
     if (review.tourId) {
       const approvedReviews = await prisma.review.findMany({
-        where: { tourId: review.tourId, status: "APPROVED" },
+        where: {
+          tourId: review.tourId,
+          status: { in: ["APPROVED", "approved", "Approved", "PUBLISHED", "published"] },
+        },
       });
       const totalApproved = approvedReviews.length;
       const avgRating =
@@ -154,6 +197,18 @@ export async function DELETE(req: Request) {
           reviewCount: totalApproved,
         },
       });
+    }
+
+    // Invalidate caches
+    try {
+      revalidatePath("/");
+      revalidatePath("/tours");
+      revalidatePath("/review");
+      if (review.tour?.slug) {
+        revalidatePath(`/tours/${review.tour.slug}`);
+      }
+    } catch (revalErr) {
+      console.warn("revalidatePath error in DELETE /api/admin/reviews:", revalErr);
     }
 
     return NextResponse.json({ success: true, message: "Review deleted successfully" });

@@ -1,31 +1,67 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 // GET /api/reviews - Return approved reviews for public display
 export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
     const tourId = searchParams.get("tourId");
-    const limit = Number(searchParams.get("limit")) || 50;
+    const limit = Math.min(Number(searchParams.get("limit")) || 50, 100);
 
+    // Support both uppercase and lowercase approved status conventions
     const whereClause: any = {
-      status: "APPROVED",
+      status: {
+        in: ["APPROVED", "approved", "Approved", "PUBLISHED", "published"],
+      },
     };
 
-    if (tourId) {
+    if (tourId && tourId !== "all") {
       whereClause.tourId = tourId;
     }
 
+    // Select ONLY safe public fields — NEVER expose customer email addresses
     const reviews = await prisma.review.findMany({
       where: whereClause,
-      include: {
-        tour: { select: { title: true, slug: true } },
+      select: {
+        id: true,
+        userName: true,
+        userCountry: true,
+        userAvatar: true,
+        photoUrl: true,
+        rating: true,
+        guideRating: true,
+        transportRating: true,
+        valueRating: true,
+        comment: true,
+        travelDate: true,
+        verified: true,
+        createdAt: true,
+        tourId: true,
+        tour: {
+          select: {
+            id: true,
+            title: true,
+            slug: true,
+          },
+        },
       },
       orderBy: { createdAt: "desc" },
       take: limit,
     });
 
-    return NextResponse.json(reviews);
+    return NextResponse.json(reviews, {
+      status: 200,
+      headers: {
+        "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0",
+        "CDN-Cache-Control": "no-store",
+        "Vercel-CDN-Cache-Control": "no-store",
+        Pragma: "no-cache",
+        Expires: "0",
+      },
+    });
   } catch (error) {
     console.error("GET /api/reviews error", error);
     return NextResponse.json({ error: "Failed to fetch reviews" }, { status: 500 });

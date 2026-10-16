@@ -827,19 +827,30 @@ export default function AdminDashboardPage() {
   // ----------------------------------------------------
   const moderateReview = async (id: string, status: "APPROVED" | "REJECTED" | "HIDDEN", reason?: string) => {
     try {
+      setStatusMsg(`Updating review status to ${status}...`);
       const res = await fetch("/api/admin/reviews", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id, status, rejectionReason: reason }),
       });
+      const data = await res.json().catch(() => ({}));
       if (res.ok) {
-        setStatusMsg(`Review has been marked ${status}. Public tour rating recalculated.`);
+        setStatusMsg(
+          status === "APPROVED"
+            ? "Review approved & published successfully! Public cache revalidated."
+            : `Review marked as ${status}.`
+        );
         setRejectingReviewId(null);
         setRejectionReason("");
-        loadAllData();
+        await loadAllData();
+      } else {
+        alert(data.error || `Failed to update review status to ${status}.`);
+        setStatusMsg(`Failed: ${data.error || "Review update error"}`);
       }
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
+      alert(`Error updating review: ${e?.message || e}`);
+      setStatusMsg("Error updating review.");
     }
   };
 
@@ -1683,115 +1694,121 @@ export default function AdminDashboardPage() {
 
           <div className="space-y-4">
             {reviews
-              .filter((r) => reviewStatusFilter === "ALL" || r.status === reviewStatusFilter)
-              .map((rev) => (
-                <div
-                  key={rev.id}
-                  className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-4"
-                >
-                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <span className="font-extrabold text-sm text-ceylon-navy">{rev.userName}</span>
-                        {rev.booking && (
-                          <span className="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-[10px] font-bold">
-                            Verified Booking: {rev.booking.bookingRef}
+              .filter((r) => reviewStatusFilter === "ALL" || r.status?.toUpperCase() === reviewStatusFilter)
+              .map((rev) => {
+                const statusUpper = rev.status?.toUpperCase();
+                return (
+                  <div
+                    key={rev.id}
+                    className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-4"
+                  >
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className="font-extrabold text-sm text-ceylon-navy">{rev.userName}</span>
+                          {rev.booking && (
+                            <span className="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-[10px] font-bold">
+                              Verified Booking: {rev.booking.bookingRef}
+                            </span>
+                          )}
+                          <span
+                            className={`px-2 py-0.5 rounded text-[10px] font-extrabold uppercase ${
+                              statusUpper === "APPROVED" || statusUpper === "PUBLISHED"
+                                ? "bg-emerald-50 text-emerald-800 border border-emerald-200"
+                                : statusUpper === "PENDING"
+                                ? "bg-amber-50 text-amber-800 border border-amber-200"
+                                : "bg-rose-50 text-rose-800 border border-rose-200"
+                            }`}
+                          >
+                            Status: {statusUpper === "APPROVED" ? "Approved & Published" : rev.status}
                           </span>
-                        )}
-                        <span
-                          className={`px-2 py-0.5 rounded text-[10px] font-extrabold uppercase ${
-                            rev.status === "APPROVED"
-                              ? "bg-emerald-50 text-emerald-800 border border-emerald-200"
-                              : rev.status === "PENDING"
-                              ? "bg-amber-50 text-amber-800 border border-amber-200"
-                              : "bg-rose-50 text-rose-800 border border-rose-200"
-                          }`}
-                        >
-                          Status: {rev.status}
+                        </div>
+                        <span className="text-[11px] text-slate-400 block mt-0.5">
+                          {rev.userEmail || "No email"} • {rev.userCountry || "International"} • Tour: {rev.tour?.title || "General Sri Lanka Journey"}
                         </span>
                       </div>
-                      <span className="text-[11px] text-slate-400 block mt-0.5">
-                        {rev.userEmail || "No email"} • {rev.userCountry} • Tour: {rev.tour?.title || "Tour"}
-                      </span>
-                    </div>
 
-                    <div className="flex text-amber-400">
-                      {[...Array(5)].map((_, i) => (
-                        <Star
-                          key={i}
-                          className={`w-4 h-4 ${
-                            i < Math.floor(rev.rating) ? "fill-current text-amber-400" : "text-slate-200"
-                          }`}
-                        />
-                      ))}
-                      <span className="ml-1 text-xs font-bold text-ceylon-navy">{rev.rating} Stars</span>
-                    </div>
-                  </div>
-
-                  <p className="text-xs text-slate-700 leading-relaxed italic bg-slate-50/60 p-4 rounded-2xl border border-slate-100">
-                    &ldquo;{rev.comment}&rdquo;
-                  </p>
-
-                  {rev.photoUrl && (
-                    <div className="flex items-center gap-3">
-                      <div className="relative w-24 h-24 rounded-xl overflow-hidden border border-slate-200">
-                        <Image src={rev.photoUrl} alt="Review attachment" fill className="object-cover" />
+                      <div className="flex text-amber-400">
+                        {[...Array(5)].map((_, i) => (
+                          <Star
+                            key={i}
+                            className={`w-4 h-4 ${
+                              i < Math.floor(rev.rating) ? "fill-current text-amber-400" : "text-slate-200"
+                            }`}
+                          />
+                        ))}
+                        <span className="ml-1 text-xs font-bold text-ceylon-navy">{rev.rating} Stars</span>
                       </div>
-                      <span className="text-xs text-slate-500 font-medium">Customer photo submitted with review</span>
                     </div>
-                  )}
 
-                  {rev.rejectionReason && (
-                    <div className="text-xs text-rose-600 bg-rose-50 p-3 rounded-xl border border-rose-100">
-                      <strong>Rejection Reason:</strong> {rev.rejectionReason}
-                    </div>
-                  )}
+                    <p className="text-xs text-slate-700 leading-relaxed italic bg-slate-50/60 p-4 rounded-2xl border border-slate-100">
+                      &ldquo;{rev.comment}&rdquo;
+                    </p>
 
-                  <div className="flex items-center justify-between pt-2">
-                    <span className="text-[11px] text-slate-400">
-                      Submitted on {new Date(rev.createdAt).toLocaleDateString()}
-                    </span>
+                    {rev.photoUrl && (
+                      <div className="flex items-center gap-3">
+                        <div className="relative w-24 h-24 rounded-xl overflow-hidden border border-slate-200">
+                          <Image src={rev.photoUrl} alt="Review attachment" fill className="object-cover" />
+                        </div>
+                        <span className="text-xs text-slate-500 font-medium">Customer photo submitted with review</span>
+                      </div>
+                    )}
 
-                    <div className="flex items-center gap-2">
-                      {rev.status !== "APPROVED" && (
+                    {rev.rejectionReason && (
+                      <div className="text-xs text-rose-600 bg-rose-50 p-3 rounded-xl border border-rose-100">
+                        <strong>Rejection Reason:</strong> {rev.rejectionReason}
+                      </div>
+                    )}
+
+                    <div className="flex items-center justify-between pt-2">
+                      <span className="text-[11px] text-slate-400">
+                        Submitted on {new Date(rev.createdAt).toLocaleDateString()}
+                        {rev.travelDate ? ` • Visited: ${rev.travelDate}` : ""}
+                      </span>
+
+                      <div className="flex items-center gap-2">
+                        {statusUpper !== "APPROVED" && statusUpper !== "PUBLISHED" && (
+                          <button
+                            onClick={() => moderateReview(rev.id, "APPROVED")}
+                            className="px-4 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-extrabold shadow flex items-center gap-1.5"
+                          >
+                            <CheckCircle className="w-3.5 h-3.5" />
+                            <span>Approve & Publish</span>
+                          </button>
+                        )}
+                        {(statusUpper === "APPROVED" || statusUpper === "PUBLISHED") && (
+                          <button
+                            onClick={() => moderateReview(rev.id, "HIDDEN", "Moderator unpublished")}
+                            className="px-3 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 rounded-xl text-xs font-bold"
+                            title="Unpublish this review from the public website"
+                          >
+                            Unpublish (Hide)
+                          </button>
+                        )}
+                        {statusUpper !== "REJECTED" && (
+                          <button
+                            onClick={() => {
+                              const reason = prompt("Enter rejection reason (e.g. spam, inappropriate content, promotional link):");
+                              if (reason !== null && reason.trim()) moderateReview(rev.id, "REJECTED", reason.trim());
+                            }}
+                            className="px-4 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 rounded-xl text-xs font-bold"
+                          >
+                            Reject as Spam
+                          </button>
+                        )}
                         <button
-                          onClick={() => moderateReview(rev.id, "APPROVED")}
-                          className="px-4 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-extrabold shadow"
+                          onClick={() => deleteReview(rev.id)}
+                          className="px-3 py-1.5 bg-white hover:bg-rose-50 text-rose-600 border border-rose-200 rounded-xl text-xs font-bold flex items-center gap-1 transition-colors"
+                          title="Permanently delete review"
                         >
-                          Approve & Publish
+                          <Trash2 className="w-3.5 h-3.5" />
+                          <span>Delete</span>
                         </button>
-                      )}
-                      {rev.status !== "REJECTED" && (
-                        <button
-                          onClick={() => {
-                            const reason = prompt("Enter rejection reason (e.g. spam, inappropriate content, promotional link):");
-                            if (reason) moderateReview(rev.id, "REJECTED", reason);
-                          }}
-                          className="px-4 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 rounded-xl text-xs font-bold"
-                        >
-                          Reject as Spam
-                        </button>
-                      )}
-                      {rev.status === "APPROVED" && (
-                        <button
-                          onClick={() => moderateReview(rev.id, "HIDDEN", "Moderator suppressed")}
-                          className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl text-xs font-bold"
-                        >
-                          Hide
-                        </button>
-                      )}
-                      <button
-                        onClick={() => deleteReview(rev.id)}
-                        className="px-3 py-1.5 bg-white hover:bg-rose-50 text-rose-600 border border-rose-200 rounded-xl text-xs font-bold flex items-center gap-1 transition-colors"
-                        title="Permanently delete review"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                        <span>Delete</span>
-                      </button>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
           </div>
         </div>
       )}

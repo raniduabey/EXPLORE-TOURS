@@ -4,6 +4,7 @@ import prisma from "@/lib/prisma";
 import { verifyAdminToken } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export async function GET() {
   try {
@@ -51,8 +52,14 @@ export async function GET() {
     const newInquiries = await prisma.customTripRequest.count({ where: { status: "NEW" } });
 
     // 4. Reviews
-    const pendingReviews = await prisma.review.count({ where: { status: "PENDING" } });
-    const approvedReviews = await prisma.review.count({ where: { status: "APPROVED" } });
+    const pendingReviews = await prisma.review.count({
+      where: { status: { in: ["PENDING", "pending", "Pending"] } },
+    });
+    const approvedReviews = await prisma.review.count({
+      where: {
+        status: { in: ["APPROVED", "approved", "Approved", "PUBLISHED", "published"] },
+      },
+    });
 
     // 5. Monthly booking breakdown (from actual database records)
     const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
