@@ -62,6 +62,8 @@ import { RichTextEditor } from "@/components/admin/RichTextEditor";
 import { DynamicIcon, AVAILABLE_TOUR_ICONS } from "@/components/common/DynamicIcon";
 import { TourEditorModal } from "@/components/admin/TourEditorModal";
 import { DestinationEditorModal } from "@/components/admin/DestinationEditorModal";
+import { AdminTabErrorBoundary } from "@/components/admin/AdminTabErrorBoundary";
+import { getBadgeLabel } from "@/components/tours/TourCard";
 
 export default function AdminDashboardPage() {
   const [tab, setTab] = useState<
@@ -274,7 +276,9 @@ export default function AdminDashboardPage() {
         setUploadProgress(100);
         setUploadSuccess("Photograph uploaded and published successfully.");
         setStatusMsg("Photograph uploaded successfully.");
-        if (callback) callback(data.url, data);
+        if (callback) {
+          await callback(data.url, data);
+        }
 
         // Refresh media library
         const mRes = await fetch("/api/admin/upload");
@@ -443,6 +447,7 @@ export default function AdminDashboardPage() {
   const handleSaveTourMedia = async (tourId: string, primaryImg: string, gallery: string[]) => {
     try {
       setUploading(true);
+      setStatusMsg("Saving photographs to tour package...");
       const res = await fetch("/api/admin/tours", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -453,15 +458,25 @@ export default function AdminDashboardPage() {
         }),
       });
       if (res.ok) {
-        setStatusMsg("Tour photographs and gallery updated successfully!");
+        setStatusMsg("Synchronizing tour catalog and galleries...");
         const tRes = await fetch("/api/admin/tours");
-        if (tRes.ok) setTours(await tRes.json());
+        if (tRes.ok) {
+          const freshTours = await tRes.json();
+          setTours(freshTours);
+        }
+        setStatusMsg("Tour photographs and gallery updated successfully!");
+        setUploadSuccess("Photograph saved to tour package successfully.");
+        return true;
       } else {
         const d = await res.json().catch(() => ({}));
-        alert(d.error || "Failed to update tour images.");
+        const errMsg = d.error || "Failed to update tour images.";
+        setStatusMsg(`Failed: ${errMsg}`);
+        alert(errMsg);
+        return false;
       }
-    } catch (e) {
-      alert("Error saving tour photographs.");
+    } catch (e: any) {
+      alert(`Error saving tour photographs: ${e?.message || e}`);
+      return false;
     } finally {
       setUploading(false);
     }
@@ -1159,10 +1174,11 @@ export default function AdminDashboardPage() {
         })}
       </div>
 
-      {/* ---------------------------------------------------- */}
-      {/* 1. OVERVIEW & ANALYTICS TAB */}
-      {/* ---------------------------------------------------- */}
-      {tab === "overview" && (
+      <AdminTabErrorBoundary onReset={() => setTab("overview")}>
+        {/* ---------------------------------------------------- */}
+        {/* 1. OVERVIEW & ANALYTICS TAB */}
+        {/* ---------------------------------------------------- */}
+        {tab === "overview" && (
         <div className="space-y-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-2">
@@ -1345,13 +1361,14 @@ export default function AdminDashboardPage() {
                 <tbody className="divide-y divide-slate-100">
                   {tours
                     .filter((t) => {
+                      const q = tourSearch.toLowerCase();
                       const matchSearch =
                         !tourSearch ||
-                        t.title.toLowerCase().includes(tourSearch.toLowerCase()) ||
-                        t.location.toLowerCase().includes(tourSearch.toLowerCase());
+                        (t.title && t.title.toLowerCase().includes(q)) ||
+                        (t.location && t.location.toLowerCase().includes(q));
                       const matchStatus =
                         tourStatusFilter === "ALL" || t.status === tourStatusFilter;
-                      return matchSearch && matchStatus;
+                      return Boolean(matchSearch && matchStatus);
                     })
                     .map((tour) => {
                       const primaryImg =
@@ -1523,14 +1540,15 @@ export default function AdminDashboardPage() {
                 <tbody className="divide-y divide-slate-100">
                   {bookings
                     .filter((b) => {
+                      const q = bookingSearch.toLowerCase();
                       const matchSearch =
                         !bookingSearch ||
-                        b.bookingRef.toLowerCase().includes(bookingSearch.toLowerCase()) ||
-                        b.guestName.toLowerCase().includes(bookingSearch.toLowerCase()) ||
-                        b.guestEmail.toLowerCase().includes(bookingSearch.toLowerCase());
+                        (b.bookingRef && b.bookingRef.toLowerCase().includes(q)) ||
+                        (b.guestName && b.guestName.toLowerCase().includes(q)) ||
+                        (b.guestEmail && b.guestEmail.toLowerCase().includes(q));
                       const matchStatus =
                         bookingStatusFilter === "ALL" || b.bookingStatus === bookingStatusFilter;
-                      return matchSearch && matchStatus;
+                      return Boolean(matchSearch && matchStatus);
                     })
                     .map((b) => {
                       const invite = b.invitations?.[0];
@@ -1804,7 +1822,7 @@ export default function AdminDashboardPage() {
               <div key={dest.id} className="bg-white rounded-3xl overflow-hidden border border-slate-200 shadow-sm flex flex-col justify-between">
                 <div>
                   <div className="relative h-44 w-full bg-slate-100">
-                    <Image src={dest.image} alt={dest.name} fill className="object-cover" />
+                    <Image src={dest.image || "/images/destinations/sigiriya.jpg"} alt={dest.name || "Destination"} fill className="object-cover" />
                   </div>
                   <div className="p-5 space-y-2">
                     <h3 className="font-extrabold text-base text-ceylon-navy">{dest.name}</h3>
@@ -1879,7 +1897,7 @@ export default function AdminDashboardPage() {
               <div key={post.id} className="bg-white rounded-3xl overflow-hidden border border-slate-200 shadow-sm flex flex-col justify-between">
                 <div>
                   <div className="relative h-44 w-full bg-slate-100">
-                    <Image src={post.image} alt={post.title} fill className="object-cover" />
+                    <Image src={post.image || "/images/destinations/sigiriya.jpg"} alt={post.title || "Article"} fill className="object-cover" />
                   </div>
                   <div className="p-5 space-y-2">
                     <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-ceylon-softblue text-ceylon-blue">
@@ -2246,7 +2264,7 @@ export default function AdminDashboardPage() {
 
                       {/* Desktop Banner Thumbnail */}
                       <div className="relative w-44 h-28 rounded-2xl overflow-hidden border border-slate-200 bg-slate-100 group">
-                        <Image src={s.image} alt={s.destination || "Hero banner"} fill className="object-cover" />
+                        <Image src={s.image || "/images/destinations/sigiriya.jpg"} alt={s.destination || "Hero banner"} fill className="object-cover" />
                         <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1.5">
                           <button
                             onClick={() => setLightboxImage(s.image)}
@@ -2397,7 +2415,11 @@ export default function AdminDashboardPage() {
                 const tour = tours.find((t) => t.id === (selectedTourForMedia || tours[0]?.id));
                 if (!tour) return <div className="p-8 text-center text-xs text-slate-400">No tour package found.</div>;
 
-                const primaryImg = tour.images?.find((i: any) => i.isPrimary)?.url || tour.images?.[0]?.url || "";
+                const primaryImg =
+                  tour.images?.find((i: any) => i.isPrimary)?.url ||
+                  tour.primaryImage ||
+                  tour.images?.[0]?.url ||
+                  "";
                 const galleryList = (tour.images || [])
                   .filter((i: any) => !i.isPrimary && i.url !== primaryImg)
                   .map((i: any) => i.url);
@@ -2438,7 +2460,7 @@ export default function AdminDashboardPage() {
 
                         {primaryImg ? (
                           <div className="relative h-64 w-full rounded-2xl overflow-hidden border border-slate-200 bg-slate-100 group">
-                            <Image src={primaryImg} alt={tour.title} fill className="object-cover" />
+                            <Image src={primaryImg} alt={tour.title || "Tour cover"} fill className="object-cover" />
                             <div className="absolute top-3 left-3 px-3 py-1 rounded-full bg-emerald-600 text-white text-xs font-bold shadow">
                               Primary Cover
                             </div>
@@ -2475,8 +2497,9 @@ export default function AdminDashboardPage() {
                                 const file = e.target.files?.[0];
                                 if (file) {
                                   await handleFileUpload(file, async (url) => {
-                                    const updated = [...galleryList, url];
-                                    await handleSaveTourMedia(tour.id, primaryImg, updated);
+                                    const targetCover = primaryImg || url;
+                                    const updated = primaryImg ? [...galleryList, url] : galleryList;
+                                    await handleSaveTourMedia(tour.id, targetCover, updated);
                                   });
                                 }
                               }}
@@ -2541,22 +2564,26 @@ export default function AdminDashboardPage() {
                         <div className="rounded-2xl border border-slate-200 overflow-hidden bg-white shadow-sm flex flex-col">
                           <div className="relative h-44 w-full bg-slate-100">
                             {primaryImg ? (
-                              <Image src={primaryImg} alt={tour.title} fill className="object-cover" />
+                              <Image src={primaryImg} alt={tour.title || "Tour card"} fill className="object-cover" />
                             ) : (
                               <div className="h-full flex items-center justify-center text-slate-400 text-xs">No Cover Image</div>
                             )}
-                            {tour.badge && (
-                              <span className="absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded-full bg-amber-500 text-white text-[10px] font-black uppercase shadow">
-                                {tour.badge}
-                              </span>
-                            )}
+                            {(() => {
+                              const badgeLabel = getBadgeLabel(tour.badge, tour.tourType || "Private Tour");
+                              if (!badgeLabel) return null;
+                              return (
+                                <span className="absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded-full bg-amber-500 text-white text-[10px] font-black uppercase shadow">
+                                  {badgeLabel}
+                                </span>
+                              );
+                            })()}
                             <div className="absolute bottom-2.5 right-2.5 px-2 py-0.5 rounded-lg bg-black/60 backdrop-blur-sm text-white text-[10px] font-bold">
-                              {tour.duration}
+                              {tour.duration || "Day Tour"}
                             </div>
                           </div>
                           <div className="p-4 space-y-2">
                             <div className="text-[10px] font-extrabold uppercase text-ceylon-blue tracking-wider">
-                              {tour.destination?.name || tour.location}
+                              {tour.destination?.name || tour.location || "Sri Lanka"}
                             </div>
                             <h5 className="text-sm font-extrabold text-ceylon-navy line-clamp-2">{tour.title}</h5>
                             <div className="flex items-center justify-between pt-2 border-t border-slate-100">
@@ -3591,6 +3618,7 @@ export default function AdminDashboardPage() {
           </div>
         </div>
       )}
+      </AdminTabErrorBoundary>
 
       {/* ---------------------------------------------------- */}
       {/* REUSABLE MEDIA LIBRARY ASSET PICKER MODAL */}
@@ -3648,7 +3676,7 @@ export default function AdminDashboardPage() {
                       if (!mediaSearch) return true;
                       const q = mediaSearch.toLowerCase();
                       return (
-                        a.filename.toLowerCase().includes(q) ||
+                        (a.filename && a.filename.toLowerCase().includes(q)) ||
                         (a.title && a.title.toLowerCase().includes(q)) ||
                         (a.altText && a.altText.toLowerCase().includes(q))
                       );

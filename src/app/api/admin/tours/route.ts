@@ -358,9 +358,9 @@ export async function PUT(req: Request) {
         ...(minTravellers !== undefined && { minTravellers: Number(minTravellers) }),
         ...(maxTravellers !== undefined && { maxTravellers: Number(maxTravellers) }),
         ...(description !== undefined && { description }),
-        highlights: highlightsStr,
-        includes: includesStr,
-        excludes: excludesStr,
+        ...(highlights !== undefined && { highlights: highlightsStr }),
+        ...(includes !== undefined && { includes: includesStr }),
+        ...(excludes !== undefined && { excludes: excludesStr }),
         ...(importantInfo !== undefined && { importantInfo: importantInfo || null }),
         ...(whatToBring !== undefined && { whatToBring: whatToBringStr }),
         ...(cancellationPolicy !== undefined && { cancellationPolicy: cancellationPolicy || null }),
@@ -466,15 +466,30 @@ export async function PUT(req: Request) {
       });
     } catch (e) {}
 
+    const finalTour = await prisma.tour.findUnique({
+      where: { id },
+      include: {
+        destination: { select: { id: true, name: true, slug: true } },
+        category: { select: { id: true, name: true, slug: true } },
+        images: { orderBy: [{ isPrimary: "desc" }, { order: "asc" }] },
+        itinerary: { orderBy: { stepNumber: "asc" } },
+        _count: { select: { bookings: true, reviews: true } },
+      },
+    });
+
     try {
       revalidatePath("/tours");
       revalidatePath("/");
-      if (updated.slug) {
-        revalidatePath(`/tours/${updated.slug}`);
+      revalidatePath("/admin");
+      if (finalTour?.slug) {
+        revalidatePath(`/tours/${finalTour.slug}`);
+      }
+      if (existingTour?.slug && existingTour.slug !== finalTour?.slug) {
+        revalidatePath(`/tours/${existingTour.slug}`);
       }
     } catch (e) {}
 
-    return NextResponse.json({ success: true, tour: updated });
+    return NextResponse.json({ success: true, tour: finalTour || updated });
   } catch (error) {
     console.error("PUT /api/admin/tours error", error);
     return NextResponse.json({ error: "Failed to update tour package" }, { status: 500 });

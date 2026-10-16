@@ -307,8 +307,8 @@ export async function POST(req: Request) {
       },
     });
 
-    // If local write was read-only, ensure public URL points to the dedicated media serving route
-    if (!publishedUrl) {
+    // Ensure non-cloud uploads have persistent, serverless-safe public URLs
+    if (!publishedUrl || publishedUrl.startsWith("/uploads/")) {
       publishedUrl = `/api/media/${asset.id}`;
       await prisma.mediaAsset.update({
         where: { id: asset.id },

@@ -33,7 +33,7 @@ export const ImageGallery: React.FC<ImageGalleryProps> = ({ images = [], title }
   const touchStartX = useRef<number | null>(null);
   const touchEndX = useRef<number | null>(null);
 
-  // Normalize image array: put primary first, ensure fallback
+  // Normalize image array: deduplicate, put primary first, ensure fallback
   const validImages: TourPhoto[] = React.useMemo(() => {
     if (!images || images.length === 0) {
       return [
@@ -47,12 +47,28 @@ export const ImageGallery: React.FC<ImageGalleryProps> = ({ images = [], title }
     }
 
     const primary = images.find((i) => i.isPrimary);
-    const nonPrimary = images.filter((i) => !i.isPrimary);
+    const nonPrimary = images.filter((i) => !i.isPrimary && (!primary || i.url !== primary.url));
 
-    if (primary) {
-      return [primary, ...nonPrimary];
+    const combined = primary ? [primary, ...nonPrimary] : images;
+    const seen = new Set<string>();
+    const unique: TourPhoto[] = [];
+    for (const item of combined) {
+      if (item && item.url && !seen.has(item.url)) {
+        seen.add(item.url);
+        unique.push(item);
+      }
     }
-    return images;
+
+    return unique.length > 0
+      ? unique
+      : [
+          {
+            id: "default-hero",
+            url: "/images/destinations/sigiriya.jpg",
+            caption: title,
+            isPrimary: true,
+          },
+        ];
   }, [images, title]);
 
   const count = validImages.length;

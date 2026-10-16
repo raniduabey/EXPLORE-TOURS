@@ -32,16 +32,47 @@ const fallbackImages: Record<string, string> = {
   yala: "/images/destinations/yala.jpg",
 };
 
+export function getBadgeLabel(badge: any, fallback?: string): string | null {
+  if (!badge) return fallback || null;
+  if (typeof badge === "string") {
+    const trimmed = badge.trim();
+    if (trimmed.startsWith("[") || trimmed.startsWith("{")) {
+      try {
+        const parsed = JSON.parse(trimmed);
+        if (Array.isArray(parsed)) {
+          const item = parsed.find((b: any) => b?.enabled !== false && (b?.label || b?.value || b?.text));
+          return item ? (item.value || item.label || item.text) : (fallback || null);
+        }
+        if (typeof parsed === "object" && parsed !== null) {
+          return parsed.value || parsed.label || parsed.text || fallback || null;
+        }
+      } catch {
+        return trimmed;
+      }
+    }
+    return trimmed;
+  }
+  if (Array.isArray(badge)) {
+    const item = badge.find((b: any) => b?.enabled !== false && (b?.label || b?.value || b?.text));
+    return item ? (item.value || item.label || item.text) : (fallback || null);
+  }
+  if (typeof badge === "object" && badge !== null) {
+    return badge.value || badge.label || badge.text || fallback || null;
+  }
+  return String(badge);
+}
+
 export const TourCard: React.FC<{ tour: TourCardData }> = ({ tour }) => {
   const { formatPrice } = useCurrency();
   const [imgError, setImgError] = useState(false);
 
-  const locLower = tour.location?.toLowerCase() || "";
+  const locLower = tour.location ? tour.location.toLowerCase() : "";
   const imageUrl = imgError
     ? fallbackImages[locLower] || "/images/destinations/sigiriya.jpg"
     : tour.primaryImage || "/images/destinations/sigiriya.jpg";
 
   const hasGenuineReviews = (tour.reviewCount ?? 0) > 0 && (tour.rating ?? 0) > 0;
+  const badgeText = getBadgeLabel(tour.badge);
 
   return (
     <motion.div
@@ -52,23 +83,23 @@ export const TourCard: React.FC<{ tour: TourCardData }> = ({ tour }) => {
       <div className="relative h-52 sm:h-56 w-full overflow-hidden bg-luxury-sand/20">
         <Image
           src={imageUrl}
-          alt={tour.title}
+          alt={tour.title || "Tour package"}
           fill
           unoptimized={imageUrl.startsWith("/api/media/") || imageUrl.startsWith("data:")}
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           onError={() => setImgError(true)}
           className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
         />
-        {tour.badge && (
+        {badgeText && (
           <div className="absolute top-3 left-3 z-10">
             <span className="px-3 py-1 rounded-full text-[9px] font-mono uppercase tracking-[0.18em] bg-luxury-forest/90 text-luxury-gold border border-luxury-gold/30 backdrop-blur-md shadow-sm">
-              {tour.badge}
+              {badgeText}
             </span>
           </div>
         )}
         <div className="absolute bottom-3 left-3 z-10 flex items-center gap-1.5 px-3 py-1 rounded-full bg-luxury-forest/80 backdrop-blur-md text-luxury-ivory text-[11px] font-serif">
           <MapPin className="w-3.5 h-3.5 text-luxury-gold" />
-          <span>{tour.location}</span>
+          <span>{tour.location || "Sri Lanka"}</span>
         </div>
       </div>
 
