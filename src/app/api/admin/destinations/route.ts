@@ -38,11 +38,15 @@ export async function POST(req: Request) {
       shortDesc,
       longDesc,
       image,
+      thumbnail,
+      gallery,
       startingPrice,
       popularAttractions,
       bestTimeToVisit,
       featured,
       status,
+      seoTitle,
+      seoDescription,
     } = body;
 
     if (!name || !image) {
@@ -64,11 +68,15 @@ export async function POST(req: Request) {
         shortDesc: shortDesc || "",
         longDesc: longDesc || shortDesc || "",
         image,
+        thumbnail: thumbnail || null,
+        gallery: typeof gallery === "object" ? JSON.stringify(gallery) : gallery || null,
         startingPrice: Number(startingPrice) || 0,
-        popularAttractions: popularAttractions || "",
+        popularAttractions: typeof popularAttractions === "object" ? JSON.stringify(popularAttractions) : popularAttractions || "",
         bestTimeToVisit: bestTimeToVisit || "Year-round",
         featured: Boolean(featured),
         status: status || "PUBLISHED",
+        seoTitle: seoTitle || null,
+        seoDescription: seoDescription || null,
       },
     });
 
@@ -114,11 +122,15 @@ export async function PUT(req: Request) {
       shortDesc,
       longDesc,
       image,
+      thumbnail,
+      gallery,
       startingPrice,
       popularAttractions,
       bestTimeToVisit,
       featured,
       status,
+      seoTitle,
+      seoDescription,
     } = await req.json();
 
     if (!id) {
@@ -133,11 +145,15 @@ export async function PUT(req: Request) {
         ...(shortDesc !== undefined && { shortDesc }),
         ...(longDesc !== undefined && { longDesc }),
         ...(image && { image }),
+        ...(thumbnail !== undefined && { thumbnail: thumbnail || null }),
+        ...(gallery !== undefined && { gallery: typeof gallery === "object" ? JSON.stringify(gallery) : gallery || null }),
         ...(startingPrice !== undefined && { startingPrice: Number(startingPrice) }),
-        ...(popularAttractions !== undefined && { popularAttractions }),
+        ...(popularAttractions !== undefined && { popularAttractions: typeof popularAttractions === "object" ? JSON.stringify(popularAttractions) : popularAttractions }),
         ...(bestTimeToVisit !== undefined && { bestTimeToVisit }),
         ...(featured !== undefined && { featured: Boolean(featured) }),
         ...(status !== undefined && { status }),
+        ...(seoTitle !== undefined && { seoTitle: seoTitle || null }),
+        ...(seoDescription !== undefined && { seoDescription: seoDescription || null }),
       },
     });
 

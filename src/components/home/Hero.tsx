@@ -7,7 +7,20 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight, Star, MapPin, Users, Camera, Compass, Sparkles, ChevronDown, Check, Calendar, Search, ShieldCheck } from "lucide-react";
 import { Float } from "@/components/ui/motion";
 
-const defaultSlides = [
+interface HeroSlide {
+  id: number | string;
+  tagline: string;
+  headlineLine1: string;
+  headlineHighlight: string;
+  subtitle: string;
+  image: string;
+  mobileImage?: string;
+  destination: string;
+  ctaText: string;
+  ctaLink: string;
+}
+
+const defaultSlides: HeroSlide[] = [
   {
     id: 1,
     tagline: "Bespoke Island Journeys",
@@ -57,7 +70,7 @@ const defaultSlides = [
 import { SearchWidget } from "./SearchWidget";
 
 export const Hero: React.FC<{ onOpenCustomPlanner?: () => void }> = ({ onOpenCustomPlanner }) => {
-  const [slides, setSlides] = useState(defaultSlides);
+  const [slides, setSlides] = useState<HeroSlide[]>(defaultSlides);
   const [current, setCurrent] = useState(0);
   const [paused, setPaused] = useState(false);
 

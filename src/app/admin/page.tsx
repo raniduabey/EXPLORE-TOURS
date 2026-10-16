@@ -46,9 +46,22 @@ import {
   MoveRight,
   Loader2,
   Sparkles,
-  FolderOpen
+  FolderOpen,
+  Hotel,
+  Utensils,
+  Languages,
+  Tag,
+  ChevronUp,
+  Info,
+  ListOrdered,
+  FileText,
+  Award,
 } from "lucide-react";
 import { formatCurrency } from "@/lib/currency";
+import { RichTextEditor } from "@/components/admin/RichTextEditor";
+import { DynamicIcon, AVAILABLE_TOUR_ICONS } from "@/components/common/DynamicIcon";
+import { TourEditorModal } from "@/components/admin/TourEditorModal";
+import { DestinationEditorModal } from "@/components/admin/DestinationEditorModal";
 
 export default function AdminDashboardPage() {
   const [tab, setTab] = useState<
@@ -103,6 +116,16 @@ export default function AdminDashboardPage() {
   const [rejectionReason, setRejectionReason] = useState("");
   const [selectedBookingForNotes, setSelectedBookingForNotes] = useState<any>(null);
 
+  // Tour Package Modal Sub-tab State (10 structured tabs)
+  const [tourModalTab, setTourModalTab] = useState<
+    "basic" | "pricing" | "icons" | "curator" | "signature" | "itinerary" | "inclusions" | "media" | "booking" | "seo"
+  >("basic");
+
+  // Destination Modal Sub-tab State (7 structured tabs)
+  const [destModalTab, setDestModalTab] = useState<
+    "basic" | "about" | "media" | "attractions" | "overview" | "tours" | "seo"
+  >("basic");
+
   // Media Management Sub-tabs & States
   const [mediaSubTab, setMediaSubTab] = useState<"banners" | "tours" | "destinations" | "library">("banners");
   const [selectedTourForMedia, setSelectedTourForMedia] = useState<string>("");
@@ -125,7 +148,7 @@ export default function AdminDashboardPage() {
   const [uploadProgress, setUploadProgress] = useState<number>(0);
 
   // Tour Gallery & Multi-Photo Upload State
-  const [mediaPickerTarget, setMediaPickerTarget] = useState<"tourPrimary" | "tourGallery" | null>(null);
+  const [mediaPickerTarget, setMediaPickerTarget] = useState<"tourPrimary" | "tourGallery" | "destCover" | "destBanner" | null>(null);
   const [tourGalleryUploadProgress, setTourGalleryUploadProgress] = useState<{ current: number; total: number } | null>(null);
   const [isDraggingTourGallery, setIsDraggingTourGallery] = useState(false);
   const [newGalleryUrlInput, setNewGalleryUrlInput] = useState("");
@@ -523,7 +546,12 @@ export default function AdminDashboardPage() {
       adultPrice: 85,
       childPrice: 45,
       tourType: "Private Tour",
-      badge: "Popular Experience",
+      badge: [
+        { id: "duration", label: "Duration", value: "8 Hours", icon: "Clock", enabled: true },
+        { id: "journeyType", label: "Journey Type", value: "Private Tour", icon: "Compass", enabled: true },
+        { id: "chauffeurGuide", label: "Chauffeur Guide", value: "English (Native)", icon: "Languages", enabled: true },
+        { id: "cancellation", label: "Cancellation", value: "Free up to 24h", icon: "CheckCircle", enabled: true },
+      ],
       freeCancellation: true,
       instantBook: true,
       pickupAvailable: true,
@@ -533,17 +561,174 @@ export default function AdminDashboardPage() {
       minTravellers: 1,
       maxTravellers: 12,
       description: "",
-      highlights: ["Scale ancient landmarks", "Chauffeur pickup in air-conditioned vehicle"],
-      includes: ["Private transportation", "Bottled mineral water", "Certified chauffeur guide"],
-      excludes: ["Site entrance tickets", "Gratuities"],
+      highlights: {
+        title: "Curator's Highlights",
+        subtitle: "Signature moments hand-selected by our private Ceylon travel curators",
+        enabled: true,
+        items: [
+          { id: "h1", text: "Scale the iconic Sigiriya Rock Fortress with a private certified guide", icon: "Sparkles" },
+          { id: "h2", text: "Luxury private air-conditioned vehicle with chilled king coconuts", icon: "Car" },
+        ],
+      },
+      whatToBring: {
+        heading: "Signature Experiences Included",
+        subtitle: "Exclusive moments reserved for private Ceylon journeys",
+        enabled: true,
+        experiences: [
+          { id: "e1", title: "Archaeological Access", description: "VIP entrance accompanied by an archaeological specialist", icon: "Award", tag: "VIP Access" },
+        ],
+      },
+      includes: [
+        "Private air-conditioned transportation",
+        "Bottled mineral water & chilled king coconut",
+        "Licensed English-speaking chauffeur guide",
+      ],
+      excludes: [
+        "Site entrance tickets (unless specified)",
+        "Gratuities & personal expenses",
+      ],
       featured: false,
       status: "PUBLISHED",
+      seoTitle: "",
+      seoDescription: "",
       primaryImage: "/images/destinations/sigiriya.jpg",
       galleryImages: [],
       itinerary: [
-        { stepNumber: 1, title: "Morning Departure & Guided Tour", description: "Pickup from hotel and journey to destination.", location: "Central Province", duration: "4 Hours" }
+        { stepNumber: 1, title: "Morning Departure & Guided Tour", description: "Pickup from hotel and scenic transfer.", location: "Central Province", duration: "4 Hours", accommodation: "", meals: "Refreshments Included" }
       ],
     });
+    setTourModalTab("basic");
+  };
+
+  const openEditTour = (tour: any) => {
+    const primary = tour.images?.find((img: any) => img.isPrimary)?.url;
+    const gallery = tour.images?.filter((img: any) => !img.isPrimary).map((i: any) => i.url);
+
+    // Normalize Tour Info & Icons (badge)
+    let parsedBadge: any[] = [];
+    try {
+      if (tour.badge && typeof tour.badge === "string" && tour.badge.trim().startsWith("[")) {
+        parsedBadge = JSON.parse(tour.badge);
+      } else if (Array.isArray(tour.badge)) {
+        parsedBadge = tour.badge;
+      }
+    } catch (e) {}
+
+    if (!Array.isArray(parsedBadge) || parsedBadge.length === 0) {
+      parsedBadge = [
+        { id: "duration", label: "Duration", value: tour.duration || "8 Hours", icon: "Clock", enabled: true },
+        { id: "journeyType", label: "Journey Type", value: tour.tourType || "Private Tour", icon: "Compass", enabled: true },
+        { id: "chauffeurGuide", label: "Chauffeur Guide", value: tour.liveGuide || (tour.languages ? `English & ${tour.languages}` : "English (Native)"), icon: "Languages", enabled: true },
+        { id: "cancellation", label: "Cancellation", value: tour.freeCancellation ? "Free up to 24h" : "Non-refundable", icon: "CheckCircle", enabled: true },
+      ];
+    }
+
+    // Normalize Curator's Highlights
+    let parsedHighlights: any = {
+      title: "Curator's Highlights",
+      subtitle: "Signature moments hand-selected by our private Ceylon travel curators",
+      enabled: true,
+      items: [],
+    };
+
+    try {
+      if (tour.highlights) {
+        if (typeof tour.highlights === "object" && !Array.isArray(tour.highlights)) {
+          parsedHighlights = {
+            title: tour.highlights.title || "Curator's Highlights",
+            subtitle: tour.highlights.subtitle || "",
+            enabled: tour.highlights.enabled !== false,
+            items: Array.isArray(tour.highlights.items) ? tour.highlights.items : [],
+          };
+        } else if (typeof tour.highlights === "string" && tour.highlights.trim().startsWith("{")) {
+          const obj = JSON.parse(tour.highlights);
+          parsedHighlights = {
+            title: obj.title || "Curator's Highlights",
+            subtitle: obj.subtitle || "",
+            enabled: obj.enabled !== false,
+            items: Array.isArray(obj.items)
+              ? obj.items.map((it: any, idx: number) => typeof it === "string" ? { id: `h-${idx}`, text: it, icon: "Sparkles" } : { id: it.id || `h-${idx}`, text: it.text || "", icon: it.icon || "Sparkles" })
+              : [],
+          };
+        } else {
+          const arr = typeof tour.highlights === "string" ? JSON.parse(tour.highlights) : tour.highlights;
+          parsedHighlights.items = (Array.isArray(arr) ? arr : [String(tour.highlights)]).map((text: any, idx: number) => ({
+            id: `h-${idx}`,
+            text: typeof text === "string" ? text : (text?.text || String(text)),
+            icon: "Sparkles",
+          }));
+        }
+      }
+    } catch (e) {
+      if (tour.highlights) {
+        parsedHighlights.items = [{ id: "h-0", text: String(tour.highlights), icon: "Sparkles" }];
+      }
+    }
+
+    // Normalize Signature Experiences (whatToBring)
+    let parsedSignature: any = {
+      heading: "Signature Experiences Included",
+      subtitle: "Exclusive moments reserved for private Ceylon journeys",
+      enabled: true,
+      experiences: [],
+    };
+
+    try {
+      if (tour.whatToBring) {
+        if (typeof tour.whatToBring === "object") {
+          parsedSignature = {
+            heading: tour.whatToBring.heading || "Signature Experiences Included",
+            subtitle: tour.whatToBring.subtitle || "",
+            enabled: tour.whatToBring.enabled !== false,
+            experiences: Array.isArray(tour.whatToBring.experiences) ? tour.whatToBring.experiences : [],
+          };
+        } else if (typeof tour.whatToBring === "string" && tour.whatToBring.trim().startsWith("{")) {
+          const obj = JSON.parse(tour.whatToBring);
+          parsedSignature = {
+            heading: obj.heading || "Signature Experiences Included",
+            subtitle: obj.subtitle || "",
+            enabled: obj.enabled !== false,
+            experiences: Array.isArray(obj.experiences) ? obj.experiences : [],
+          };
+        } else if (tour.whatToBring.trim()) {
+          parsedSignature.experiences = [
+            { id: "e-0", title: "Signature Experience", description: String(tour.whatToBring), icon: "Sparkles", tag: "Included" }
+          ];
+        }
+      }
+    } catch (e) {}
+
+    // Normalize Includes & Excludes
+    let parsedIncludes: string[] = [];
+    try {
+      const raw = typeof tour.includes === "string" ? JSON.parse(tour.includes) : tour.includes;
+      parsedIncludes = Array.isArray(raw) ? raw.map((i: any) => typeof i === "string" ? i : (i.text || String(i))) : (tour.includes ? [String(tour.includes)] : []);
+    } catch (e) {
+      parsedIncludes = tour.includes ? [String(tour.includes)] : [];
+    }
+
+    let parsedExcludes: string[] = [];
+    try {
+      const raw = typeof tour.excludes === "string" ? JSON.parse(tour.excludes) : tour.excludes;
+      parsedExcludes = Array.isArray(raw) ? raw.map((i: any) => typeof i === "string" ? i : (i.text || String(i))) : (tour.excludes ? [String(tour.excludes)] : []);
+    } catch (e) {
+      parsedExcludes = tour.excludes ? [String(tour.excludes)] : [];
+    }
+
+    setEditingTour({
+      ...tour,
+      primaryImage: primary || tour.primaryImage || (tour.images?.[0]?.url || "/images/destinations/sigiriya.jpg"),
+      galleryImages: gallery || [],
+      badge: parsedBadge,
+      highlights: parsedHighlights,
+      whatToBring: parsedSignature,
+      includes: parsedIncludes,
+      excludes: parsedExcludes,
+      itinerary: Array.isArray(tour.itinerary) ? tour.itinerary : [],
+      seoTitle: tour.seoTitle || "",
+      seoDescription: tour.seoDescription || "",
+    });
+    setTourModalTab("basic");
   };
 
   const saveTour = async (e: React.FormEvent) => {
@@ -718,6 +903,77 @@ export default function AdminDashboardPage() {
   // ----------------------------------------------------
   // DESTINATIONS ACTIONS
   // ----------------------------------------------------
+  const openNewDestForm = () => {
+    setEditingDest({
+      name: "",
+      slug: "",
+      shortDesc: "",
+      longDesc: "",
+      image: "/images/destinations/sigiriya.jpg",
+      thumbnail: "/images/destinations/sigiriya.jpg",
+      startingPrice: 65,
+      popularAttractions: [
+        { id: "a1", name: "Sigiriya Rock Citadel", description: "Ancient UNESCO 5th-century fortress", tourSlug: "", active: true },
+        { id: "a2", name: "Pidurangala Viewpoint", description: "Spectacular panoramic sunrise summit", tourSlug: "", active: true },
+      ],
+      gallery: {
+        aboutHeading: "About the Destination",
+        curatedExperiencesText: "Private Day Journeys & Bespoke Safaris",
+        travelTips: "Best explored in early mornings to avoid midday tropical sun. Chauffeur transport recommended.",
+        customButtonText: "Plan Custom Itinerary",
+      },
+      bestTimeToVisit: "December to April",
+      featured: true,
+      status: "PUBLISHED",
+      seoTitle: "",
+      seoDescription: "",
+    });
+    setDestModalTab("basic");
+  };
+
+  const openEditDest = (dest: any) => {
+    let parsedAttractions: any[] = [];
+    try {
+      if (dest.popularAttractions && typeof dest.popularAttractions === "string" && dest.popularAttractions.trim().startsWith("[")) {
+        parsedAttractions = JSON.parse(dest.popularAttractions);
+      } else if (dest.popularAttractions) {
+        parsedAttractions = String(dest.popularAttractions).split(",").map((item, idx) => ({
+          id: `att-${idx}`,
+          name: item.trim(),
+          description: "",
+          tourSlug: "",
+          active: true,
+        })).filter((a) => a.name.length > 0);
+      }
+    } catch (e) {
+      parsedAttractions = [];
+    }
+
+    let parsedGallery: any = {
+      aboutHeading: `About ${dest.name}`,
+      curatedExperiencesText: "",
+      travelTips: "",
+      customButtonText: `Plan Custom Itinerary for ${dest.name}`,
+    };
+    try {
+      if (dest.gallery && typeof dest.gallery === "string" && dest.gallery.trim().startsWith("{")) {
+        parsedGallery = { ...parsedGallery, ...JSON.parse(dest.gallery) };
+      } else if (dest.gallery && typeof dest.gallery === "object") {
+        parsedGallery = { ...parsedGallery, ...dest.gallery };
+      }
+    } catch (e) {}
+
+    setEditingDest({
+      ...dest,
+      thumbnail: dest.thumbnail || dest.image || "/images/destinations/sigiriya.jpg",
+      popularAttractions: parsedAttractions,
+      gallery: parsedGallery,
+      seoTitle: dest.seoTitle || "",
+      seoDescription: dest.seoDescription || "",
+    });
+    setDestModalTab("basic");
+  };
+
   const saveDest = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingDest) return;
@@ -1164,26 +1420,7 @@ export default function AdminDashboardPage() {
                                 <Eye className="w-4 h-4" />
                               </Link>
                               <button
-                                onClick={() => {
-                                  const primary = tour.images?.find((img: any) => img.isPrimary)?.url;
-                                  const gallery = tour.images?.filter((img: any) => !img.isPrimary).map((i: any) => i.url);
-                                  let parsedHighlights = [];
-                                  let parsedIncludes = [];
-                                  let parsedExcludes = [];
-                                  try { parsedHighlights = JSON.parse(tour.highlights); } catch (e) { parsedHighlights = [tour.highlights]; }
-                                  try { parsedIncludes = JSON.parse(tour.includes); } catch (e) { parsedIncludes = [tour.includes]; }
-                                  try { parsedExcludes = JSON.parse(tour.excludes); } catch (e) { parsedExcludes = [tour.excludes]; }
-
-                                  setEditingTour({
-                                    ...tour,
-                                    primaryImage: primary || tour.primaryImage,
-                                    galleryImages: gallery || [],
-                                    highlights: parsedHighlights,
-                                    includes: parsedIncludes,
-                                    excludes: parsedExcludes,
-                                    itinerary: tour.itinerary || [],
-                                  });
-                                }}
+                                onClick={() => openEditTour(tour)}
                                 className="p-1.5 rounded-lg text-slate-600 hover:text-ceylon-blue hover:bg-slate-100"
                                 title="Edit Package"
                               >
@@ -1210,647 +1447,20 @@ export default function AdminDashboardPage() {
 
           {/* Edit / Add Tour Modal */}
           {editingTour && (
-            <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-              <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl space-y-6">
-                <div className="flex items-center justify-between border-b border-slate-100 pb-4">
-                  <h3 className="text-lg font-extrabold text-ceylon-navy">
-                    {editingTour.id ? "Edit Tour Package" : "Create New Tour Package"}
-                  </h3>
-                  <button
-                    onClick={() => setEditingTour(null)}
-                    className="p-1.5 rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-700"
-                  >
-                    ✕
-                  </button>
-                </div>
-
-                <form onSubmit={saveTour} className="space-y-6">
-                  {/* Basic Information */}
-                  <div className="space-y-4">
-                    <h4 className="text-xs font-extrabold uppercase tracking-wider text-ceylon-blue">
-                      1. Basic Information
-                    </h4>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div className="sm:col-span-2">
-                        <label className="block text-xs font-bold text-ceylon-navy mb-1">
-                          Tour Title *
-                        </label>
-                        <input
-                          type="text"
-                          value={editingTour.title}
-                          onChange={(e) => setEditingTour({ ...editingTour, title: e.target.value })}
-                          className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-ceylon-navy font-semibold focus:outline-none"
-                          required
-                        />
-                      </div>
-
-                      <div>
-                        <label className="block text-xs font-bold text-ceylon-navy mb-1">
-                          URL Slug (e.g. sigiriya-day-tour)
-                        </label>
-                        <input
-                          type="text"
-                          value={editingTour.slug}
-                          onChange={(e) => setEditingTour({ ...editingTour, slug: e.target.value })}
-                          className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-mono text-slate-700"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="block text-xs font-bold text-ceylon-navy mb-1">
-                          Location / Region
-                        </label>
-                        <input
-                          type="text"
-                          value={editingTour.location}
-                          onChange={(e) => setEditingTour({ ...editingTour, location: e.target.value })}
-                          className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs text-slate-700"
-                          required
-                        />
-                      </div>
-
-                      <div>
-                        <label className="block text-xs font-bold text-ceylon-navy mb-1">
-                          Associated Destination
-                        </label>
-                        <select
-                          value={editingTour.destinationId || ""}
-                          onChange={(e) => setEditingTour({ ...editingTour, destinationId: e.target.value })}
-                          className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-semibold text-ceylon-navy"
-                        >
-                          <option value="">Select Destination...</option>
-                          {destinations.map((d) => (
-                            <option key={d.id} value={d.id}>{d.name}</option>
-                          ))}
-                        </select>
-                      </div>
-
-                      <div>
-                        <label className="block text-xs font-bold text-ceylon-navy mb-1">
-                          Duration (e.g. 8 Hours, 2 Days)
-                        </label>
-                        <input
-                          type="text"
-                          value={editingTour.duration}
-                          onChange={(e) => setEditingTour({ ...editingTour, duration: e.target.value })}
-                          className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs text-slate-700"
-                          required
-                        />
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-bold text-ceylon-navy mb-1">
-                        Detailed Description
-                      </label>
-                      <textarea
-                        rows={4}
-                        value={editingTour.description}
-                        onChange={(e) => setEditingTour({ ...editingTour, description: e.target.value })}
-                        className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs text-slate-700 focus:outline-none"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Pricing */}
-                  <div className="space-y-4 pt-4 border-t border-slate-100">
-                    <h4 className="text-xs font-extrabold uppercase tracking-wider text-ceylon-blue">
-                      2. Pricing & Capacity
-                    </h4>
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                      <div>
-                        <label className="block text-xs font-bold text-ceylon-navy mb-1">Base Price ($ USD) *</label>
-                        <input
-                          type="number"
-                          value={editingTour.price}
-                          onChange={(e) => setEditingTour({ ...editingTour, price: Number(e.target.value) })}
-                          className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-ceylon-navy"
-                          required
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-xs font-bold text-ceylon-navy mb-1">Adult Price ($)</label>
-                        <input
-                          type="number"
-                          value={editingTour.adultPrice || editingTour.price}
-                          onChange={(e) => setEditingTour({ ...editingTour, adultPrice: Number(e.target.value) })}
-                          className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-700"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-xs font-bold text-ceylon-navy mb-1">Child Price ($)</label>
-                        <input
-                          type="number"
-                          value={editingTour.childPrice || ""}
-                          onChange={(e) => setEditingTour({ ...editingTour, childPrice: Number(e.target.value) })}
-                          className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-700"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-xs font-bold text-ceylon-navy mb-1">Discount/Original Price</label>
-                        <input
-                          type="number"
-                          value={editingTour.previousPrice || ""}
-                          onChange={(e) => setEditingTour({ ...editingTour, previousPrice: e.target.value ? Number(e.target.value) : null })}
-                          className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-700"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* 3. Media & Photographs (Featured + Full Tour Gallery) */}
-                  <div className="space-y-6 pt-5 border-t border-slate-200">
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                      <div>
-                        <h4 className="text-xs font-extrabold uppercase tracking-wider text-ceylon-blue flex items-center gap-1.5">
-                          <Camera className="w-3.5 h-3.5 text-luxury-gold" />
-                          <span>3. Media & Photographs (Primary + Tour Gallery)</span>
-                        </h4>
-                        <p className="text-[11px] text-slate-500 mt-0.5">
-                          Manage the prominent hero photograph and the rich interactive gallery collection for this journey.
-                        </p>
-                      </div>
-                      <span className="text-[11px] font-mono text-slate-500 bg-slate-100 px-2.5 py-1 rounded-full border border-slate-200 shrink-0">
-                        Total Gallery: <strong className="text-ceylon-navy font-bold">{1 + (editingTour.galleryImages || []).length}</strong> Photos
-                      </span>
-                    </div>
-
-                    {/* A. Primary Featured Image Card */}
-                    <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-3">
-                      <div className="flex items-center justify-between">
-                        <label className="text-xs font-bold text-ceylon-navy flex items-center gap-1.5">
-                          <Sparkles className="w-3.5 h-3.5 text-luxury-gold" />
-                          <span>Primary Featured / Cover Image *</span>
-                        </label>
-                        <span className="text-[10px] font-semibold text-amber-700 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full">
-                          Used on Tour Cards & Public Hero
-                        </span>
-                      </div>
-
-                      <div className="flex flex-col sm:flex-row gap-3 items-start">
-                        {/* Preview thumbnail */}
-                        <div className="relative w-full sm:w-40 h-28 rounded-xl overflow-hidden bg-slate-200 border border-slate-300 shrink-0 shadow-inner">
-                          {editingTour.primaryImage ? (
-                            <Image
-                              src={editingTour.primaryImage}
-                              alt="Featured tour cover"
-                              fill
-                              unoptimized
-                              className="object-cover"
-                            />
-                          ) : (
-                            <div className="w-full h-full flex items-center justify-center text-slate-400 text-xs font-medium">
-                              No Cover Image
-                            </div>
-                          )}
-                        </div>
-
-                        {/* URL input and action buttons */}
-                        <div className="flex-1 w-full space-y-2">
-                          <input
-                            type="text"
-                            placeholder="Enter image URL or upload below..."
-                            value={editingTour.primaryImage || ""}
-                            onChange={(e) => setEditingTour({ ...editingTour, primaryImage: e.target.value })}
-                            className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-mono text-slate-700 focus:outline-none focus:border-ceylon-blue"
-                            required
-                          />
-                          <div className="flex flex-wrap gap-2">
-                            <label className="px-3 py-1.5 bg-ceylon-navy hover:bg-ceylon-blue text-white rounded-xl text-xs font-bold cursor-pointer flex items-center gap-1.5 shadow transition-colors">
-                              {uploading ? (
-                                <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                              ) : (
-                                <Upload className="w-3.5 h-3.5" />
-                              )}
-                              <span>{uploading ? "Uploading..." : "Upload New Cover"}</span>
-                              <input
-                                type="file"
-                                accept="image/jpeg,image/png,image/webp,image/avif"
-                                disabled={uploading}
-                                onChange={async (e) => {
-                                  const file = e.target.files?.[0];
-                                  if (file) {
-                                    await handleFileUpload(file, (url) => {
-                                      setEditingTour({ ...editingTour, primaryImage: url });
-                                    });
-                                  }
-                                }}
-                                className="hidden"
-                              />
-                            </label>
-
-                            <button
-                              type="button"
-                              onClick={() => setMediaPickerTarget("tourPrimary")}
-                              className="px-3 py-1.5 bg-white hover:bg-slate-100 text-slate-700 rounded-xl text-xs font-bold border border-slate-200 flex items-center gap-1.5 shadow-sm transition-colors"
-                            >
-                              <FolderOpen className="w-3.5 h-3.5 text-luxury-gold" />
-                              <span>Select from Media Library</span>
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* B. Tour Gallery Photographs (Multi-Photo) */}
-                    <div className="space-y-4 p-4 bg-slate-50/80 rounded-2xl border border-slate-200">
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                        <div>
-                          <label className="text-xs font-bold text-ceylon-navy flex items-center gap-1.5">
-                            <Layers className="w-3.5 h-3.5 text-ceylon-blue" />
-                            <span>Additional Tour Gallery Photos</span>
-                          </label>
-                          <p className="text-[11px] text-slate-500">
-                            Upload at least 8–15 photos. Guests can browse them in the luxury full-screen lightbox.
-                          </p>
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => setMediaPickerTarget("tourGallery")}
-                          className="px-3 py-1 bg-white hover:bg-slate-100 text-slate-700 rounded-xl text-xs font-bold border border-slate-200 flex items-center gap-1.5 self-start sm:self-auto shadow-sm"
-                        >
-                          <FolderOpen className="w-3.5 h-3.5 text-luxury-gold" />
-                          <span>Add from Library</span>
-                        </button>
-                      </div>
-
-                      {/* Multi-Photo Drag & Drop Upload Zone */}
-                      <div
-                        onDragOver={(e) => {
-                          e.preventDefault();
-                          setIsDraggingTourGallery(true);
-                        }}
-                        onDragLeave={() => setIsDraggingTourGallery(false)}
-                        onDrop={async (e) => {
-                          e.preventDefault();
-                          setIsDraggingTourGallery(false);
-                          if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-                            await handleMultipleTourFiles(e.dataTransfer.files, (newUrls) => {
-                              const existing = editingTour.galleryImages || [];
-                              setEditingTour({
-                                ...editingTour,
-                                galleryImages: [...existing, ...newUrls],
-                              });
-                            });
-                          }
-                        }}
-                        className={`rounded-2xl p-5 border-2 border-dashed transition-all text-center flex flex-col items-center justify-center space-y-2 ${
-                          isDraggingTourGallery
-                            ? "border-ceylon-blue bg-blue-50/60"
-                            : "border-slate-300 bg-white hover:border-ceylon-blue/60"
-                        }`}
-                      >
-                        <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-ceylon-blue">
-                          <Upload className="w-5 h-5" />
-                        </div>
-                        <div>
-                          <p className="text-xs font-bold text-ceylon-navy">
-                            Drag & Drop Multiple Photographs Here or Browse
-                          </p>
-                          <p className="text-[10px] text-slate-400 mt-0.5">
-                            Strict 8 MB max per image • JPEG, PNG, WebP, AVIF • Select multiple files at once
-                          </p>
-                        </div>
-
-                        <label className="px-4 py-2 bg-ceylon-blue hover:bg-ceylon-navy text-white text-xs font-extrabold rounded-xl shadow cursor-pointer transition-colors inline-flex items-center gap-1.5">
-                          {uploading && tourGalleryUploadProgress ? (
-                            <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                          ) : (
-                            <Plus className="w-3.5 h-3.5" />
-                          )}
-                          <span>
-                            {uploading && tourGalleryUploadProgress
-                              ? `Uploading (${tourGalleryUploadProgress.current}/${tourGalleryUploadProgress.total})...`
-                              : "Browse & Upload Multiple Photos"}
-                          </span>
-                          <input
-                            type="file"
-                            multiple
-                            accept="image/jpeg,image/png,image/webp,image/avif"
-                            disabled={uploading}
-                            onChange={async (e) => {
-                              const files = e.target.files;
-                              if (files && files.length > 0) {
-                                await handleMultipleTourFiles(files, (newUrls) => {
-                                  const existing = editingTour.galleryImages || [];
-                                  setEditingTour({
-                                    ...editingTour,
-                                    galleryImages: [...existing, ...newUrls],
-                                  });
-                                });
-                              }
-                            }}
-                            className="hidden"
-                          />
-                        </label>
-                      </div>
-
-                      {/* Direct URL input bar */}
-                      <div className="flex gap-2">
-                        <input
-                          type="url"
-                          placeholder="Or paste an image URL to add directly..."
-                          value={newGalleryUrlInput}
-                          onChange={(e) => setNewGalleryUrlInput(e.target.value)}
-                          onKeyDown={(e) => {
-                            if (e.key === "Enter") {
-                              e.preventDefault();
-                              if (newGalleryUrlInput.trim()) {
-                                const existing = editingTour.galleryImages || [];
-                                setEditingTour({
-                                  ...editingTour,
-                                  galleryImages: [...existing, newGalleryUrlInput.trim()],
-                                });
-                                setNewGalleryUrlInput("");
-                              }
-                            }
-                          }}
-                          className="flex-1 bg-white border border-slate-200 rounded-xl px-3 py-1.5 text-xs text-slate-700 focus:outline-none focus:border-ceylon-blue"
-                        />
-                        <button
-                          type="button"
-                          onClick={() => {
-                            if (newGalleryUrlInput.trim()) {
-                              const existing = editingTour.galleryImages || [];
-                              setEditingTour({
-                                ...editingTour,
-                                galleryImages: [...existing, newGalleryUrlInput.trim()],
-                              });
-                              setNewGalleryUrlInput("");
-                            }
-                          }}
-                          className="px-3.5 py-1.5 bg-slate-200 hover:bg-slate-300 text-xs font-bold text-slate-700 rounded-xl"
-                        >
-                          Add URL
-                        </button>
-                      </div>
-
-                      {/* Interactive Gallery Thumbnails Grid */}
-                      {(editingTour.galleryImages || []).length > 0 ? (
-                        <div className="space-y-2">
-                          <span className="text-[11px] font-bold text-slate-600 block">
-                            Current Gallery Collection ({editingTour.galleryImages.length} photos):
-                          </span>
-                          <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-2.5">
-                            {editingTour.galleryImages.map((imgUrl: string, idx: number) => (
-                              <div
-                                key={`${imgUrl}-${idx}`}
-                                className="relative group rounded-xl overflow-hidden bg-white border border-slate-200 shadow-sm aspect-[4/3] flex flex-col justify-between"
-                              >
-                                <Image
-                                  src={imgUrl}
-                                  alt={`Gallery ${idx + 1}`}
-                                  fill
-                                  unoptimized
-                                  className="object-cover"
-                                />
-
-                                {/* Index badge */}
-                                <div className="absolute top-1 left-1 bg-black/70 text-white font-mono text-[9px] font-bold px-1.5 py-0.5 rounded shadow">
-                                  #{idx + 1}
-                                </div>
-
-                                {/* Hover Overlay Actions */}
-                                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-between p-1.5">
-                                  {/* Top row: Set as Featured button */}
-                                  <div className="flex justify-end">
-                                    <button
-                                      type="button"
-                                      onClick={() => {
-                                        // Swap this photo with primaryImage
-                                        const oldPrimary = editingTour.primaryImage;
-                                        const newGallery = [...editingTour.galleryImages];
-                                        newGallery.splice(idx, 1);
-                                        if (oldPrimary) newGallery.unshift(oldPrimary);
-                                        setEditingTour({
-                                          ...editingTour,
-                                          primaryImage: imgUrl,
-                                          galleryImages: newGallery,
-                                        });
-                                      }}
-                                      className="px-1.5 py-0.5 bg-amber-500 hover:bg-amber-600 text-white text-[9px] font-extrabold rounded shadow flex items-center gap-0.5"
-                                      title="Set this photograph as the primary cover"
-                                    >
-                                      <Star className="w-2.5 h-2.5 fill-current" />
-                                      <span>Feature</span>
-                                    </button>
-                                  </div>
-
-                                  {/* Bottom row: Move & Delete controls */}
-                                  <div className="flex items-center justify-between">
-                                    <div className="flex gap-1">
-                                      <button
-                                        type="button"
-                                        disabled={idx === 0}
-                                        onClick={() => {
-                                          if (idx > 0) {
-                                            const arr = [...editingTour.galleryImages];
-                                            const temp = arr[idx];
-                                            arr[idx] = arr[idx - 1];
-                                            arr[idx - 1] = temp;
-                                            setEditingTour({ ...editingTour, galleryImages: arr });
-                                          }
-                                        }}
-                                        className="p-1 bg-white/90 hover:bg-white text-slate-800 rounded disabled:opacity-30"
-                                        title="Move earlier"
-                                      >
-                                        <MoveLeft className="w-3 h-3" />
-                                      </button>
-                                      <button
-                                        type="button"
-                                        disabled={idx === editingTour.galleryImages.length - 1}
-                                        onClick={() => {
-                                          if (idx < editingTour.galleryImages.length - 1) {
-                                            const arr = [...editingTour.galleryImages];
-                                            const temp = arr[idx];
-                                            arr[idx] = arr[idx + 1];
-                                            arr[idx + 1] = temp;
-                                            setEditingTour({ ...editingTour, galleryImages: arr });
-                                          }
-                                        }}
-                                        className="p-1 bg-white/90 hover:bg-white text-slate-800 rounded disabled:opacity-30"
-                                        title="Move later"
-                                      >
-                                        <MoveRight className="w-3 h-3" />
-                                      </button>
-                                    </div>
-
-                                    <button
-                                      type="button"
-                                      onClick={() => {
-                                        const arr = editingTour.galleryImages.filter((_: any, i: number) => i !== idx);
-                                        setEditingTour({ ...editingTour, galleryImages: arr });
-                                      }}
-                                      className="p-1 bg-rose-600/90 hover:bg-rose-600 text-white rounded"
-                                      title="Remove from gallery"
-                                    >
-                                      <Trash2 className="w-3 h-3" />
-                                    </button>
-                                  </div>
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="py-4 text-center rounded-xl bg-white border border-slate-200 text-slate-400 text-xs">
-                          No additional gallery photos added yet. Upload or browse multiple photos above to build an immersive tour gallery.
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Itinerary Days */}
-                  <div className="space-y-4 pt-4 border-t border-slate-100">
-                    <div className="flex items-center justify-between">
-                      <h4 className="text-xs font-extrabold uppercase tracking-wider text-ceylon-blue">
-                        4. Itinerary Timeline
-                      </h4>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          const steps = editingTour.itinerary || [];
-                          setEditingTour({
-                            ...editingTour,
-                            itinerary: [
-                              ...steps,
-                              {
-                                stepNumber: steps.length + 1,
-                                title: `Day / Stop ${steps.length + 1}`,
-                                description: "",
-                                location: "",
-                                duration: "",
-                              },
-                            ],
-                          });
-                        }}
-                        className="px-3 py-1 bg-slate-100 hover:bg-slate-200 text-xs font-bold text-ceylon-navy rounded-lg flex items-center gap-1"
-                      >
-                        <Plus className="w-3 h-3" />
-                        <span>Add Day / Stop</span>
-                      </button>
-                    </div>
-
-                    <div className="space-y-3">
-                      {(editingTour.itinerary || []).map((step: any, idx: number) => (
-                        <div key={idx} className="p-3 bg-slate-50 rounded-2xl border border-slate-200 space-y-2">
-                          <div className="flex items-center justify-between gap-2">
-                            <span className="font-extrabold text-xs text-ceylon-navy">Day #{step.stepNumber}</span>
-                            <button
-                              type="button"
-                              onClick={() => {
-                                const updated = editingTour.itinerary.filter((_: any, i: number) => i !== idx);
-                                setEditingTour({ ...editingTour, itinerary: updated });
-                              }}
-                              className="text-rose-500 hover:text-rose-700 text-xs font-bold"
-                            >
-                              Remove
-                            </button>
-                          </div>
-                          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                            <input
-                              type="text"
-                              placeholder="Title (e.g. Sigiriya Rock Citadel)"
-                              value={step.title}
-                              onChange={(e) => {
-                                const arr = [...editingTour.itinerary];
-                                arr[idx].title = e.target.value;
-                                setEditingTour({ ...editingTour, itinerary: arr });
-                              }}
-                              className="w-full bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs font-semibold"
-                            />
-                            <input
-                              type="text"
-                              placeholder="Location"
-                              value={step.location || ""}
-                              onChange={(e) => {
-                                const arr = [...editingTour.itinerary];
-                                arr[idx].location = e.target.value;
-                                setEditingTour({ ...editingTour, itinerary: arr });
-                              }}
-                              className="w-full bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs"
-                            />
-                            <input
-                              type="text"
-                              placeholder="Duration (e.g. 4 Hours)"
-                              value={step.duration || ""}
-                              onChange={(e) => {
-                                const arr = [...editingTour.itinerary];
-                                arr[idx].duration = e.target.value;
-                                setEditingTour({ ...editingTour, itinerary: arr });
-                              }}
-                              className="w-full bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs"
-                            />
-                          </div>
-                          <textarea
-                            placeholder="Detailed activities description for this day..."
-                            rows={2}
-                            value={step.description}
-                            onChange={(e) => {
-                              const arr = [...editingTour.itinerary];
-                              arr[idx].description = e.target.value;
-                              setEditingTour({ ...editingTour, itinerary: arr });
-                            }}
-                            className="w-full bg-white border border-slate-200 rounded-lg p-2 text-xs"
-                          />
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Publication Status & Marketing */}
-                  <div className="space-y-4 pt-4 border-t border-slate-100">
-                    <h4 className="text-xs font-extrabold uppercase tracking-wider text-ceylon-blue">
-                      5. Publication & Marketing
-                    </h4>
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                      <div>
-                        <label className="block text-xs font-bold text-ceylon-navy mb-1">Publication Status</label>
-                        <select
-                          value={editingTour.status}
-                          onChange={(e) => setEditingTour({ ...editingTour, status: e.target.value })}
-                          className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-extrabold text-ceylon-navy"
-                        >
-                          <option value="PUBLISHED">Published</option>
-                          <option value="DRAFT">Save as Draft</option>
-                          <option value="ARCHIVED">Archived</option>
-                        </select>
-                      </div>
-
-                      <div className="flex items-center gap-2 pt-6">
-                        <input
-                          type="checkbox"
-                          id="featuredToggle"
-                          checked={editingTour.featured}
-                          onChange={(e) => setEditingTour({ ...editingTour, featured: e.target.checked })}
-                          className="w-4 h-4 accent-ceylon-blue"
-                        />
-                        <label htmlFor="featuredToggle" className="text-xs font-bold text-ceylon-navy cursor-pointer">
-                          Feature on Homepage
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-end gap-3 pt-6 border-t border-slate-100">
-                    <button
-                      type="button"
-                      onClick={() => setEditingTour(null)}
-                      className="px-5 py-2.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-600 hover:bg-slate-50"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="submit"
-                      className="px-6 py-2.5 rounded-xl bg-ceylon-blue hover:bg-ceylon-navy text-white text-xs font-extrabold shadow flex items-center gap-2"
-                    >
-                      <Save className="w-4 h-4" />
-                      <span>Save Package Changes</span>
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>
+            <TourEditorModal
+              editingTour={editingTour}
+              setEditingTour={setEditingTour}
+              onSave={saveTour}
+              onClose={() => setEditingTour(null)}
+              destinations={destinations}
+              handleFileUpload={handleFileUpload}
+              handleMultipleTourFiles={handleMultipleTourFiles}
+              uploading={uploading}
+              tourGalleryUploadProgress={tourGalleryUploadProgress}
+              isDraggingTourGallery={isDraggingTourGallery}
+              setIsDraggingTourGallery={setIsDraggingTourGallery}
+              setMediaPickerTarget={setMediaPickerTarget}
+            />
           )}
         </div>
       )}
@@ -2181,20 +1791,7 @@ export default function AdminDashboardPage() {
               </p>
             </div>
             <button
-              onClick={() =>
-                setEditingDest({
-                  name: "",
-                  slug: "",
-                  shortDesc: "",
-                  longDesc: "",
-                  image: "/images/destinations/sigiriya.jpg",
-                  startingPrice: 65,
-                  popularAttractions: "",
-                  bestTimeToVisit: "December to April",
-                  featured: true,
-                  status: "PUBLISHED",
-                })
-              }
+              onClick={openNewDestForm}
               className="px-4 py-2 bg-ceylon-green hover:bg-ceylon-darkgreen text-white text-xs font-extrabold rounded-xl shadow flex items-center gap-1.5"
             >
               <Plus className="w-4 h-4" />
@@ -2220,7 +1817,7 @@ export default function AdminDashboardPage() {
                 <div className="p-5 pt-0 flex items-center justify-between border-t border-slate-100 mt-2">
                   <span className="text-xs font-bold text-ceylon-blue">From ${dest.startingPrice} USD</span>
                   <button
-                    onClick={() => setEditingDest(dest)}
+                    onClick={() => openEditDest(dest)}
                     className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-xs font-bold text-ceylon-navy rounded-xl"
                   >
                     Edit Destination
@@ -2231,85 +1828,16 @@ export default function AdminDashboardPage() {
           </div>
 
           {editingDest && (
-            <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-              <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-lg w-full shadow-2xl space-y-4">
-                <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-                  <h3 className="font-extrabold text-base text-ceylon-navy">
-                    {editingDest.id ? "Edit Destination" : "Create Destination"}
-                  </h3>
-                  <button onClick={() => setEditingDest(null)} className="text-slate-400 hover:text-slate-700">✕</button>
-                </div>
-                <form onSubmit={saveDest} className="space-y-4">
-                  <div>
-                    <label className="block text-xs font-bold text-ceylon-navy mb-1">Name *</label>
-                    <input
-                      type="text"
-                      value={editingDest.name}
-                      onChange={(e) => setEditingDest({ ...editingDest, name: e.target.value })}
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold text-ceylon-navy mb-1">Image URL *</label>
-                    <div className="flex gap-2">
-                      <input
-                        type="text"
-                        value={editingDest.image}
-                        onChange={(e) => setEditingDest({ ...editingDest, image: e.target.value })}
-                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-mono"
-                        required
-                      />
-                      <label className="px-3 py-2 bg-slate-100 text-xs font-bold rounded-xl cursor-pointer">
-                        Upload
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={(e) => {
-                            const file = e.target.files?.[0];
-                            if (file) handleFileUpload(file, (url) => setEditingDest({ ...editingDest, image: url }));
-                          }}
-                          className="hidden"
-                        />
-                      </label>
-                    </div>
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold text-ceylon-navy mb-1">Short Description</label>
-                    <textarea
-                      rows={2}
-                      value={editingDest.shortDesc}
-                      onChange={(e) => setEditingDest({ ...editingDest, shortDesc: e.target.value })}
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2 text-xs"
-                    />
-                  </div>
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <label className="block text-xs font-bold text-ceylon-navy mb-1">Starting Price ($)</label>
-                      <input
-                        type="number"
-                        value={editingDest.startingPrice}
-                        onChange={(e) => setEditingDest({ ...editingDest, startingPrice: Number(e.target.value) })}
-                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-bold text-ceylon-navy mb-1">Best Travel Season</label>
-                      <input
-                        type="text"
-                        value={editingDest.bestTimeToVisit}
-                        onChange={(e) => setEditingDest({ ...editingDest, bestTimeToVisit: e.target.value })}
-                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs"
-                      />
-                    </div>
-                  </div>
-                  <div className="flex justify-end gap-2 pt-4 border-t border-slate-100">
-                    <button type="button" onClick={() => setEditingDest(null)} className="px-4 py-2 text-xs font-bold text-slate-500">Cancel</button>
-                    <button type="submit" className="px-5 py-2 bg-ceylon-blue text-white rounded-xl text-xs font-bold">Save Destination</button>
-                  </div>
-                </form>
-              </div>
-            </div>
+            <DestinationEditorModal
+              editingDest={editingDest}
+              setEditingDest={setEditingDest}
+              onSave={saveDest}
+              onClose={() => setEditingDest(null)}
+              tours={tours}
+              handleFileUpload={handleFileUpload}
+              uploading={uploading}
+              setMediaPickerTarget={setMediaPickerTarget}
+            />
           )}
         </div>
       )}
@@ -2971,7 +2499,7 @@ export default function AdminDashboardPage() {
                                   <button
                                     onClick={async () => {
                                       // Promote this image to primary
-                                      const newGallery = galleryList.filter((_, i) => i !== gIdx);
+                                      const newGallery = galleryList.filter((_: string, i: number) => i !== gIdx);
                                       if (primaryImg) newGallery.unshift(primaryImg);
                                       await handleSaveTourMedia(tour.id, imgUrl, newGallery);
                                     }}
@@ -2981,7 +2509,7 @@ export default function AdminDashboardPage() {
                                   </button>
                                   <button
                                     onClick={async () => {
-                                      const updated = galleryList.filter((_, i) => i !== gIdx);
+                                      const updated = galleryList.filter((_: string, i: number) => i !== gIdx);
                                       await handleSaveTourMedia(tour.id, primaryImg, updated);
                                     }}
                                     className="p-1 text-rose-500 hover:bg-rose-50 rounded"
@@ -4079,7 +3607,11 @@ export default function AdminDashboardPage() {
                 <p className="text-xs text-slate-500 mt-0.5">
                   {mediaPickerTarget === "tourPrimary"
                     ? "Click an image to set as the primary cover photo."
-                    : "Click an image to add it to the tour gallery."}
+                    : mediaPickerTarget === "tourGallery"
+                    ? "Click an image to add it to the tour gallery."
+                    : mediaPickerTarget === "destCover"
+                    ? "Click an image to set as the destination cover photo."
+                    : "Click an image to set as the destination hero banner."}
                 </p>
               </div>
               <button
@@ -4136,6 +3668,10 @@ export default function AdminDashboardPage() {
                                 galleryImages: [...current, asset.url],
                               });
                             }
+                          } else if (mediaPickerTarget === "destCover") {
+                            setEditingDest({ ...editingDest, image: asset.url });
+                          } else if (mediaPickerTarget === "destBanner") {
+                            setEditingDest({ ...editingDest, thumbnail: asset.url });
                           }
                           setMediaPickerTarget(null);
                         }}

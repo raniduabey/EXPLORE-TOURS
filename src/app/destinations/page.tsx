@@ -2,8 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { siteConfig } from "@/config/site";
+import prisma from "@/lib/prisma";
 import { DESTINATIONS_CATALOG } from "@/data/destinationsData";
 import { MapPin, ArrowRight, Calendar, Compass, ShieldCheck } from "lucide-react";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: `Destinations in Sri Lanka | ${siteConfig.name}`,
@@ -14,7 +17,24 @@ export const metadata: Metadata = {
   },
 };
 
-export default function DestinationsPage() {
+export default async function DestinationsPage() {
+  let destinations: any[] = [];
+  try {
+    const dbDests = await prisma.destination.findMany({
+      where: { status: "PUBLISHED" },
+      orderBy: { name: "asc" },
+    });
+    if (dbDests.length > 0) {
+      destinations = dbDests;
+    }
+  } catch (e) {
+    console.error("Failed to load destinations from database", e);
+  }
+
+  if (destinations.length === 0) {
+    destinations = DESTINATIONS_CATALOG;
+  }
+
   return (
     <div className="min-h-screen py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-12">
       {/* Hero Header */}
@@ -34,7 +54,7 @@ export default function DestinationsPage() {
 
       {/* Destinations Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {DESTINATIONS_CATALOG.map((dest) => (
+        {destinations.map((dest) => (
           <Link
             key={dest.id}
             href={`/destinations/${dest.slug}`}
@@ -70,10 +90,25 @@ export default function DestinationsPage() {
                     <Calendar className="w-3.5 h-3.5 text-luxury-gold shrink-0" />
                     <span className="line-clamp-1 font-serif">Best season: {dest.bestTimeToVisit}</span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Compass className="w-3.5 h-3.5 text-luxury-gold shrink-0" />
-                    <span className="line-clamp-1 font-sans text-xs">{dest.popularAttractions}</span>
-                  </div>
+                  {dest.popularAttractions && (
+                    <div className="flex items-center gap-2">
+                      <Compass className="w-3.5 h-3.5 text-luxury-gold shrink-0" />
+                      <span className="line-clamp-1 font-sans text-xs">
+                        {(() => {
+                          const raw = dest.popularAttractions;
+                          if (typeof raw === "string" && raw.trim().startsWith("[")) {
+                            try {
+                              const arr = JSON.parse(raw);
+                              if (Array.isArray(arr)) {
+                                return arr.map((a: any) => typeof a === "string" ? a : a.name).filter(Boolean).join(", ");
+                              }
+                            } catch (e) {}
+                          }
+                          return String(raw);
+                        })()}
+                      </span>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

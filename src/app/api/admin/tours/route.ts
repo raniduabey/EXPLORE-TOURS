@@ -126,9 +126,11 @@ export async function POST(req: Request) {
 
     const finalSlug = existing ? `${cleanSlug}-${Date.now().toString().slice(-4)}` : cleanSlug;
 
-    const highlightsStr = Array.isArray(highlights) ? JSON.stringify(highlights) : String(highlights || "[]");
-    const includesStr = Array.isArray(includes) ? JSON.stringify(includes) : String(includes || "[]");
-    const excludesStr = Array.isArray(excludes) ? JSON.stringify(excludes) : String(excludes || "[]");
+    const badgeStr = typeof badge === "object" && badge !== null ? JSON.stringify(badge) : (badge || null);
+    const highlightsStr = typeof highlights === "object" && highlights !== null ? JSON.stringify(highlights) : String(highlights || "[]");
+    const whatToBringStr = typeof whatToBring === "object" && whatToBring !== null ? JSON.stringify(whatToBring) : (whatToBring || null);
+    const includesStr = typeof includes === "object" && includes !== null ? JSON.stringify(includes) : String(includes || "[]");
+    const excludesStr = typeof excludes === "object" && excludes !== null ? JSON.stringify(excludes) : String(excludes || "[]");
 
     const newTour = await prisma.tour.create({
       data: {
@@ -144,7 +146,7 @@ export async function POST(req: Request) {
         adultPrice: adultPrice ? Number(adultPrice) : Number(price),
         childPrice: childPrice ? Number(childPrice) : null,
         tourType: tourType || "Private Tour",
-        badge: badge || null,
+        badge: badgeStr,
         freeCancellation: freeCancellation !== false,
         instantBook: instantBook !== false,
         pickupAvailable: pickupAvailable !== false,
@@ -158,7 +160,7 @@ export async function POST(req: Request) {
         includes: includesStr,
         excludes: excludesStr,
         importantInfo: importantInfo || null,
-        whatToBring: whatToBring || null,
+        whatToBring: whatToBringStr,
         cancellationPolicy: cancellationPolicy || null,
         featured: Boolean(featured),
         status: status || "PUBLISHED",
@@ -311,22 +313,24 @@ export async function PUT(req: Request) {
       return NextResponse.json({ error: "Tour not found" }, { status: 404 });
     }
 
-    const highlightsStr = Array.isArray(highlights)
-      ? JSON.stringify(highlights)
-      : highlights !== undefined
-      ? String(highlights)
+    const badgeStr = badge !== undefined
+      ? (typeof badge === "object" && badge !== null ? JSON.stringify(badge) : (badge || null))
+      : existingTour.badge;
+
+    const highlightsStr = highlights !== undefined
+      ? (typeof highlights === "object" && highlights !== null ? JSON.stringify(highlights) : String(highlights))
       : existingTour.highlights;
 
-    const includesStr = Array.isArray(includes)
-      ? JSON.stringify(includes)
-      : includes !== undefined
-      ? String(includes)
+    const whatToBringStr = whatToBring !== undefined
+      ? (typeof whatToBring === "object" && whatToBring !== null ? JSON.stringify(whatToBring) : (whatToBring || null))
+      : existingTour.whatToBring;
+
+    const includesStr = includes !== undefined
+      ? (typeof includes === "object" && includes !== null ? JSON.stringify(includes) : String(includes))
       : existingTour.includes;
 
-    const excludesStr = Array.isArray(excludes)
-      ? JSON.stringify(excludes)
-      : excludes !== undefined
-      ? String(excludes)
+    const excludesStr = excludes !== undefined
+      ? (typeof excludes === "object" && excludes !== null ? JSON.stringify(excludes) : String(excludes))
       : existingTour.excludes;
 
     const updated = await prisma.tour.update({
@@ -344,7 +348,7 @@ export async function PUT(req: Request) {
         ...(adultPrice !== undefined && { adultPrice: adultPrice ? Number(adultPrice) : null }),
         ...(childPrice !== undefined && { childPrice: childPrice ? Number(childPrice) : null }),
         ...(tourType !== undefined && { tourType }),
-        ...(badge !== undefined && { badge: badge || null }),
+        ...(badge !== undefined && { badge: badgeStr }),
         ...(freeCancellation !== undefined && { freeCancellation: Boolean(freeCancellation) }),
         ...(instantBook !== undefined && { instantBook: Boolean(instantBook) }),
         ...(pickupAvailable !== undefined && { pickupAvailable: Boolean(pickupAvailable) }),
@@ -358,7 +362,7 @@ export async function PUT(req: Request) {
         includes: includesStr,
         excludes: excludesStr,
         ...(importantInfo !== undefined && { importantInfo: importantInfo || null }),
-        ...(whatToBring !== undefined && { whatToBring: whatToBring || null }),
+        ...(whatToBring !== undefined && { whatToBring: whatToBringStr }),
         ...(cancellationPolicy !== undefined && { cancellationPolicy: cancellationPolicy || null }),
         ...(featured !== undefined && { featured: Boolean(featured) }),
         ...(status !== undefined && { status }),
