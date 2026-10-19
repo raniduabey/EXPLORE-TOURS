@@ -5,13 +5,6 @@ import Image from "next/image";
 import { ArrowRight, MapPin } from "lucide-react";
 import { useCurrency } from "@/context/CurrencyContext";
 import { FadeIn, FadeInStagger, FadeInStaggerItem } from "@/components/ui/motion";
-import {
-  HOMEPAGE_CARD_GRID,
-  HOMEPAGE_CARD_CONTAINER,
-  HOMEPAGE_CARD_OVERLAY,
-  HOMEPAGE_CARD_VIGNETTE,
-  HOMEPAGE_CARD_PADDING,
-} from "./cardTokens";
 
 export interface DestinationItem {
   id: string;
@@ -144,12 +137,15 @@ export const DestinationGrid: React.FC<{ destinations?: DestinationItem[] }> = (
         </Link>
       </FadeIn>
 
-      <FadeInStagger className={HOMEPAGE_CARD_GRID}>
+      <FadeInStagger className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7 lg:gap-8">
         {list.map((d) => {
           const img = imgErrors[d.id] ? fallbackImages[d.slug] || d.image : d.image;
           return (
             <FadeInStaggerItem key={d.id}>
-              <Link href={`/destinations/${d.slug}`} className={HOMEPAGE_CARD_CONTAINER}>
+              <Link
+                href={`/destinations/${d.slug}`}
+                className="group relative h-[460px] sm:h-[480px] lg:h-[520px] rounded-3xl overflow-hidden shadow-[0_12px_35px_rgba(16,45,36,0.08)] hover:shadow-[0_24px_55px_rgba(16,45,36,0.18)] border border-luxury-sand/70 hover:border-luxury-gold/60 transition-all duration-500 transform hover:-translate-y-2 block bg-luxury-forest"
+              >
                 {/* Background Image with smooth hover scale */}
                 <Image
                   src={img}
@@ -160,33 +156,36 @@ export const DestinationGrid: React.FC<{ destinations?: DestinationItem[] }> = (
                   className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                 />
 
-                {/* Overlays matching Curated By Interest */}
-                <div className={HOMEPAGE_CARD_OVERLAY} />
-                <div className={HOMEPAGE_CARD_VIGNETTE} />
+                {/* Dual Subtle Vignette & Gradient Overlays for High Legibility */}
+                <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-luxury-forest/80 via-luxury-forest/30 to-transparent pointer-events-none" />
+                <div className="absolute inset-0 bg-gradient-to-t from-luxury-forest/95 via-luxury-forest/45 to-transparent pointer-events-none" />
+                <div className="absolute inset-0 bg-luxury-forest/10 group-hover:bg-transparent transition-colors duration-500 pointer-events-none" />
 
-                {/* Top Bar: Journey Count Badge & Circular Arrow Button */}
-                <div className="absolute top-4 left-4 right-4 z-10 flex items-center justify-between">
-                  <span className="px-3 py-1 rounded-full text-[10px] font-sans font-medium uppercase tracking-wider bg-luxury-forest/85 text-luxury-gold border border-luxury-gold/30 backdrop-blur-md shadow-sm">
-                    {d.experienceCount} {d.experienceCount === 1 ? "Journey" : "Journeys"}
+                {/* Top Header: Journey Count Badge & Circular Arrow Button */}
+                <div className="absolute top-5 left-5 right-5 z-10 flex items-center justify-between">
+                  <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-luxury-forest/85 backdrop-blur-md border border-luxury-gold/30 text-luxury-gold shadow-sm">
+                    <MapPin className="w-3.5 h-3.5 text-luxury-gold" />
+                    <span className="text-[10px] font-sans font-medium uppercase tracking-wider text-luxury-sand">
+                      {d.experienceCount} {d.experienceCount === 1 ? "Journey" : "Journeys"}
+                    </span>
                   </span>
-                  <div className="w-8 h-8 rounded-full bg-luxury-forest/80 backdrop-blur-md border border-luxury-gold/30 flex items-center justify-center text-luxury-gold group-hover:bg-luxury-gold group-hover:text-luxury-forest transition-all duration-300 shadow-sm">
-                    <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-0.5 transition-transform" />
+                  <div className="w-9 h-9 rounded-full bg-luxury-forest/80 backdrop-blur-md border border-luxury-gold/30 flex items-center justify-center text-luxury-gold group-hover:bg-luxury-gold group-hover:text-luxury-forest transition-all duration-300 shadow-sm">
+                    <ArrowRight className="w-4 h-4 transform group-hover:translate-x-0.5 transition-transform" />
                   </div>
                 </div>
 
                 {/* Bottom Content Area */}
-                <div className={`absolute bottom-0 left-0 right-0 ${HOMEPAGE_CARD_PADDING} text-luxury-ivory z-10`}>
-                  <div className="flex items-center gap-1.5 text-luxury-gold text-xs font-sans font-medium mb-1">
-                    <MapPin className="w-3.5 h-3.5 text-luxury-gold" />
-                    <span>Sri Lanka</span>
-                  </div>
-                  <h3 className="font-serif text-2xl font-normal tracking-wide text-luxury-ivory group-hover:text-luxury-gold transition-colors leading-tight">
+                <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-7 text-luxury-ivory z-10">
+                  <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-luxury-gold block mb-1.5">
+                    Sri Lanka Iconic Enclave
+                  </span>
+                  <h3 className="font-serif text-2xl sm:text-3xl font-normal tracking-wide text-luxury-ivory group-hover:text-luxury-gold transition-colors leading-snug">
                     {d.name}
                   </h3>
-                  <p className="text-xs sm:text-sm text-luxury-sand/90 mt-1.5 line-clamp-2 font-sans font-normal leading-relaxed">
+                  <p className="text-xs sm:text-sm text-luxury-sand/90 font-sans font-light mt-2 line-clamp-2 sm:line-clamp-3 leading-relaxed">
                     {d.shortDesc}
                   </p>
-                  <div className="mt-3.5 pt-3 border-t border-white/15 flex items-center justify-between">
+                  <div className="mt-4 pt-3.5 border-t border-white/15 flex items-center justify-between">
                     <div className="flex items-baseline gap-1.5">
                       <span className="text-[10px] font-sans uppercase tracking-widest text-luxury-sand/70 font-medium">
                         From
@@ -198,9 +197,9 @@ export const DestinationGrid: React.FC<{ destinations?: DestinationItem[] }> = (
                         / person
                       </span>
                     </div>
-                    <div className="flex items-center gap-1 text-[11px] font-sans uppercase tracking-wider text-luxury-gold group-hover:text-luxury-ivory transition-colors">
+                    <div className="flex items-center gap-1.5 text-[11px] font-sans uppercase tracking-widest text-luxury-gold font-medium group-hover:text-luxury-ivory transition-colors">
                       <span>View Journeys</span>
-                      <ArrowRight className="w-3 h-3 transform group-hover:translate-x-1 transition-transform" />
+                      <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform" />
                     </div>
                   </div>
                 </div>

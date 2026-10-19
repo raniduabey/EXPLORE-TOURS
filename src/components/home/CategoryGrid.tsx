@@ -12,13 +12,6 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { FadeIn, FadeInStagger, FadeInStaggerItem } from "@/components/ui/motion";
-import {
-  HOMEPAGE_CARD_GRID,
-  HOMEPAGE_CARD_CONTAINER,
-  HOMEPAGE_CARD_OVERLAY,
-  HOMEPAGE_CARD_VIGNETTE,
-  HOMEPAGE_CARD_PADDING,
-} from "./cardTokens";
 
 export const CategoryGrid: React.FC = () => {
   const [imgErrors, setImgErrors] = useState<Record<string, boolean>>({});
@@ -89,7 +82,7 @@ export const CategoryGrid: React.FC = () => {
   return (
     <section className="py-16 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8 bg-[#FAF8F5] border-y border-luxury-sand/80">
       <div className="max-w-7xl mx-auto">
-        <FadeIn className="text-center max-w-2xl mx-auto mb-10 sm:mb-12">
+        <FadeIn className="text-center max-w-2xl mx-auto mb-12 sm:mb-14">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-luxury-forest/5 text-luxury-gold text-[10px] font-mono uppercase tracking-[0.25em] border border-luxury-gold/30 mb-3">
             <span>Specialized Travel Styles</span>
           </div>
@@ -101,15 +94,18 @@ export const CategoryGrid: React.FC = () => {
           </p>
         </FadeIn>
 
-        <FadeInStagger className={HOMEPAGE_CARD_GRID}>
+        <FadeInStagger className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7 lg:gap-8">
           {categories.map((c) => {
             const Icon = c.icon;
             const imgSrc = imgErrors[c.slug] ? "/images/destinations/sigiriya.jpg" : c.image;
 
             return (
               <FadeInStaggerItem key={c.slug}>
-                <Link href={`/tours?category=${c.slug}`} className={HOMEPAGE_CARD_CONTAINER}>
-                  {/* Background Image with smooth hover scale */}
+                <Link
+                  href={`/tours?category=${c.slug}`}
+                  className="group relative h-[460px] sm:h-[480px] lg:h-[520px] rounded-3xl overflow-hidden shadow-[0_12px_35px_rgba(16,45,36,0.08)] hover:shadow-[0_24px_55px_rgba(16,45,36,0.18)] border border-luxury-sand/70 hover:border-luxury-gold/60 transition-all duration-500 transform hover:-translate-y-2 block bg-luxury-forest"
+                >
+                  {/* Portrait Background Image */}
                   <Image
                     src={imgSrc}
                     alt={c.title}
@@ -119,39 +115,40 @@ export const CategoryGrid: React.FC = () => {
                     className={`object-cover ${c.focalPosition} group-hover:scale-105 transition-transform duration-700 ease-out`}
                   />
 
-                  {/* Overlays matching DestinationGrid */}
-                  <div className={HOMEPAGE_CARD_OVERLAY} />
-                  <div className={HOMEPAGE_CARD_VIGNETTE} />
+                  {/* Dual Subtle Vignette & Gradient Overlays for High Legibility */}
+                  <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-luxury-forest/80 via-luxury-forest/30 to-transparent pointer-events-none" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-luxury-forest/95 via-luxury-forest/45 to-transparent pointer-events-none" />
+                  <div className="absolute inset-0 bg-luxury-forest/10 group-hover:bg-transparent transition-colors duration-500 pointer-events-none" />
 
-                  {/* Top Bar: Category Tag Pill & Circular Arrow Button */}
-                  <div className="absolute top-4 left-4 right-4 z-10 flex items-center justify-between">
-                    <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-luxury-forest/85 backdrop-blur-md border border-luxury-gold/30 text-luxury-gold shadow-sm">
+                  {/* Top Header: Category Tag & Circular Action Pill */}
+                  <div className="absolute top-5 left-5 right-5 z-10 flex items-center justify-between">
+                    <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-luxury-forest/85 backdrop-blur-md border border-luxury-gold/30 text-luxury-gold shadow-sm">
                       <Icon className="w-3.5 h-3.5 text-luxury-gold" />
                       <span className="text-[10px] font-sans font-medium uppercase tracking-wider text-luxury-sand">
                         {c.tag}
                       </span>
                     </span>
-                    <div className="w-8 h-8 rounded-full bg-luxury-forest/80 backdrop-blur-md border border-luxury-gold/30 flex items-center justify-center text-luxury-gold group-hover:bg-luxury-gold group-hover:text-luxury-forest transition-all duration-300 shadow-sm">
-                      <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-0.5 transition-transform" />
+                    <div className="w-9 h-9 rounded-full bg-luxury-forest/80 backdrop-blur-md border border-luxury-gold/30 flex items-center justify-center text-luxury-gold group-hover:bg-luxury-gold group-hover:text-luxury-forest transition-all duration-300 shadow-sm">
+                      <ArrowRight className="w-4 h-4 transform group-hover:translate-x-0.5 transition-transform" />
                     </div>
                   </div>
 
-                  {/* Bottom Content Area */}
-                  <div className={`absolute bottom-0 left-0 right-0 ${HOMEPAGE_CARD_PADDING} text-luxury-ivory z-10`}>
-                    <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-luxury-gold block mb-1">
+                  {/* Bottom Content: Subtitle, Title, Description, and Link Footer */}
+                  <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-7 text-luxury-ivory z-10">
+                    <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-luxury-gold block mb-1.5">
                       {c.subtitle}
                     </span>
-                    <h3 className="font-serif text-2xl font-normal tracking-wide text-luxury-ivory group-hover:text-luxury-gold transition-colors leading-tight">
+                    <h3 className="font-serif text-2xl sm:text-3xl font-normal tracking-wide text-luxury-ivory group-hover:text-luxury-gold transition-colors leading-snug">
                       {c.title}
                     </h3>
-                    <p className="text-xs sm:text-sm text-luxury-sand/90 font-sans font-normal mt-1.5 line-clamp-2 leading-relaxed">
+                    <p className="text-xs sm:text-sm text-luxury-sand/90 font-sans font-light mt-2 line-clamp-2 sm:line-clamp-3 leading-relaxed">
                       {c.desc}
                     </p>
-                    <div className="mt-3.5 pt-3 border-t border-white/15 flex items-center justify-between">
-                      <div className="flex items-center gap-1.5 text-[11px] font-sans uppercase tracking-wider text-luxury-gold group-hover:text-luxury-ivory transition-colors">
+                    <div className="mt-4 pt-3.5 border-t border-white/15 flex items-center justify-between">
+                      <span className="text-[11px] font-sans uppercase tracking-widest text-luxury-gold font-medium flex items-center gap-1.5 group-hover:text-luxury-ivory transition-colors">
                         <span>Explore Journeys</span>
-                        <ArrowRight className="w-3 h-3 transform group-hover:translate-x-1 transition-transform" />
-                      </div>
+                        <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform" />
+                      </span>
                       <span className="text-[10px] font-sans font-light text-luxury-sand/70">
                         Curated Experiences
                       </span>
