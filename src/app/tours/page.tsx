@@ -32,7 +32,9 @@ const CATEGORIES = [
   { label: "Multi-Day Tour Packages", value: "multiday" },
   { label: "Cultural Heritage", value: "cultural" },
   { label: "Wildlife & Safari", value: "wildlife" },
+  { label: "Scenic Rail & Highlands", value: "scenic" },
   { label: "Adventure & Hiking", value: "adventure" },
+  { label: "Beach & Coastal Escapes", value: "beaches" },
 ];
 
 function ToursPageContent() {
@@ -145,7 +147,11 @@ function ToursPageContent() {
           const matchCatSlug = t.categorySlug?.toLowerCase() === catLower;
           const matchCatName = t.categoryName?.toLowerCase().includes(catLower);
           const matchType = t.tourType?.toLowerCase().includes(catLower);
-          if (!matchCatSlug && !matchCatName && !matchType) return false;
+          const matchContent =
+            (t.title + " " + t.location + " " + (t.highlights || []).join(" ") + " " + (t.shortDescription || ""))
+              .toLowerCase()
+              .includes(catLower === "scenic" ? "train" : catLower === "beaches" ? "whale" : catLower);
+          if (!matchCatSlug && !matchCatName && !matchType && !matchContent) return false;
         }
 
         // Price check
