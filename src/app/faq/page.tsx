@@ -139,26 +139,30 @@ export default function FAQPage() {
       />
       <div className="min-h-screen py-10 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto space-y-12">
         {/* Banner */}
-        <div className="bg-ceylon-navy text-white rounded-3xl p-8 sm:p-12 text-center relative overflow-hidden shadow-2xl space-y-4">
-          <span className="text-xs font-bold text-emerald-400 uppercase tracking-widest block">
-            Help & Information Center
-          </span>
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight">
-            Frequently Asked Questions
-          </h1>
-          <p className="text-xs sm:text-sm text-slate-300 max-w-xl mx-auto">
-            Everything you need to know about booking, hotel pickups, cancellation deadlines, and travelling around Sri Lanka.
-          </p>
+        <div className="relative rounded-3xl overflow-hidden bg-luxury-forest text-luxury-ivory p-8 sm:p-12 text-center shadow-2xl border border-luxury-gold/30 space-y-4">
+          <div className="absolute -right-20 -top-20 w-96 h-96 rounded-full bg-luxury-gold/10 blur-3xl pointer-events-none" />
+          <div className="absolute -left-20 -bottom-20 w-96 h-96 rounded-full bg-luxury-emerald/20 blur-3xl pointer-events-none" />
+          <div className="relative z-10 space-y-4">
+            <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-luxury-gold block">
+              Help & Information Center
+            </span>
+            <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-normal tracking-tight text-luxury-ivory">
+              Frequently Asked Questions
+            </h1>
+            <p className="text-xs sm:text-sm text-luxury-sand/85 max-w-xl mx-auto font-light leading-relaxed">
+              Everything you need to know about booking, hotel pickups, cancellation deadlines, and travelling around Sri Lanka.
+            </p>
 
-          <div className="max-w-md mx-auto relative pt-2">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-5" />
-            <input
-              type="text"
-              placeholder="Search topics (e.g. train, refund, pickup, children)..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-white text-ceylon-text pl-10 pr-4 py-3 rounded-2xl text-xs font-semibold placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-ceylon-blue"
-            />
+            <div className="max-w-md mx-auto relative pt-2">
+              <Search className="w-4 h-4 text-luxury-charcoal/40 absolute left-3.5 top-5" />
+              <input
+                type="text"
+                placeholder="Search topics (e.g. train, refund, pickup, children)..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full bg-white text-luxury-charcoal pl-10 pr-4 py-3 rounded-2xl text-xs font-medium placeholder:text-luxury-charcoal/40 focus:outline-none focus:ring-2 focus:ring-luxury-gold/60 border border-luxury-sand/80 shadow-sm"
+              />
+            </div>
           </div>
         </div>
 
@@ -171,10 +175,10 @@ export default function FAQPage() {
                 setActiveCategory(cat);
                 setOpenIndex(null);
               }}
-              className={`px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${
+              className={`px-4 py-2 rounded-xl text-xs font-sans font-medium whitespace-nowrap transition-all ${
                 activeCategory === cat
-                  ? "bg-ceylon-navy text-white shadow"
-                  : "bg-white text-slate-600 border border-slate-200 hover:bg-slate-50"
+                  ? "bg-luxury-forest text-luxury-ivory shadow"
+                  : "bg-white text-luxury-charcoal/80 border border-luxury-sand/80 hover:bg-slate-50"
               }`}
             >
               {cat}
@@ -190,26 +194,26 @@ export default function FAQPage() {
               return (
                 <div
                   key={idx}
-                  className="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden transition-all"
+                  className="bg-white rounded-2xl border border-luxury-sand/80 shadow-sm overflow-hidden transition-all"
                 >
                   <button
                     type="button"
                     onClick={() => setOpenIndex(isOpen ? null : idx)}
                     aria-expanded={isOpen}
-                    className="w-full text-left p-5 sm:p-6 flex items-center justify-between gap-4 font-extrabold text-xs sm:text-sm text-ceylon-navy hover:text-ceylon-blue transition-colors"
+                    className="w-full text-left p-5 sm:p-6 flex items-center justify-between gap-4 font-semibold text-xs sm:text-sm text-luxury-forest hover:text-luxury-gold transition-colors"
                   >
                     <span className="flex items-center gap-3">
-                      <HelpCircle className="w-4 h-4 text-ceylon-blue shrink-0" />
+                      <HelpCircle className="w-4 h-4 text-luxury-gold shrink-0" />
                       <span>{faq.q}</span>
                     </span>
                     <ChevronDown
                       className={`w-4 h-4 text-slate-400 shrink-0 transition-transform duration-200 ${
-                        isOpen ? "transform rotate-180 text-ceylon-blue" : ""
+                        isOpen ? "transform rotate-180 text-luxury-gold" : ""
                       }`}
                     />
                   </button>
                   {isOpen && (
-                    <div className="px-6 pb-6 pt-1 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-100 bg-slate-50/50">
+                    <div className="px-6 pb-6 pt-1 text-xs sm:text-sm text-luxury-charcoal/80 leading-relaxed border-t border-luxury-sand/60 bg-[#FAF8F5]/60 font-light">
                       {faq.a}
                     </div>
                   )}
@@ -217,12 +221,12 @@ export default function FAQPage() {
               );
             })
           ) : (
-            <div className="bg-white rounded-3xl p-12 text-center border border-slate-200/80 space-y-3">
+            <div className="bg-white rounded-3xl p-12 text-center border border-luxury-sand/80 space-y-3">
               <HelpCircle className="w-10 h-10 text-slate-300 mx-auto" />
-              <h3 className="text-base font-bold text-ceylon-navy">
+              <h3 className="text-base font-serif font-normal text-luxury-forest">
                 No matching answers found
               </h3>
-              <p className="text-xs text-ceylon-muted">
+              <p className="text-xs text-luxury-charcoal/60 font-light">
                 Try searching with different keywords or contact our 24/7 WhatsApp concierge.
               </p>
             </div>
@@ -230,11 +234,11 @@ export default function FAQPage() {
         </div>
 
         {/* Still Have Questions CTA */}
-        <div className="bg-ceylon-softblue rounded-3xl p-8 sm:p-10 border border-ceylon-blue/20 text-center space-y-3">
-          <h3 className="text-xl font-extrabold text-ceylon-navy">
+        <div className="bg-[#FAF8F5] rounded-3xl p-8 sm:p-10 border border-luxury-sand/80 text-center space-y-3">
+          <h3 className="font-serif text-xl font-normal text-luxury-forest">
             Still Have Questions?
           </h3>
-          <p className="text-xs text-ceylon-muted max-w-md mx-auto">
+          <p className="text-xs text-luxury-charcoal/70 max-w-md mx-auto font-light leading-relaxed">
             Our certified Sri Lankan travel specialists are available 24/7 on WhatsApp or email to answer specific questions.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
@@ -244,14 +248,14 @@ export default function FAQPage() {
               )}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#25D366] hover:bg-[#20ba5a] text-white text-xs font-bold rounded-xl shadow"
+              className="inline-flex items-center gap-2 px-6 py-2.5 bg-[#25D366] hover:bg-[#20ba5a] text-white text-xs font-sans font-medium uppercase tracking-wider rounded-full shadow transition-all"
             >
               <MessageSquare className="w-4 h-4 fill-current" />
               <span>Ask on WhatsApp</span>
             </a>
             <Link
               href="/contact"
-              className="px-5 py-2.5 bg-ceylon-navy hover:bg-ceylon-blue text-white text-xs font-bold rounded-xl shadow"
+              className="px-6 py-2.5 bg-luxury-forest hover:bg-luxury-emerald text-luxury-ivory text-xs font-sans font-medium uppercase tracking-wider rounded-full shadow transition-all"
             >
               Contact Support
             </Link>
