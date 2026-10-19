@@ -36,6 +36,30 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: `${baseUrl}/blog`,
       lastModified: new Date(),
     },
+    {
+      url: `${baseUrl}/plan-my-trip`,
+      lastModified: new Date(),
+    },
+    {
+      url: `${baseUrl}/cancellation-policy`,
+      lastModified: new Date(),
+    },
+    {
+      url: `${baseUrl}/terms`,
+      lastModified: new Date(),
+    },
+    {
+      url: `${baseUrl}/privacy`,
+      lastModified: new Date(),
+    },
+    {
+      url: `${baseUrl}/refund-policy`,
+      lastModified: new Date(),
+    },
+    {
+      url: `${baseUrl}/review`,
+      lastModified: new Date(),
+    },
   ];
 
   // Dynamic Tour Routes from verified catalog

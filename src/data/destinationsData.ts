@@ -22,7 +22,7 @@ export const DESTINATIONS_CATALOG: DestinationData[] = [
     longDesc:
       "The Cultural Triangle forms the cradle of ancient Sri Lankan civilization. Anchored by the UNESCO World Heritage Lion Rock Citadel of Sigiriya and the subterranean Buddhist shrines of Dambulla, this region invites travelers into an awe-inspiring world of 2,500-year-old hydraulic engineering, vibrant frescoes, and spiritual serenity.",
     image: "/images/destinations/sigiriya.jpg",
-    experienceCount: 8,
+    experienceCount: 5,
     startingPrice: 85,
     popularAttractions:
       "Sigiriya Lion Rock, Dambulla Cave Temple, Pidurangala Rock, Polonnaruwa Ruins, Minneriya Elephant Gathering",
@@ -39,7 +39,7 @@ export const DESTINATIONS_CATALOG: DestinationData[] = [
     longDesc:
       "Perched high in Sri Lanka's central highlands, Ella is a tranquil mountain haven surrounded by cascading waterfalls, tea gardens, and dramatic hill passes. Famed for Little Adam's Peak, Ella Rock, and the architectural masterpiece of the colonial Nine Arches Viaduct.",
     image: "/images/destinations/ella.jpg",
-    experienceCount: 6,
+    experienceCount: 1,
     startingPrice: 65,
     popularAttractions:
       "Nine Arches Bridge, Little Adam's Peak, Ella Rock, Ravana Falls, Halpewatte Tea Factory",
@@ -55,7 +55,7 @@ export const DESTINATIONS_CATALOG: DestinationData[] = [
     longDesc:
       "Yala National Park is Sri Lanka's premier wildlife sanctuary, bordering the Indian Ocean in the southeast. Experienced local safari trackers navigate rugged scrubland and freshwater lagoons in 4x4 open-top jeeps in search of the elusive Ceylon leopard.",
     image: "/images/destinations/yala.jpg",
-    experienceCount: 5,
+    experienceCount: 1,
     startingPrice: 95,
     popularAttractions:
       "Block 1 Leopard Safari, Elephant Herd Waterholes, Sloth Bear Tracking, Kumana Bird Sanctuary",
@@ -72,7 +72,7 @@ export const DESTINATIONS_CATALOG: DestinationData[] = [
     longDesc:
       "Built by Portuguese and Dutch colonizers between the 16th and 17th centuries, Galle Fort is Asia's best-preserved fortified sea bastion. Stroll past whitewashed ramparts, colonial clock towers, spice merchants, and charming seaside gelato parlors.",
     image: "/images/destinations/galle.jpg",
-    experienceCount: 4,
+    experienceCount: 1,
     startingPrice: 45,
     popularAttractions:
       "Galle Lighthouse, Dutch Reformed Church, Sea Wall Ramparts, Maritime Museum, Unawatuna Beach",
@@ -88,7 +88,7 @@ export const DESTINATIONS_CATALOG: DestinationData[] = [
     longDesc:
       "Mirissa is the jewel of Sri Lanka's southern shores. Renowned as one of the premier whale watching havens on Earth, Mirissa pairs exhilarating ocean wildlife cruises with laid-back beachside dining, snorkeling around coral reefs, and coconut tree hills overlooking sunset horizons.",
     image: "/images/destinations/mirissa.jpg",
-    experienceCount: 5,
+    experienceCount: 1,
     startingPrice: 75,
     popularAttractions:
       "Mirissa Whale Watching, Coconut Tree Hill, Parrot Rock, Secret Beach, Weligama Bay Surfing",
@@ -104,7 +104,7 @@ export const DESTINATIONS_CATALOG: DestinationData[] = [
     longDesc:
       "Nestled in the shadows of Mount Pidurutalagala at 1,868 meters elevation, Nuwara Eliya is the heartland of world-renowned Ceylon tea. With Victorian post offices, manicured golf links, botanical gardens, and dramatic cascades like Ramboda Falls, it offers a refreshing highland retreat.",
     image: "/images/destinations/nuwara-eliya.jpg",
-    experienceCount: 4,
+    experienceCount: 1,
     startingPrice: 70,
     popularAttractions:
       "Historic Tea Factory & Plucking, Lake Gregory, Ramboda Falls, Victoria Park, Pedro Tea Estate",

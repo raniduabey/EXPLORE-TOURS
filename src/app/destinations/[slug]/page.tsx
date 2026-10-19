@@ -301,18 +301,18 @@ export default async function DestinationPage({
         </div>
       </div>
 
-      <div className="space-y-6 pt-6 border-t border-slate-200">
+      <div className="space-y-6 pt-6 border-t border-luxury-sand/70">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="text-2xl font-extrabold text-ceylon-navy tracking-tight">
+            <h3 className="text-2xl sm:text-3xl font-serif font-normal text-luxury-forest tracking-tight">
               Tours & Experiences in {dest.name}
             </h3>
-            <p className="text-xs text-ceylon-muted mt-1">
+            <p className="text-xs sm:text-sm text-luxury-charcoal/70 mt-1 font-light">
               Handpicked authentic activities led by licensed local guides.
             </p>
           </div>
-          <span className="text-xs font-bold text-ceylon-blue">
-            {tours.length} available
+          <span className="text-xs font-serif font-semibold text-luxury-forest">
+            {tours.length} {tours.length === 1 ? "Experience" : "Experiences"} Available
           </span>
         </div>
 
@@ -323,17 +323,17 @@ export default async function DestinationPage({
             ))}
           </div>
         ) : (
-          <div className="bg-white rounded-3xl p-12 text-center border border-slate-200/80 space-y-3">
-            <Compass className="w-10 h-10 text-slate-300 mx-auto" />
-            <h4 className="text-lg font-bold text-ceylon-navy">
+          <div className="bg-white rounded-3xl p-12 text-center border border-luxury-sand/80 space-y-3">
+            <Compass className="w-10 h-10 text-luxury-gold/50 mx-auto" />
+            <h4 className="text-lg font-serif font-normal text-luxury-forest">
               Custom Experiences Coming Soon
             </h4>
-            <p className="text-xs text-ceylon-muted max-w-sm mx-auto">
+            <p className="text-xs text-luxury-charcoal/70 max-w-sm mx-auto font-light">
               Our team is currently curating new bespoke tours for this destination. Contact our local trip specialists to organize a private guide.
             </p>
             <Link
               href="/plan-my-trip"
-              className="inline-block px-5 py-2.5 bg-ceylon-green text-white text-xs font-bold rounded-xl"
+              className="inline-block px-5 py-2.5 bg-luxury-forest hover:bg-luxury-gold text-luxury-ivory text-xs font-sans font-medium uppercase tracking-wider rounded-xl transition-all shadow"
             >
               Request Custom Tour
             </Link>

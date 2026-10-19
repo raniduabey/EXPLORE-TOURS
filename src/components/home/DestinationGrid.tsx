@@ -27,10 +27,10 @@ const fallbackImages: Record<string, string> = {
 };
 
 const defaultDestinations: DestinationItem[] = [
-  { id: "1", name: "Sigiriya", slug: "sigiriya", shortDesc: "Ancient 5th-century palace fortress and UNESCO World Heritage site.", image: fallbackImages.sigiriya, experienceCount: 14, startingPrice: 45 },
-  { id: "2", name: "Ella", slug: "ella", shortDesc: "Highland mountain peaks, Nine Arch Bridge, and tea plantations.", image: fallbackImages.ella, experienceCount: 12, startingPrice: 35 },
-  { id: "3", name: "Yala", slug: "yala", shortDesc: "Wild leopards, Asian elephants, and open-top 4x4 safaris.", image: fallbackImages.yala, experienceCount: 8, startingPrice: 65 },
-  { id: "4", name: "Galle", slug: "galle", shortDesc: "Dutch colonial cobblestone streets, lighthouses, and ramparts.", image: fallbackImages.galle, experienceCount: 10, startingPrice: 30 },
+  { id: "1", name: "Sigiriya", slug: "sigiriya", shortDesc: "Ancient 5th-century palace fortress and UNESCO World Heritage site.", image: fallbackImages.sigiriya, experienceCount: 5, startingPrice: 85 },
+  { id: "2", name: "Ella", slug: "ella", shortDesc: "Highland mountain peaks, Nine Arch Bridge, and tea plantations.", image: fallbackImages.ella, experienceCount: 1, startingPrice: 65 },
+  { id: "3", name: "Yala", slug: "yala", shortDesc: "Wild leopards, Asian elephants, and open-top 4x4 safaris.", image: fallbackImages.yala, experienceCount: 1, startingPrice: 95 },
+  { id: "4", name: "Galle", slug: "galle", shortDesc: "Dutch colonial cobblestone streets, lighthouses, and ramparts.", image: fallbackImages.galle, experienceCount: 1, startingPrice: 45 },
 ];
 
 export const DestinationGrid: React.FC<{ destinations?: DestinationItem[] }> = ({ destinations: propDestinations }) => {
@@ -81,7 +81,7 @@ export const DestinationGrid: React.FC<{ destinations?: DestinationItem[] }> = (
                 <div className="absolute inset-0 bg-gradient-to-t from-luxury-forest/95 via-luxury-forest/40 to-transparent" />
                 <div className="absolute top-4 left-4">
                   <span className="px-3 py-1 rounded-full text-[10px] font-sans font-medium uppercase tracking-wider bg-luxury-forest/80 text-luxury-gold border border-luxury-gold/30 backdrop-blur-md shadow-sm">
-                    {d.experienceCount} Journeys
+                    {d.experienceCount} {d.experienceCount === 1 ? "Journey" : "Journeys"}
                   </span>
                 </div>
                 <div className="absolute bottom-0 left-0 right-0 p-6 text-luxury-ivory">
