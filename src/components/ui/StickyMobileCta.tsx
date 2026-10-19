@@ -30,7 +30,7 @@ export const StickyMobileCta: React.FC<{ onOpenCustomPlanner?: () => void }> = (
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 100, opacity: 0 }}
           transition={{ type: "spring", stiffness: 350, damping: 30 }}
-          className="fixed bottom-0 left-0 right-0 z-40 lg:hidden bg-white/95 backdrop-blur-md border-t border-slate-200/80 px-4 py-3 shadow-[0_-8px_25px_rgba(0,0,0,0.1)] flex items-center gap-3"
+          className="fixed bottom-0 left-0 right-0 z-40 lg:hidden bg-white/95 backdrop-blur-md border-t border-slate-200/80 px-4 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))] shadow-[0_-8px_25px_rgba(0,0,0,0.1)] flex items-center gap-3 touch-manipulation"
         >
           {/* WhatsApp Direct */}
           <a

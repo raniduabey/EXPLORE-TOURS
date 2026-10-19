@@ -55,23 +55,23 @@ export default function AboutPage() {
   return (
     <div className="min-h-screen py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-20">
       {/* Hero */}
-      <div className="relative rounded-3xl overflow-hidden bg-luxury-forest text-luxury-ivory p-8 sm:p-14 lg:p-18 shadow-2xl border border-luxury-gold/30">
+      <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden bg-luxury-forest text-luxury-ivory p-6 sm:p-14 lg:p-18 shadow-2xl border border-luxury-gold/30">
         <div className="absolute -right-20 -top-20 w-96 h-96 rounded-full bg-luxury-gold/10 blur-3xl pointer-events-none" />
         <div className="absolute -left-20 -bottom-20 w-96 h-96 rounded-full bg-luxury-emerald/20 blur-3xl pointer-events-none" />
         <div className="relative z-10 max-w-3xl space-y-4">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 border border-luxury-gold/30 text-[10px] font-mono uppercase tracking-[0.25em] text-luxury-gold">
-            <Sparkles className="w-3.5 h-3.5 text-luxury-gold" />
+            <Sparkles className="w-3.5 h-3.5 text-luxury-gold shrink-0" />
             <span>Curators of Ceylon Journeys</span>
           </div>
-          <h1 className="font-serif text-3xl sm:text-5xl lg:text-6xl font-normal tracking-tight text-luxury-ivory leading-tight">
+          <h1 className="font-serif text-3xl sm:text-5xl lg:text-6xl font-normal tracking-tight text-luxury-ivory leading-tight break-words">
             Discover Sri Lanka With Those Who Know Its Soul
           </h1>
           <p className="text-sm sm:text-base text-luxury-sand/85 max-w-2xl font-light leading-relaxed">
             Welcome to {siteConfig.name}. We craft bespoke private journeys across Sri Lanka—from ancient royal rock citadels to misty highland tea bungalows and untamed leopard sanctuaries.
           </p>
           {siteConfig.sltda.isVerified && siteConfig.sltda.registrationNumber && (
-            <div className="pt-2 text-xs font-mono uppercase tracking-wider text-luxury-gold flex items-center gap-2">
-              <ShieldCheck className="w-4 h-4 text-luxury-gold" />
+            <div className="pt-2 text-xs font-mono uppercase tracking-wider text-luxury-gold flex flex-wrap items-center gap-2">
+              <ShieldCheck className="w-4 h-4 text-luxury-gold shrink-0" />
               <span>Official SLTDA Registration: {siteConfig.sltda.registrationNumber}</span>
             </div>
           )}

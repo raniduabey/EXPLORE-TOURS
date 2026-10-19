@@ -89,20 +89,20 @@ export const HomeFaqSection: React.FC = () => {
               <button
                 type="button"
                 onClick={() => toggle(idx)}
-                className="w-full p-6 text-left flex items-center justify-between gap-4 focus:outline-none"
+                className="w-full p-4 sm:p-6 text-left flex items-center justify-between gap-3 sm:gap-4 focus:outline-none"
               >
-                <div className="space-y-1.5">
+                <div className="space-y-1.5 min-w-0">
                   <span className="text-[10px] font-mono uppercase tracking-widest text-luxury-gold block">
                     {faq.tag}
                   </span>
-                  <span className="font-serif text-base sm:text-lg font-medium text-luxury-forest">
+                  <span className="font-serif text-base sm:text-lg font-medium text-luxury-forest break-words block">
                     {faq.question}
                   </span>
                 </div>
                 <motion.div
                   animate={{ rotate: isOpen ? 180 : 0 }}
                   transition={{ duration: 0.25, ease: "easeInOut" }}
-                  className="w-9 h-9 rounded-full bg-white border border-luxury-sand/80 flex items-center justify-center text-luxury-forest shrink-0 shadow-xs"
+                  className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white border border-luxury-sand/80 flex items-center justify-center text-luxury-forest shrink-0 shadow-xs"
                 >
                   <ChevronDown className="w-4 h-4 text-luxury-gold" />
                 </motion.div>
@@ -117,7 +117,7 @@ export const HomeFaqSection: React.FC = () => {
                     exit={{ height: 0, opacity: 0 }}
                     transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
                   >
-                    <div className="px-6 pb-6 pt-1 text-xs sm:text-sm text-luxury-charcoal/80 leading-relaxed border-t border-luxury-sand/60">
+                    <div className="px-4 pb-5 pt-1 sm:px-6 sm:pb-6 text-xs sm:text-sm text-luxury-charcoal/80 leading-relaxed border-t border-luxury-sand/60 break-words">
                       {faq.answer}
                     </div>
                   </motion.div>
@@ -128,9 +128,9 @@ export const HomeFaqSection: React.FC = () => {
         })}
       </div>
 
-      <div className="mt-12 p-8 rounded-3xl bg-luxury-forest text-luxury-ivory border border-luxury-gold/30 shadow-2xl flex flex-col sm:flex-row items-center justify-between gap-6 text-center sm:text-left">
+      <div className="mt-10 sm:mt-12 p-6 sm:p-8 rounded-2xl sm:rounded-3xl bg-luxury-forest text-luxury-ivory border border-luxury-gold/30 shadow-2xl flex flex-col sm:flex-row items-center justify-between gap-6 text-center sm:text-left">
         <div>
-          <h4 className="font-serif text-lg font-medium text-luxury-ivory">
+          <h4 className="font-serif text-base sm:text-lg font-medium text-luxury-ivory break-words">
             Seeking a bespoke route or have a special request?
           </h4>
           <p className="text-xs text-luxury-sand/80 mt-1 font-light leading-relaxed">
@@ -141,9 +141,9 @@ export const HomeFaqSection: React.FC = () => {
           href={`https://wa.me/${siteConfig.contact.whatsapp}?text=Hi%20${encodeURIComponent(siteConfig.name)},%20I%20have%20a%20question%20about%20traveling%20in%20Sri%20Lanka.`}
           target="_blank"
           rel="noopener noreferrer"
-          className="px-7 py-3.5 bg-gradient-to-r from-[#DFBE82] via-[#C9A86A] to-[#A88647] hover:brightness-110 text-luxury-forest rounded-full text-xs font-sans font-medium uppercase tracking-wider transition-all flex items-center gap-2 shrink-0 shadow-lg"
+          className="w-full sm:w-auto px-6 sm:px-7 py-3 sm:py-3.5 bg-gradient-to-r from-[#DFBE82] via-[#C9A86A] to-[#A88647] hover:brightness-110 text-luxury-forest rounded-full text-xs font-sans font-medium uppercase tracking-wider transition-all flex items-center justify-center gap-2 shrink-0 shadow-lg text-center"
         >
-          <MessageCircle className="w-4 h-4 fill-current" />
+          <MessageCircle className="w-4 h-4 fill-current shrink-0" />
           <span>Connect With Concierge</span>
         </a>
       </div>

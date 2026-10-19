@@ -80,7 +80,7 @@ export const StatsCounter: React.FC = () => {
             <CheckCircle2 className="w-4 h-4 text-luxury-gold shrink-0" />
             <span className="font-sans font-medium text-luxury-forest">Official Sri Lanka Tourism Standards · SLTDA Registered Chauffeurs</span>
           </div>
-          <div className="flex items-center gap-6">
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
             <span className="flex items-center gap-1.5 font-sans text-xs">
               <span className="w-2 h-2 rounded-full bg-luxury-gold animate-pulse shrink-0" />
               Private AC Vehicles Guaranteed

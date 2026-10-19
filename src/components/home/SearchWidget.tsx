@@ -509,7 +509,7 @@ export const SearchWidget: React.FC = () => {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 8, scale: 0.98 }}
                 transition={{ duration: 0.18, ease: "easeOut" }}
-                className="absolute left-0 sm:left-auto sm:right-0 md:left-0 top-full mt-2 w-[310px] sm:w-[340px] bg-white rounded-3xl shadow-2xl border border-luxury-sand/80 p-4 sm:p-5 z-50 space-y-4"
+                className="absolute left-0 sm:left-auto sm:right-0 md:left-0 top-full mt-2 w-[calc(100vw-3rem)] max-w-[340px] bg-white rounded-3xl shadow-2xl border border-luxury-sand/80 p-4 sm:p-5 z-50 space-y-4"
               >
                 {/* Header: Month & Year with Navigation Arrows */}
                 <div className="flex items-center justify-between">
@@ -675,7 +675,7 @@ export const SearchWidget: React.FC = () => {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 8, scale: 0.98 }}
                 transition={{ duration: 0.18, ease: "easeOut" }}
-                className="absolute right-0 top-full mt-2 w-72 sm:w-80 bg-white rounded-3xl shadow-2xl border border-luxury-sand/80 p-5 z-50 space-y-4"
+                className="absolute right-0 top-full mt-2 w-[calc(100vw-3rem)] max-w-xs sm:w-80 bg-white rounded-3xl shadow-2xl border border-luxury-sand/80 p-5 z-50 space-y-4"
               >
                 <div className="space-y-3.5">
                   {/* Adults row */}

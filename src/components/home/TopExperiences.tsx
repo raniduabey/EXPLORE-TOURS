@@ -143,11 +143,11 @@ export const TopExperiences: React.FC<{ tours?: TourCardData[] }> = ({ tours: pr
 
       <div
         ref={containerRef}
-        className="flex gap-6 overflow-x-auto scrollbar-none scroll-smooth pb-4 pt-1 snap-x snap-mandatory"
-        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+        className="w-full max-w-full flex gap-5 sm:gap-6 overflow-x-auto overscroll-x-contain touch-pan-x scrollbar-none scroll-smooth pb-4 pt-1 snap-x snap-mandatory"
+        style={{ scrollbarWidth: "none", msOverflowStyle: "none", WebkitOverflowScrolling: "touch" }}
       >
         {list.map((t) => (
-          <div key={t.id} className="min-w-[300px] sm:min-w-[360px] max-w-[360px] snap-start flex-shrink-0">
+          <div key={t.id} className="min-w-[270px] sm:min-w-[360px] max-w-[360px] snap-start flex-shrink-0">
             <TourCard tour={t} />
           </div>
         ))}

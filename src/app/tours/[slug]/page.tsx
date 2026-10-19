@@ -385,7 +385,7 @@ export default async function TourDetailPage({
 
         {/* Dynamic Tour Information Icons Bar */}
         {infoItems.length > 0 && (
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 p-5 rounded-3xl bg-[#FAF8F5] border border-luxury-sand/80 shadow-sm">
+          <div className="grid grid-cols-1 min-[420px]:grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 p-4 sm:p-5 rounded-2xl sm:rounded-3xl bg-[#FAF8F5] border border-luxury-sand/80 shadow-sm">
             {infoItems.map((item) => (
               <div key={item.id} className="flex items-center gap-3.5">
                 <div className="w-10 h-10 rounded-2xl bg-white border border-luxury-sand flex items-center justify-center shrink-0">

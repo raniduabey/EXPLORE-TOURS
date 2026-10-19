@@ -57,14 +57,14 @@ export default async function BlogPage() {
 
   return (
     <div className="min-h-screen py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-10">
-      <div className="relative rounded-3xl overflow-hidden bg-luxury-forest text-luxury-ivory p-8 sm:p-12 shadow-2xl border border-luxury-gold/30 space-y-3">
+      <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden bg-luxury-forest text-luxury-ivory p-6 sm:p-12 shadow-2xl border border-luxury-gold/30 space-y-3">
         <div className="absolute -right-20 -top-20 w-96 h-96 rounded-full bg-luxury-gold/10 blur-3xl pointer-events-none" />
         <div className="absolute -left-20 -bottom-20 w-96 h-96 rounded-full bg-luxury-emerald/20 blur-3xl pointer-events-none" />
         <div className="relative z-10 space-y-3">
           <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-luxury-gold block">
             Editorial Travel Hub
           </span>
-          <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-normal tracking-tight text-luxury-ivory">
+          <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-normal tracking-tight text-luxury-ivory break-words">
             Sri Lanka Travel Guide & Inspiration
           </h1>
           <p className="text-sm sm:text-base text-luxury-sand/85 max-w-xl font-light leading-relaxed">

@@ -238,7 +238,7 @@ export const BookingWidget: React.FC<BookingWidgetProps> = ({
       </div>
 
       {/* Mobile Sticky Bar */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-slate-200 p-4 shadow-2xl flex items-center justify-between">
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-slate-200 px-4 pt-3 pb-[calc(0.85rem+env(safe-area-inset-bottom,0px))] shadow-2xl flex items-center justify-between touch-manipulation">
         <div>
           <span className="text-[10px] text-slate-400 block font-medium">Starting From</span>
           <div className="flex items-baseline gap-1">

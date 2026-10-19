@@ -23,7 +23,7 @@ export const WhatsAppButton: React.FC<{ tourTitle?: string }> = ({ tourTitle }) 
       href={link}
       target="_blank"
       rel="noopener noreferrer"
-      className="fixed bottom-6 right-6 z-40 bg-[#25D366] hover:bg-[#20ba5a] text-white p-3.5 rounded-full shadow-2xl transition-all transform hover:scale-105 flex items-center justify-center group"
+      className="fixed bottom-[calc(4.75rem+env(safe-area-inset-bottom,0px))] sm:bottom-6 right-4 sm:right-6 z-40 bg-[#25D366] hover:bg-[#20ba5a] text-white p-3 sm:p-3.5 rounded-full shadow-2xl transition-all transform hover:scale-105 flex items-center justify-center group touch-manipulation"
       title={`Plan Your Sri Lanka Trip on WhatsApp with ${company}`}
       aria-label="Chat on WhatsApp"
     >

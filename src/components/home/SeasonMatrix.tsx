@@ -169,51 +169,76 @@ export const SeasonMatrix: React.FC = () => {
   const currentMonthIdx = new Date().getMonth(); // 0-11
   const [selectedIdx, setSelectedIdx] = useState(currentMonthIdx);
   const data = MONTHS[selectedIdx] || MONTHS[0];
+  const scrollContainerRef = React.useRef<HTMLDivElement>(null);
+  const monthButtonRefs = React.useRef<(HTMLButtonElement | null)[]>([]);
+
+  // Keep the selected month visible in the horizontal scroll container
+  React.useEffect(() => {
+    const activeBtn = monthButtonRefs.current[selectedIdx];
+    if (activeBtn && scrollContainerRef.current) {
+      activeBtn.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+        inline: "center",
+      });
+    }
+  }, [selectedIdx]);
 
   return (
-    <section className="py-16 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-      <FadeIn className="text-center max-w-3xl mx-auto mb-10 sm:mb-12">
+    <section className="py-14 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full overflow-hidden">
+      <FadeIn className="text-center max-w-3xl mx-auto mb-8 sm:mb-12 px-2 sm:px-0">
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-luxury-forest/5 text-luxury-gold text-[10px] font-mono uppercase tracking-[0.25em] border border-luxury-gold/30 mb-3">
-          <Sun className="w-3.5 h-3.5 text-luxury-gold" />
+          <Sun className="w-3.5 h-3.5 text-luxury-gold shrink-0" />
           <span>Microclimate Almanac</span>
         </div>
-        <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-normal text-luxury-forest tracking-tight">
+        <h2 className="font-serif text-2xl sm:text-4xl lg:text-5xl font-normal text-luxury-forest tracking-tight break-words leading-tight sm:leading-snug">
           When to Journey Through Sri Lanka
         </h2>
-        <p className="text-sm sm:text-base text-luxury-charcoal/80 font-sans font-normal mt-3 leading-relaxed">
+        <p className="text-xs sm:text-base text-luxury-charcoal/80 font-sans font-normal mt-3 leading-relaxed max-w-2xl mx-auto break-words">
           Thanks to the island&apos;s dual monsoon microclimates, there is <strong className="text-luxury-forest font-serif">always pristine sunshine, calm waters, and sublime weather</strong> in Sri Lanka year-round. Select any month to view optimum regions.
         </p>
       </FadeIn>
 
-      {/* Month Bar */}
-      <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-4 mb-8 sm:mb-10 scrollbar-none justify-start md:justify-center">
-        {MONTHS.map((m, idx) => {
-          const isSelected = idx === selectedIdx;
-          return (
-            <button
-              key={m.month}
-              onClick={() => setSelectedIdx(idx)}
-              className={`relative px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-sans uppercase tracking-wider shrink-0 transition-all ${
-                isSelected
-                  ? "text-luxury-forest font-semibold shadow-sm"
-                  : "text-luxury-charcoal/70 bg-white hover:bg-slate-50 border border-luxury-sand/80 font-medium"
-              }`}
-            >
-              {isSelected && (
-                <motion.div
-                  layoutId="activeMonth"
-                  className="absolute inset-0 bg-luxury-gold/25 border border-luxury-gold rounded-xl -z-10"
-                  transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                />
-              )}
-              <span>{m.month.slice(0, 3)}</span>
-            </button>
-          );
-        })}
+      {/* Month Bar: Clearly Horizontally Scrollable on Mobile, Centered on Desktop */}
+      <div className="relative w-full mb-8 sm:mb-10">
+        <div
+          ref={scrollContainerRef}
+          className="w-full max-w-full overflow-x-auto overscroll-x-contain touch-pan-x pb-3 pt-1 flex items-center gap-1.5 sm:gap-2 justify-start md:justify-center scrollbar-none scroll-smooth px-1"
+          style={{ scrollbarWidth: "none", msOverflowStyle: "none", WebkitOverflowScrolling: "touch" }}
+        >
+          {MONTHS.map((m, idx) => {
+            const isSelected = idx === selectedIdx;
+            return (
+              <button
+                key={m.month}
+                ref={(el) => {
+                  monthButtonRefs.current[idx] = el;
+                }}
+                onClick={() => setSelectedIdx(idx)}
+                type="button"
+                className={`relative px-3.5 sm:px-4 py-2.5 rounded-xl text-xs sm:text-sm font-sans uppercase tracking-wider shrink-0 transition-all min-h-[42px] min-w-[54px] flex items-center justify-center select-none active:scale-95 ${
+                  isSelected
+                    ? "text-luxury-forest font-semibold shadow-sm"
+                    : "text-luxury-charcoal/70 bg-white hover:bg-slate-50 border border-luxury-sand/80 font-medium"
+                }`}
+                aria-pressed={isSelected}
+              >
+                {isSelected && (
+                  <motion.div
+                    layoutId="activeMonth"
+                    className="absolute inset-0 bg-luxury-gold/25 border border-luxury-gold rounded-xl -z-10"
+                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                  />
+                )}
+                <span>{m.month.slice(0, 3)}</span>
+              </button>
+            );
+          })}
+        </div>
       </div>
 
-      {/* Selected Month Interactive Details */}
-      <div className="bg-white rounded-3xl p-7 sm:p-9 lg:p-11 border border-luxury-sand/80 shadow-[0_20px_50px_rgba(16,45,36,0.08)]">
+      {/* Selected Month Interactive Details: Responsive Full-Width Climate Information Cards */}
+      <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-7 md:p-9 lg:p-11 border border-luxury-sand/80 shadow-[0_20px_50px_rgba(16,45,36,0.08)] w-full max-w-full overflow-hidden">
         <AnimatePresence mode="wait">
           <motion.div
             key={data.month}
@@ -221,89 +246,91 @@ export const SeasonMatrix: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -12 }}
             transition={{ duration: 0.3 }}
-            className="space-y-7"
+            className="space-y-6 sm:space-y-7 w-full max-w-full"
           >
             {/* Header info */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-luxury-sand/70">
-              <div className="space-y-1.5">
-                <div className="flex items-center gap-3">
-                  <h3 className="font-serif text-2xl sm:text-3xl font-normal text-luxury-forest">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 sm:pb-6 border-b border-luxury-sand/70 w-full">
+              <div className="space-y-2 min-w-0 flex-1">
+                <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+                  <h3 className="font-serif text-xl sm:text-2xl lg:text-3xl font-normal text-luxury-forest break-words">
                     {data.month} in Sri Lanka
                   </h3>
                   <span
-                    className="px-3 py-1 rounded-full text-[10px] font-mono uppercase tracking-wider bg-luxury-gold/15 text-luxury-forest border border-luxury-gold/30"
+                    className="px-3 py-1 rounded-full text-[10px] font-mono uppercase tracking-wider bg-luxury-gold/15 text-luxury-forest border border-luxury-gold/30 shrink-0"
                   >
                     {data.seasonType}
                   </span>
                 </div>
-                <p className="text-xs sm:text-sm text-luxury-charcoal/70 font-light">
+                <p className="text-xs sm:text-sm text-luxury-charcoal/70 font-light leading-relaxed break-words">
                   {data.recommendation}
                 </p>
               </div>
 
-              <div className="bg-[#FAF8F5] px-4 py-2.5 rounded-2xl border border-luxury-sand/80 shrink-0 flex items-center gap-3">
-                <Sun className="w-5 h-5 text-luxury-gold" />
-                <div>
-                  <span className="text-[10px] font-mono text-luxury-charcoal/50 uppercase tracking-wider block">Average Climate</span>
-                  <span className="text-xs font-serif font-medium text-luxury-forest">{data.averageTemp}</span>
+              <div className="bg-[#FAF8F5] px-4 py-2.5 rounded-2xl border border-luxury-sand/80 shrink-0 flex items-center justify-between sm:justify-start gap-3 w-full sm:w-auto">
+                <div className="flex items-center gap-3">
+                  <Sun className="w-5 h-5 text-luxury-gold shrink-0" />
+                  <div>
+                    <span className="text-[10px] font-mono text-luxury-charcoal/50 uppercase tracking-wider block">Average Climate</span>
+                    <span className="text-xs font-serif font-medium text-luxury-forest">{data.averageTemp}</span>
+                  </div>
                 </div>
               </div>
             </div>
 
             {/* 3 Detail columns */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-[#FAF8F5] p-6 rounded-2xl border border-luxury-sand/80 space-y-3">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 w-full">
+              <div className="bg-[#FAF8F5] p-4 sm:p-6 rounded-2xl border border-luxury-sand/80 space-y-3 min-w-0">
                 <div className="flex items-center gap-2 text-[10px] font-mono uppercase tracking-[0.18em] text-luxury-forest">
-                  <Sun className="w-4 h-4 text-luxury-gold" />
-                  Sunniest Regions
+                  <Sun className="w-4 h-4 text-luxury-gold shrink-0" />
+                  <span>Sunniest Regions</span>
                 </div>
                 <div className="space-y-2">
                   {data.sunnyRegions.map((region, i) => (
-                    <div key={i} className="flex items-start gap-2 text-xs text-luxury-charcoal/80 font-sans">
+                    <div key={i} className="flex items-start gap-2 text-xs text-luxury-charcoal/80 font-sans leading-snug">
                       <CheckCircle2 className="w-3.5 h-3.5 text-luxury-gold mt-0.5 shrink-0" />
-                      <span>{region}</span>
+                      <span className="break-words">{region}</span>
                     </div>
                   ))}
                 </div>
               </div>
 
-              <div className="bg-[#FAF8F5] p-6 rounded-2xl border border-luxury-sand/80 space-y-3">
+              <div className="bg-[#FAF8F5] p-4 sm:p-6 rounded-2xl border border-luxury-sand/80 space-y-3 min-w-0">
                 <div className="flex items-center gap-2 text-[10px] font-mono uppercase tracking-[0.18em] text-luxury-forest">
-                  <Waves className="w-4 h-4 text-luxury-gold" />
-                  Coastal Waters
+                  <Waves className="w-4 h-4 text-luxury-gold shrink-0" />
+                  <span>Coastal Waters</span>
                 </div>
-                <p className="text-xs text-luxury-charcoal/80 font-sans leading-relaxed">
+                <p className="text-xs text-luxury-charcoal/80 font-sans leading-relaxed break-words">
                   {data.seaCondition}
                 </p>
               </div>
 
-              <div className="bg-[#FAF8F5] p-6 rounded-2xl border border-luxury-sand/80 space-y-3">
+              <div className="bg-[#FAF8F5] p-4 sm:p-6 rounded-2xl border border-luxury-sand/80 space-y-3 min-w-0">
                 <div className="flex items-center gap-2 text-[10px] font-mono uppercase tracking-[0.18em] text-luxury-forest">
-                  <Sparkles className="w-4 h-4 text-luxury-gold" />
-                  Wildlife Spectacle
+                  <Sparkles className="w-4 h-4 text-luxury-gold shrink-0" />
+                  <span>Wildlife Spectacle</span>
                 </div>
-                <p className="text-xs text-luxury-charcoal/80 font-sans leading-relaxed">
+                <p className="text-xs text-luxury-charcoal/80 font-sans leading-relaxed break-words">
                   {data.wildlifeHighlight}
                 </p>
               </div>
             </div>
 
             {/* Recommended itinerary for month */}
-            <div className="pt-4 border-t border-luxury-sand/70 flex flex-col sm:flex-row items-center justify-between gap-5 bg-luxury-forest text-luxury-ivory p-6 rounded-3xl border border-luxury-gold/30">
-              <div>
+            <div className="pt-4 border-t border-luxury-sand/70 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-5 bg-luxury-forest text-luxury-ivory p-5 sm:p-6 rounded-2xl sm:rounded-3xl border border-luxury-gold/30 w-full">
+              <div className="min-w-0 w-full sm:w-auto">
                 <span className="text-[10px] font-mono uppercase tracking-widest text-luxury-gold block">
                   Recommended Circuit for {data.month}
                 </span>
-                <span className="font-serif text-base sm:text-lg font-medium text-luxury-ivory mt-0.5 block">
+                <span className="font-serif text-base sm:text-lg font-medium text-luxury-ivory mt-0.5 block break-words">
                   {data.recommendedTourName}
                 </span>
               </div>
               <Link
                 href={data.recommendedTourSlug}
-                className="w-full sm:w-auto px-7 py-3.5 bg-gradient-to-r from-[#DFBE82] via-[#C9A86A] to-[#A88647] hover:brightness-110 text-luxury-forest rounded-full text-xs font-sans font-medium uppercase tracking-wider transition-all flex items-center justify-center gap-2 shrink-0 shadow-lg group"
+                className="w-full sm:w-auto px-6 sm:px-7 py-3 sm:py-3.5 bg-gradient-to-r from-[#DFBE82] via-[#C9A86A] to-[#A88647] hover:brightness-110 text-luxury-forest rounded-full text-xs font-sans font-medium uppercase tracking-wider transition-all flex items-center justify-center gap-2 shrink-0 shadow-lg group text-center"
               >
                 <span>Discover Itinerary</span>
-                <ArrowRight className="w-3.5 h-3.5 text-luxury-forest group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="w-3.5 h-3.5 text-luxury-forest group-hover:translate-x-1 transition-transform shrink-0" />
               </Link>
             </div>
           </motion.div>

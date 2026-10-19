@@ -262,7 +262,7 @@ export const WriteReviewModal: React.FC<WriteReviewModalProps> = ({
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.95, opacity: 0 }}
         transition={{ duration: 0.2 }}
-        className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-slate-100 relative my-8"
+        className="bg-white rounded-2xl sm:rounded-3xl max-w-lg w-full p-4 sm:p-8 shadow-2xl border border-slate-100 relative my-6 max-h-[92vh] overflow-y-auto"
       >
         <button
           onClick={onClose}
@@ -468,7 +468,7 @@ export const WriteReviewModal: React.FC<WriteReviewModalProps> = ({
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 8, scale: 0.98 }}
                         transition={{ duration: 0.18, ease: "easeOut" }}
-                        className="absolute right-0 top-full mt-2 w-[295px] sm:w-[320px] bg-white rounded-3xl shadow-2xl border border-slate-200/90 p-4 sm:p-5 z-50 space-y-4"
+                        className="absolute right-0 top-full mt-2 w-[calc(100vw-4rem)] max-w-[310px] bg-white rounded-3xl shadow-2xl border border-slate-200/90 p-4 sm:p-5 z-50 space-y-4"
                       >
                         {/* Header: Month & Year with Navigation Arrows & Fast Year Selector */}
                         <div className="flex items-center justify-between">

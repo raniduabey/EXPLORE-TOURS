@@ -57,7 +57,7 @@ export const WhyUs: React.FC = () => {
               />
             </div>
           </div>
-          <div className="absolute -bottom-5 left-4 sm:left-6 bg-luxury-forest text-luxury-ivory p-4 rounded-2xl shadow-2xl border border-luxury-gold/30 flex items-center gap-3.5 max-w-xs backdrop-blur-md">
+          <div className="absolute -bottom-5 left-4 sm:left-6 bg-luxury-forest text-luxury-ivory p-3.5 sm:p-4 rounded-2xl shadow-2xl border border-luxury-gold/30 flex items-center gap-3.5 max-w-[calc(100%-2rem)] sm:max-w-xs backdrop-blur-md">
             <div className="w-10 h-10 rounded-xl bg-luxury-gold/20 text-luxury-gold flex items-center justify-center shrink-0 border border-luxury-gold/30">
               <ShieldCheck className="w-5 h-5" />
             </div>

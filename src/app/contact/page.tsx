@@ -85,12 +85,12 @@ export default function ContactPage() {
   return (
     <div className="min-h-screen py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-12">
       {/* Header Banner */}
-      <div className="bg-luxury-forest text-luxury-ivory rounded-3xl p-8 sm:p-14 relative overflow-hidden shadow-2xl border border-luxury-gold/30 space-y-3">
+      <div className="bg-luxury-forest text-luxury-ivory rounded-2xl sm:rounded-3xl p-6 sm:p-14 relative overflow-hidden shadow-2xl border border-luxury-gold/30 space-y-3">
         <div className="absolute -right-16 -bottom-16 w-80 h-80 rounded-full bg-luxury-gold/10 blur-3xl pointer-events-none" />
         <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-luxury-gold block">
           Private Concierge & Reservations
         </span>
-        <h1 className="font-serif text-3xl sm:text-5xl lg:text-6xl font-normal tracking-tight text-luxury-ivory">
+        <h1 className="font-serif text-3xl sm:text-5xl lg:text-6xl font-normal tracking-tight text-luxury-ivory break-words">
           Begin Your Sri Lanka Journey
         </h1>
         <p className="text-sm sm:text-base text-luxury-sand/85 max-w-2xl font-light leading-relaxed">

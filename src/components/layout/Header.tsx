@@ -76,11 +76,11 @@ export const Header: React.FC = () => {
                     priority
                   />
                 </div>
-                <div className="flex flex-col justify-center">
-                  <span className="font-editorial text-base sm:text-lg md:text-xl text-white font-bold tracking-wide leading-tight whitespace-nowrap block group-hover:text-luxury-sand transition-colors">
+                <div className="flex flex-col justify-center min-w-0">
+                  <span className="font-editorial text-sm sm:text-lg md:text-xl text-white font-bold tracking-wide leading-tight truncate block group-hover:text-luxury-sand transition-colors">
                     Ceylon Explore Tours
                   </span>
-                  <span className="text-[9px] sm:text-[10px] font-medium tracking-[0.22em] uppercase block mt-0.5 whitespace-nowrap text-[#C9A86A]">
+                  <span className="text-[8px] sm:text-[10px] font-medium tracking-[0.16em] sm:tracking-[0.22em] uppercase block mt-0.5 truncate text-[#C9A86A]">
                     Curated Sri Lanka Journeys
                   </span>
                 </div>
@@ -229,7 +229,7 @@ export const Header: React.FC = () => {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
-              className="xl:hidden bg-[#102D24] border-t border-[#C9A86A]/20 px-4 pt-4 pb-6 space-y-3"
+              className="xl:hidden bg-[#102D24] border-t border-[#C9A86A]/20 px-4 pt-4 pb-6 space-y-3 max-h-[calc(100vh-5rem)] overflow-y-auto"
             >
               <div className="flex flex-col space-y-2">
                 {navLinks.map((link) => {

@@ -139,14 +139,14 @@ export default function FAQPage() {
       />
       <div className="min-h-screen py-10 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto space-y-12">
         {/* Banner */}
-        <div className="relative rounded-3xl overflow-hidden bg-luxury-forest text-luxury-ivory p-8 sm:p-12 text-center shadow-2xl border border-luxury-gold/30 space-y-4">
+        <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden bg-luxury-forest text-luxury-ivory p-6 sm:p-12 text-center shadow-2xl border border-luxury-gold/30 space-y-4">
           <div className="absolute -right-20 -top-20 w-96 h-96 rounded-full bg-luxury-gold/10 blur-3xl pointer-events-none" />
           <div className="absolute -left-20 -bottom-20 w-96 h-96 rounded-full bg-luxury-emerald/20 blur-3xl pointer-events-none" />
           <div className="relative z-10 space-y-4">
             <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-luxury-gold block">
               Help & Information Center
             </span>
-            <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-normal tracking-tight text-luxury-ivory">
+            <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-normal tracking-tight text-luxury-ivory break-words">
               Frequently Asked Questions
             </h1>
             <p className="text-xs sm:text-sm text-luxury-sand/85 max-w-xl mx-auto font-light leading-relaxed">
@@ -167,7 +167,7 @@ export default function FAQPage() {
         </div>
 
         {/* Category Filter Pills */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+        <div className="w-full max-w-full flex items-center gap-2 overflow-x-auto overscroll-x-contain touch-pan-x pb-2 scrollbar-none" style={{ scrollbarWidth: "none", msOverflowStyle: "none", WebkitOverflowScrolling: "touch" }}>
           {categories.map((cat) => (
             <button
               key={cat}
