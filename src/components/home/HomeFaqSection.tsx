@@ -141,7 +141,7 @@ export const HomeFaqSection: React.FC = () => {
           href={`https://wa.me/${siteConfig.contact.whatsapp}?text=Hi%20${encodeURIComponent(siteConfig.name)},%20I%20have%20a%20question%20about%20traveling%20in%20Sri%20Lanka.`}
           target="_blank"
           rel="noopener noreferrer"
-          className="px-7 py-3.5 bg-gradient-to-r from-[#DFBE82] via-[#C9A86A] to-[#A88647] hover:brightness-110 text-luxury-forest rounded-full text-xs font-serif font-semibold uppercase tracking-wider transition-all flex items-center gap-2 shrink-0 shadow-lg"
+          className="px-7 py-3.5 bg-gradient-to-r from-[#DFBE82] via-[#C9A86A] to-[#A88647] hover:brightness-110 text-luxury-forest rounded-full text-xs font-sans font-medium uppercase tracking-wider transition-all flex items-center gap-2 shrink-0 shadow-lg"
         >
           <MessageCircle className="w-4 h-4 fill-current" />
           <span>Connect With Concierge</span>

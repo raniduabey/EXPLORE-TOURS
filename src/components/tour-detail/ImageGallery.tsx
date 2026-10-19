@@ -155,7 +155,7 @@ export const ImageGallery: React.FC<ImageGalleryProps> = ({ images = [], title }
             className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-80 group-hover:opacity-60 transition-opacity" />
-          <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-3.5 py-1.5 rounded-full text-xs font-serif text-luxury-forest shadow flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
+          <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-3.5 py-1.5 rounded-full text-xs font-sans font-medium text-luxury-forest shadow flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
             <Maximize2 className="w-3.5 h-3.5 text-luxury-gold" />
             <span>Enlarge Photo</span>
           </div>
@@ -350,7 +350,7 @@ export const ImageGallery: React.FC<ImageGalleryProps> = ({ images = [], title }
       <button
         type="button"
         onClick={() => openLightbox(0)}
-        className="absolute bottom-4 right-4 bg-white/95 backdrop-blur-md hover:bg-white text-luxury-forest font-serif font-bold text-xs px-4 py-2.5 rounded-2xl shadow-luxury border border-luxury-sand/80 flex items-center gap-2 transition-all transform hover:scale-[1.02] active:scale-95"
+        className="absolute bottom-4 right-4 bg-white/95 backdrop-blur-md hover:bg-white text-luxury-forest font-sans font-semibold text-xs px-4 py-2.5 rounded-2xl shadow-luxury border border-luxury-sand/80 flex items-center gap-2 transition-all transform hover:scale-[1.02] active:scale-95"
       >
         <Grid3X3 className="w-4 h-4 text-luxury-gold" />
         <span>View All Photographs ({count})</span>

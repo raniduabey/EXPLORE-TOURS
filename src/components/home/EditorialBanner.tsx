@@ -30,7 +30,7 @@ export const EditorialBanner: React.FC = () => {
           <div className="pt-2">
             <Link
               href="/tours"
-              className="inline-flex items-center gap-2.5 px-9 py-4 rounded-full font-serif font-semibold text-xs uppercase tracking-[0.2em] text-luxury-forest bg-gradient-to-r from-[#DFBE82] via-[#C9A86A] to-[#A88647] hover:brightness-110 transition-all transform hover:-translate-y-0.5 shadow-xl group"
+              className="inline-flex items-center gap-2.5 px-9 py-4 rounded-full font-sans font-medium text-xs uppercase tracking-[0.2em] text-luxury-forest bg-gradient-to-r from-[#DFBE82] via-[#C9A86A] to-[#A88647] hover:brightness-110 transition-all transform hover:-translate-y-0.5 shadow-xl group"
             >
               <span>Explore All Curated Journeys</span>
               <ArrowRight className="w-4 h-4 text-luxury-forest group-hover:translate-x-1 transition-transform" />

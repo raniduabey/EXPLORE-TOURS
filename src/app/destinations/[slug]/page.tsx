@@ -264,7 +264,7 @@ export default async function DestinationPage({
                 </div>
                 <div>
                   <span className="font-mono text-[10px] uppercase tracking-wider text-luxury-charcoal/50 block">Best Time to Visit</span>
-                  <span className="font-serif text-xs font-semibold text-luxury-forest">{dest.bestTimeToVisit || "Year-round destination"}</span>
+                  <span className="font-sans text-xs font-semibold text-luxury-forest">{dest.bestTimeToVisit || "Year-round destination"}</span>
                 </div>
               </div>
 
@@ -274,7 +274,7 @@ export default async function DestinationPage({
                 </div>
                 <div>
                   <span className="font-mono text-[10px] uppercase tracking-wider text-luxury-charcoal/50 block">Curated Experiences</span>
-                  <span className="font-serif text-xs font-semibold text-luxury-forest">{curatedExperiencesText}</span>
+                  <span className="font-sans text-xs font-semibold text-luxury-forest">{curatedExperiencesText}</span>
                 </div>
               </div>
 
@@ -293,7 +293,7 @@ export default async function DestinationPage({
 
             <Link
               href={`/plan-my-trip?destination=${dest.slug}`}
-              className="w-full inline-flex items-center justify-center py-3.5 px-4 bg-luxury-forest hover:bg-luxury-gold text-luxury-ivory text-xs font-serif font-semibold uppercase tracking-wider rounded-2xl transition-all duration-300 shadow-md group"
+              className="w-full inline-flex items-center justify-center py-3.5 px-4 bg-luxury-forest hover:bg-luxury-gold text-luxury-ivory text-xs font-sans font-medium uppercase tracking-wider rounded-2xl transition-all duration-300 shadow-md group"
             >
               <span>{customButtonText}</span>
             </Link>

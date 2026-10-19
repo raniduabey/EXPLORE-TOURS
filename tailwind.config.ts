@@ -33,9 +33,11 @@ const config: Config = {
         },
       },
       fontFamily: {
-        sans: ["Plus Jakarta Sans", "Inter", "sans-serif"],
-        serif: ["Playfair Display", "Georgia", "serif"],
-        heading: ["Playfair Display", "Georgia", "serif"],
+        sans: ["var(--font-poppins)", "Poppins", "sans-serif"],
+        poppins: ["var(--font-poppins)", "Poppins", "sans-serif"],
+        serif: ["var(--font-cormorant)", "Cormorant Garamond", "Georgia", "serif"],
+        heading: ["var(--font-cormorant)", "Cormorant Garamond", "Georgia", "serif"],
+        editorial: ["var(--font-cormorant)", "Cormorant Garamond", "Georgia", "serif"],
       },
       boxShadow: {
         card: "0 4px 20px -2px rgba(7, 81, 125, 0.08)",

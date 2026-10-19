@@ -300,7 +300,7 @@ export const SeasonMatrix: React.FC = () => {
               </div>
               <Link
                 href={data.recommendedTourSlug}
-                className="w-full sm:w-auto px-7 py-3.5 bg-gradient-to-r from-[#DFBE82] via-[#C9A86A] to-[#A88647] hover:brightness-110 text-luxury-forest rounded-full text-xs font-serif font-semibold uppercase tracking-wider transition-all flex items-center justify-center gap-2 shrink-0 shadow-lg group"
+                className="w-full sm:w-auto px-7 py-3.5 bg-gradient-to-r from-[#DFBE82] via-[#C9A86A] to-[#A88647] hover:brightness-110 text-luxury-forest rounded-full text-xs font-sans font-medium uppercase tracking-wider transition-all flex items-center justify-center gap-2 shrink-0 shadow-lg group"
               >
                 <span>Discover Itinerary</span>
                 <ArrowRight className="w-3.5 h-3.5 text-luxury-forest group-hover:translate-x-1 transition-transform" />

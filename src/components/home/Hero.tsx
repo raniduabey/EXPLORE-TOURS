@@ -267,7 +267,7 @@ export const Hero: React.FC<{ onOpenCustomPlanner?: () => void }> = ({ onOpenCus
           <div className="flex items-center gap-3">
             <Link
               href={slide.ctaLink || "/tours"}
-              className="px-8 py-3.5 rounded-full font-serif font-semibold text-xs uppercase tracking-[0.18em] text-luxury-forest bg-gradient-to-r from-[#DFBE82] via-[#C9A86A] to-[#A88647] hover:brightness-110 shadow-xl transition-all transform hover:-translate-y-0.5 flex items-center gap-2"
+              className="px-8 py-3.5 rounded-full font-sans font-semibold text-xs uppercase tracking-[0.18em] text-luxury-forest bg-gradient-to-r from-[#DFBE82] via-[#C9A86A] to-[#A88647] hover:brightness-110 shadow-xl transition-all transform hover:-translate-y-0.5 flex items-center gap-2"
             >
               <Compass className="w-4 h-4" />
               <span>{slide.ctaText || "Explore Our Journeys"}</span>
@@ -277,7 +277,7 @@ export const Hero: React.FC<{ onOpenCustomPlanner?: () => void }> = ({ onOpenCus
               <button
                 type="button"
                 onClick={onOpenCustomPlanner}
-                className="px-7 py-3.5 rounded-full font-serif font-medium text-xs uppercase tracking-[0.18em] text-luxury-ivory bg-white/5 hover:bg-white/10 border border-luxury-gold/40 hover:border-luxury-gold backdrop-blur-md shadow-xl transition-all transform hover:-translate-y-0.5 flex items-center gap-2"
+                className="px-7 py-3.5 rounded-full font-sans font-medium text-xs uppercase tracking-[0.18em] text-luxury-ivory bg-white/5 hover:bg-white/10 border border-luxury-gold/40 hover:border-luxury-gold backdrop-blur-md shadow-xl transition-all transform hover:-translate-y-0.5 flex items-center gap-2"
               >
                 <Sparkles className="w-4 h-4 text-luxury-gold" />
                 <span>Tailor My Journey</span>
@@ -285,7 +285,7 @@ export const Hero: React.FC<{ onOpenCustomPlanner?: () => void }> = ({ onOpenCus
             ) : (
               <Link
                 href="/contact"
-                className="px-7 py-3.5 rounded-full font-serif font-medium text-xs uppercase tracking-[0.18em] text-luxury-ivory bg-white/5 hover:bg-white/10 border border-luxury-gold/40 hover:border-luxury-gold backdrop-blur-md shadow-xl transition-all transform hover:-translate-y-0.5 flex items-center gap-2"
+                className="px-7 py-3.5 rounded-full font-sans font-medium text-xs uppercase tracking-[0.18em] text-luxury-ivory bg-white/5 hover:bg-white/10 border border-luxury-gold/40 hover:border-luxury-gold backdrop-blur-md shadow-xl transition-all transform hover:-translate-y-0.5 flex items-center gap-2"
               >
                 <Sparkles className="w-4 h-4 text-luxury-gold" />
                 <span>Tailor My Journey</span>

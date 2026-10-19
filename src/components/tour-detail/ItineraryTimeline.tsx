@@ -55,7 +55,7 @@ export const ItineraryTimeline: React.FC<ItineraryTimelineProps> = ({ items, tou
             });
             setExpanded(next);
           }}
-          className="text-xs font-serif text-luxury-gold hover:text-luxury-forest transition-colors"
+          className="text-xs font-sans font-medium text-luxury-gold hover:text-luxury-forest transition-colors"
         >
           {items.every((item) => expanded[item.stepNumber]) ? "Collapse All" : "Expand All"}
         </button>
@@ -69,7 +69,7 @@ export const ItineraryTimeline: React.FC<ItineraryTimelineProps> = ({ items, tou
           return (
             <div key={item.id || item.stepNumber} className="relative pl-7">
               {/* Luxury Step Badge */}
-              <div className="absolute -left-[13px] top-2 w-6 h-6 rounded-full bg-luxury-forest border-2 border-[#FAF8F5] ring-2 ring-luxury-gold/40 flex items-center justify-center text-luxury-gold text-[10px] font-serif font-bold shadow-md">
+              <div className="absolute -left-[13px] top-2 w-6 h-6 rounded-full bg-luxury-forest border-2 border-[#FAF8F5] ring-2 ring-luxury-gold/40 flex items-center justify-center text-luxury-gold text-[10px] font-sans font-semibold shadow-md">
                 {item.stepNumber}
               </div>
 
@@ -90,13 +90,13 @@ export const ItineraryTimeline: React.FC<ItineraryTimelineProps> = ({ items, tou
 
                     <div className="flex flex-wrap items-center gap-3 text-xs text-luxury-charcoal/70 pt-1">
                       {item.duration && (
-                        <div className="flex items-center gap-1 font-serif text-[11px]">
+                        <div className="flex items-center gap-1 font-sans text-[11px]">
                           <Clock className="w-3.5 h-3.5 text-luxury-gold" />
                           <span>{item.duration}</span>
                         </div>
                       )}
                       {item.location && (
-                        <div className="flex items-center gap-1 font-serif text-[11px]">
+                        <div className="flex items-center gap-1 font-sans text-[11px]">
                           <MapPin className="w-3.5 h-3.5 text-luxury-gold" />
                           <span>{item.location}</span>
                         </div>
@@ -130,13 +130,13 @@ export const ItineraryTimeline: React.FC<ItineraryTimelineProps> = ({ items, tou
                       {(item.accommodation || item.meals) && (
                         <div className="flex flex-wrap gap-3 pt-2 text-xs border-t border-luxury-sand/40">
                           {item.accommodation && (
-                            <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-white rounded-full border border-luxury-sand text-luxury-forest font-serif text-[11px]">
+                            <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-white rounded-full border border-luxury-sand text-luxury-forest font-sans text-[11px]">
                               <Hotel className="w-3.5 h-3.5 text-luxury-gold" />
                               <span>Stay: {item.accommodation}</span>
                             </div>
                           )}
                           {item.meals && (
-                            <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-white rounded-full border border-luxury-sand text-luxury-forest font-serif text-[11px]">
+                            <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-white rounded-full border border-luxury-sand text-luxury-forest font-sans text-[11px]">
                               <Utensils className="w-3.5 h-3.5 text-luxury-gold" />
                               <span>Meals: {item.meals}</span>
                             </div>

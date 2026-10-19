@@ -88,7 +88,7 @@ export default async function DestinationsPage() {
                 <div className="space-y-2.5 pt-3 border-t border-luxury-sand/70 text-xs text-luxury-charcoal/70">
                   <div className="flex items-center gap-2">
                     <Calendar className="w-3.5 h-3.5 text-luxury-gold shrink-0" />
-                    <span className="line-clamp-1 font-serif">Best season: {dest.bestTimeToVisit}</span>
+                    <span className="line-clamp-1 font-sans">Best season: {dest.bestTimeToVisit}</span>
                   </div>
                   {dest.popularAttractions && (
                     <div className="flex items-center gap-2">
@@ -121,7 +121,7 @@ export default async function DestinationsPage() {
                   <span className="text-xs font-sans font-light text-luxury-charcoal/50">/ person</span>
                 </span>
               </div>
-              <div className="flex items-center gap-1.5 font-serif text-xs font-semibold uppercase tracking-wider text-luxury-forest group-hover:text-luxury-gold group-hover:translate-x-1 transition-all">
+              <div className="flex items-center gap-1.5 font-sans text-xs font-medium uppercase tracking-wider text-luxury-forest group-hover:text-luxury-gold group-hover:translate-x-1 transition-all">
                 <span>View Journeys</span>
                 <ArrowRight className="w-3.5 h-3.5 text-luxury-gold" />
               </div>

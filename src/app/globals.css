@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -7,13 +7,49 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    font-family: var(--font-poppins), 'Poppins', sans-serif;
   }
+
   body {
     @apply bg-[#F8F6F0] text-[#222A25] font-sans antialiased;
-    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    font-family: var(--font-poppins), 'Poppins', sans-serif;
+    font-weight: 400;
+    line-height: 1.68;
+    letter-spacing: 0.01em;
   }
-  h1, h2, h3, .font-editorial {
-    font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+
+  /* Main Headings & Titles in Cormorant Garamond */
+  h1, h2, h3, h4, .font-heading, .font-editorial {
+    font-family: var(--font-cormorant), 'Cormorant Garamond', Georgia, serif;
+    font-weight: 500;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+  }
+
+  /* Description text & paragraphs in Poppins with comfortable 1.65–1.75 line-height */
+  p, .description-text {
+    font-family: var(--font-poppins), 'Poppins', sans-serif;
+    font-weight: 400;
+    line-height: 1.72;
+  }
+
+  /* Navigation, Buttons, Labels & Form Controls in Poppins */
+  button, input, select, textarea, label, nav {
+    font-family: var(--font-poppins), 'Poppins', sans-serif;
+  }
+
+  button {
+    font-weight: 500;
+  }
+
+  nav a {
+    font-family: var(--font-poppins), 'Poppins', sans-serif;
+    font-weight: 500;
+  }
+
+  label {
+    font-family: var(--font-poppins), 'Poppins', sans-serif;
+    font-weight: 600;
   }
 }
 

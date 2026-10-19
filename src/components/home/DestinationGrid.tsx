@@ -55,7 +55,7 @@ export const DestinationGrid: React.FC<{ destinations?: DestinationItem[] }> = (
         </div>
         <Link
           href="/destinations"
-          className="inline-flex items-center gap-1.5 font-serif text-xs font-semibold uppercase tracking-wider text-luxury-forest hover:text-luxury-gold transition-colors self-start md:self-auto"
+          className="inline-flex items-center gap-1.5 font-sans text-xs font-medium uppercase tracking-wider text-luxury-forest hover:text-luxury-gold transition-colors self-start md:self-auto"
         >
           <span>View All Destinations</span>
           <ArrowRight className="w-4 h-4 text-luxury-gold" />
@@ -85,7 +85,7 @@ export const DestinationGrid: React.FC<{ destinations?: DestinationItem[] }> = (
                   </span>
                 </div>
                 <div className="absolute bottom-0 left-0 right-0 p-6 text-luxury-ivory">
-                  <div className="flex items-center gap-1.5 text-luxury-gold text-xs font-serif mb-1">
+                  <div className="flex items-center gap-1.5 text-luxury-gold text-xs font-sans mb-1">
                     <MapPin className="w-3.5 h-3.5" />
                     <span>Sri Lanka</span>
                   </div>

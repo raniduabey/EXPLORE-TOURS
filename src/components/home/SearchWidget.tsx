@@ -232,14 +232,14 @@ export const SearchWidget: React.FC = () => {
         {/* 1. DESTINATION SELECTOR */}
         {/* ============================================================ */}
         <div className="relative md:col-span-3">
-          <label className="block text-[11px] font-serif font-semibold text-luxury-forest uppercase tracking-[0.14em] mb-1 flex items-center gap-1.5">
+          <label className="block text-[11px] font-sans font-semibold text-luxury-forest uppercase tracking-[0.14em] mb-1 flex items-center gap-1.5">
             <MapPin className="w-3.5 h-3.5 text-luxury-gold shrink-0" />
             <span>Destination</span>
           </label>
           <button
             type="button"
             onClick={() => toggleDropdown("destination")}
-            className={`w-full h-12 bg-white hover:bg-slate-50 border rounded-xl px-3.5 text-left text-xs font-serif cursor-pointer flex items-center justify-between transition-all ${
+            className={`w-full h-12 bg-white hover:bg-slate-50 border rounded-xl px-3.5 text-left text-xs font-sans cursor-pointer flex items-center justify-between transition-all ${
               activeDropdown === "destination"
                 ? "border-luxury-gold ring-2 ring-luxury-gold/20 bg-white shadow-xs"
                 : "border-luxury-sand/80 hover:border-luxury-gold/50"
@@ -388,14 +388,14 @@ export const SearchWidget: React.FC = () => {
         {/* 2. ACTIVITY TYPE SELECTOR */}
         {/* ============================================================ */}
         <div className="relative md:col-span-3">
-          <label className="block text-[11px] font-serif font-semibold text-luxury-forest uppercase tracking-[0.14em] mb-1 flex items-center gap-1.5">
+          <label className="block text-[11px] font-sans font-semibold text-luxury-forest uppercase tracking-[0.14em] mb-1 flex items-center gap-1.5">
             <Compass className="w-3.5 h-3.5 text-luxury-gold shrink-0" />
             <span>Activity Type</span>
           </label>
           <button
             type="button"
             onClick={() => toggleDropdown("activity")}
-            className={`w-full h-12 bg-white hover:bg-slate-50 border rounded-xl px-3.5 text-left text-xs font-serif cursor-pointer flex items-center justify-between transition-all ${
+            className={`w-full h-12 bg-white hover:bg-slate-50 border rounded-xl px-3.5 text-left text-xs font-sans cursor-pointer flex items-center justify-between transition-all ${
               activeDropdown === "activity"
                 ? "border-luxury-gold ring-2 ring-luxury-gold/20 bg-white shadow-xs"
                 : "border-luxury-sand/80 hover:border-luxury-gold/50"
@@ -478,14 +478,14 @@ export const SearchWidget: React.FC = () => {
         {/* 3. TRAVEL DATE SELECTOR (PREMIUM DATE PICKER) */}
         {/* ============================================================ */}
         <div className="relative md:col-span-3">
-          <label className="block text-[11px] font-serif font-semibold text-luxury-forest uppercase tracking-[0.14em] mb-1 flex items-center gap-1.5">
+          <label className="block text-[11px] font-sans font-semibold text-luxury-forest uppercase tracking-[0.14em] mb-1 flex items-center gap-1.5">
             <CalendarIcon className="w-3.5 h-3.5 text-luxury-gold shrink-0" />
             <span>Travel Date</span>
           </label>
           <button
             type="button"
             onClick={() => toggleDropdown("date")}
-            className={`w-full h-12 bg-white hover:bg-slate-50 border rounded-xl px-3.5 text-left text-xs font-serif cursor-pointer flex items-center justify-between transition-all ${
+            className={`w-full h-12 bg-white hover:bg-slate-50 border rounded-xl px-3.5 text-left text-xs font-sans cursor-pointer flex items-center justify-between transition-all ${
               activeDropdown === "date"
                 ? "border-luxury-gold ring-2 ring-luxury-gold/20 bg-white shadow-xs"
                 : "border-luxury-sand/80 hover:border-luxury-gold/50"
@@ -645,14 +645,14 @@ export const SearchWidget: React.FC = () => {
         {/* ============================================================ */}
         <div className="relative md:col-span-3 flex items-end gap-2">
           <div className="relative flex-1">
-            <label className="block text-[11px] font-serif font-semibold text-luxury-forest uppercase tracking-[0.14em] mb-1 flex items-center gap-1.5">
+            <label className="block text-[11px] font-sans font-semibold text-luxury-forest uppercase tracking-[0.14em] mb-1 flex items-center gap-1.5">
               <Users className="w-3.5 h-3.5 text-luxury-gold shrink-0" />
               <span>Travellers</span>
             </label>
             <button
               type="button"
               onClick={() => toggleDropdown("travellers")}
-              className={`w-full h-12 bg-white hover:bg-slate-50 border rounded-xl px-3.5 text-left text-xs font-serif cursor-pointer flex items-center justify-between transition-all ${
+              className={`w-full h-12 bg-white hover:bg-slate-50 border rounded-xl px-3.5 text-left text-xs font-sans cursor-pointer flex items-center justify-between transition-all ${
                 activeDropdown === "travellers"
                   ? "border-luxury-gold ring-2 ring-luxury-gold/20 bg-white shadow-xs"
                   : "border-luxury-sand/80 hover:border-luxury-gold/50"
@@ -791,7 +791,7 @@ export const SearchWidget: React.FC = () => {
                     <button
                       type="button"
                       onClick={closeDropdown}
-                      className="w-full py-2.5 bg-luxury-forest hover:bg-luxury-emerald text-luxury-ivory rounded-xl text-xs font-serif uppercase tracking-wider font-semibold transition-colors shadow-sm"
+                      className="w-full py-2.5 bg-luxury-forest hover:bg-luxury-emerald text-luxury-ivory rounded-xl text-xs font-sans uppercase tracking-wider font-semibold transition-colors shadow-sm"
                     >
                       Apply Travellers
                     </button>
@@ -804,7 +804,7 @@ export const SearchWidget: React.FC = () => {
           {/* Search Action Button */}
           <button
             type="submit"
-            className="h-12 px-6 bg-gradient-to-r from-[#DFBE82] via-[#C9A86A] to-[#A88647] hover:brightness-105 text-luxury-forest font-serif font-bold text-xs tracking-wider uppercase rounded-xl shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 shrink-0 active:scale-95"
+            className="h-12 px-6 bg-gradient-to-r from-[#DFBE82] via-[#C9A86A] to-[#A88647] hover:brightness-105 text-luxury-forest font-sans font-bold text-xs tracking-wider uppercase rounded-xl shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 shrink-0 active:scale-95"
             aria-label="Search journeys"
           >
             <Search className="w-4 h-4 stroke-[2.5]" />
@@ -815,37 +815,37 @@ export const SearchWidget: React.FC = () => {
 
       {/* Popular Trending Search Chips */}
       <div className="mt-3.5 pt-3 border-t border-luxury-sand/60 flex flex-wrap items-center gap-2 text-xs">
-        <span className="text-[11px] font-serif font-medium text-luxury-charcoal/60 uppercase tracking-widest flex items-center gap-1">
+        <span className="text-[11px] font-sans font-medium text-luxury-charcoal/60 uppercase tracking-widest flex items-center gap-1">
           <Sparkles className="w-3 h-3 text-luxury-gold" />
           Curated:
         </span>
         <Link
           href="/tours/8-day-splendour-of-sri-lanka-classical-circuit"
-          className="px-3 py-1 rounded-full bg-white hover:bg-luxury-sand/50 text-luxury-forest font-serif text-[11px] transition-colors border border-luxury-sand/80"
+          className="px-3 py-1 rounded-full bg-white hover:bg-luxury-sand/50 text-luxury-forest font-sans text-[11px] transition-colors border border-luxury-sand/80"
         >
           ✦ 8-Day Classical Circuit
         </Link>
         <Link
           href="/tours/sigiriya-rock-fortress-dambulla-day-tour"
-          className="px-3 py-1 rounded-full bg-white hover:bg-luxury-sand/50 text-luxury-forest font-serif text-[11px] transition-colors border border-luxury-sand/80"
+          className="px-3 py-1 rounded-full bg-white hover:bg-luxury-sand/50 text-luxury-forest font-sans text-[11px] transition-colors border border-luxury-sand/80"
         >
           ✦ Sigiriya Citadel
         </Link>
         <Link
           href="/tours/kandy-to-ella-scenic-train-journey"
-          className="px-3 py-1 rounded-full bg-white hover:bg-luxury-sand/50 text-luxury-forest font-serif text-[11px] transition-colors border border-luxury-sand/80"
+          className="px-3 py-1 rounded-full bg-white hover:bg-luxury-sand/50 text-luxury-forest font-sans text-[11px] transition-colors border border-luxury-sand/80"
         >
           ✦ Ella Scenic Rail
         </Link>
         <Link
           href="/tours/yala-national-park-private-safari"
-          className="px-3 py-1 rounded-full bg-white hover:bg-luxury-sand/50 text-luxury-forest font-serif text-[11px] transition-colors border border-luxury-sand/80"
+          className="px-3 py-1 rounded-full bg-white hover:bg-luxury-sand/50 text-luxury-forest font-sans text-[11px] transition-colors border border-luxury-sand/80"
         >
           ✦ Yala Private Safari
         </Link>
         <Link
           href="/tours?category=multiday"
-          className="px-3 py-1 rounded-full bg-luxury-gold/15 hover:bg-luxury-gold/25 text-luxury-forest font-serif font-semibold text-[11px] transition-colors border border-luxury-gold/40"
+          className="px-3 py-1 rounded-full bg-luxury-gold/15 hover:bg-luxury-gold/25 text-luxury-forest font-sans font-semibold text-[11px] transition-colors border border-luxury-gold/40"
         >
           ✨ Multi-Day Journeys
         </Link>

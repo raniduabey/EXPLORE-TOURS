@@ -206,7 +206,7 @@ function ToursPageContent() {
           </span>
           <button
             onClick={() => setMobileFiltersOpen(!mobileFiltersOpen)}
-            className="lg:hidden flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white text-xs font-serif font-medium text-luxury-forest border border-luxury-sand"
+            className="lg:hidden flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white text-xs font-sans font-medium text-luxury-forest border border-luxury-sand"
           >
             <SlidersHorizontal className="w-3.5 h-3.5 text-luxury-gold" />
             <span>Refine ({activeFilterCount})</span>
@@ -214,7 +214,7 @@ function ToursPageContent() {
           {activeFilterCount > 0 && (
             <button
               onClick={resetFilters}
-              className="text-xs font-serif font-semibold text-rose-700 hover:underline flex items-center gap-1"
+              className="text-xs font-sans font-medium text-rose-700 hover:underline flex items-center gap-1"
             >
               <RotateCcw className="w-3 h-3" />
               <span>Reset Filters</span>
@@ -229,7 +229,7 @@ function ToursPageContent() {
             <select
               value={sort}
               onChange={(e) => setSort(e.target.value)}
-              className="bg-white border border-luxury-sand/80 rounded-xl px-3 py-1.5 text-xs font-serif text-luxury-forest focus:outline-none focus:border-luxury-gold"
+              className="bg-white border border-luxury-sand/80 rounded-xl px-3 py-1.5 text-xs font-sans text-luxury-forest focus:outline-none focus:border-luxury-gold"
             >
               <option value="recommended">Curator&apos;s Recommendation</option>
               <option value="top-rated">Highest Guest Rating</option>
@@ -268,14 +268,14 @@ function ToursPageContent() {
         <div className="hidden lg:block space-y-6">
           <div className="bg-white rounded-3xl p-6 sm:p-7 border border-luxury-sand/80 shadow-[0_10px_30px_rgba(16,45,36,0.06)] space-y-6">
             <div className="flex items-center justify-between pb-4 border-b border-luxury-sand/70">
-              <span className="font-serif font-semibold text-xs uppercase tracking-widest text-luxury-forest flex items-center gap-2">
+              <span className="font-sans font-semibold text-xs uppercase tracking-widest text-luxury-forest flex items-center gap-2">
                 <Filter className="w-4 h-4 text-luxury-gold" />
                 Refine Itineraries
               </span>
               {activeFilterCount > 0 && (
                 <button
                   onClick={resetFilters}
-                  className="text-[11px] font-serif font-medium text-rose-700 hover:underline"
+                  className="text-[11px] font-sans font-medium text-rose-700 hover:underline"
                 >
                   Clear All
                 </button>

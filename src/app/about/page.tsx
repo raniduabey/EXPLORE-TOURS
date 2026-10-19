@@ -96,7 +96,7 @@ export default function AboutPage() {
           <div className="pt-2">
             <Link
               href="/tours"
-              className="inline-flex items-center gap-2 px-8 py-3.5 bg-luxury-forest hover:bg-luxury-emerald text-luxury-ivory text-xs font-serif font-semibold uppercase tracking-wider rounded-full transition-all shadow-md hover:shadow-lg"
+              className="inline-flex items-center gap-2 px-8 py-3.5 bg-luxury-forest hover:bg-luxury-emerald text-luxury-ivory text-xs font-sans font-medium uppercase tracking-wider rounded-full transition-all shadow-md hover:shadow-lg"
             >
               <span>Explore Curated Journeys</span>
               <ArrowRight className="w-4 h-4 text-luxury-gold" />
@@ -114,7 +114,7 @@ export default function AboutPage() {
             />
           </div>
           <div className="absolute -bottom-6 -left-6 bg-luxury-forest text-luxury-ivory p-5 rounded-2xl shadow-2xl border border-luxury-gold/30 max-w-xs space-y-1.5 backdrop-blur-md">
-            <div className="flex items-center gap-2 text-luxury-gold font-serif text-xs font-semibold">
+            <div className="flex items-center gap-2 text-luxury-gold font-sans text-xs font-semibold">
               <CheckCircle className="w-4 h-4 text-luxury-gold" />
               <span>Licensed Native Chauffeurs</span>
             </div>
@@ -200,13 +200,13 @@ export default function AboutPage() {
         <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
           <Link
             href="/contact"
-            className="px-8 py-3.5 bg-gradient-to-r from-[#DFBE82] via-[#C9A86A] to-[#A88647] hover:brightness-110 text-luxury-forest font-serif font-semibold text-xs uppercase tracking-wider rounded-full transition-all shadow-md"
+            className="px-8 py-3.5 bg-gradient-to-r from-[#DFBE82] via-[#C9A86A] to-[#A88647] hover:brightness-110 text-luxury-forest font-sans font-medium text-xs uppercase tracking-wider rounded-full transition-all shadow-md"
           >
             Connect With Concierge
           </Link>
           <Link
             href="/tours"
-            className="px-8 py-3.5 bg-white hover:bg-slate-50 text-luxury-forest border border-luxury-sand/80 hover:border-luxury-gold font-serif font-semibold text-xs uppercase tracking-wider rounded-full transition-all shadow-xs"
+            className="px-8 py-3.5 bg-white hover:bg-slate-50 text-luxury-forest border border-luxury-sand/80 hover:border-luxury-gold font-sans font-medium text-xs uppercase tracking-wider rounded-full transition-all shadow-xs"
           >
             Explore Journeys
           </Link>

@@ -78,7 +78,7 @@ export const StatsCounter: React.FC = () => {
         <div className="mt-8 pt-6 border-t border-luxury-sand/80 flex flex-wrap items-center justify-between gap-4 text-xs text-luxury-charcoal/75">
           <div className="flex items-center gap-2">
             <CheckCircle2 className="w-4 h-4 text-luxury-gold" />
-            <span className="font-serif font-medium text-luxury-forest">Official Sri Lanka Tourism Standards · SLTDA Registered Chauffeurs</span>
+            <span className="font-sans font-medium text-luxury-forest">Official Sri Lanka Tourism Standards · SLTDA Registered Chauffeurs</span>
           </div>
           <div className="flex items-center gap-6">
             <span className="flex items-center gap-1.5 font-sans text-xs">

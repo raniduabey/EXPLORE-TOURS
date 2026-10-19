@@ -97,7 +97,7 @@ export const TourCard: React.FC<{ tour: TourCardData }> = ({ tour }) => {
             </span>
           </div>
         )}
-        <div className="absolute bottom-3 left-3 z-10 flex items-center gap-1.5 px-3 py-1 rounded-full bg-luxury-forest/80 backdrop-blur-md text-luxury-ivory text-[11px] font-serif">
+        <div className="absolute bottom-3 left-3 z-10 flex items-center gap-1.5 px-3 py-1 rounded-full bg-luxury-forest/80 backdrop-blur-md text-luxury-ivory text-[11px] font-sans font-medium">
           <MapPin className="w-3.5 h-3.5 text-luxury-gold" />
           <span>{tour.location || "Sri Lanka"}</span>
         </div>
@@ -110,7 +110,7 @@ export const TourCard: React.FC<{ tour: TourCardData }> = ({ tour }) => {
               <>
                 <div className="flex items-center text-luxury-gold">
                   <Star className="w-3.5 h-3.5 fill-current" />
-                  <span className="font-serif font-bold text-luxury-forest ml-1">
+                  <span className="font-sans font-semibold text-luxury-forest ml-1">
                     {(tour.rating || 0).toFixed(1)}
                   </span>
                 </div>
@@ -161,7 +161,7 @@ export const TourCard: React.FC<{ tour: TourCardData }> = ({ tour }) => {
           </div>
           <Link
             href={`/tours/${tour.slug}`}
-            className="px-4 py-2 rounded-full bg-luxury-forest/5 hover:bg-luxury-forest text-luxury-forest hover:text-luxury-ivory border border-luxury-forest/20 hover:border-luxury-forest font-serif font-semibold text-xs uppercase tracking-wider transition-all duration-200"
+            className="px-4 py-2 rounded-full bg-luxury-forest/5 hover:bg-luxury-forest text-luxury-forest hover:text-luxury-ivory border border-luxury-forest/20 hover:border-luxury-forest font-sans font-medium text-xs uppercase tracking-wider transition-all duration-200"
           >
             Discover
           </Link>

@@ -146,7 +146,7 @@ export const ReviewsSection: React.FC<ReviewsSectionProps> = ({ initialReviews =
               <button
                 type="button"
                 onClick={() => setModalOpen(true)}
-                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-white hover:bg-luxury-forest hover:text-luxury-ivory text-luxury-forest text-xs font-serif font-semibold uppercase tracking-wider border border-luxury-sand/80 hover:border-luxury-forest shadow-sm transition-all"
+                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-white hover:bg-luxury-forest hover:text-luxury-ivory text-luxury-forest text-xs font-sans font-medium uppercase tracking-wider border border-luxury-sand/80 hover:border-luxury-forest shadow-sm transition-all"
               >
                 <PenLine className="w-3.5 h-3.5 text-luxury-gold" />
                 <span>Write a Reflection</span>
@@ -203,7 +203,7 @@ export const ReviewsSection: React.FC<ReviewsSectionProps> = ({ initialReviews =
                     setLoading(true);
                     loadApprovedReviews();
                   }}
-                  className="px-6 py-2.5 bg-luxury-forest hover:bg-luxury-emerald text-luxury-ivory rounded-full text-xs font-serif font-semibold uppercase tracking-wider transition-all shadow-md inline-flex items-center gap-2"
+                  className="px-6 py-2.5 bg-luxury-forest hover:bg-luxury-emerald text-luxury-ivory rounded-full text-xs font-sans font-medium uppercase tracking-wider transition-all shadow-md inline-flex items-center gap-2"
                 >
                   <RefreshCw className="w-3.5 h-3.5 text-luxury-gold" />
                   <span>Retry Loading</span>
@@ -228,7 +228,7 @@ export const ReviewsSection: React.FC<ReviewsSectionProps> = ({ initialReviews =
                 <button
                   type="button"
                   onClick={() => setModalOpen(true)}
-                  className="px-7 py-3 bg-luxury-forest hover:bg-luxury-emerald text-luxury-ivory rounded-full text-xs font-serif font-semibold uppercase tracking-wider transition-all shadow-md inline-flex items-center gap-2"
+                  className="px-7 py-3 bg-luxury-forest hover:bg-luxury-emerald text-luxury-ivory rounded-full text-xs font-sans font-medium uppercase tracking-wider transition-all shadow-md inline-flex items-center gap-2"
                 >
                   <PenLine className="w-3.5 h-3.5 text-luxury-gold" />
                   <span>Share Your Experience</span>
@@ -258,7 +258,7 @@ export const ReviewsSection: React.FC<ReviewsSectionProps> = ({ initialReviews =
                         ))}
                       </div>
 
-                      <p className="text-xs sm:text-sm text-luxury-charcoal/80 font-serif italic leading-relaxed pt-1">
+                      <p className="text-xs sm:text-sm text-luxury-charcoal/80 font-sans italic leading-relaxed pt-1">
                         &ldquo;{r.comment}&rdquo;
                       </p>
 

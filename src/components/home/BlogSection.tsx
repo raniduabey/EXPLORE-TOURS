@@ -64,7 +64,7 @@ export const BlogSection: React.FC<{ posts?: BlogPostItem[] }> = ({ posts: propP
         </div>
         <Link
           href="/blog"
-          className="inline-flex items-center gap-1.5 font-serif text-xs font-semibold uppercase tracking-wider text-luxury-forest hover:text-luxury-gold transition-colors self-start md:self-auto"
+          className="inline-flex items-center gap-1.5 font-sans text-xs font-medium uppercase tracking-wider text-luxury-forest hover:text-luxury-gold transition-colors self-start md:self-auto"
         >
           <span>Read All Field Notes</span>
           <ArrowRight className="w-4 h-4 text-luxury-gold" />
@@ -103,7 +103,7 @@ export const BlogSection: React.FC<{ posts?: BlogPostItem[] }> = ({ posts: propP
                   </p>
                 </div>
               </div>
-              <div className="px-6 pb-6 pt-2 text-xs font-serif font-semibold text-luxury-forest group-hover:text-luxury-gold flex items-center gap-1.5 uppercase tracking-wider transition-colors">
+              <div className="px-6 pb-6 pt-2 text-xs font-sans font-medium text-luxury-forest group-hover:text-luxury-gold flex items-center gap-1.5 uppercase tracking-wider transition-colors">
                 <span>Read Story</span>
                 <ArrowRight className="w-3.5 h-3.5 text-luxury-gold group-hover:translate-x-1 transition-transform" />
               </div>

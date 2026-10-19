@@ -278,7 +278,7 @@ export const WriteReviewModal: React.FC<WriteReviewModalProps> = ({
               <CheckCircle2 className="w-10 h-10" />
             </div>
             <div className="space-y-2">
-              <h3 className="text-xl font-extrabold text-ceylon-navy">
+              <h3 className="font-serif text-xl font-normal text-luxury-forest">
                 Thank You for Your Review!
               </h3>
               <p className="text-xs sm:text-sm text-slate-600 leading-relaxed max-w-sm mx-auto">
@@ -288,7 +288,7 @@ export const WriteReviewModal: React.FC<WriteReviewModalProps> = ({
             <div className="pt-4">
               <button
                 onClick={onClose}
-                className="px-6 py-2.5 bg-ceylon-navy hover:bg-ceylon-blue text-white rounded-xl text-xs font-bold transition-colors"
+                className="px-6 py-2.5 bg-luxury-forest hover:bg-luxury-emerald text-luxury-ivory rounded-full text-xs font-sans font-medium uppercase tracking-wider transition-colors"
               >
                 Close Window
               </button>
@@ -297,14 +297,14 @@ export const WriteReviewModal: React.FC<WriteReviewModalProps> = ({
         ) : (
           <div className="space-y-6">
             <div>
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-700 text-[11px] font-bold mb-2">
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-luxury-forest/5 text-luxury-gold text-[10px] font-mono uppercase tracking-[0.2em] border border-luxury-gold/30 mb-2">
                 <ShieldCheck className="w-3.5 h-3.5" />
                 <span>Authentic Traveller Feedback</span>
               </div>
-              <h2 className="text-xl sm:text-2xl font-extrabold text-ceylon-navy tracking-tight">
+              <h2 className="font-serif text-2xl sm:text-3xl font-normal text-luxury-forest tracking-tight">
                 Write a Review
               </h2>
-              <p className="text-xs text-slate-500 mt-1">
+              <p className="text-xs text-luxury-charcoal/70 mt-1 font-light leading-relaxed">
                 Share your journey experience in Sri Lanka. Your honest feedback helps future travellers plan their journeys.
               </p>
             </div>

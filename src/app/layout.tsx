@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { Poppins, Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
 import { siteConfig } from "@/config/site";
 import { CurrencyProvider } from "@/context/CurrencyContext";
@@ -9,6 +10,21 @@ import { WhatsAppButton } from "@/components/ui/WhatsAppButton";
 import { StickyMobileCta } from "@/components/ui/StickyMobileCta";
 import { CookieConsent } from "@/components/ui/CookieConsent";
 import { BusinessProvider } from "@/context/BusinessContext";
+
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-poppins",
+  display: "swap",
+});
+
+const cormorant = Cormorant_Garamond({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  style: ["normal", "italic"],
+  variable: "--font-cormorant",
+  display: "swap",
+});
 
 export const viewport: Viewport = {
   themeColor: "#0D2C54",
@@ -120,8 +136,8 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="en" className="scroll-smooth">
-      <body className="antialiased min-h-screen flex flex-col justify-between">
+    <html lang="en" className={`scroll-smooth ${poppins.variable} ${cormorant.variable}`}>
+      <body className={`antialiased min-h-screen flex flex-col justify-between font-sans ${poppins.className}`}>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}

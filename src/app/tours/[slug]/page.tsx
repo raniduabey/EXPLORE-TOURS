@@ -345,7 +345,7 @@ export default async function TourDetailPage({
       />
       <div className="min-h-screen py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-10">
         <div className="space-y-3">
-          <div className="flex items-center gap-2 text-xs font-serif text-luxury-charcoal/60">
+          <div className="flex items-center gap-2 text-xs font-sans text-luxury-charcoal/60">
             <span className="font-semibold text-luxury-forest">
               {tour.destination?.name || tour.location}
             </span>
@@ -360,7 +360,7 @@ export default async function TourDetailPage({
               <>
                 <div className="flex items-center text-luxury-gold">
                   <Star className="w-4 h-4 fill-current" />
-                  <span className="font-serif font-bold text-luxury-forest ml-1">
+                  <span className="font-sans font-semibold text-luxury-forest ml-1">
                     {tour.rating.toFixed(1)}
                   </span>
                   <span className="text-luxury-charcoal/60 font-sans ml-1 text-[11px]">
@@ -395,7 +395,7 @@ export default async function TourDetailPage({
                   <span className="text-[10px] font-mono text-luxury-charcoal/50 uppercase tracking-wider block">
                     {item.label}
                   </span>
-                  <span className="text-xs font-serif font-semibold text-luxury-forest">
+                  <span className="text-xs font-sans font-semibold text-luxury-forest">
                     {item.value}
                   </span>
                 </div>
@@ -418,9 +418,9 @@ export default async function TourDetailPage({
             {curatorHighlights.enabled !== false && curatorHighlights.items.length > 0 && (
               <div className="space-y-4 bg-luxury-forest text-luxury-ivory p-7 sm:p-8 rounded-3xl border border-luxury-gold/30 shadow-xl">
                 <div>
-                  <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-luxury-gold block">
+                  <h3 className="font-serif text-xl sm:text-2xl font-normal text-luxury-gold tracking-wide">
                     {curatorHighlights.title}
-                  </span>
+                  </h3>
                   {curatorHighlights.subtitle && (
                     <p className="text-xs font-light text-luxury-sand/80 mt-1">
                       {curatorHighlights.subtitle}
