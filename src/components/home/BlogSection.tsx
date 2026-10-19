@@ -49,7 +49,7 @@ export const BlogSection: React.FC<{ posts?: BlogPostItem[] }> = ({ posts: propP
   const list = propPosts && propPosts.length > 0 ? propPosts : defaultPosts;
 
   return (
-    <section className="py-16 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <section className="py-16 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8 max-w-[1248px] mx-auto">
       <FadeIn className="flex flex-col md:flex-row md:items-end justify-between mb-10 sm:mb-12 gap-6">
         <div>
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-luxury-forest/5 text-luxury-gold text-[10px] font-mono uppercase tracking-[0.25em] border border-luxury-gold/30 mb-3">
@@ -71,12 +71,12 @@ export const BlogSection: React.FC<{ posts?: BlogPostItem[] }> = ({ posts: propP
         </Link>
       </FadeIn>
 
-      <FadeInStagger className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-7">
+      <FadeInStagger className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-x-6 lg:gap-y-7 justify-items-center justify-center max-w-[1248px] mx-auto">
         {list.map((post) => (
-          <FadeInStaggerItem key={post.id}>
+          <FadeInStaggerItem key={post.id} className="w-full flex justify-center">
             <Link
               href={`/blog/${post.slug}`}
-              className="group bg-white rounded-3xl overflow-hidden shadow-[0_10px_30px_rgba(16,45,36,0.06)] hover:shadow-[0_20px_40px_rgba(16,45,36,0.12)] border border-luxury-sand/80 hover:border-luxury-gold/50 transition-all duration-300 flex flex-col justify-between h-full"
+              className="group bg-white rounded-2xl sm:rounded-3xl lg:rounded-[20px] overflow-hidden shadow-[0_10px_30px_rgba(16,45,36,0.06)] hover:shadow-[0_20px_40px_rgba(16,45,36,0.12)] border border-luxury-sand/80 hover:border-luxury-gold/50 transition-all duration-300 flex flex-col justify-between h-full w-full max-w-[400px] mx-auto"
             >
               <div>
                 <div className="relative h-56 w-full overflow-hidden bg-slate-100">

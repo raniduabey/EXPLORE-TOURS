@@ -36,7 +36,7 @@ export default async function DestinationsPage() {
   }
 
   return (
-    <div className="min-h-screen py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-12">
+    <div className="min-h-screen py-10 px-4 sm:px-6 lg:px-8 max-w-[1248px] mx-auto space-y-12">
       {/* Hero Header */}
       <div className="bg-luxury-forest text-luxury-ivory rounded-3xl p-8 sm:p-14 relative overflow-hidden shadow-2xl border border-luxury-gold/30 space-y-4">
         <div className="absolute -right-16 -bottom-16 w-80 h-80 rounded-full bg-luxury-gold/10 blur-3xl pointer-events-none" />
@@ -52,78 +52,68 @@ export default async function DestinationsPage() {
         </p>
       </div>
 
-      {/* Destinations Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {/* Destinations Grid: Centered 3 Columns of 400x300px 4:3 Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-x-6 lg:gap-y-7 justify-items-center justify-center max-w-[1248px] mx-auto">
         {destinations.map((dest) => (
           <Link
             key={dest.id}
             href={`/destinations/${dest.slug}`}
-            className="group bg-white rounded-3xl overflow-hidden border border-luxury-sand/80 hover:border-luxury-gold/50 shadow-[0_12px_30px_rgba(16,45,36,0.06)] hover:shadow-[0_20px_45px_rgba(16,45,36,0.14)] transition-all duration-300 flex flex-col justify-between"
+            className="group relative w-full max-w-[400px] h-[440px] sm:h-[480px] lg:h-auto lg:aspect-[4/3] lg:max-w-[400px] lg:max-h-[300px] xl:w-[400px] xl:h-[300px] rounded-2xl sm:rounded-3xl lg:rounded-[20px] overflow-hidden shadow-[0_12px_35px_rgba(16,45,36,0.08)] hover:shadow-[0_24px_55px_rgba(16,45,36,0.18)] border border-luxury-sand/70 hover:border-luxury-gold/60 transition-all duration-500 transform hover:-translate-y-1.5 block bg-luxury-forest mx-auto"
           >
-            <div>
-              <div className="relative h-64 w-full overflow-hidden bg-slate-100">
-                <Image
-                  src={dest.image}
-                  alt={`${dest.name} authentic photography`}
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-luxury-forest/90 via-luxury-forest/30 to-transparent" />
-                <div className="absolute bottom-5 left-5 right-5">
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-luxury-forest/80 backdrop-blur-md text-luxury-gold border border-luxury-gold/30 text-[10px] font-mono uppercase tracking-wider mb-2">
-                    <MapPin className="w-3 h-3 text-luxury-gold" />
-                    <span>Sri Lanka</span>
-                  </span>
-                  <h3 className="font-serif text-2xl font-normal text-luxury-ivory tracking-wide leading-tight group-hover:text-luxury-gold transition-colors">
-                    {dest.name}
-                  </h3>
-                </div>
-              </div>
+            {/* Background Image with smooth hover scale */}
+            <Image
+              src={dest.image}
+              alt={`${dest.name} authentic photography`}
+              fill
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 400px"
+              className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+            />
 
-              <div className="p-6 sm:p-7 space-y-4">
-                <p className="text-xs sm:text-sm text-luxury-charcoal/75 leading-relaxed font-light line-clamp-3">
-                  {dest.shortDesc}
-                </p>
+            {/* Dual Subtle Vignette & Gradient Overlays for High Legibility */}
+            <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-luxury-forest/80 via-luxury-forest/25 to-transparent pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-t from-luxury-forest/95 via-luxury-forest/55 to-transparent pointer-events-none" />
+            <div className="absolute inset-0 bg-luxury-forest/10 group-hover:bg-transparent transition-colors duration-500 pointer-events-none" />
 
-                <div className="space-y-2.5 pt-3 border-t border-luxury-sand/70 text-xs text-luxury-charcoal/70">
-                  <div className="flex items-center gap-2">
-                    <Calendar className="w-3.5 h-3.5 text-luxury-gold shrink-0" />
-                    <span className="line-clamp-1 font-sans">Best season: {dest.bestTimeToVisit}</span>
-                  </div>
-                  {dest.popularAttractions && (
-                    <div className="flex items-center gap-2">
-                      <Compass className="w-3.5 h-3.5 text-luxury-gold shrink-0" />
-                      <span className="line-clamp-1 font-sans text-xs">
-                        {(() => {
-                          const raw = dest.popularAttractions;
-                          if (typeof raw === "string" && raw.trim().startsWith("[")) {
-                            try {
-                              const arr = JSON.parse(raw);
-                              if (Array.isArray(arr)) {
-                                return arr.map((a: any) => typeof a === "string" ? a : a.name).filter(Boolean).join(", ");
-                              }
-                            } catch (e) {}
-                          }
-                          return String(raw);
-                        })()}
-                      </span>
-                    </div>
-                  )}
-                </div>
+            {/* Top Header: Sri Lanka MapPin Badge & Circular Arrow Button */}
+            <div className="absolute top-4 left-4 right-4 z-10 flex items-center justify-between pointer-events-none">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-luxury-forest/85 backdrop-blur-md border border-luxury-gold/30 text-luxury-gold shadow-sm">
+                <MapPin className="w-3.5 h-3.5 text-luxury-gold shrink-0" />
+                <span className="text-[10px] font-sans font-medium uppercase tracking-wider text-luxury-sand">
+                  Sri Lanka
+                </span>
+              </span>
+              <div className="w-8 h-8 rounded-full bg-luxury-forest/80 backdrop-blur-md border border-luxury-gold/30 flex items-center justify-center text-luxury-gold group-hover:bg-luxury-gold group-hover:text-luxury-forest transition-all duration-300 shadow-sm pointer-events-auto">
+                <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-0.5 transition-transform" />
               </div>
             </div>
 
-            <div className="p-6 sm:p-7 pt-0 border-t border-luxury-sand/50 flex items-center justify-between mt-auto">
-              <div>
-                <span className="text-[10px] font-mono uppercase tracking-widest text-luxury-charcoal/50 block">From</span>
-                <span className="font-serif text-lg font-semibold text-luxury-forest">
-                  ${dest.startingPrice}{" "}
-                  <span className="text-xs font-sans font-light text-luxury-charcoal/50">/ person</span>
-                </span>
-              </div>
-              <div className="flex items-center gap-1.5 font-sans text-xs font-medium uppercase tracking-wider text-luxury-forest group-hover:text-luxury-gold group-hover:translate-x-1 transition-all">
-                <span>View Journeys</span>
-                <ArrowRight className="w-3.5 h-3.5 text-luxury-gold" />
+            {/* Bottom Content Area */}
+            <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-5 lg:p-4.5 lg:pb-3.5 text-luxury-ivory z-10">
+              <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-luxury-gold block mb-1">
+                {dest.bestTimeToVisit ? `Best: ${dest.bestTimeToVisit}` : "Iconic Enclave"}
+              </span>
+              <h3 className="font-serif text-lg sm:text-xl lg:text-xl font-normal tracking-wide text-luxury-ivory group-hover:text-luxury-gold transition-colors leading-tight line-clamp-1">
+                {dest.name}
+              </h3>
+              <p className="text-xs text-luxury-sand/90 font-sans font-light mt-1.5 line-clamp-2 leading-relaxed">
+                {dest.shortDesc}
+              </p>
+              <div className="mt-2.5 pt-2 border-t border-white/15 flex items-center justify-between">
+                <div className="flex items-baseline gap-1.5">
+                  <span className="text-[10px] font-sans uppercase tracking-widest text-luxury-sand/70 font-medium">
+                    From
+                  </span>
+                  <span className="font-serif text-sm sm:text-base font-semibold text-luxury-gold">
+                    ${dest.startingPrice}
+                  </span>
+                  <span className="text-[10px] font-sans font-normal text-luxury-sand/60">
+                    / person
+                  </span>
+                </div>
+                <div className="flex items-center gap-1.5 text-[10px] sm:text-[11px] font-sans uppercase tracking-widest text-luxury-gold font-medium group-hover:text-luxury-ivory transition-colors">
+                  <span>View Journeys</span>
+                  <ArrowRight className="w-3 h-3 transform group-hover:translate-x-1 transition-transform" />
+                </div>
               </div>
             </div>
           </Link>
