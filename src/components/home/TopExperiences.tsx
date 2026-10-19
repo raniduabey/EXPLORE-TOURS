@@ -97,7 +97,7 @@ export const TopExperiences: React.FC<{ tours?: TourCardData[] }> = ({ tours: pr
   const list = propTours && propTours.length > 0 ? propTours : defaultTours;
 
   return (
-    <section className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-10">
+    <section className="py-16 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-8 sm:space-y-10">
       <FadeIn className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-luxury-forest/5 border border-luxury-gold/30 text-luxury-gold text-[10px] font-mono uppercase tracking-[0.25em] mb-3">
@@ -107,7 +107,7 @@ export const TopExperiences: React.FC<{ tours?: TourCardData[] }> = ({ tours: pr
           <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-normal text-luxury-forest tracking-tight">
             Exceptional Sri Lankan Experiences
           </h2>
-          <p className="text-sm sm:text-base text-luxury-charcoal/70 font-light mt-2 max-w-2xl leading-relaxed">
+          <p className="text-sm sm:text-base text-luxury-charcoal/80 font-sans font-normal mt-2 max-w-2xl leading-relaxed">
             Thoughtfully designed itineraries led by licensed private chauffeur-guides, featuring boutique heritage stays, seamless logistics, and intimate island encounters.
           </p>
         </div>
@@ -133,7 +133,7 @@ export const TopExperiences: React.FC<{ tours?: TourCardData[] }> = ({ tours: pr
           </div>
           <Link
             href="/tours"
-            className="inline-flex items-center gap-1.5 font-serif text-xs font-semibold uppercase tracking-wider text-luxury-forest hover:text-luxury-gold transition-colors pl-2"
+            className="inline-flex items-center gap-1.5 font-sans text-xs font-semibold uppercase tracking-wider text-luxury-forest hover:text-luxury-gold transition-colors pl-2"
           >
             <span>View All Journeys</span>
             <ArrowRight className="w-4 h-4 text-luxury-gold" />

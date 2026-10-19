@@ -9,6 +9,7 @@ import { FadeIn } from "@/components/ui/motion";
 interface RegionData {
   id: string;
   name: string;
+  tabLabel: string;
   tagline: string;
   description: string;
   highlights: string[];
@@ -25,6 +26,7 @@ const regions: RegionData[] = [
   {
     id: "cultural",
     name: "Cultural Triangle",
+    tabLabel: "Cultural Triangle",
     tagline: "Ancient Citadels & Royal Shrines",
     description:
       "The spiritual cradle of Sri Lanka, home to 5 UNESCO World Heritage sites including the 5th-century Sigiriya Lion Rock, the golden caves of Dambulla, and ancient reservoir civilizations.",
@@ -40,6 +42,7 @@ const regions: RegionData[] = [
   {
     id: "highlands",
     name: "Hill Country & Tea Highlands",
+    tabLabel: "Tea Highlands",
     tagline: "Scenic Railways, Mist & Waterfalls",
     description:
       "Cool emerald valleys blanketed in world-renowned Ceylon tea estates, plunging waterfalls, and the legendary Kandy to Ella blue mountain train ride crossing the Nine Arch Viaduct.",
@@ -55,6 +58,7 @@ const regions: RegionData[] = [
   {
     id: "south-coast",
     name: "Southern Coast & Galle Fort",
+    tabLabel: "Southern Coast",
     tagline: "Colonial Ramparts & Golden Shores",
     description:
       "A tropical stretch of palm-fringed sands, world-famous blue whale expeditions in Mirissa, iconic stilt fishermen, and the 17th-century cobblestone alleys of Galle Dutch Fort.",
@@ -70,6 +74,7 @@ const regions: RegionData[] = [
   {
     id: "wildlife",
     name: "Wildlife & Safari Sanctuaries",
+    tabLabel: "Wildlife & Safaris",
     tagline: "Leopards, Elephants & Untamed Nature",
     description:
       "Sri Lanka boasts the world's highest density of leopards in Yala National Park, alongside massive elephant gatherings in Udawalawe and Minneriya, and rich bird sanctuaries.",
@@ -85,6 +90,7 @@ const regions: RegionData[] = [
   {
     id: "multiday-circuits",
     name: "Islandwide Multi-Day Circuits",
+    tabLabel: "Multi-Day Circuits",
     tagline: "Comprehensive 6 to 21-Day Itineraries",
     description:
       "Seamless all-in-one private journeys combining all top regions with dedicated private chauffeur guides, boutique hotels, rail tickets, and exclusive local experiences.",
@@ -104,8 +110,8 @@ export const RegionExplorer: React.FC = () => {
   const activeRegion = regions.find((r) => r.id === activeId) || regions[0];
 
   return (
-    <section className="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-      <FadeIn className="text-center max-w-3xl mx-auto mb-14">
+    <section className="py-16 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <FadeIn className="text-center max-w-3xl mx-auto mb-10 sm:mb-12">
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-luxury-forest/5 text-luxury-gold text-[10px] font-mono uppercase tracking-[0.25em] border border-luxury-gold/30 mb-3">
           <Compass className="w-3.5 h-3.5 text-luxury-gold" />
           <span>Island Territory Guide</span>
@@ -113,40 +119,40 @@ export const RegionExplorer: React.FC = () => {
         <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-normal text-luxury-forest tracking-tight">
           Explore Sri Lanka By Region
         </h2>
-        <p className="text-sm sm:text-base text-luxury-charcoal/70 font-light mt-3 leading-relaxed">
+        <p className="text-sm sm:text-base text-luxury-charcoal/80 font-sans font-normal mt-3 leading-relaxed">
           From the ancient Buddhist citadels of the dry plains to the mist-covered tea plateaus and wild leopard savannas. Select an enclave below to uncover its distinct character.
         </p>
       </FadeIn>
 
-      {/* Region Selector Tabs */}
-      <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-2.5 mb-12">
+      {/* Region Selector Tabs - Balanced Responsive Layout */}
+      <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-10 sm:mb-12 max-w-4xl mx-auto">
         {regions.map((region) => {
           const isActive = region.id === activeId;
           return (
             <button
               key={region.id}
               onClick={() => setActiveId(region.id)}
-              className={`relative px-5 py-2.5 rounded-full text-xs font-serif tracking-wider uppercase transition-all ${
+              className={`relative px-4 sm:px-5 py-2.5 rounded-full text-xs sm:text-[13px] font-sans font-medium tracking-wide transition-all ${
                 isActive
                   ? "text-luxury-ivory font-semibold shadow-md shadow-luxury-forest/20"
-                  : "text-luxury-charcoal/70 bg-white hover:bg-slate-50 border border-luxury-sand/80"
+                  : "text-luxury-charcoal/70 bg-white hover:bg-slate-50 hover:text-luxury-forest border border-luxury-sand/80"
               }`}
             >
               {isActive && (
                 <motion.div
                   layoutId="activeRegion"
-                  className="absolute inset-0 bg-luxury-forest rounded-full -z-10 border border-luxury-gold/30"
+                  className="absolute inset-0 bg-luxury-forest rounded-full -z-10 border border-luxury-gold/30 shadow-sm"
                   transition={{ type: "spring", stiffness: 400, damping: 30 }}
                 />
               )}
-              <span>{region.name}</span>
+              <span>{region.tabLabel}</span>
             </button>
           );
         })}
       </div>
 
       {/* Interactive Region Showcase Card */}
-      <div className="bg-white rounded-3xl border border-luxury-sand/80 shadow-[0_20px_50px_rgba(16,45,36,0.08)] overflow-hidden">
+      <div className="bg-white rounded-3xl border border-luxury-sand/80 shadow-[0_20px_50px_rgba(16,45,36,0.06)] overflow-hidden">
         <AnimatePresence mode="wait">
           <motion.div
             key={activeRegion.id}
@@ -157,7 +163,7 @@ export const RegionExplorer: React.FC = () => {
             className="grid grid-cols-1 lg:grid-cols-12 gap-0"
           >
             {/* Image Showcase */}
-            <div className="lg:col-span-7 relative min-h-[400px] lg:min-h-[540px] overflow-hidden group">
+            <div className="lg:col-span-7 relative min-h-[300px] sm:min-h-[380px] lg:min-h-[520px] overflow-hidden group">
               <Image
                 src={activeRegion.image}
                 alt={activeRegion.name}
@@ -168,25 +174,25 @@ export const RegionExplorer: React.FC = () => {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-luxury-forest/90 via-luxury-forest/30 to-black/20" />
 
-              <div className="absolute bottom-8 left-8 right-8 text-luxury-ivory space-y-1.5">
-                <span className="text-[10px] font-mono font-medium text-luxury-gold uppercase tracking-[0.2em] block">
+              <div className="absolute bottom-6 left-6 right-6 sm:bottom-8 sm:left-8 sm:right-8 text-luxury-ivory space-y-1.5">
+                <span className="text-[11px] font-sans font-medium text-luxury-gold uppercase tracking-[0.2em] block">
                   {activeRegion.tagline}
                 </span>
-                <h3 className="font-serif text-3xl sm:text-4xl font-normal text-luxury-ivory">
+                <h3 className="font-serif text-2xl sm:text-4xl font-normal text-luxury-ivory">
                   {activeRegion.name}
                 </h3>
               </div>
             </div>
 
             {/* Region Details & Highlights */}
-            <div className="lg:col-span-5 p-7 sm:p-9 lg:p-11 flex flex-col justify-between space-y-6 bg-white">
+            <div className="lg:col-span-5 p-6 sm:p-8 lg:p-10 flex flex-col justify-between space-y-6 bg-white">
               <div className="space-y-6">
                 <div>
-                  <h4 className="text-[10px] font-mono uppercase tracking-[0.2em] text-luxury-gold mb-2 flex items-center gap-1.5">
-                    <Sparkles className="w-3.5 h-3.5 text-luxury-gold" />
-                    Region Overview
+                  <h4 className="text-xs font-sans font-semibold uppercase tracking-[0.16em] text-luxury-gold mb-2 flex items-center gap-1.5">
+                    <Sparkles className="w-3.5 h-3.5 text-luxury-gold shrink-0" />
+                    <span>Region Overview</span>
                   </h4>
-                  <p className="text-xs sm:text-sm text-luxury-charcoal/80 font-light leading-relaxed">
+                  <p className="text-sm sm:text-[15px] text-luxury-charcoal/80 font-sans font-normal leading-relaxed">
                     {activeRegion.description}
                   </p>
                 </div>
@@ -194,20 +200,20 @@ export const RegionExplorer: React.FC = () => {
                 {/* Key Insights Matrix */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-luxury-sand/70">
                   <div className="bg-[#FAF8F5] p-3.5 rounded-2xl border border-luxury-sand/80">
-                    <div className="flex items-center gap-1.5 text-luxury-charcoal/50 text-[10px] font-mono uppercase tracking-wider mb-1">
-                      <Sun className="w-3.5 h-3.5 text-luxury-gold" />
-                      Best Season
+                    <div className="flex items-center gap-1.5 text-luxury-charcoal/60 text-[11px] font-sans font-semibold uppercase tracking-wider mb-1">
+                      <Sun className="w-3.5 h-3.5 text-luxury-gold shrink-0" />
+                      <span>Best Season</span>
                     </div>
-                    <p className="text-xs font-serif font-medium text-luxury-forest">
+                    <p className="text-xs sm:text-[13px] font-serif font-medium text-luxury-forest">
                       {activeRegion.bestMonths}
                     </p>
                   </div>
                   <div className="bg-[#FAF8F5] p-3.5 rounded-2xl border border-luxury-sand/80">
-                    <div className="flex items-center gap-1.5 text-luxury-charcoal/50 text-[10px] font-mono uppercase tracking-wider mb-1">
-                      <Clock className="w-3.5 h-3.5 text-luxury-gold" />
-                      Airport Transit
+                    <div className="flex items-center gap-1.5 text-luxury-charcoal/60 text-[11px] font-sans font-semibold uppercase tracking-wider mb-1">
+                      <Clock className="w-3.5 h-3.5 text-luxury-gold shrink-0" />
+                      <span>Airport Transit</span>
                     </div>
-                    <p className="text-xs font-serif font-medium text-luxury-forest">
+                    <p className="text-xs sm:text-[13px] font-serif font-medium text-luxury-forest">
                       {activeRegion.driveFromAirport}
                     </p>
                   </div>
@@ -215,7 +221,7 @@ export const RegionExplorer: React.FC = () => {
 
                 {/* Highlights List */}
                 <div className="space-y-2.5">
-                  <h4 className="text-[10px] font-mono uppercase tracking-[0.2em] text-luxury-forest">
+                  <h4 className="text-xs font-sans font-semibold uppercase tracking-[0.16em] text-luxury-forest">
                     Iconic Highlights
                   </h4>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -230,16 +236,16 @@ export const RegionExplorer: React.FC = () => {
               </div>
 
               {/* Action Banner */}
-              <div className="pt-5 border-t border-luxury-sand/70 flex flex-col sm:flex-row items-center justify-between gap-4">
-                <div>
-                  <span className="text-[10px] font-mono uppercase tracking-widest text-luxury-charcoal/50 block">Curated Experience</span>
-                  <span className="font-serif text-sm font-medium text-luxury-forest line-clamp-1">{activeRegion.tourName}</span>
+              <div className="pt-4 border-t border-luxury-sand/70 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div className="pr-2">
+                  <span className="text-[10px] font-sans font-medium uppercase tracking-widest text-luxury-charcoal/50 block">Curated Experience</span>
+                  <span className="font-serif text-sm sm:text-base font-medium text-luxury-forest block leading-snug">{activeRegion.tourName}</span>
                 </div>
                 <Link
                   href={activeRegion.tourSlug}
-                  className="w-full sm:w-auto px-6 py-3 bg-luxury-forest hover:bg-luxury-emerald text-luxury-ivory rounded-full text-xs font-serif font-semibold uppercase tracking-wider transition-all flex items-center justify-center gap-2 shrink-0 shadow-md group"
+                  className="w-full sm:w-auto px-6 py-2.5 bg-luxury-forest hover:bg-luxury-emerald text-luxury-ivory rounded-full text-xs font-sans font-semibold uppercase tracking-wider transition-all flex items-center justify-center gap-2 shrink-0 shadow-md group"
                 >
-                  <span>Discover</span>
+                  <span>View Journey</span>
                   <ArrowRight className="w-3.5 h-3.5 text-luxury-gold group-hover:translate-x-1 transition-transform" />
                 </Link>
               </div>

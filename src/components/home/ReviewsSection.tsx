@@ -103,9 +103,9 @@ export const ReviewsSection: React.FC<ReviewsSectionProps> = ({ initialReviews =
 
   return (
     <>
-      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-[#FAF8F5] border-y border-luxury-sand/80">
+      <section className="py-16 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8 bg-[#FAF8F5] border-y border-luxury-sand/80">
         <div className="max-w-7xl mx-auto">
-          <FadeIn className="text-center max-w-2xl mx-auto mb-14">
+          <FadeIn className="text-center max-w-2xl mx-auto mb-10 sm:mb-12">
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-luxury-forest/5 text-luxury-gold text-[10px] font-mono uppercase tracking-[0.25em] border border-luxury-gold/30 mb-3">
               <CheckCircle2 className="w-3.5 h-3.5 text-luxury-gold" />
               <span>Verified Guest Reflections</span>
@@ -113,7 +113,7 @@ export const ReviewsSection: React.FC<ReviewsSectionProps> = ({ initialReviews =
             <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-normal text-luxury-forest tracking-tight">
               Traveller Perspectives
             </h2>
-            <p className="text-sm sm:text-base text-luxury-charcoal/70 font-light mt-2 max-w-xl mx-auto leading-relaxed">
+            <p className="text-sm sm:text-base text-luxury-charcoal/80 font-sans font-normal mt-2 max-w-xl mx-auto leading-relaxed">
               Authentic stories and feedback from travellers who have journeyed across Sri Lanka with Ceylon Explore Tours.
             </p>
 

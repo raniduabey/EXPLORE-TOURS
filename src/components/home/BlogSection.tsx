@@ -49,8 +49,8 @@ export const BlogSection: React.FC<{ posts?: BlogPostItem[] }> = ({ posts: propP
   const list = propPosts && propPosts.length > 0 ? propPosts : defaultPosts;
 
   return (
-    <section className="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-      <FadeIn className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+    <section className="py-16 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <FadeIn className="flex flex-col md:flex-row md:items-end justify-between mb-10 sm:mb-12 gap-6">
         <div>
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-luxury-forest/5 text-luxury-gold text-[10px] font-mono uppercase tracking-[0.25em] border border-luxury-gold/30 mb-3">
             <span>The Ceylon Journal</span>
@@ -58,13 +58,13 @@ export const BlogSection: React.FC<{ posts?: BlogPostItem[] }> = ({ posts: propP
           <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-normal text-luxury-forest tracking-tight">
             Stories & Island Insights
           </h2>
-          <p className="text-sm sm:text-base text-luxury-charcoal/70 font-light mt-2 max-w-xl leading-relaxed">
+          <p className="text-sm sm:text-base text-luxury-charcoal/80 font-sans font-normal mt-2 max-w-xl leading-relaxed">
             Curated field notes, rail guides, and heritage narratives written by our local curators.
           </p>
         </div>
         <Link
           href="/blog"
-          className="inline-flex items-center gap-1.5 font-sans text-xs font-medium uppercase tracking-wider text-luxury-forest hover:text-luxury-gold transition-colors self-start md:self-auto"
+          className="inline-flex items-center gap-1.5 font-sans text-xs font-semibold uppercase tracking-wider text-luxury-forest hover:text-luxury-gold transition-colors self-start md:self-auto"
         >
           <span>Read All Field Notes</span>
           <ArrowRight className="w-4 h-4 text-luxury-gold" />
@@ -86,7 +86,7 @@ export const BlogSection: React.FC<{ posts?: BlogPostItem[] }> = ({ posts: propP
                     fill
                     className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                   />
-                  <div className="absolute top-3.5 left-3.5 bg-luxury-forest/90 text-luxury-gold border border-luxury-gold/30 backdrop-blur-md text-[9px] font-mono uppercase tracking-[0.18em] px-3 py-1 rounded-full shadow-sm">
+                  <div className="absolute top-3.5 left-3.5 bg-luxury-forest/90 text-luxury-gold border border-luxury-gold/30 backdrop-blur-md text-[10px] font-sans font-medium uppercase tracking-[0.16em] px-3 py-1 rounded-full shadow-sm">
                     {post.category}
                   </div>
                 </div>
@@ -98,12 +98,12 @@ export const BlogSection: React.FC<{ posts?: BlogPostItem[] }> = ({ posts: propP
                   <h3 className="font-serif font-medium text-lg text-luxury-forest group-hover:text-luxury-gold transition-colors line-clamp-2 leading-snug">
                     {post.title}
                   </h3>
-                  <p className="text-xs text-luxury-charcoal/70 font-light line-clamp-2 leading-relaxed">
+                  <p className="text-xs sm:text-[13px] text-luxury-charcoal/80 font-sans font-normal line-clamp-2 leading-relaxed">
                     {post.excerpt}
                   </p>
                 </div>
               </div>
-              <div className="px-6 pb-6 pt-2 text-xs font-sans font-medium text-luxury-forest group-hover:text-luxury-gold flex items-center gap-1.5 uppercase tracking-wider transition-colors">
+              <div className="px-6 pb-6 pt-2 text-xs font-sans font-semibold text-luxury-forest group-hover:text-luxury-gold flex items-center gap-1.5 uppercase tracking-wider transition-colors">
                 <span>Read Story</span>
                 <ArrowRight className="w-3.5 h-3.5 text-luxury-gold group-hover:translate-x-1 transition-transform" />
               </div>

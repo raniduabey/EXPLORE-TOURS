@@ -92,7 +92,7 @@ export const TourCard: React.FC<{ tour: TourCardData }> = ({ tour }) => {
         />
         {badgeText && (
           <div className="absolute top-3 left-3 z-10">
-            <span className="px-3 py-1 rounded-full text-[9px] font-mono uppercase tracking-[0.18em] bg-luxury-forest/90 text-luxury-gold border border-luxury-gold/30 backdrop-blur-md shadow-sm">
+            <span className="px-3 py-1 rounded-full text-[10px] font-sans font-semibold uppercase tracking-[0.16em] bg-luxury-forest/90 text-luxury-gold border border-luxury-gold/30 backdrop-blur-md shadow-sm">
               {badgeText}
             </span>
           </div>
@@ -114,22 +114,24 @@ export const TourCard: React.FC<{ tour: TourCardData }> = ({ tour }) => {
                     {(tour.rating || 0).toFixed(1)}
                   </span>
                 </div>
-                <span className="text-luxury-charcoal/60 text-[11px]">
+                <span className="text-luxury-charcoal/60 text-[11px] font-sans">
                   ({tour.reviewCount} {tour.reviewCount === 1 ? "review" : "reviews"})
                 </span>
                 <span className="text-luxury-sand">•</span>
               </>
             )}
-            <span className="text-luxury-charcoal/70 font-mono text-[10px] uppercase tracking-wider">
+            <span className="text-luxury-forest/80 font-sans text-xs font-semibold uppercase tracking-wider">
               {tour.tourType || "Private Tour"}
             </span>
           </div>
 
-          <Link href={`/tours/${tour.slug}`} className="block">
-            <h3 className="font-serif font-medium text-base sm:text-lg text-luxury-forest group-hover:text-luxury-gold transition-colors line-clamp-2 leading-snug">
-              {tour.title}
-            </h3>
-          </Link>
+          <div className="min-h-[2.75rem] sm:min-h-[3.25rem] flex items-start">
+            <Link href={`/tours/${tour.slug}`} className="block">
+              <h3 className="font-serif font-medium text-base sm:text-lg text-luxury-forest group-hover:text-luxury-gold transition-colors line-clamp-2 leading-snug">
+                {tour.title}
+              </h3>
+            </Link>
+          </div>
 
           <div className="flex flex-wrap items-center gap-3 text-xs text-luxury-charcoal/70 pt-1">
             <div className="flex items-center gap-1.5 font-sans">
@@ -145,9 +147,9 @@ export const TourCard: React.FC<{ tour: TourCardData }> = ({ tour }) => {
           </div>
         </div>
 
-        <div className="pt-3.5 border-t border-luxury-sand/70 flex items-end justify-between">
+        <div className="mt-auto pt-3.5 border-t border-luxury-sand/70 flex items-center justify-between">
           <div>
-            <span className="text-[10px] font-mono uppercase tracking-widest text-luxury-charcoal/50 block">From</span>
+            <span className="text-[10px] font-sans uppercase tracking-widest text-luxury-charcoal/50 block font-medium">From</span>
             <div className="flex items-baseline gap-1.5">
               <span className="font-serif text-xl sm:text-2xl font-normal text-luxury-forest">
                 {formatPrice(tour.price)}
@@ -161,9 +163,9 @@ export const TourCard: React.FC<{ tour: TourCardData }> = ({ tour }) => {
           </div>
           <Link
             href={`/tours/${tour.slug}`}
-            className="px-4 py-2 rounded-full bg-luxury-forest/5 hover:bg-luxury-forest text-luxury-forest hover:text-luxury-ivory border border-luxury-forest/20 hover:border-luxury-forest font-sans font-medium text-xs uppercase tracking-wider transition-all duration-200"
+            className="px-4 py-2 rounded-full bg-luxury-forest/5 hover:bg-luxury-forest text-luxury-forest hover:text-luxury-ivory border border-luxury-forest/20 hover:border-luxury-forest font-sans font-semibold text-xs uppercase tracking-wider transition-all duration-200"
           >
-            Discover
+            View Journey
           </Link>
         </div>
       </div>

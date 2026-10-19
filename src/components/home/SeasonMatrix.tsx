@@ -171,8 +171,8 @@ export const SeasonMatrix: React.FC = () => {
   const data = MONTHS[selectedIdx] || MONTHS[0];
 
   return (
-    <section className="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-      <FadeIn className="text-center max-w-3xl mx-auto mb-12">
+    <section className="py-16 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <FadeIn className="text-center max-w-3xl mx-auto mb-10 sm:mb-12">
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-luxury-forest/5 text-luxury-gold text-[10px] font-mono uppercase tracking-[0.25em] border border-luxury-gold/30 mb-3">
           <Sun className="w-3.5 h-3.5 text-luxury-gold" />
           <span>Microclimate Almanac</span>
@@ -180,23 +180,23 @@ export const SeasonMatrix: React.FC = () => {
         <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-normal text-luxury-forest tracking-tight">
           When to Journey Through Sri Lanka
         </h2>
-        <p className="text-sm sm:text-base text-luxury-charcoal/70 font-light mt-3 leading-relaxed">
+        <p className="text-sm sm:text-base text-luxury-charcoal/80 font-sans font-normal mt-3 leading-relaxed">
           Thanks to the island&apos;s dual monsoon microclimates, there is <strong className="text-luxury-forest font-serif">always pristine sunshine, calm waters, and sublime weather</strong> in Sri Lanka year-round. Select any month to view optimum regions.
         </p>
       </FadeIn>
 
       {/* Month Bar */}
-      <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-4 mb-10 scrollbar-none justify-start md:justify-center">
+      <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-4 mb-8 sm:mb-10 scrollbar-none justify-start md:justify-center">
         {MONTHS.map((m, idx) => {
           const isSelected = idx === selectedIdx;
           return (
             <button
               key={m.month}
               onClick={() => setSelectedIdx(idx)}
-              className={`relative px-4 py-2 rounded-xl text-xs sm:text-sm font-serif uppercase tracking-wider shrink-0 transition-all ${
+              className={`relative px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-sans uppercase tracking-wider shrink-0 transition-all ${
                 isSelected
                   ? "text-luxury-forest font-semibold shadow-sm"
-                  : "text-luxury-charcoal/70 bg-white hover:bg-slate-50 border border-luxury-sand/80"
+                  : "text-luxury-charcoal/70 bg-white hover:bg-slate-50 border border-luxury-sand/80 font-medium"
               }`}
             >
               {isSelected && (

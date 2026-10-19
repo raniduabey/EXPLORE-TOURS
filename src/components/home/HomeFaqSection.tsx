@@ -59,8 +59,8 @@ export const HomeFaqSection: React.FC = () => {
   };
 
   return (
-    <section className="py-24 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
-      <FadeIn className="text-center max-w-2xl mx-auto mb-14">
+    <section className="py-16 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
+      <FadeIn className="text-center max-w-2xl mx-auto mb-10 sm:mb-12">
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-luxury-forest/5 text-luxury-gold text-[10px] font-mono uppercase tracking-[0.25em] border border-luxury-gold/30 mb-3">
           <HelpCircle className="w-3.5 h-3.5 text-luxury-gold" />
           <span>Curated Travel Insights</span>
@@ -68,7 +68,7 @@ export const HomeFaqSection: React.FC = () => {
         <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-normal text-luxury-forest tracking-tight">
           Everything You Need to Know
         </h2>
-        <p className="text-sm sm:text-base text-luxury-charcoal/70 font-light mt-2 max-w-xl mx-auto leading-relaxed">
+        <p className="text-sm sm:text-base text-luxury-charcoal/80 font-sans font-normal mt-2 max-w-xl mx-auto leading-relaxed">
           Comprehensive guidance on private chauffeur journeys, reserved train seats, visas, and island etiquette.
         </p>
       </FadeIn>

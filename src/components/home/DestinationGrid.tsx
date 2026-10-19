@@ -40,8 +40,8 @@ export const DestinationGrid: React.FC<{ destinations?: DestinationItem[] }> = (
   const list = propDestinations && propDestinations.length > 0 ? propDestinations : defaultDestinations;
 
   return (
-    <section className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-      <FadeIn className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+    <section className="py-16 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <FadeIn className="flex flex-col md:flex-row md:items-end justify-between mb-10 sm:mb-12 gap-6">
         <div>
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-luxury-forest/5 border border-luxury-gold/30 text-luxury-gold text-[10px] font-mono uppercase tracking-[0.25em] mb-3">
             <span>Iconic Enclaves</span>
@@ -49,13 +49,13 @@ export const DestinationGrid: React.FC<{ destinations?: DestinationItem[] }> = (
           <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-normal text-luxury-forest tracking-tight">
             Sri Lanka's Most Alluring Regions
           </h2>
-          <p className="text-sm sm:text-base text-luxury-charcoal/70 font-light mt-2 max-w-2xl leading-relaxed">
+          <p className="text-sm sm:text-base text-luxury-charcoal/80 font-sans font-normal mt-2 max-w-2xl leading-relaxed">
             From misty highlands and ancient UNESCO heritage citadels to untamed savannahs and palm-fringed coastlines.
           </p>
         </div>
         <Link
           href="/destinations"
-          className="inline-flex items-center gap-1.5 font-sans text-xs font-medium uppercase tracking-wider text-luxury-forest hover:text-luxury-gold transition-colors self-start md:self-auto"
+          className="inline-flex items-center gap-1.5 font-sans text-xs font-semibold uppercase tracking-wider text-luxury-forest hover:text-luxury-gold transition-colors self-start md:self-auto"
         >
           <span>View All Destinations</span>
           <ArrowRight className="w-4 h-4 text-luxury-gold" />
@@ -69,35 +69,35 @@ export const DestinationGrid: React.FC<{ destinations?: DestinationItem[] }> = (
             <FadeInStaggerItem key={d.id}>
               <Link
                 href={`/destinations/${d.slug}`}
-                className="group relative h-96 rounded-2xl overflow-hidden shadow-[0_15px_35px_rgba(16,45,36,0.1)] hover:shadow-[0_25px_50px_rgba(16,45,36,0.18)] border border-luxury-sand/50 transition-all duration-500 transform hover:-translate-y-1.5 block bg-luxury-forest"
+                className="group relative h-96 rounded-2xl overflow-hidden shadow-[0_15px_35px_rgba(16,45,36,0.08)] hover:shadow-[0_25px_50px_rgba(16,45,36,0.15)] border border-luxury-sand/50 transition-all duration-500 transform hover:-translate-y-1.5 block bg-luxury-forest"
               >
                 <Image
                   src={img}
                   alt={d.name}
                   fill
                   onError={() => setImgErrors((prev) => ({ ...prev, [d.id]: true }))}
-                  className="object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
+                  className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-luxury-forest/95 via-luxury-forest/40 to-transparent" />
                 <div className="absolute top-4 left-4">
-                  <span className="px-3 py-1 rounded-full text-[10px] font-mono uppercase tracking-wider bg-luxury-forest/80 text-luxury-gold border border-luxury-gold/30 backdrop-blur-md shadow-sm">
+                  <span className="px-3 py-1 rounded-full text-[10px] font-sans font-medium uppercase tracking-wider bg-luxury-forest/80 text-luxury-gold border border-luxury-gold/30 backdrop-blur-md shadow-sm">
                     {d.experienceCount} Journeys
                   </span>
                 </div>
                 <div className="absolute bottom-0 left-0 right-0 p-6 text-luxury-ivory">
-                  <div className="flex items-center gap-1.5 text-luxury-gold text-xs font-sans mb-1">
+                  <div className="flex items-center gap-1.5 text-luxury-gold text-xs font-sans font-medium mb-1">
                     <MapPin className="w-3.5 h-3.5" />
                     <span>Sri Lanka</span>
                   </div>
                   <h3 className="font-serif text-2xl font-normal tracking-wide text-luxury-ivory group-hover:text-luxury-gold transition-colors">
                     {d.name}
                   </h3>
-                  <p className="text-xs text-luxury-sand/85 mt-1.5 line-clamp-2 font-light leading-relaxed">
+                  <p className="text-xs sm:text-sm text-luxury-sand/90 mt-1.5 line-clamp-2 font-sans font-normal leading-relaxed">
                     {d.shortDesc}
                   </p>
                   <div className="mt-4 pt-3.5 border-t border-white/15 flex items-center justify-between">
-                    <span className="text-[10px] font-mono uppercase tracking-widest text-luxury-sand/70">From</span>
-                    <span className="font-serif text-sm font-semibold text-luxury-gold">
+                    <span className="text-[10px] font-sans uppercase tracking-widest text-luxury-sand/70 font-medium">From</span>
+                    <span className="font-serif text-base font-semibold text-luxury-gold">
                       {formatPrice(d.startingPrice)}
                     </span>
                   </div>

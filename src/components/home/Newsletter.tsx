@@ -37,19 +37,19 @@ export const Newsletter: React.FC = () => {
   };
 
   return (
-    <section className="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <section className="py-16 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
       <div className="bg-luxury-forest rounded-3xl p-8 sm:p-14 lg:p-16 text-luxury-ivory relative overflow-hidden shadow-2xl border border-luxury-gold/30">
         <div className="absolute -right-20 -bottom-20 w-96 h-96 rounded-full bg-luxury-gold/10 blur-3xl pointer-events-none" />
         <div className="absolute -left-20 -top-20 w-96 h-96 rounded-full bg-luxury-emerald/30 blur-3xl pointer-events-none" />
         <FadeIn className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
           <div className="space-y-3.5">
-            <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-luxury-gold block">
+            <span className="text-[11px] font-sans font-semibold uppercase tracking-[0.25em] text-luxury-gold block">
               Private Dispatches
             </span>
             <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-normal tracking-tight text-luxury-ivory">
               Island Chronicles, Delivered.
             </h2>
-            <p className="text-sm sm:text-base text-luxury-sand/85 max-w-md font-light leading-relaxed">
+            <p className="text-sm sm:text-base text-luxury-sand/90 max-w-md font-sans font-normal leading-relaxed">
               Curated private travel dispatches, seasonal wildlife calendars, and exclusive new journey itineraries from {siteConfig.name}.
             </p>
           </div>
@@ -60,7 +60,7 @@ export const Newsletter: React.FC = () => {
                 <CheckCircle2 className="w-6 h-6 text-luxury-gold shrink-0" />
                 <div>
                   <h4 className="font-serif font-semibold text-sm text-luxury-ivory tracking-wide">Welcome to Ceylon Explore</h4>
-                  <p className="text-xs text-luxury-sand/80 mt-0.5 font-light">Your private island compendium has been dispatched to your inbox.</p>
+                  <p className="text-xs text-luxury-sand/80 mt-0.5 font-sans font-normal">Your private island compendium has been dispatched to your inbox.</p>
                 </div>
               </div>
             ) : (
@@ -74,13 +74,13 @@ export const Newsletter: React.FC = () => {
                       placeholder="Enter your email address"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="w-full bg-white/95 text-luxury-forest pl-12 pr-4 py-3.5 rounded-full text-xs font-serif placeholder:text-luxury-charcoal/50 focus:outline-none focus:ring-2 focus:ring-luxury-gold border border-luxury-sand"
+                      className="w-full bg-white/95 text-luxury-forest pl-12 pr-4 py-3.5 rounded-full text-xs font-sans placeholder:text-luxury-charcoal/50 focus:outline-none focus:ring-2 focus:ring-luxury-gold border border-luxury-sand"
                     />
                   </div>
                   <button
                     type="submit"
                     disabled={loading}
-                    className="px-8 py-3.5 bg-gradient-to-r from-[#DFBE82] via-[#C9A86A] to-[#A88647] hover:brightness-110 text-luxury-forest font-serif font-semibold text-xs uppercase tracking-wider rounded-full transition-all shadow-lg flex items-center justify-center gap-2 shrink-0 disabled:opacity-50"
+                    className="px-8 py-3.5 bg-gradient-to-r from-[#DFBE82] via-[#C9A86A] to-[#A88647] hover:brightness-110 text-luxury-forest font-sans font-semibold text-xs uppercase tracking-wider rounded-full transition-all shadow-lg flex items-center justify-center gap-2 shrink-0 disabled:opacity-50"
                   >
                     <span>{loading ? "Subscribing..." : "Subscribe"}</span>
                     <Send className="w-3.5 h-3.5" />
