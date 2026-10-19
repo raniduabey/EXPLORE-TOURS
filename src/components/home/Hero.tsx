@@ -99,7 +99,7 @@ export const Hero: React.FC<{ onOpenCustomPlanner?: () => void }> = ({ onOpenCus
 
   return (
     <section
-      className="relative z-30 min-h-[720px] lg:min-h-[820px] flex flex-col justify-between pt-10 sm:pt-14 pb-12 sm:pb-16 px-4 sm:px-6 lg:px-8 bg-luxury-forest overflow-visible"
+      className="relative z-30 min-h-0 sm:min-h-[720px] lg:min-h-[820px] flex flex-col justify-between pt-6 sm:pt-14 pb-8 sm:pb-16 px-4 sm:px-6 lg:px-8 bg-luxury-forest overflow-visible"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
@@ -175,7 +175,7 @@ export const Hero: React.FC<{ onOpenCustomPlanner?: () => void }> = ({ onOpenCus
       </button>
 
       {/* Slide Content with AnimatePresence */}
-      <div className="relative z-10 max-w-5xl mx-auto w-full pt-10 sm:pt-14 space-y-6">
+      <div className="relative z-10 max-w-5xl mx-auto w-full pt-4 sm:pt-14 space-y-4 sm:space-y-6">
         <AnimatePresence mode="wait">
           <motion.div
             key={slide.id || current}
@@ -183,22 +183,22 @@ export const Hero: React.FC<{ onOpenCustomPlanner?: () => void }> = ({ onOpenCus
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -16 }}
             transition={{ duration: 0.5, ease: "easeOut" }}
-            className="space-y-6"
+            className="space-y-3 sm:space-y-6"
           >
             {/* Tagline Pill */}
             <div className="flex items-center gap-3">
-              <span className="text-[11px] font-sans font-medium uppercase tracking-[0.25em] text-luxury-gold bg-luxury-forest/80 backdrop-blur-md px-4 py-1.5 rounded-full border border-luxury-gold/30">
+              <span className="text-[10px] sm:text-[11px] font-sans font-medium uppercase tracking-[0.2em] sm:tracking-[0.25em] text-luxury-gold bg-luxury-forest/80 backdrop-blur-md px-3.5 sm:px-4 py-1 sm:py-1.5 rounded-full border border-luxury-gold/30">
                 {slide.tagline}
               </span>
             </div>
 
-            {/* Editorial Serif Heading */}
-            <div className="space-y-3 max-w-3xl">
-              <h1 className="font-serif text-4xl sm:text-6xl lg:text-7xl font-normal text-luxury-ivory tracking-tight leading-[1.08] drop-shadow-md">
+            {/* Editorial Serif Heading (Responsive 38–44px on mobile, 6xl-7xl on desktop) */}
+            <div className="space-y-2 sm:space-y-3 max-w-3xl">
+              <h1 className="font-serif text-[38px] min-[390px]:text-[42px] sm:text-6xl lg:text-7xl font-normal text-luxury-ivory tracking-tight leading-[1.1] sm:leading-[1.08] drop-shadow-md">
                 {slide.headlineLine1 || "Discover Sri Lanka,"} <br />
                 <span className="italic text-luxury-gold font-serif">{slide.headlineHighlight || "Your Way."}</span>
               </h1>
-              <p className="text-base sm:text-lg text-luxury-sand/90 font-sans font-normal max-w-2xl leading-relaxed pt-1">
+              <p className="text-sm sm:text-lg text-luxury-sand/90 font-sans font-normal max-w-2xl leading-relaxed pt-0.5 sm:pt-1">
                 {slide.subtitle}
               </p>
             </div>
@@ -206,11 +206,11 @@ export const Hero: React.FC<{ onOpenCustomPlanner?: () => void }> = ({ onOpenCus
         </AnimatePresence>
 
         {/* Action Buttons & Pagination */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-4 sm:pt-6">
-          <div className="flex flex-col min-[420px]:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 pt-3 sm:pt-6">
+          <div className="flex flex-col min-[420px]:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3 w-full sm:w-auto">
             <Link
               href={slide.ctaLink || "/tours"}
-              className="px-6 sm:px-8 py-3.5 rounded-full font-sans font-semibold text-xs uppercase tracking-[0.18em] text-luxury-forest bg-gradient-to-r from-[#DFBE82] via-[#C9A86A] to-[#A88647] hover:brightness-110 shadow-xl transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2 text-center"
+              className="px-5 sm:px-8 py-3 sm:py-3.5 rounded-full font-sans font-semibold text-xs uppercase tracking-[0.16em] sm:tracking-[0.18em] text-luxury-forest bg-gradient-to-r from-[#DFBE82] via-[#C9A86A] to-[#A88647] hover:brightness-110 shadow-xl transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2 text-center min-h-[44px]"
             >
               <Compass className="w-4 h-4 shrink-0" />
               <span>{slide.ctaText || "Explore Our Journeys"}</span>
@@ -220,7 +220,7 @@ export const Hero: React.FC<{ onOpenCustomPlanner?: () => void }> = ({ onOpenCus
               <button
                 type="button"
                 onClick={onOpenCustomPlanner}
-                className="px-6 sm:px-7 py-3.5 rounded-full font-sans font-medium text-xs uppercase tracking-[0.18em] text-luxury-ivory bg-white/5 hover:bg-white/10 border border-luxury-gold/40 hover:border-luxury-gold backdrop-blur-md shadow-xl transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2 text-center"
+                className="px-5 sm:px-7 py-3 sm:py-3.5 rounded-full font-sans font-medium text-xs uppercase tracking-[0.16em] sm:tracking-[0.18em] text-luxury-ivory bg-white/5 hover:bg-white/10 border border-luxury-gold/40 hover:border-luxury-gold backdrop-blur-md shadow-xl transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2 text-center min-h-[44px]"
               >
                 <Sparkles className="w-4 h-4 text-luxury-gold shrink-0" />
                 <span>Tailor My Journey</span>
@@ -228,7 +228,7 @@ export const Hero: React.FC<{ onOpenCustomPlanner?: () => void }> = ({ onOpenCus
             ) : (
               <Link
                 href="/contact"
-                className="px-6 sm:px-7 py-3.5 rounded-full font-sans font-medium text-xs uppercase tracking-[0.18em] text-luxury-ivory bg-white/5 hover:bg-white/10 border border-luxury-gold/40 hover:border-luxury-gold backdrop-blur-md shadow-xl transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2 text-center"
+                className="px-5 sm:px-7 py-3 sm:py-3.5 rounded-full font-sans font-medium text-xs uppercase tracking-[0.16em] sm:tracking-[0.18em] text-luxury-ivory bg-white/5 hover:bg-white/10 border border-luxury-gold/40 hover:border-luxury-gold backdrop-blur-md shadow-xl transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2 text-center min-h-[44px]"
               >
                 <Sparkles className="w-4 h-4 text-luxury-gold shrink-0" />
                 <span>Tailor My Journey</span>
@@ -237,7 +237,7 @@ export const Hero: React.FC<{ onOpenCustomPlanner?: () => void }> = ({ onOpenCus
           </div>
 
           {/* Slide Pagination Dots */}
-          <div className="flex items-center gap-2 bg-luxury-forest/80 backdrop-blur-md px-3.5 py-2 rounded-full border border-luxury-gold/25">
+          <div className="flex items-center gap-2 bg-luxury-forest/80 backdrop-blur-md px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-full border border-luxury-gold/25 self-start sm:self-auto">
             {slides.map((_, i) => (
               <button
                 type="button"
@@ -245,7 +245,7 @@ export const Hero: React.FC<{ onOpenCustomPlanner?: () => void }> = ({ onOpenCus
                 onClick={() => setCurrent(i)}
                 className={`transition-all duration-300 rounded-full ${
                   i === current
-                    ? "w-8 h-2 bg-gradient-to-r from-luxury-gold to-luxury-sand shadow"
+                    ? "w-7 sm:w-8 h-2 bg-gradient-to-r from-luxury-gold to-luxury-sand shadow"
                     : "w-2 h-2 bg-white/30 hover:bg-white/60"
                 }`}
                 aria-label={`Go to slide ${i + 1}`}
@@ -256,12 +256,12 @@ export const Hero: React.FC<{ onOpenCustomPlanner?: () => void }> = ({ onOpenCus
       </div>
 
       {/* Floating Search Widget & 3 Value Pillars */}
-      <div className="relative z-40 mt-10 lg:mt-14 max-w-5xl mx-auto w-full">
+      <div className="relative z-40 mt-5 sm:mt-10 lg:mt-14 max-w-5xl mx-auto w-full">
         <SearchWidget />
 
         {/* Dedicated 3 Feature Cards Section below Search Interface */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 sm:gap-5 pt-8 pb-2">
-          <div className="flex items-center gap-3.5 bg-luxury-forest/80 backdrop-blur-md px-5 py-3.5 rounded-2xl border border-white/10 shadow-lg hover:border-luxury-gold/40 transition-all group">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-5 pt-5 sm:pt-8 pb-2">
+          <div className="flex items-center gap-3.5 bg-luxury-forest/80 backdrop-blur-md px-4 sm:px-5 py-3 sm:py-3.5 rounded-2xl border border-white/10 shadow-lg hover:border-luxury-gold/40 transition-all group">
             <div className="w-10 h-10 rounded-xl bg-luxury-gold/15 text-luxury-gold flex items-center justify-center shrink-0 border border-luxury-gold/25 group-hover:scale-105 transition-transform">
               <MapPin className="w-5 h-5 text-luxury-gold" />
             </div>
@@ -270,7 +270,7 @@ export const Hero: React.FC<{ onOpenCustomPlanner?: () => void }> = ({ onOpenCus
               <p className="text-[11px] font-sans font-normal text-luxury-sand/80">Private SLTDA chauffeur-guides</p>
             </div>
           </div>
-          <div className="flex items-center gap-3.5 bg-luxury-forest/80 backdrop-blur-md px-5 py-3.5 rounded-2xl border border-white/10 shadow-lg hover:border-luxury-gold/40 transition-all group">
+          <div className="flex items-center gap-3.5 bg-luxury-forest/80 backdrop-blur-md px-4 sm:px-5 py-3 sm:py-3.5 rounded-2xl border border-white/10 shadow-lg hover:border-luxury-gold/40 transition-all group">
             <div className="w-10 h-10 rounded-xl bg-luxury-gold/15 text-luxury-gold flex items-center justify-center shrink-0 border border-luxury-gold/25 group-hover:scale-105 transition-transform">
               <Users className="w-5 h-5 text-luxury-gold" />
             </div>
@@ -279,7 +279,7 @@ export const Hero: React.FC<{ onOpenCustomPlanner?: () => void }> = ({ onOpenCus
               <p className="text-[11px] font-sans font-normal text-luxury-sand/80">Curated to your travel rhythm</p>
             </div>
           </div>
-          <div className="flex items-center gap-3.5 bg-luxury-forest/80 backdrop-blur-md px-5 py-3.5 rounded-2xl border border-white/10 shadow-lg hover:border-luxury-gold/40 transition-all group">
+          <div className="flex items-center gap-3.5 bg-luxury-forest/80 backdrop-blur-md px-4 sm:px-5 py-3 sm:py-3.5 rounded-2xl border border-white/10 shadow-lg hover:border-luxury-gold/40 transition-all group">
             <div className="w-10 h-10 rounded-xl bg-luxury-gold/15 text-luxury-gold flex items-center justify-center shrink-0 border border-luxury-gold/25 group-hover:scale-105 transition-transform">
               <Sparkles className="w-5 h-5 text-luxury-gold" />
             </div>

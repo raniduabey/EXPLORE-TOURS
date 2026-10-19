@@ -223,21 +223,21 @@ export const SearchWidget: React.FC = () => {
   return (
     <div
       ref={widgetRef}
-      className="w-full max-w-5xl mx-auto bg-white rounded-2xl p-3 sm:p-4 shadow-[0_20px_50px_rgba(16,45,36,0.12)] border border-luxury-sand/80 relative z-40 transition-shadow duration-300"
+      className="w-full max-w-5xl mx-auto bg-white rounded-2xl p-2.5 sm:p-4 shadow-[0_20px_50px_rgba(16,45,36,0.12)] border border-luxury-sand/80 relative z-40 transition-shadow duration-300"
     >
-      <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-12 gap-3 items-end">
+      <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-12 gap-2 sm:gap-3 items-end">
         {/* ============================================================ */}
         {/* 1. DESTINATION SELECTOR */}
         {/* ============================================================ */}
         <div className="relative col-span-12 md:col-span-6 lg:col-span-3">
-          <label className="block text-[10px] font-sans font-semibold text-luxury-charcoal/60 uppercase tracking-[0.14em] mb-1.5 flex items-center gap-1.5">
+          <label className="block text-[10px] font-sans font-semibold text-luxury-charcoal/60 uppercase tracking-[0.14em] mb-1 sm:mb-1.5 flex items-center gap-1.5">
             <MapPin className="w-3.5 h-3.5 text-luxury-gold shrink-0" />
             <span>Destination</span>
           </label>
           <button
             type="button"
             onClick={() => toggleDropdown("destination")}
-            className={`w-full h-12 bg-[#FAF8F5] hover:bg-[#F5F2EB] border rounded-xl px-3.5 text-left text-xs font-sans cursor-pointer flex items-center justify-between transition-all ${
+            className={`w-full h-11 sm:h-12 bg-[#FAF8F5] hover:bg-[#F5F2EB] border rounded-xl px-3 sm:px-3.5 text-left text-xs font-sans cursor-pointer flex items-center justify-between transition-all ${
               activeDropdown === "destination"
                 ? "border-luxury-gold ring-2 ring-luxury-gold/20 bg-white"
                 : "border-luxury-sand/80 hover:border-luxury-gold/50"
@@ -386,14 +386,14 @@ export const SearchWidget: React.FC = () => {
         {/* 2. ACTIVITY TYPE SELECTOR */}
         {/* ============================================================ */}
         <div className="relative col-span-12 md:col-span-6 lg:col-span-3">
-          <label className="block text-[10px] font-sans font-semibold text-luxury-charcoal/60 uppercase tracking-[0.14em] mb-1.5 flex items-center gap-1.5">
+          <label className="block text-[10px] font-sans font-semibold text-luxury-charcoal/60 uppercase tracking-[0.14em] mb-1 sm:mb-1.5 flex items-center gap-1.5">
             <Compass className="w-3.5 h-3.5 text-luxury-gold shrink-0" />
             <span>Activity Type</span>
           </label>
           <button
             type="button"
             onClick={() => toggleDropdown("activity")}
-            className={`w-full h-12 bg-[#FAF8F5] hover:bg-[#F5F2EB] border rounded-xl px-3.5 text-left text-xs font-sans cursor-pointer flex items-center justify-between transition-all ${
+            className={`w-full h-11 sm:h-12 bg-[#FAF8F5] hover:bg-[#F5F2EB] border rounded-xl px-3 sm:px-3.5 text-left text-xs font-sans cursor-pointer flex items-center justify-between transition-all ${
               activeDropdown === "activity"
                 ? "border-luxury-gold ring-2 ring-luxury-gold/20 bg-white"
                 : "border-luxury-sand/80 hover:border-luxury-gold/50"
@@ -476,14 +476,14 @@ export const SearchWidget: React.FC = () => {
         {/* 3. TRAVEL DATE SELECTOR (PREMIUM DATE PICKER) */}
         {/* ============================================================ */}
         <div className="relative col-span-12 md:col-span-4 lg:col-span-2">
-          <label className="block text-[10px] font-sans font-semibold text-luxury-charcoal/60 uppercase tracking-[0.14em] mb-1.5 flex items-center gap-1.5">
+          <label className="block text-[10px] font-sans font-semibold text-luxury-charcoal/60 uppercase tracking-[0.14em] mb-1 sm:mb-1.5 flex items-center gap-1.5">
             <CalendarIcon className="w-3.5 h-3.5 text-luxury-gold shrink-0" />
             <span>Travel Date</span>
           </label>
           <button
             type="button"
             onClick={() => toggleDropdown("date")}
-            className={`w-full h-12 bg-[#FAF8F5] hover:bg-[#F5F2EB] border rounded-xl px-3 text-left text-xs font-sans cursor-pointer flex items-center justify-between transition-all ${
+            className={`w-full h-11 sm:h-12 bg-[#FAF8F5] hover:bg-[#F5F2EB] border rounded-xl px-3 text-left text-xs font-sans cursor-pointer flex items-center justify-between transition-all ${
               activeDropdown === "date"
                 ? "border-luxury-gold ring-2 ring-luxury-gold/20 bg-white"
                 : "border-luxury-sand/80 hover:border-luxury-gold/50"
@@ -642,14 +642,14 @@ export const SearchWidget: React.FC = () => {
         {/* 4. TRAVELLERS SELECTOR */}
         {/* ============================================================ */}
         <div className="relative col-span-12 md:col-span-4 lg:col-span-2">
-          <label className="block text-[10px] font-sans font-semibold text-luxury-charcoal/60 uppercase tracking-[0.14em] mb-1.5 flex items-center gap-1.5">
+          <label className="block text-[10px] font-sans font-semibold text-luxury-charcoal/60 uppercase tracking-[0.14em] mb-1 sm:mb-1.5 flex items-center gap-1.5">
             <Users className="w-3.5 h-3.5 text-luxury-gold shrink-0" />
             <span>Travellers</span>
           </label>
           <button
             type="button"
             onClick={() => toggleDropdown("travellers")}
-            className={`w-full h-12 bg-[#FAF8F5] hover:bg-[#F5F2EB] border rounded-xl px-3 text-left text-xs font-sans cursor-pointer flex items-center justify-between transition-all ${
+            className={`w-full h-11 sm:h-12 bg-[#FAF8F5] hover:bg-[#F5F2EB] border rounded-xl px-3 text-left text-xs font-sans cursor-pointer flex items-center justify-between transition-all ${
               activeDropdown === "travellers"
                 ? "border-luxury-gold ring-2 ring-luxury-gold/20 bg-white"
                 : "border-luxury-sand/80 hover:border-luxury-gold/50"
@@ -804,7 +804,7 @@ export const SearchWidget: React.FC = () => {
         <div className="col-span-12 md:col-span-4 lg:col-span-2">
           <button
             type="submit"
-            className="h-12 w-full bg-gradient-to-r from-[#DFBE82] via-[#C9A86A] to-[#A88647] hover:brightness-105 text-luxury-forest font-sans font-semibold text-xs tracking-wider uppercase rounded-xl shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 active:scale-95"
+            className="h-11 sm:h-12 w-full bg-gradient-to-r from-[#DFBE82] via-[#C9A86A] to-[#A88647] hover:brightness-105 text-luxury-forest font-sans font-semibold text-xs tracking-wider uppercase rounded-xl shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 active:scale-95"
             aria-label="Search tours"
           >
             <Search className="w-4 h-4 stroke-[2.5]" />
@@ -814,9 +814,9 @@ export const SearchWidget: React.FC = () => {
       </form>
 
       {/* Popular Curated Search Shortcuts */}
-      <div className="mt-3.5 pt-3 border-t border-luxury-sand/60 flex flex-wrap items-center gap-2 text-xs">
-        <span className="text-[11px] font-sans font-medium text-luxury-charcoal/60 uppercase tracking-widest flex items-center gap-1.5 shrink-0">
-          <Sparkles className="w-3.5 h-3.5 text-luxury-gold" />
+      <div className="mt-2.5 sm:mt-3.5 pt-2.5 sm:pt-3 border-t border-luxury-sand/60 flex flex-wrap items-center gap-1.5 sm:gap-2 text-xs">
+        <span className="text-[10px] sm:text-[11px] font-sans font-medium text-luxury-charcoal/60 uppercase tracking-widest flex items-center gap-1.5 shrink-0">
+          <Sparkles className="w-3.5 h-3.5 text-luxury-gold shrink-0" />
           Popular Curations:
         </span>
         <div className="flex flex-wrap items-center gap-1.5">
