@@ -4,8 +4,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, ChevronRight, Star, MapPin, Users, Camera, Compass, Sparkles, ChevronDown, Check, Calendar, Search, ShieldCheck } from "lucide-react";
-import { Float } from "@/components/ui/motion";
+import { ChevronLeft, ChevronRight, MapPin, Users, Compass, Sparkles } from "lucide-react";
+import { SearchWidget } from "./SearchWidget";
 
 interface HeroSlide {
   id: number | string;
@@ -25,7 +25,7 @@ const defaultSlides: HeroSlide[] = [
     id: 1,
     tagline: "Bespoke Island Journeys",
     headlineLine1: "Discover Sri Lanka,",
-    headlineHighlight: "Beautifully.",
+    headlineHighlight: "Your Way.",
     subtitle: "Immerse in ancient royal citadels, mist-veiled highland tea estates, and wild safari sanctuaries with Sri Lanka's finest licensed private chauffeur-guides.",
     image: "/images/destinations/sigiriya.jpg",
     destination: "Sigiriya Rock Citadel",
@@ -67,8 +67,6 @@ const defaultSlides: HeroSlide[] = [
   }
 ];
 
-import { SearchWidget } from "./SearchWidget";
-
 export const Hero: React.FC<{ onOpenCustomPlanner?: () => void }> = ({ onOpenCustomPlanner }) => {
   const [slides, setSlides] = useState<HeroSlide[]>(defaultSlides);
   const [current, setCurrent] = useState(0);
@@ -101,7 +99,7 @@ export const Hero: React.FC<{ onOpenCustomPlanner?: () => void }> = ({ onOpenCus
 
   return (
     <section
-      className="relative z-30 min-h-[720px] lg:min-h-[820px] flex flex-col justify-between pt-12 pb-16 px-4 sm:px-6 lg:px-8 bg-luxury-forest overflow-visible"
+      className="relative z-30 min-h-[720px] lg:min-h-[820px] flex flex-col justify-between pt-10 sm:pt-14 pb-12 sm:pb-16 px-4 sm:px-6 lg:px-8 bg-luxury-forest overflow-visible"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
@@ -140,7 +138,7 @@ export const Hero: React.FC<{ onOpenCustomPlanner?: () => void }> = ({ onOpenCus
                 }`}
               />
             )}
-            {/* Cinematic Gradient Overlays */}
+            {/* Controlled Luxury Forest-Green Gradient Overlays */}
             <div className="absolute inset-0 bg-gradient-to-r from-luxury-forest/95 via-luxury-forest/75 to-luxury-forest/40" />
             <div className="absolute inset-0 bg-gradient-to-t from-luxury-forest via-transparent to-black/25" />
           </div>
@@ -156,26 +154,6 @@ export const Hero: React.FC<{ onOpenCustomPlanner?: () => void }> = ({ onOpenCus
           transition={{ duration: 7, ease: "linear" }}
           className="h-full bg-gradient-to-r from-luxury-gold to-luxury-sand"
         />
-      </div>
-
-      {/* Floating SLTDA Certified Pill */}
-      <div className="hidden lg:block absolute right-12 top-28 z-20 pointer-events-none">
-        <Float duration={6} yOffset={8}>
-          <div className="bg-luxury-forest/80 backdrop-blur-md border border-luxury-gold/30 rounded-2xl p-4 shadow-2xl flex items-center gap-3.5 text-luxury-ivory">
-            <div className="w-11 h-11 rounded-xl bg-luxury-gold/20 border border-luxury-gold/40 flex items-center justify-center font-serif text-luxury-gold font-bold text-lg">
-              🇱🇰
-            </div>
-            <div>
-              <div className="flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-[0.2em] text-luxury-gold">
-                <ShieldCheck className="w-3.5 h-3.5 text-luxury-gold" />
-                <span>SLTDA Certified</span>
-              </div>
-              <p className="text-xs font-serif font-medium text-luxury-ivory tracking-wide">
-                Licensed Chauffeur Guides
-              </p>
-            </div>
-          </div>
-        </Float>
       </div>
 
       {/* Navigation Arrows */}
@@ -208,62 +186,27 @@ export const Hero: React.FC<{ onOpenCustomPlanner?: () => void }> = ({ onOpenCus
             className="space-y-6"
           >
             {/* Tagline Pill */}
-            <div className="flex flex-wrap items-center gap-3">
-              <span className="text-[11px] font-mono uppercase tracking-[0.25em] text-luxury-gold bg-luxury-forest/80 backdrop-blur-md px-4 py-1.5 rounded-full border border-luxury-gold/30">
+            <div className="flex items-center gap-3">
+              <span className="text-[11px] font-sans font-medium uppercase tracking-[0.25em] text-luxury-gold bg-luxury-forest/80 backdrop-blur-md px-4 py-1.5 rounded-full border border-luxury-gold/30">
                 {slide.tagline}
               </span>
-              <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/5 backdrop-blur-md border border-white/10 text-luxury-sand text-xs font-light tracking-wide">
-                <ShieldCheck className="w-3.5 h-3.5 text-luxury-gold" />
-                <span>Private Chauffeur-Driven Air-Conditioned Fleet</span>
-              </div>
             </div>
 
             {/* Editorial Serif Heading */}
             <div className="space-y-3 max-w-3xl">
-              <h1 className="font-serif text-4xl sm:text-6xl lg:text-7xl font-normal text-luxury-ivory tracking-tight leading-[1.06] drop-shadow-md">
-                {slide.headlineLine1} <br />
-                <span className="italic text-luxury-gold font-serif">{slide.headlineHighlight}</span>
+              <h1 className="font-serif text-4xl sm:text-6xl lg:text-7xl font-normal text-luxury-ivory tracking-tight leading-[1.08] drop-shadow-md">
+                {slide.headlineLine1 || "Discover Sri Lanka,"} <br />
+                <span className="italic text-luxury-gold font-serif">{slide.headlineHighlight || "Your Way."}</span>
               </h1>
-              <p className="text-base sm:text-lg text-luxury-sand/90 font-light max-w-2xl leading-relaxed pt-2">
+              <p className="text-base sm:text-lg text-luxury-sand/90 font-sans font-normal max-w-2xl leading-relaxed pt-1">
                 {slide.subtitle}
               </p>
             </div>
           </motion.div>
         </AnimatePresence>
 
-        {/* 3 Value Pillars */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 max-w-2xl pt-2">
-          <div className="flex items-center gap-3 bg-luxury-forest/60 backdrop-blur-md p-3 rounded-2xl border border-white/10">
-            <div className="w-9 h-9 rounded-xl bg-luxury-gold/15 text-luxury-gold flex items-center justify-center shrink-0 border border-luxury-gold/20">
-              <MapPin className="w-4 h-4" />
-            </div>
-            <div>
-              <h4 className="text-xs font-serif font-medium text-luxury-ivory">Native Island Experts</h4>
-              <p className="text-[10px] text-luxury-sand/75">Private SLTDA chauffeur-guides</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-3 bg-luxury-forest/60 backdrop-blur-md p-3 rounded-2xl border border-white/10">
-            <div className="w-9 h-9 rounded-xl bg-luxury-gold/15 text-luxury-gold flex items-center justify-center shrink-0 border border-luxury-gold/20">
-              <Users className="w-4 h-4" />
-            </div>
-            <div>
-              <h4 className="text-xs font-serif font-medium text-luxury-ivory">100% Tailor-Made</h4>
-              <p className="text-[10px] text-luxury-sand/75">Curated to your travel rhythm</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-3 bg-luxury-forest/60 backdrop-blur-md p-3 rounded-2xl border border-white/10">
-            <div className="w-9 h-9 rounded-xl bg-luxury-gold/15 text-luxury-gold flex items-center justify-center shrink-0 border border-luxury-gold/20">
-              <Sparkles className="w-4 h-4" />
-            </div>
-            <div>
-              <h4 className="text-xs font-serif font-medium text-luxury-ivory">24/7 Island Concierge</h4>
-              <p className="text-[10px] text-luxury-sand/75">Dedicated personal assistance</p>
-            </div>
-          </div>
-        </div>
-
         {/* Action Buttons & Pagination */}
-        <div className="flex flex-wrap items-center justify-between gap-4 pt-3">
+        <div className="flex flex-wrap items-center justify-between gap-4 pt-4 sm:pt-6">
           <div className="flex items-center gap-3">
             <Link
               href={slide.ctaLink || "/tours"}
@@ -312,9 +255,40 @@ export const Hero: React.FC<{ onOpenCustomPlanner?: () => void }> = ({ onOpenCus
         </div>
       </div>
 
-      {/* Floating Search Widget */}
-      <div className="relative z-40 mt-12">
+      {/* Floating Search Widget & 3 Value Pillars */}
+      <div className="relative z-40 mt-10 lg:mt-14 max-w-5xl mx-auto w-full">
         <SearchWidget />
+
+        {/* Dedicated 3 Feature Cards Section below Search Interface */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 sm:gap-5 pt-8 pb-2">
+          <div className="flex items-center gap-3.5 bg-luxury-forest/80 backdrop-blur-md px-5 py-3.5 rounded-2xl border border-white/10 shadow-lg hover:border-luxury-gold/40 transition-all group">
+            <div className="w-10 h-10 rounded-xl bg-luxury-gold/15 text-luxury-gold flex items-center justify-center shrink-0 border border-luxury-gold/25 group-hover:scale-105 transition-transform">
+              <MapPin className="w-5 h-5 text-luxury-gold" />
+            </div>
+            <div>
+              <h4 className="text-xs font-serif font-semibold text-luxury-ivory tracking-wide">Native Island Experts</h4>
+              <p className="text-[11px] font-sans font-normal text-luxury-sand/80">Private SLTDA chauffeur-guides</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-3.5 bg-luxury-forest/80 backdrop-blur-md px-5 py-3.5 rounded-2xl border border-white/10 shadow-lg hover:border-luxury-gold/40 transition-all group">
+            <div className="w-10 h-10 rounded-xl bg-luxury-gold/15 text-luxury-gold flex items-center justify-center shrink-0 border border-luxury-gold/25 group-hover:scale-105 transition-transform">
+              <Users className="w-5 h-5 text-luxury-gold" />
+            </div>
+            <div>
+              <h4 className="text-xs font-serif font-semibold text-luxury-ivory tracking-wide">100% Tailor-Made</h4>
+              <p className="text-[11px] font-sans font-normal text-luxury-sand/80">Curated to your travel rhythm</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-3.5 bg-luxury-forest/80 backdrop-blur-md px-5 py-3.5 rounded-2xl border border-white/10 shadow-lg hover:border-luxury-gold/40 transition-all group">
+            <div className="w-10 h-10 rounded-xl bg-luxury-gold/15 text-luxury-gold flex items-center justify-center shrink-0 border border-luxury-gold/25 group-hover:scale-105 transition-transform">
+              <Sparkles className="w-5 h-5 text-luxury-gold" />
+            </div>
+            <div>
+              <h4 className="text-xs font-serif font-semibold text-luxury-ivory tracking-wide">24/7 Island Concierge</h4>
+              <p className="text-[11px] font-sans font-normal text-luxury-sand/80">Dedicated personal assistance</p>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );
