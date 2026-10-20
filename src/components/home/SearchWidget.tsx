@@ -509,7 +509,7 @@ export const SearchWidget: React.FC = () => {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 8, scale: 0.98 }}
                 transition={{ duration: 0.18, ease: "easeOut" }}
-                className="absolute left-0 sm:left-auto sm:right-0 md:left-0 top-full mt-2 w-[calc(100vw-3rem)] max-w-[340px] bg-white rounded-3xl shadow-2xl border border-luxury-sand/80 p-4 sm:p-5 z-50 space-y-4"
+                className="absolute left-0 sm:left-auto sm:right-0 md:left-0 top-full mt-2 w-full sm:w-84 md:w-88 bg-white rounded-2xl sm:rounded-3xl shadow-2xl border border-luxury-sand/80 p-3.5 sm:p-5 z-50 space-y-3 sm:space-y-4"
               >
                 {/* Header: Month & Year with Navigation Arrows */}
                 <div className="flex items-center justify-between">
@@ -542,7 +542,7 @@ export const SearchWidget: React.FC = () => {
                   {["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"].map((dayName) => (
                     <span
                       key={dayName}
-                      className="text-[10px] font-sans font-semibold text-luxury-charcoal/40 tracking-wider py-1"
+                      className="text-[9px] sm:text-[10px] font-sans font-semibold text-luxury-charcoal/40 tracking-wider py-1"
                     >
                       {dayName}
                     </span>
@@ -553,7 +553,7 @@ export const SearchWidget: React.FC = () => {
                 <div className="grid grid-cols-7 gap-1 text-center">
                   {/* Empty cells before 1st day of month */}
                   {Array.from({ length: firstDay }).map((_, idx) => (
-                    <div key={`blank-${idx}`} className="h-9 w-full" />
+                    <div key={`blank-${idx}`} className="h-8 sm:h-9 w-full" />
                   ))}
 
                   {/* Day numbers */}
@@ -573,7 +573,7 @@ export const SearchWidget: React.FC = () => {
                           setDate(cellDateStr);
                           closeDropdown();
                         }}
-                        className={`h-9 w-full rounded-full flex items-center justify-center text-xs font-semibold transition-all ${
+                        className={`h-8 sm:h-9 w-full rounded-full flex items-center justify-center text-xs font-semibold transition-all ${
                           isSelected
                             ? "bg-luxury-forest text-luxury-ivory font-bold shadow-sm scale-105"
                             : isPast
@@ -675,7 +675,7 @@ export const SearchWidget: React.FC = () => {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 8, scale: 0.98 }}
                 transition={{ duration: 0.18, ease: "easeOut" }}
-                className="absolute right-0 top-full mt-2 w-[calc(100vw-3rem)] max-w-xs sm:w-80 bg-white rounded-3xl shadow-2xl border border-luxury-sand/80 p-5 z-50 space-y-4"
+                className="absolute right-0 top-full mt-2 w-full sm:w-80 bg-white rounded-2xl sm:rounded-3xl shadow-2xl border border-luxury-sand/80 p-4 sm:p-5 z-50 space-y-4"
               >
                 <div className="space-y-3.5">
                   {/* Adults row */}

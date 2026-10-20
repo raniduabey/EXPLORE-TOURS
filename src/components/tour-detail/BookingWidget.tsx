@@ -1,7 +1,7 @@
 "use client";
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
-import { Calendar, Clock, Users, ChevronDown, Zap, ShieldCheck } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Calendar, Clock, Users, ChevronDown, Zap, ShieldCheck, X } from "lucide-react";
 import { useCurrency } from "@/context/CurrencyContext";
 import { useCart } from "@/context/CartContext";
 
@@ -25,6 +25,7 @@ export const BookingWidget: React.FC<BookingWidgetProps> = ({
   previousPrice,
 }) => {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { formatPrice } = useCurrency();
   const { addToCart } = useCart();
 
@@ -36,12 +37,21 @@ export const BookingWidget: React.FC<BookingWidgetProps> = ({
   };
 
   const minDateStr = getTomorrowStr();
-  const [date, setDate] = useState(minDateStr);
+  const paramDate = searchParams?.get("date");
+  const paramAdults = searchParams?.get("adults");
+  const paramChildren = searchParams?.get("children");
+
+  const initialDate = paramDate && paramDate >= minDateStr ? paramDate : minDateStr;
+  const initialAdults = paramAdults ? Math.max(1, Number(paramAdults)) : 2;
+  const initialChildren = paramChildren ? Math.max(0, Number(paramChildren)) : 0;
+
+  const [date, setDate] = useState(initialDate);
   const [time, setTime] = useState("07:00 AM");
-  const [adults, setAdults] = useState(2);
-  const [childrenCount, setChildrenCount] = useState(0);
+  const [adults, setAdults] = useState(initialAdults);
+  const [childrenCount, setChildrenCount] = useState(initialChildren);
   const [pickup, setPickup] = useState("");
   const [openTravellerModal, setOpenTravellerModal] = useState(false);
+  const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
 
   // Calculate cancellation deadline
   let cancelDeadlineText = "24 hours prior to departure";
@@ -238,23 +248,177 @@ export const BookingWidget: React.FC<BookingWidgetProps> = ({
       </div>
 
       {/* Mobile Sticky Bar */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-slate-200 px-4 pt-3 pb-[calc(0.85rem+env(safe-area-inset-bottom,0px))] shadow-2xl flex items-center justify-between touch-manipulation">
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200 px-4 pt-3 pb-[calc(0.85rem+env(safe-area-inset-bottom,0px))] shadow-2xl flex items-center justify-between touch-manipulation">
         <div>
           <span className="text-[10px] text-slate-400 block font-medium">Starting From</span>
           <div className="flex items-baseline gap-1">
-            <span className="text-lg font-extrabold text-ceylon-navy">
+            <span className="text-lg font-extrabold text-luxury-forest">
               {formatPrice(price)}
             </span>
             <span className="text-[10px] text-ceylon-muted">/ person</span>
           </div>
         </div>
         <button
-          onClick={handleBooking}
-          className="px-6 py-2.5 rounded-xl font-extrabold text-xs text-white bg-ceylon-green shadow-md"
+          onClick={() => setMobileDrawerOpen(true)}
+          className="px-5 py-2.5 rounded-xl font-extrabold text-xs text-white bg-ceylon-green hover:bg-ceylon-darkgreen shadow-md active:scale-95 transition-all"
         >
           Check Availability & Book
         </button>
       </div>
+
+      {/* Mobile Booking Drawer Modal */}
+      {mobileDrawerOpen && (
+        <div className="lg:hidden fixed inset-0 z-50 flex flex-col justify-end">
+          <div
+            className="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity"
+            onClick={() => setMobileDrawerOpen(false)}
+          />
+          <div className="relative bg-white rounded-t-3xl max-h-[88vh] overflow-y-auto p-5 sm:p-6 space-y-4 shadow-2xl border-t border-slate-200 z-10">
+            {/* Header */}
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+              <div className="pr-2">
+                <span className="text-[10px] font-bold text-luxury-gold uppercase tracking-wider block">
+                  Reserve Journey
+                </span>
+                <h3 className="font-serif font-bold text-base text-luxury-forest line-clamp-1">
+                  {tourTitle}
+                </h3>
+              </div>
+              <button
+                onClick={() => setMobileDrawerOpen(false)}
+                className="p-1.5 rounded-full text-slate-400 hover:text-luxury-forest hover:bg-slate-100 transition-colors shrink-0"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Date and Time */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label className="block text-[11px] font-bold text-ceylon-navy uppercase tracking-wider mb-1 flex items-center gap-1">
+                  <Calendar className="w-3.5 h-3.5 text-ceylon-blue" />
+                  Travel Date
+                </label>
+                <input
+                  type="date"
+                  value={date}
+                  min={minDateStr}
+                  onChange={(e) => setDate(e.target.value)}
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-semibold text-ceylon-text focus:outline-none focus:border-ceylon-blue"
+                />
+              </div>
+              <div>
+                <label className="block text-[11px] font-bold text-ceylon-navy uppercase tracking-wider mb-1 flex items-center gap-1">
+                  <Clock className="w-3.5 h-3.5 text-ceylon-blue" />
+                  Departure Time
+                </label>
+                <select
+                  value={time}
+                  onChange={(e) => setTime(e.target.value)}
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-semibold text-ceylon-text focus:outline-none focus:border-ceylon-blue"
+                >
+                  <option value="06:30 AM">06:30 AM (Sunrise departure)</option>
+                  <option value="07:00 AM">07:00 AM</option>
+                  <option value="08:30 AM">08:30 AM</option>
+                  <option value="01:30 PM">01:30 PM (Afternoon)</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Travellers */}
+            <div className="bg-slate-50 rounded-2xl p-3.5 border border-slate-200 space-y-3">
+              <label className="block text-[11px] font-bold text-ceylon-navy uppercase tracking-wider flex items-center gap-1">
+                <Users className="w-3.5 h-3.5 text-ceylon-blue" />
+                Select Travellers
+              </label>
+              <div className="flex items-center justify-between text-xs font-semibold">
+                <div>
+                  <span className="text-luxury-forest font-bold block">Adults (12+ yrs)</span>
+                  <span className="text-[11px] text-slate-400 font-normal">{formatPrice(price)} / person</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setAdults(Math.max(1, adults - 1))}
+                    className="w-7 h-7 rounded-lg bg-white border border-slate-200 font-bold flex items-center justify-center text-slate-700 active:bg-slate-100"
+                  >
+                    -
+                  </button>
+                  <span className="w-6 text-center font-bold text-luxury-forest">{adults}</span>
+                  <button
+                    type="button"
+                    onClick={() => setAdults(adults + 1)}
+                    className="w-7 h-7 rounded-lg bg-white border border-slate-200 font-bold flex items-center justify-center text-slate-700 active:bg-slate-100"
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between text-xs font-semibold pt-2 border-t border-slate-200/60">
+                <div>
+                  <span className="text-luxury-forest font-bold block">Children (2-11 yrs)</span>
+                  <span className="text-[11px] text-slate-400 font-normal">{formatPrice(price * 0.7)} (30% off)</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setChildrenCount(Math.max(0, childrenCount - 1))}
+                    className="w-7 h-7 rounded-lg bg-white border border-slate-200 font-bold flex items-center justify-center text-slate-700 active:bg-slate-100"
+                  >
+                    -
+                  </button>
+                  <span className="w-6 text-center font-bold text-luxury-forest">{childrenCount}</span>
+                  <button
+                    type="button"
+                    onClick={() => setChildrenCount(childrenCount + 1)}
+                    className="w-7 h-7 rounded-lg bg-white border border-slate-200 font-bold flex items-center justify-center text-slate-700 active:bg-slate-100"
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Hotel Pickup */}
+            <div>
+              <label className="block text-[11px] font-bold text-ceylon-navy uppercase tracking-wider mb-1">
+                Hotel / Pickup Location
+              </label>
+              <input
+                type="text"
+                placeholder="e.g. Cinnamon Grand Colombo or Kandy Hotel"
+                value={pickup}
+                onChange={(e) => setPickup(e.target.value)}
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-medium text-ceylon-text focus:outline-none focus:border-ceylon-blue"
+              />
+            </div>
+
+            {/* Free Cancellation Notice */}
+            <div className="text-[11px] text-emerald-800 bg-emerald-50/90 border border-emerald-200/70 rounded-xl p-2.5 flex items-start gap-2">
+              <ShieldCheck className="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5" />
+              <div>
+                <span className="font-bold block">Free Cancellation Guarantee</span>
+                <span className="text-slate-600">Full refund if cancelled before <strong>{cancelDeadlineText}</strong></span>
+              </div>
+            </div>
+
+            {/* Total and CTA */}
+            <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
+              <div>
+                <span className="text-[10px] text-slate-400 font-medium block">Total Calculated</span>
+                <span className="text-2xl font-extrabold text-luxury-forest">{formatPrice(total)}</span>
+              </div>
+              <button
+                onClick={handleBooking}
+                className="px-6 py-3 rounded-xl font-bold text-xs text-white bg-ceylon-green hover:bg-ceylon-darkgreen shadow-lg"
+              >
+                Confirm & Proceed
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };

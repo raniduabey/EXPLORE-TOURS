@@ -62,7 +62,10 @@ export function getBadgeLabel(badge: any, fallback?: string): string | null {
   return String(badge);
 }
 
-export const TourCard: React.FC<{ tour: TourCardData }> = ({ tour }) => {
+export const TourCard: React.FC<{ tour: TourCardData; searchParamsString?: string }> = ({
+  tour,
+  searchParamsString,
+}) => {
   const { formatPrice } = useCurrency();
   const [imgError, setImgError] = useState(false);
 
@@ -73,6 +76,9 @@ export const TourCard: React.FC<{ tour: TourCardData }> = ({ tour }) => {
 
   const hasGenuineReviews = (tour.reviewCount ?? 0) > 0 && (tour.rating ?? 0) > 0;
   const badgeText = getBadgeLabel(tour.badge);
+  const tourHref = searchParamsString
+    ? `/tours/${tour.slug}?${searchParamsString}`
+    : `/tours/${tour.slug}`;
 
   return (
     <motion.div
@@ -126,7 +132,7 @@ export const TourCard: React.FC<{ tour: TourCardData }> = ({ tour }) => {
           </div>
 
           <div className="min-h-[2.75rem] sm:min-h-[3.25rem] flex items-start">
-            <Link href={`/tours/${tour.slug}`} className="block">
+            <Link href={tourHref} className="block">
               <h3 className="font-serif font-medium text-base sm:text-lg text-luxury-forest group-hover:text-luxury-gold transition-colors line-clamp-2 leading-snug">
                 {tour.title}
               </h3>
@@ -162,7 +168,7 @@ export const TourCard: React.FC<{ tour: TourCardData }> = ({ tour }) => {
             </div>
           </div>
           <Link
-            href={`/tours/${tour.slug}`}
+            href={tourHref}
             className="px-4 py-2 rounded-full bg-luxury-forest/5 hover:bg-luxury-forest text-luxury-forest hover:text-luxury-ivory border border-luxury-forest/20 hover:border-luxury-forest font-sans font-semibold text-xs uppercase tracking-wider transition-all duration-200"
           >
             View Journey

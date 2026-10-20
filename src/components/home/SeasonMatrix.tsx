@@ -201,9 +201,13 @@ export const SeasonMatrix: React.FC = () => {
 
       {/* Month Bar: Clearly Horizontally Scrollable on Mobile, Centered on Desktop */}
       <div className="relative w-full mb-8 sm:mb-10">
+        {/* Subtle Edge Scroll Cues for Mobile */}
+        <div className="absolute left-0 top-0 bottom-3 w-5 bg-gradient-to-r from-[#FAF8F5] to-transparent pointer-events-none md:hidden z-10" />
+        <div className="absolute right-0 top-0 bottom-3 w-5 bg-gradient-to-l from-[#FAF8F5] to-transparent pointer-events-none md:hidden z-10" />
+
         <div
           ref={scrollContainerRef}
-          className="w-full max-w-full overflow-x-auto overscroll-x-contain touch-pan-x pb-3 pt-1 flex items-center gap-1.5 sm:gap-2 justify-start md:justify-center scrollbar-none scroll-smooth px-1"
+          className="w-full max-w-full overflow-x-auto overscroll-x-contain touch-pan-x pb-3 pt-1 flex items-center gap-1.5 sm:gap-2 justify-start md:justify-center scrollbar-none scroll-smooth px-2 sm:px-1"
           style={{ scrollbarWidth: "none", msOverflowStyle: "none", WebkitOverflowScrolling: "touch" }}
         >
           {MONTHS.map((m, idx) => {
@@ -216,7 +220,7 @@ export const SeasonMatrix: React.FC = () => {
                 }}
                 onClick={() => setSelectedIdx(idx)}
                 type="button"
-                className={`relative px-3.5 sm:px-4 py-2.5 rounded-xl text-xs sm:text-sm font-sans uppercase tracking-wider shrink-0 transition-all min-h-[42px] min-w-[54px] flex items-center justify-center select-none active:scale-95 ${
+                className={`relative px-3.5 sm:px-4 py-2.5 rounded-xl text-xs sm:text-sm font-sans uppercase tracking-wider shrink-0 transition-all min-h-[44px] min-w-[54px] flex items-center justify-center select-none active:scale-95 ${
                   isSelected
                     ? "text-luxury-forest font-semibold shadow-sm"
                     : "text-luxury-charcoal/70 bg-white hover:bg-slate-50 border border-luxury-sand/80 font-medium"

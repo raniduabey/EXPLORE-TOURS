@@ -13,6 +13,9 @@ import {
   MapPin,
   Compass,
   CheckCircle2,
+  Calendar,
+  Users,
+  Sparkles,
 } from "lucide-react";
 import { TourCard } from "@/components/tours/TourCard";
 import { TOURS_CATALOG } from "@/data/toursData";
@@ -45,6 +48,20 @@ function ToursPageContent() {
   const urlCat = searchParams.get("category") || "";
   const urlRating = searchParams.get("minRating") || "0";
   const urlMaxPrice = searchParams.get("maxPrice") || "3500";
+  const urlDate = searchParams.get("date") || "";
+  const urlAdults = searchParams.get("adults") || "";
+  const urlChildren = searchParams.get("children") || "";
+
+  const formattedSearchDate = useMemo(() => {
+    if (!urlDate) return "";
+    const [y, m, d] = urlDate.split("-").map(Number);
+    if (!y || !m || !d) return urlDate;
+    return new Date(y, m - 1, d).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+  }, [urlDate]);
 
   const [tours, setTours] = useState<any[]>(TOURS_CATALOG);
   const [loading, setLoading] = useState(false);
@@ -203,6 +220,49 @@ function ToursPageContent() {
           </p>
         </div>
       </div>
+
+      {/* Active Search Summary Banner */}
+      {(urlDate || urlAdults || filters.destination || filters.category) && (
+        <div className="bg-luxury-gold/10 border border-luxury-gold/30 rounded-2xl p-3.5 sm:p-4 flex flex-wrap items-center justify-between gap-3 text-xs">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-[11px] font-sans font-semibold uppercase tracking-wider text-luxury-forest/80 flex items-center gap-1.5">
+              <Sparkles className="w-3.5 h-3.5 text-luxury-gold" />
+              Active Search:
+            </span>
+            {filters.destination && (
+              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white text-luxury-forest border border-luxury-sand text-xs font-medium shadow-xs">
+                <MapPin className="w-3 h-3 text-luxury-gold" />
+                {DESTINATION_OPTIONS.find((d) => d.value === filters.destination)?.label || filters.destination}
+              </span>
+            )}
+            {filters.category && (
+              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white text-luxury-forest border border-luxury-sand text-xs font-medium shadow-xs">
+                <Compass className="w-3 h-3 text-luxury-gold" />
+                {CATEGORIES.find((c) => c.value === filters.category)?.label || filters.category}
+              </span>
+            )}
+            {formattedSearchDate && (
+              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white text-luxury-forest border border-luxury-sand text-xs font-medium shadow-xs">
+                <Calendar className="w-3 h-3 text-luxury-gold" />
+                {formattedSearchDate}
+              </span>
+            )}
+            {urlAdults && (
+              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white text-luxury-forest border border-luxury-sand text-xs font-medium shadow-xs">
+                <Users className="w-3 h-3 text-luxury-gold" />
+                {urlAdults} {Number(urlAdults) === 1 ? "Adult" : "Adults"}
+                {urlChildren && Number(urlChildren) > 0 ? `, ${urlChildren} Child${Number(urlChildren) > 1 ? "ren" : ""}` : ""}
+              </span>
+            )}
+          </div>
+          <button
+            onClick={resetFilters}
+            className="text-xs font-medium text-luxury-forest/80 hover:text-luxury-forest underline underline-offset-2 ml-auto"
+          >
+            Clear Search
+          </button>
+        </div>
+      )}
 
       {/* Filter and Controls Header */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 bg-[#FAF8F5] p-4 sm:p-5 rounded-2xl border border-luxury-sand/80 shadow-sm">
@@ -538,7 +598,11 @@ function ToursPageContent() {
               }`}
             >
               {filtered.map((tour) => (
-                <TourCard key={tour.id} tour={tour} />
+                <TourCard
+                  key={tour.id}
+                  tour={tour}
+                  searchParamsString={searchParams.toString()}
+                />
               ))}
             </div>
           ) : (

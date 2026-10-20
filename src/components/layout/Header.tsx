@@ -255,18 +255,22 @@ export const Header: React.FC = () => {
               </div>
 
               {/* Currency Selector & Quick Links inside Mobile Menu */}
-              <div className="pt-3 border-t border-white/10 flex items-center justify-between gap-2">
-                <div className="flex items-center gap-1.5">
-                  <span className="text-[11px] text-white/60">Currency:</span>
-                  <div className="flex gap-1">
-                    {["USD", "EUR", "GBP", "LKR"].map((c) => (
+              <div className="pt-3.5 border-t border-white/10 space-y-3.5">
+                {/* Currency Selector Grid (All 6 Currencies) */}
+                <div className="space-y-1.5">
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-[#C9A86A] block">
+                    Display Currency:
+                  </span>
+                  <div className="grid grid-cols-6 gap-1 w-full">
+                    {["USD", "EUR", "GBP", "AUD", "CAD", "LKR"].map((c) => (
                       <button
                         key={c}
+                        type="button"
                         onClick={() => setCurrency(c)}
-                        className={`px-2 py-1 rounded text-[10px] font-bold ${
+                        className={`py-1.5 px-1 rounded-lg text-[10px] font-bold text-center transition-all ${
                           currency === c
-                            ? "bg-[#C9A86A] text-[#102D24]"
-                            : "bg-white/10 text-white/80"
+                            ? "bg-[#C9A86A] text-[#102D24] shadow-sm font-black"
+                            : "bg-white/10 text-white/80 hover:bg-white/15 hover:text-white"
                         }`}
                       >
                         {c}
@@ -275,24 +279,48 @@ export const Header: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2">
+                {/* Quick Action Links: View Cart, My Booking, Admin */}
+                <div className="grid grid-cols-3 gap-2 pt-1">
+                  <Link
+                    href="/checkout"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="py-2.5 px-2 bg-white/10 hover:bg-white/15 text-white border border-white/15 rounded-xl text-xs font-medium flex items-center justify-center gap-1.5 text-center transition-colors"
+                  >
+                    <ShoppingBag className="w-3.5 h-3.5 text-[#C9A86A] shrink-0" />
+                    <span>Cart ({cartCount})</span>
+                  </Link>
                   <Link
                     href="/account"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="px-3 py-1.5 bg-[#1E4D3D] text-white border border-[#C9A86A]/40 rounded-lg text-xs font-bold uppercase"
+                    className="py-2.5 px-2 bg-[#1E4D3D] hover:bg-[#153a2d] text-white border border-[#C9A86A]/40 rounded-xl text-xs font-semibold uppercase tracking-wider text-center transition-colors flex items-center justify-center"
                   >
                     My Booking
                   </Link>
                   <Link
                     href="/admin"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="px-2.5 py-1.5 bg-white/10 text-white rounded-lg text-xs font-medium"
+                    className="py-2.5 px-2 bg-white/10 hover:bg-white/15 text-white/90 border border-white/20 rounded-xl text-xs font-medium text-center transition-colors flex items-center justify-center"
                   >
                     Admin
                   </Link>
                 </div>
               </div>
             </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Tap Outside Backdrop to Dismiss Mobile Menu */}
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              onClick={() => setMobileMenuOpen(false)}
+              className="fixed inset-0 top-[65px] bg-black/60 backdrop-blur-sm z-[-1] xl:hidden"
+              aria-hidden="true"
+            />
           )}
         </AnimatePresence>
       </header>
