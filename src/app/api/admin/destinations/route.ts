@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import prisma from "@/lib/prisma";
 import { verifyAdminToken } from "@/lib/auth";
+import { parseSafeNum } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
@@ -70,7 +71,7 @@ export async function POST(req: Request) {
         image,
         thumbnail: thumbnail || null,
         gallery: typeof gallery === "object" ? JSON.stringify(gallery) : gallery || null,
-        startingPrice: Number(startingPrice) || 0,
+        startingPrice: parseSafeNum(startingPrice, 0) ?? 0,
         popularAttractions: typeof popularAttractions === "object" ? JSON.stringify(popularAttractions) : popularAttractions || "",
         bestTimeToVisit: bestTimeToVisit || "Year-round",
         featured: Boolean(featured),
@@ -147,7 +148,7 @@ export async function PUT(req: Request) {
         ...(image && { image }),
         ...(thumbnail !== undefined && { thumbnail: thumbnail || null }),
         ...(gallery !== undefined && { gallery: typeof gallery === "object" ? JSON.stringify(gallery) : gallery || null }),
-        ...(startingPrice !== undefined && { startingPrice: Number(startingPrice) }),
+        ...(startingPrice !== undefined && { startingPrice: parseSafeNum(startingPrice, 0) ?? 0 }),
         ...(popularAttractions !== undefined && { popularAttractions: typeof popularAttractions === "object" ? JSON.stringify(popularAttractions) : popularAttractions }),
         ...(bestTimeToVisit !== undefined && { bestTimeToVisit }),
         ...(featured !== undefined && { featured: Boolean(featured) }),

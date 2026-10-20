@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import prisma from "@/lib/prisma";
 import { verifyAdminToken } from "@/lib/auth";
+import { parseSafeNum } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
@@ -112,12 +113,6 @@ export async function POST(req: Request) {
         { status: 400 }
       );
     }
-
-function parseSafeNum(val: any, fallback: number | null = null): number | null {
-  if (val === undefined || val === null || val === "") return fallback;
-  const n = Number(val);
-  return isNaN(n) ? fallback : n;
-}
 
     // Auto-generate clean slug if not given
     const cleanSlug = (slug || title)
