@@ -113,6 +113,12 @@ export async function POST(req: Request) {
       );
     }
 
+function parseSafeNum(val: any, fallback: number | null = null): number | null {
+  if (val === undefined || val === null || val === "") return fallback;
+  const n = Number(val);
+  return isNaN(n) ? fallback : n;
+}
+
     // Auto-generate clean slug if not given
     const cleanSlug = (slug || title)
       .toLowerCase()
@@ -126,25 +132,44 @@ export async function POST(req: Request) {
 
     const finalSlug = existing ? `${cleanSlug}-${Date.now().toString().slice(-4)}` : cleanSlug;
 
+    // Validate destinationId & categoryId against DB to avoid foreign key failures
+    let validDestId: string | null = null;
+    if (destinationId && typeof destinationId === "string" && destinationId.trim()) {
+      const dest = await prisma.destination.findUnique({
+        where: { id: destinationId.trim() },
+      });
+      if (dest) validDestId = dest.id;
+    }
+
+    let validCatId: string | null = null;
+    if (categoryId && typeof categoryId === "string" && categoryId.trim()) {
+      const cat = await prisma.category.findUnique({
+        where: { id: categoryId.trim() },
+      });
+      if (cat) validCatId = cat.id;
+    }
+
     const badgeStr = typeof badge === "object" && badge !== null ? JSON.stringify(badge) : (badge || null);
     const highlightsStr = typeof highlights === "object" && highlights !== null ? JSON.stringify(highlights) : String(highlights || "[]");
     const whatToBringStr = typeof whatToBring === "object" && whatToBring !== null ? JSON.stringify(whatToBring) : (whatToBring || null);
     const includesStr = typeof includes === "object" && includes !== null ? JSON.stringify(includes) : String(includes || "[]");
     const excludesStr = typeof excludes === "object" && excludes !== null ? JSON.stringify(excludes) : String(excludes || "[]");
 
+    const numericPrice = parseSafeNum(price, 0) || 0;
+
     const newTour = await prisma.tour.create({
       data: {
         title: title.trim(),
         slug: finalSlug,
-        location: location || "Sri Lanka",
-        destinationId: destinationId || null,
-        categoryId: categoryId || null,
+        location: location ? location.trim() : "Sri Lanka",
+        destinationId: validDestId,
+        categoryId: validCatId,
         duration: duration || "Full Day",
-        durationHours: Number(durationHours) || 8,
-        price: Number(price),
-        previousPrice: previousPrice ? Number(previousPrice) : null,
-        adultPrice: adultPrice ? Number(adultPrice) : Number(price),
-        childPrice: childPrice ? Number(childPrice) : null,
+        durationHours: Math.round(parseSafeNum(durationHours, 8) ?? 8),
+        price: numericPrice,
+        previousPrice: parseSafeNum(previousPrice, null),
+        adultPrice: parseSafeNum(adultPrice, numericPrice),
+        childPrice: parseSafeNum(childPrice, null),
         tourType: tourType || "Private Tour",
         badge: badgeStr,
         freeCancellation: freeCancellation !== false,
@@ -153,8 +178,8 @@ export async function POST(req: Request) {
         guideIncluded: guideIncluded !== false,
         liveGuide: liveGuide || "English",
         languages: languages || "English",
-        minTravellers: Number(minTravellers) || 1,
-        maxTravellers: Number(maxTravellers) || 15,
+        minTravellers: Math.round(parseSafeNum(minTravellers, 1) ?? 1),
+        maxTravellers: Math.round(parseSafeNum(maxTravellers, 15) ?? 15),
         description: description || "",
         highlights: highlightsStr,
         includes: includesStr,
@@ -313,6 +338,48 @@ export async function PUT(req: Request) {
       return NextResponse.json({ error: "Tour not found" }, { status: 404 });
     }
 
+    // Validate destinationId & categoryId against DB to avoid foreign key failures
+    let validDestId: string | null | undefined = undefined;
+    if (destinationId !== undefined) {
+      if (destinationId && typeof destinationId === "string" && destinationId.trim()) {
+        const dest = await prisma.destination.findUnique({
+          where: { id: destinationId.trim() },
+        });
+        validDestId = dest ? dest.id : null;
+      } else {
+        validDestId = null;
+      }
+    }
+
+    let validCatId: string | null | undefined = undefined;
+    if (categoryId !== undefined) {
+      if (categoryId && typeof categoryId === "string" && categoryId.trim()) {
+        const cat = await prisma.category.findUnique({
+          where: { id: categoryId.trim() },
+        });
+        validCatId = cat ? cat.id : null;
+      } else {
+        validCatId = null;
+      }
+    }
+
+    let cleanNewSlug: string | undefined = undefined;
+    if (slug !== undefined) {
+      const sanitized = slug.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)+/g, "");
+      if (sanitized && sanitized !== existingTour.slug) {
+        const slugCollision = await prisma.tour.findUnique({
+          where: { slug: sanitized },
+        });
+        if (slugCollision && slugCollision.id !== id) {
+          return NextResponse.json(
+            { error: `The slug "${sanitized}" is already used by another tour package.` },
+            { status: 400 }
+          );
+        }
+        cleanNewSlug = sanitized;
+      }
+    }
+
     const badgeStr = badge !== undefined
       ? (typeof badge === "object" && badge !== null ? JSON.stringify(badge) : (badge || null))
       : existingTour.badge;
@@ -337,16 +404,16 @@ export async function PUT(req: Request) {
       where: { id },
       data: {
         ...(title !== undefined && { title: title.trim() }),
-        ...(slug !== undefined && { slug: slug.trim() }),
+        ...(cleanNewSlug && { slug: cleanNewSlug }),
         ...(location !== undefined && { location: location.trim() }),
-        ...(destinationId !== undefined && { destinationId: destinationId || null }),
-        ...(categoryId !== undefined && { categoryId: categoryId || null }),
+        ...(validDestId !== undefined && { destinationId: validDestId }),
+        ...(validCatId !== undefined && { categoryId: validCatId }),
         ...(duration !== undefined && { duration }),
-        ...(durationHours !== undefined && { durationHours: Number(durationHours) }),
-        ...(price !== undefined && { price: Number(price) }),
-        ...(previousPrice !== undefined && { previousPrice: previousPrice ? Number(previousPrice) : null }),
-        ...(adultPrice !== undefined && { adultPrice: adultPrice ? Number(adultPrice) : null }),
-        ...(childPrice !== undefined && { childPrice: childPrice ? Number(childPrice) : null }),
+        ...(durationHours !== undefined && { durationHours: Math.round(parseSafeNum(durationHours, existingTour.durationHours) ?? 8) }),
+        ...(price !== undefined && { price: parseSafeNum(price, existingTour.price) ?? existingTour.price }),
+        ...(previousPrice !== undefined && { previousPrice: parseSafeNum(previousPrice, null) }),
+        ...(adultPrice !== undefined && { adultPrice: parseSafeNum(adultPrice, null) }),
+        ...(childPrice !== undefined && { childPrice: parseSafeNum(childPrice, null) }),
         ...(tourType !== undefined && { tourType }),
         ...(badge !== undefined && { badge: badgeStr }),
         ...(freeCancellation !== undefined && { freeCancellation: Boolean(freeCancellation) }),
@@ -355,8 +422,8 @@ export async function PUT(req: Request) {
         ...(guideIncluded !== undefined && { guideIncluded: Boolean(guideIncluded) }),
         ...(liveGuide !== undefined && { liveGuide }),
         ...(languages !== undefined && { languages }),
-        ...(minTravellers !== undefined && { minTravellers: Number(minTravellers) }),
-        ...(maxTravellers !== undefined && { maxTravellers: Number(maxTravellers) }),
+        ...(minTravellers !== undefined && { minTravellers: Math.round(parseSafeNum(minTravellers, existingTour.minTravellers) ?? 1) }),
+        ...(maxTravellers !== undefined && { maxTravellers: Math.round(parseSafeNum(maxTravellers, existingTour.maxTravellers) ?? 15) }),
         ...(description !== undefined && { description }),
         ...(highlights !== undefined && { highlights: highlightsStr }),
         ...(includes !== undefined && { includes: includesStr }),

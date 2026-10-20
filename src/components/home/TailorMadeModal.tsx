@@ -23,6 +23,7 @@ export const TailorMadeModal: React.FC<TailorMadeModalProps> = ({ isOpen, onClos
   const [notes, setNotes] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
 
   useEffect(() => {
     if (!isOpen) {
@@ -30,6 +31,7 @@ export const TailorMadeModal: React.FC<TailorMadeModalProps> = ({ isOpen, onClos
       const timer = setTimeout(() => {
         setStep(1);
         setSubmitted(false);
+        setErrorMsg("");
       }, 300);
       return () => clearTimeout(timer);
     }
@@ -45,34 +47,41 @@ export const TailorMadeModal: React.FC<TailorMadeModalProps> = ({ isOpen, onClos
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrorMsg("");
     setSubmitting(true);
 
     try {
-      await fetch("/api/trip-planner", {
+      const res = await fetch("/api/trip-planner", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name,
-          email,
-          phone,
+          name: name.trim(),
+          email: email.trim(),
+          phone: phone.trim(),
           travelDates: travelMonth,
           duration,
           travelers,
           destinations: JSON.stringify(destinations),
           interests: JSON.stringify(style),
-          specialNotes: notes,
+          specialNotes: notes.trim(),
         }),
       });
 
-      confetti({
-        particleCount: 80,
-        spread: 70,
-        origin: { y: 0.6 },
-      });
-      setSubmitted(true);
+      const data = await res.json().catch(() => ({}));
+
+      if (res.ok && data.success) {
+        confetti({
+          particleCount: 80,
+          spread: 70,
+          origin: { y: 0.6 },
+        });
+        setSubmitted(true);
+      } else {
+        setErrorMsg(data.error || "Unable to save itinerary request. Please check your entries and try again.");
+      }
     } catch (err) {
-      console.error(err);
-      setSubmitted(true);
+      console.error("Trip submission error:", err);
+      setErrorMsg("A network error occurred. Please check your connection and try again.");
     } finally {
       setSubmitting(false);
     }
@@ -381,6 +390,18 @@ export const TailorMadeModal: React.FC<TailorMadeModalProps> = ({ isOpen, onClos
                       animate={{ opacity: 1, x: 0 }}
                       className="space-y-4"
                     >
+                      {errorMsg && (
+                        <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs font-semibold flex items-center justify-between gap-2">
+                          <span>{errorMsg}</span>
+                          <button
+                            type="button"
+                            onClick={() => setErrorMsg("")}
+                            className="text-rose-600 hover:text-rose-900 font-bold underline text-[11px] shrink-0"
+                          >
+                            Dismiss
+                          </button>
+                        </div>
+                      )}
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                           <label className="block text-xs font-bold text-ceylon-navy mb-1">

@@ -66,22 +66,41 @@ export function cleanReviewId(rawId: any): string {
   return s;
 }
 
-// Read reviews from JSON backup file on disk
+// Read reviews from JSON backup files on disk and merge by id
 function readBackupFile(): StoredReview[] {
+  const map = new Map<string, StoredReview>();
   for (const filePath of getBackupPaths()) {
     try {
       if (fs.existsSync(filePath)) {
         const data = fs.readFileSync(filePath, "utf-8");
         const parsed = JSON.parse(data);
         if (Array.isArray(parsed)) {
-          return parsed;
+          for (const item of parsed) {
+            if (item && item.id) {
+              const cleanId = cleanReviewId(item.id);
+              if (cleanId) {
+                const existing = map.get(cleanId);
+                const itemTime = new Date(item.updatedAt || item.createdAt || 0).getTime();
+                const existingTime = existing
+                  ? new Date(existing.updatedAt || existing.createdAt || 0).getTime()
+                  : 0;
+                if (!existing || itemTime >= existingTime) {
+                  map.set(cleanId, {
+                    ...item,
+                    id: cleanId,
+                    status: String(item.status || "PENDING").toUpperCase(),
+                  });
+                }
+              }
+            }
+          }
         }
       }
     } catch (err) {
       // Ignore reading error and check next path
     }
   }
-  return [];
+  return Array.from(map.values());
 }
 
 // Write reviews to JSON backup file on disk
@@ -147,21 +166,24 @@ async function syncWithCloudKv(
 
 // Load all reviews from memory, disk backup, and optional cloud KV
 export async function getAllStoredReviews(): Promise<StoredReview[]> {
-  // If memory store is empty, restore from disk or cloud
+  const diskReviews = readBackupFile();
+  for (const r of diskReviews) {
+    const existing = memoryStore.get(r.id);
+    const diskTime = new Date(r.updatedAt || r.createdAt || 0).getTime();
+    const memTime = existing ? new Date(existing.updatedAt || existing.createdAt || 0).getTime() : 0;
+    if (!existing || diskTime >= memTime) {
+      memoryStore.set(r.id, r);
+    }
+  }
+
+  // If memory store is still empty, restore from cloud
   if (memoryStore.size === 0) {
-    // Check cloud KV first
     const cloudReviews = await syncWithCloudKv("get");
     if (cloudReviews && cloudReviews.length > 0) {
       for (const r of cloudReviews) {
         memoryStore.set(r.id, r);
       }
       writeBackupFile(cloudReviews);
-    } else {
-      // Fallback to disk backup
-      const diskReviews = readBackupFile();
-      for (const r of diskReviews) {
-        memoryStore.set(r.id, r);
-      }
     }
   }
 

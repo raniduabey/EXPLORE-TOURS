@@ -1089,6 +1089,24 @@ export default function AdminDashboardPage() {
     }
   };
 
+  const deleteInquiry = async (id: string, name: string) => {
+    if (!confirm(`Are you sure you want to permanently delete the inquiry from "${name}"?`)) return;
+    try {
+      const res = await fetch(`/api/admin/inquiries?id=${encodeURIComponent(id)}`, {
+        method: "DELETE",
+      });
+      if (res.ok) {
+        setStatusMsg("Inquiry deleted successfully.");
+        loadAllData();
+      } else {
+        alert("Failed to delete inquiry.");
+      }
+    } catch (e) {
+      console.error(e);
+      alert("Error deleting inquiry.");
+    }
+  };
+
   // ----------------------------------------------------
   // FAQ ACTIONS
   // ----------------------------------------------------
@@ -2046,57 +2064,132 @@ export default function AdminDashboardPage() {
       {/* ---------------------------------------------------- */}
       {tab === "inquiries" && (
         <div className="space-y-6">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <h2 className="text-lg font-extrabold text-ceylon-navy">Customer Inquiries & Trip Requests</h2>
               <p className="text-xs text-ceylon-muted">Messages received through Contact Form and Custom Trip Planner.</p>
             </div>
+            <button
+              type="button"
+              onClick={async () => {
+                setStatusMsg("Refreshing inquiries from database...");
+                await loadAllData();
+                setStatusMsg("Inquiries refreshed.");
+              }}
+              className="px-4 py-2 bg-white hover:bg-slate-50 border border-slate-200 text-ceylon-navy rounded-xl text-xs font-bold shadow-sm flex items-center gap-2 self-start sm:self-auto cursor-pointer"
+            >
+              <RefreshCw className="w-3.5 h-3.5 text-ceylon-blue" />
+              <span>Refresh Inquiries</span>
+            </button>
           </div>
 
           <div className="space-y-4">
             {inquiries.length === 0 ? (
-              <div className="bg-white rounded-3xl p-8 border border-slate-200 text-center text-xs text-slate-400">
-                No inquiries submitted yet.
+              <div className="bg-white rounded-3xl p-10 border border-slate-200 text-center space-y-2">
+                <MessageSquare className="w-8 h-8 text-slate-300 mx-auto" />
+                <p className="text-xs text-slate-500 font-bold">No inquiries submitted yet.</p>
+                <p className="text-[11px] text-slate-400">Customer requests from the Custom Trip Planner and Contact form will appear here in real time.</p>
               </div>
             ) : (
-              inquiries.map((inq) => (
-                <div key={inq.id} className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-3">
-                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <span className="font-extrabold text-sm text-ceylon-navy">{inq.name}</span>
-                        <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-blue-50 text-blue-800">
-                          {inq.status}
+              inquiries.map((inq) => {
+                let parsedDests: string[] = [];
+                try {
+                  const dRaw = inq.destinations;
+                  if (typeof dRaw === "string" && (dRaw.startsWith("[") || dRaw.startsWith("{"))) {
+                    parsedDests = JSON.parse(dRaw);
+                  } else if (Array.isArray(dRaw)) {
+                    parsedDests = dRaw;
+                  } else if (dRaw && dRaw !== "[]" && dRaw !== "General Inquiry") {
+                    parsedDests = [String(dRaw)];
+                  }
+                } catch (e) {}
+
+                let parsedInterests: string[] = [];
+                try {
+                  const iRaw = inq.interests;
+                  if (typeof iRaw === "string" && (iRaw.startsWith("[") || iRaw.startsWith("{"))) {
+                    parsedInterests = JSON.parse(iRaw);
+                  } else if (Array.isArray(iRaw)) {
+                    parsedInterests = iRaw;
+                  } else if (iRaw && iRaw !== "[]" && iRaw !== "General Contact") {
+                    parsedInterests = [String(iRaw)];
+                  }
+                } catch (e) {}
+
+                return (
+                  <div key={inq.id} className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-3">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
+                      <div>
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span className="font-extrabold text-sm text-ceylon-navy">{inq.name}</span>
+                          <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-blue-50 text-blue-800 border border-blue-200">
+                            {inq.status}
+                          </span>
+                          <span className="px-2 py-0.5 rounded-md text-[10px] font-mono bg-slate-100 text-slate-600 border border-slate-200" title="Request ID">
+                            ID: {inq.id}
+                          </span>
+                        </div>
+                        <span className="text-[11px] text-slate-500 block mt-1 font-medium">
+                          {inq.email} • {inq.phone || "No phone"} • {getCountryFlag(inq.country)} {getCountryName(inq.country)}
                         </span>
                       </div>
-                      <span className="text-[11px] text-slate-400 block mt-0.5">
-                        {inq.email} • {inq.phone || "No phone"} • {getCountryFlag(inq.country)} {getCountryName(inq.country)}
+                      <div className="flex items-center gap-2 self-end sm:self-auto">
+                        <select
+                          value={inq.status}
+                          onChange={(e) => updateInquiryStatus(inq.id, e.target.value)}
+                          className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 text-xs font-bold text-ceylon-navy focus:outline-none focus:border-ceylon-blue"
+                        >
+                          <option value="NEW">NEW</option>
+                          <option value="CONTACTED">CONTACTED</option>
+                          <option value="IN_PROGRESS">IN_PROGRESS</option>
+                          <option value="CLOSED">CLOSED</option>
+                        </select>
+                        <button
+                          type="button"
+                          onClick={() => deleteInquiry(inq.id, inq.name)}
+                          className="p-2 text-rose-500 hover:text-rose-700 hover:bg-rose-50 rounded-xl transition-colors"
+                          title="Delete inquiry"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+
+                    <p className="text-xs text-slate-700 bg-slate-50/80 p-4 rounded-2xl border border-slate-100 leading-relaxed font-sans">
+                      {inq.specialNotes || "General trip inquiry"}
+                    </p>
+
+                    {(parsedDests.length > 0 || parsedInterests.length > 0) && (
+                      <div className="flex flex-wrap items-center gap-1.5 pt-1">
+                        {parsedDests.map((d, dIdx) => (
+                          <span key={`d-${dIdx}`} className="px-2.5 py-0.5 bg-emerald-50 text-emerald-800 border border-emerald-200/60 rounded-full text-[10px] font-semibold">
+                            📍 {d}
+                          </span>
+                        ))}
+                        {parsedInterests.map((int, iIdx) => (
+                          <span key={`i-${iIdx}`} className="px-2.5 py-0.5 bg-amber-50 text-amber-800 border border-amber-200/60 rounded-full text-[10px] font-semibold">
+                            ✨ {int}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+
+                    <div className="text-[11px] text-slate-500 flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-100">
+                      <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+                        <span><strong>Dates:</strong> {inq.travelDates || "Flexible"}</span>
+                        <span><strong>Duration:</strong> {inq.duration || "Custom"}</span>
+                        <span><strong>Travelers:</strong> {inq.travelers || "2 Adults"}</span>
+                        {inq.budget && inq.budget !== "Inquiry" && (
+                          <span><strong>Budget:</strong> {inq.budget}</span>
+                        )}
+                      </div>
+                      <span className="text-slate-400 font-mono text-[10px]">
+                        Submitted {new Date(inq.createdAt).toLocaleDateString()} at {new Date(inq.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                       </span>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <select
-                        value={inq.status}
-                        onChange={(e) => updateInquiryStatus(inq.id, e.target.value)}
-                        className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 text-xs font-bold text-ceylon-navy"
-                      >
-                        <option value="NEW">NEW</option>
-                        <option value="CONTACTED">CONTACTED</option>
-                        <option value="IN_PROGRESS">IN_PROGRESS</option>
-                        <option value="CLOSED">CLOSED</option>
-                      </select>
-                    </div>
                   </div>
-
-                  <p className="text-xs text-slate-700 bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                    {inq.specialNotes || "General trip inquiry"}
-                  </p>
-
-                  <div className="text-[11px] text-slate-400 flex items-center justify-between">
-                    <span>Travel Dates: {inq.travelDates || "Flexible"} • Travelers: {inq.travelers || "1"}</span>
-                    <span>Received on {new Date(inq.createdAt).toLocaleDateString()}</span>
-                  </div>
-                </div>
-              ))
+                );
+              })
             )}
           </div>
         </div>
@@ -3094,13 +3187,20 @@ export default function AdminDashboardPage() {
                               onChange={async (e) => {
                                 const file = e.target.files?.[0];
                                 if (file) {
-                                  await handleFileUpload(file, async (newUrl) => {
-                                    // Update existing record
+                                  await handleFileUpload(file, async (newUrl, uploadedAsset) => {
+                                    // Update existing record and replace in place
                                     await fetch("/api/admin/upload", {
                                       method: "PUT",
                                       headers: { "Content-Type": "application/json" },
-                                      body: JSON.stringify({ id: asset.id, title: file.name }),
+                                      body: JSON.stringify({
+                                        id: asset.id,
+                                        url: newUrl,
+                                        title: file.name,
+                                        replaceTempId: uploadedAsset?.id,
+                                      }),
                                     });
+                                    setStatusMsg(`Image "${asset.filename || asset.title || 'asset'}" replaced successfully!`);
+                                    loadAllData();
                                   });
                                 }
                               }}

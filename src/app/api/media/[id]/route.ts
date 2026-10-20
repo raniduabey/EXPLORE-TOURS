@@ -3,6 +3,7 @@ import { readFile } from "fs/promises";
 import { existsSync } from "fs";
 import path from "path";
 import prisma from "@/lib/prisma";
+import { getMediaFromStore } from "@/lib/mediaStore";
 
 export const dynamic = "force-dynamic";
 
@@ -30,6 +31,34 @@ export async function GET(
           ],
         },
       });
+    }
+
+    if (!asset) {
+      const stored = await getMediaFromStore(id);
+      if (stored) {
+        asset = stored as any;
+        // Restore to local container SQLite asynchronously
+        prisma.mediaAsset
+          .upsert({
+            where: { id: stored.id },
+            create: {
+              id: stored.id,
+              url: stored.url,
+              filename: stored.filename,
+              title: stored.title || stored.filename,
+              altText: stored.altText || `${stored.filename} travel photo`,
+              fileSize: stored.fileSize || null,
+              mimeType: stored.mimeType || "image/jpeg",
+              data: stored.data || null,
+              width: stored.width || null,
+              height: stored.height || null,
+              createdAt: new Date(stored.createdAt),
+              updatedAt: new Date(stored.updatedAt),
+            },
+            update: {},
+          })
+          .catch(() => {});
+      }
     }
 
     if (!asset) {

@@ -4,6 +4,12 @@ import path from "path";
 import { cookies } from "next/headers";
 import prisma from "@/lib/prisma";
 import { verifyAdminToken } from "@/lib/auth";
+import {
+  saveMediaToStore,
+  removeMediaFromStore,
+  syncMediaWithDb,
+  cleanMediaId,
+} from "@/lib/mediaStore";
 
 export const dynamic = "force-dynamic";
 
@@ -95,6 +101,9 @@ export async function GET(req: Request) {
 
     const { searchParams } = new URL(req.url);
     const search = searchParams.get("search")?.trim().toLowerCase();
+
+    // Synchronize media assets across serverless containers
+    await syncMediaWithDb(prisma);
 
     const assets = await prisma.mediaAsset.findMany({
       orderBy: { createdAt: "desc" },
@@ -316,6 +325,22 @@ export async function POST(req: Request) {
       });
     }
 
+    // Persist to cross-lambda store
+    await saveMediaToStore({
+      id: asset.id,
+      url: publishedUrl,
+      filename: asset.filename,
+      title: asset.title,
+      altText: asset.altText,
+      fileSize: asset.fileSize,
+      mimeType: asset.mimeType,
+      data: base64Data,
+      width: asset.width,
+      height: asset.height,
+      createdAt: asset.createdAt ? new Date(asset.createdAt).toISOString() : new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    });
+
     return NextResponse.json({
       success: true,
       url: publishedUrl,
@@ -335,7 +360,7 @@ export async function POST(req: Request) {
   }
 }
 
-// PUT /api/admin/upload - Update media asset metadata (altText, title)
+// PUT /api/admin/upload - Update media asset metadata or replace image in-place
 export async function PUT(req: Request) {
   try {
     const cookieStore = cookies();
@@ -348,23 +373,110 @@ export async function PUT(req: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { id, altText, title } = await req.json();
-    if (!id) {
+    const body = await req.json().catch(() => ({}));
+    const { id, altText, title, url, data, mimeType, fileSize, filename, replaceTempId } = body;
+    const cleanId = cleanMediaId(id);
+    if (!cleanId) {
       return NextResponse.json({ error: "Asset ID required" }, { status: 400 });
     }
 
+    const existing = await prisma.mediaAsset.findUnique({ where: { id: cleanId } });
+    if (!existing) {
+      return NextResponse.json({ error: "Asset not found" }, { status: 404 });
+    }
+
+    let updateData: any = {
+      ...(altText !== undefined && { altText }),
+      ...(title !== undefined && { title }),
+    };
+
+    // If replaceTempId is provided, pull newly uploaded asset data and transfer onto this asset
+    if (replaceTempId) {
+      const cleanTempId = cleanMediaId(replaceTempId);
+      const tempAsset = await prisma.mediaAsset.findUnique({ where: { id: cleanTempId } });
+      if (tempAsset) {
+        updateData = {
+          ...updateData,
+          data: tempAsset.data,
+          mimeType: tempAsset.mimeType,
+          fileSize: tempAsset.fileSize,
+          filename: tempAsset.filename,
+          width: tempAsset.width,
+          height: tempAsset.height,
+        };
+        // If the temp asset had an external or blob URL, use it; otherwise maintain the canonical /api/media/{id}
+        if (tempAsset.url && (tempAsset.url.startsWith("http://") || tempAsset.url.startsWith("https://"))) {
+          updateData.url = tempAsset.url;
+        }
+
+        // Clean up temp asset
+        try {
+          await prisma.mediaAsset.delete({ where: { id: cleanTempId } });
+          await removeMediaFromStore(cleanTempId);
+        } catch (delTempErr) {}
+      }
+    } else if (data !== undefined || url !== undefined) {
+      if (data !== undefined) updateData.data = data;
+      if (mimeType !== undefined) updateData.mimeType = mimeType;
+      if (fileSize !== undefined) updateData.fileSize = fileSize;
+      if (filename !== undefined) updateData.filename = filename;
+      if (url !== undefined) updateData.url = url;
+    }
+
+    const oldUrl = existing.url;
     const updated = await prisma.mediaAsset.update({
-      where: { id },
-      data: {
-        ...(altText !== undefined && { altText }),
-        ...(title !== undefined && { title }),
-      },
+      where: { id: cleanId },
+      data: updateData,
+    });
+
+    // If external URL changed, propagate to other models
+    if (updated.url && updated.url !== oldUrl) {
+      try {
+        await prisma.tourImage.updateMany({
+          where: { url: oldUrl },
+          data: { url: updated.url },
+        });
+        await prisma.destination.updateMany({
+          where: { image: oldUrl },
+          data: { image: updated.url },
+        });
+        await prisma.destination.updateMany({
+          where: { thumbnail: oldUrl },
+          data: { thumbnail: updated.url },
+        });
+        await prisma.heroSlide.updateMany({
+          where: { image: oldUrl },
+          data: { image: updated.url },
+        });
+        await prisma.heroSlide.updateMany({
+          where: { mobileImage: oldUrl },
+          data: { mobileImage: updated.url },
+        });
+      } catch (propagateErr) {
+        console.warn("Propagation notice on asset replacement:", propagateErr);
+      }
+    }
+
+    // Persist updated asset to cross-lambda mediaStore
+    await saveMediaToStore({
+      id: updated.id,
+      url: updated.url,
+      filename: updated.filename,
+      title: updated.title,
+      altText: updated.altText,
+      fileSize: updated.fileSize,
+      mimeType: updated.mimeType,
+      data: updated.data,
+      width: updated.width,
+      height: updated.height,
+      createdAt: updated.createdAt ? new Date(updated.createdAt).toISOString() : new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     });
 
     return NextResponse.json({ success: true, asset: updated });
   } catch (error) {
     console.error("PUT /api/admin/upload error", error);
-    return NextResponse.json({ error: "Failed to update asset metadata" }, { status: 500 });
+    return NextResponse.json({ error: "Failed to update asset" }, { status: 500 });
   }
 }
 
@@ -441,6 +553,7 @@ export async function DELETE(req: Request) {
     await prisma.mediaAsset.delete({
       where: { id },
     });
+    await removeMediaFromStore(id);
 
     return NextResponse.json({ success: true, message: "Image deleted safely." });
   } catch (error) {

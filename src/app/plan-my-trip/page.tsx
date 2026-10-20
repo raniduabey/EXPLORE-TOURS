@@ -6,6 +6,8 @@ import { CountrySelect } from "@/components/ui/CountrySelect";
 
 export default function PlanMyTripPage() {
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -41,15 +43,17 @@ export default function PlanMyTripPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrorMsg("");
+    setSubmitting(true);
     try {
-      await fetch("/api/trip-planner", {
+      const res = await fetch("/api/trip-planner", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name,
-          email,
-          phone,
-          country,
+          name: name.trim(),
+          email: email.trim(),
+          phone: phone.trim(),
+          country: country.trim(),
           travelDates,
           duration,
           budget,
@@ -58,13 +62,20 @@ export default function PlanMyTripPage() {
           transportation,
           destinations: JSON.stringify(destinations),
           interests: JSON.stringify(interests),
-          specialNotes,
+          specialNotes: specialNotes.trim(),
         }),
       });
-      setSubmitted(true);
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.success) {
+        setSubmitted(true);
+      } else {
+        setErrorMsg(data.error || "Failed to save your itinerary request. Please check your entries and try again.");
+      }
     } catch (err) {
-      console.error(err);
-      setSubmitted(true);
+      console.error("Trip submission network error:", err);
+      setErrorMsg("A network error occurred. Please check your connection and try again.");
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -115,6 +126,19 @@ export default function PlanMyTripPage() {
           onSubmit={handleSubmit}
           className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200/90 shadow-card space-y-8"
         >
+          {errorMsg && (
+            <div className="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-xs font-semibold flex items-center justify-between gap-3">
+              <span>{errorMsg}</span>
+              <button
+                type="button"
+                onClick={() => setErrorMsg("")}
+                className="text-rose-600 hover:text-rose-900 font-bold underline text-[11px]"
+              >
+                Dismiss
+              </button>
+            </div>
+          )}
+
           <div className="space-y-4">
             <h3 className="font-extrabold text-base text-ceylon-navy pb-2 border-b border-slate-100 flex items-center gap-2">
               <Users className="w-4 h-4 text-ceylon-blue" />
@@ -302,10 +326,11 @@ export default function PlanMyTripPage() {
 
           <button
             type="submit"
-            className="w-full py-4 bg-ceylon-green hover:bg-ceylon-darkgreen text-white font-extrabold text-sm rounded-xl shadow-lg transition-transform active:scale-98 flex items-center justify-center gap-2"
+            disabled={submitting}
+            className="w-full py-4 bg-ceylon-green hover:bg-ceylon-darkgreen disabled:opacity-60 text-white font-extrabold text-sm rounded-xl shadow-lg transition-transform active:scale-98 flex items-center justify-center gap-2 cursor-pointer disabled:cursor-not-allowed"
           >
             <Send className="w-4 h-4" />
-            <span>Build My Sri Lanka Trip</span>
+            <span>{submitting ? "Confirming & Securing Request..." : "Build My Sri Lanka Trip"}</span>
           </button>
         </form>
       )}

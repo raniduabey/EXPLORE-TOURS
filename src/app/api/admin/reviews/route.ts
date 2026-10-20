@@ -123,6 +123,9 @@ export async function PUT(req: Request) {
       );
     }
 
+    // Synchronize across serverless environments before moderating
+    await syncReviewsWithDb(prisma);
+
     const body = await req.json().catch(() => ({}));
     const { id, status, rejectionReason } = body;
 
@@ -323,6 +326,9 @@ export async function DELETE(req: Request) {
         { status: 401 }
       );
     }
+
+    // Synchronize across serverless environments before deleting
+    await syncReviewsWithDb(prisma);
 
     const { searchParams } = new URL(req.url);
     const cleanId = cleanReviewId(searchParams.get("id"));
