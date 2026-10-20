@@ -1,8 +1,15 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import prisma from "@/lib/prisma";
 import { siteConfig } from "@/config/site";
+import {
+  syncSettingsWithDb,
+  saveSettingsToStore,
+  getStoredSettings,
+} from "@/lib/settingsStore";
 
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 const DEFAULT_SETTINGS = {
   id: "default",
@@ -19,26 +26,29 @@ const DEFAULT_SETTINGS = {
 // GET /api/business-settings - Public endpoint to retrieve current business contact details
 export async function GET() {
   try {
+    await syncSettingsWithDb(prisma);
+
     let settings = await prisma.businessSettings.findUnique({
       where: { id: "default" },
     });
 
     if (!settings) {
-      // Create default if not yet created
-      settings = await prisma.businessSettings.create({
-        data: DEFAULT_SETTINGS,
-      });
+      settings = await getStoredSettings();
     }
 
-    return NextResponse.json(settings, {
+    return NextResponse.json(settings || DEFAULT_SETTINGS, {
       headers: {
-        "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300",
+        "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0",
+        "CDN-Cache-Control": "no-store",
+        "Vercel-CDN-Cache-Control": "no-store",
+        Pragma: "no-cache",
+        Expires: "0",
       },
     });
   } catch (error) {
     console.error("GET /api/business-settings error:", error);
-    // Return graceful fallback so public pages never break
-    return NextResponse.json(DEFAULT_SETTINGS);
+    const stored = await getStoredSettings().catch(() => DEFAULT_SETTINGS);
+    return NextResponse.json(stored);
   }
 }
 
@@ -58,31 +68,33 @@ export async function PUT(req: Request) {
     } = body;
 
     // Validation
-    if (!address || address.trim().length < 5) {
+    if (!companyName || !companyName.trim()) {
       return NextResponse.json(
-        { error: "Please provide a valid physical business address (minimum 5 characters)." },
+        { error: "Company name is required." },
         { status: 400 }
       );
     }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!email || !emailRegex.test(email.trim())) {
+    if (!address || !address.trim()) {
       return NextResponse.json(
-        { error: "Please provide a valid business email address (e.g. info@ceylonexploretours.com)." },
+        { error: "Business address is required." },
         { status: 400 }
       );
     }
-
-    if (!primaryPhone || primaryPhone.trim().length < 7) {
+    if (!email || !email.trim() || !email.includes("@")) {
       return NextResponse.json(
-        { error: "Please provide a valid primary phone number." },
+        { error: "A valid business email address is required." },
         { status: 400 }
       );
     }
-
-    if (!whatsapp || whatsapp.trim().length < 7) {
+    if (!primaryPhone || !primaryPhone.trim()) {
       return NextResponse.json(
-        { error: "Please provide a valid WhatsApp contact number with country code." },
+        { error: "Primary telephone number is required." },
+        { status: 400 }
+      );
+    }
+    if (!whatsapp || !whatsapp.trim()) {
+      return NextResponse.json(
+        { error: "WhatsApp contact number is required." },
         { status: 400 }
       );
     }
@@ -90,7 +102,7 @@ export async function PUT(req: Request) {
     const updated = await prisma.businessSettings.upsert({
       where: { id: "default" },
       update: {
-        companyName: (companyName || DEFAULT_SETTINGS.companyName).trim(),
+        companyName: companyName.trim(),
         address: address.trim(),
         email: email.trim().toLowerCase(),
         primaryPhone: primaryPhone.trim(),
@@ -112,6 +124,13 @@ export async function PUT(req: Request) {
       },
     });
 
+    try {
+      await saveSettingsToStore(updated);
+      revalidatePath("/", "page");
+      revalidatePath("/contact", "page");
+      revalidatePath("/admin", "page");
+    } catch (e) {}
+
     // Record audit log
     try {
       await prisma.auditLog.create({
@@ -123,9 +142,7 @@ export async function PUT(req: Request) {
           details: `Updated contact settings: email=${email}, primaryPhone=${primaryPhone}, whatsapp=${whatsapp}`,
         },
       });
-    } catch (e) {
-      // audit log failure non-blocking
-    }
+    } catch (e) {}
 
     return NextResponse.json({
       success: true,

@@ -19,8 +19,10 @@ import {
   XCircle,
   Sparkles,
 } from "lucide-react";
+import { syncToursWithDb, getAllStoredTours } from "@/lib/toursStore";
 
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export async function generateMetadata({
   params,
@@ -42,6 +44,16 @@ export async function generateMetadata({
       image = dbTour.images[0]?.url;
     }
   } catch (e) {}
+
+  if (!title) {
+    const stored = await getAllStoredTours().catch(() => []);
+    const match = stored.find((t) => t.slug === params.slug);
+    if (match) {
+      title = match.seoTitle || match.title;
+      description = match.seoDescription || match.description?.substring(0, 160);
+      image = match.images?.[0]?.url;
+    }
+  }
 
   if (!title) {
     const catalogTour = getTourBySlug(params.slug);
@@ -85,6 +97,12 @@ export default async function TourDetailPage({
 }: {
   params: { slug: string };
 }) {
+  try {
+    await syncToursWithDb(prisma);
+  } catch (syncErr) {
+    console.warn("syncToursWithDb warning in /tours/[slug]:", syncErr);
+  }
+
   let tour: any = null;
 
   try {
@@ -109,7 +127,43 @@ export default async function TourDetailPage({
     console.error("Prisma lookup error in tour detail:", e);
   }
 
-  // If not found in DB, pull the exact tour from the verified TOURS_CATALOG
+  // If not found in DB, pull from stored tours
+  if (!tour) {
+    const stored = await getAllStoredTours().catch(() => []);
+    const match = stored.find((t) => t.slug === params.slug);
+    if (match) {
+      tour = {
+        id: match.id,
+        title: match.title,
+        slug: match.slug,
+        location: match.location,
+        duration: match.duration,
+        durationHours: match.durationHours,
+        rating: match.rating || 5,
+        reviewCount: match.reviewCount || 0,
+        bookedCount: match.bookedCount || 0,
+        tourType: match.tourType,
+        liveGuide: match.liveGuide,
+        price: match.price,
+        previousPrice: match.previousPrice,
+        freeCancellation: match.freeCancellation,
+        instantBook: match.instantBook,
+        description: match.description,
+        importantInfo: match.importantInfo,
+        whatToBring: match.whatToBring,
+        highlights: match.highlights,
+        includes: match.includes,
+        excludes: match.excludes,
+        images: match.images || [],
+        itinerary: match.itinerary || [],
+        reviews: [],
+        destination: match.destination ? { name: match.destination.name } : null,
+        category: match.category ? { name: match.category.name } : null,
+      };
+    }
+  }
+
+  // If not found in store, pull the exact tour from the verified TOURS_CATALOG
   if (!tour) {
     const catalogTour = getTourBySlug(params.slug);
     if (!catalogTour) {

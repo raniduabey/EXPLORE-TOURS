@@ -3,6 +3,7 @@ import prisma from "@/lib/prisma";
 import { saveInquiryToStore, findRecentDuplicateInquiry } from "@/lib/inquiriesStore";
 
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export async function POST(req: Request) {
   try {

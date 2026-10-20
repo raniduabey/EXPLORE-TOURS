@@ -87,6 +87,35 @@ export const TopExperiences: React.FC<{ tours?: TourCardData[] }> = ({ tours: pr
   const containerRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = React.useState(false);
   const [canScrollRight, setCanScrollRight] = React.useState(true);
+  const [list, setList] = React.useState<TourCardData[]>(
+    propTours && propTours.length > 0 ? propTours : defaultTours
+  );
+
+  React.useEffect(() => {
+    if (propTours && propTours.length > 0) {
+      setList(propTours);
+    }
+  }, [propTours]);
+
+  React.useEffect(() => {
+    fetch(`/api/tours?_t=${Date.now()}`, {
+      cache: "no-store",
+      headers: {
+        Pragma: "no-cache",
+        "Cache-Control": "no-cache",
+      },
+    })
+      .then((res) => {
+        if (res.ok) return res.json();
+        return null;
+      })
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          setList(data.slice(0, 8));
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const checkScroll = React.useCallback(() => {
     if (containerRef.current) {
@@ -95,8 +124,6 @@ export const TopExperiences: React.FC<{ tours?: TourCardData[] }> = ({ tours: pr
       setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
     }
   }, []);
-
-  const list = propTours && propTours.length > 0 ? propTours : defaultTours;
 
   React.useEffect(() => {
     const el = containerRef.current;

@@ -42,7 +42,13 @@ export const BusinessProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   const fetchSettings = useCallback(async () => {
     try {
-      const res = await fetch("/api/business-settings");
+      const res = await fetch(`/api/business-settings?_t=${Date.now()}`, {
+        cache: "no-store",
+        headers: {
+          Pragma: "no-cache",
+          "Cache-Control": "no-cache",
+        },
+      });
       if (res.ok) {
         const data = await res.json();
         setSettings({

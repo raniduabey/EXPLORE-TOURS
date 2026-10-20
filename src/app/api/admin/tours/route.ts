@@ -4,8 +4,10 @@ import { revalidatePath } from "next/cache";
 import prisma from "@/lib/prisma";
 import { verifyAdminToken } from "@/lib/auth";
 import { parseSafeNum } from "@/lib/utils";
+import { syncToursWithDb, saveTourToStore } from "@/lib/toursStore";
 
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 // GET /api/admin/tours - List tours with search, status & destination filter
 export async function GET(req: Request) {
@@ -17,6 +19,9 @@ export async function GET(req: Request) {
     if (!auth.valid) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+
+    // Synchronize across serverless containers and persistent store
+    await syncToursWithDb(prisma);
 
     const { searchParams } = new URL(req.url);
     const search = searchParams.get("search");
@@ -38,7 +43,7 @@ export async function GET(req: Request) {
       ];
     }
 
-    const tours = await prisma.tour.findMany({
+    let tours = await prisma.tour.findMany({
       where,
       include: {
         destination: { select: { id: true, name: true, slug: true } },
@@ -50,7 +55,19 @@ export async function GET(req: Request) {
       orderBy: { updatedAt: "desc" },
     });
 
-    return NextResponse.json(tours);
+    if ((!tours || tours.length === 0) && !search && (!status || status === "ALL") && !destinationId) {
+      const stored = await getAllStoredTours().catch(() => []);
+      if (stored && stored.length > 0) {
+        tours = stored as any;
+      }
+    }
+
+    return NextResponse.json(tours, {
+      headers: {
+        "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
+        Pragma: "no-cache",
+      },
+    });
   } catch (error) {
     console.error("GET /api/admin/tours error", error);
     return NextResponse.json({ error: "Failed to fetch tours" }, { status: 500 });
@@ -255,11 +272,17 @@ export async function POST(req: Request) {
       });
     } catch (e) {}
 
+    // Persist to cross-lambda store
     try {
-      revalidatePath("/tours");
-      revalidatePath("/");
+      await saveTourToStore(newTour);
+    } catch (sErr) {}
+
+    try {
+      revalidatePath("/tours", "page");
+      revalidatePath("/", "page");
+      revalidatePath("/admin", "page");
       if (newTour.slug) {
-        revalidatePath(`/tours/${newTour.slug}`);
+        revalidatePath(`/tours/${newTour.slug}`, "page");
       }
     } catch (e) {}
 
@@ -280,6 +303,9 @@ export async function PUT(req: Request) {
     if (!auth.valid) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+
+    // Synchronize across serverless containers and persistent store
+    await syncToursWithDb(prisma);
 
     const body = await req.json();
     const {
@@ -539,15 +565,20 @@ export async function PUT(req: Request) {
       },
     });
 
+    // Persist to cross-lambda store
     try {
-      revalidatePath("/tours");
-      revalidatePath("/");
-      revalidatePath("/admin");
+      await saveTourToStore(finalTour || updated);
+    } catch (sErr) {}
+
+    try {
+      revalidatePath("/tours", "page");
+      revalidatePath("/", "page");
+      revalidatePath("/admin", "page");
       if (finalTour?.slug) {
-        revalidatePath(`/tours/${finalTour.slug}`);
+        revalidatePath(`/tours/${finalTour.slug}`, "page");
       }
       if (existingTour?.slug && existingTour.slug !== finalTour?.slug) {
-        revalidatePath(`/tours/${existingTour.slug}`);
+        revalidatePath(`/tours/${existingTour.slug}`, "page");
       }
     } catch (e) {}
 
@@ -595,11 +626,17 @@ export async function DELETE(req: Request) {
       });
     } catch (e) {}
 
+    // Persist to cross-lambda store
     try {
-      revalidatePath("/tours");
-      revalidatePath("/");
+      await saveTourToStore(archived);
+    } catch (sErr) {}
+
+    try {
+      revalidatePath("/tours", "page");
+      revalidatePath("/", "page");
+      revalidatePath("/admin", "page");
       if (archived.slug) {
-        revalidatePath(`/tours/${archived.slug}`);
+        revalidatePath(`/tours/${archived.slug}`, "page");
       }
     } catch (e) {}
 

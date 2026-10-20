@@ -4,18 +4,36 @@ import { revalidatePath } from "next/cache";
 import prisma from "@/lib/prisma";
 import { verifyAdminToken } from "@/lib/auth";
 import { parseSafeNum } from "@/lib/utils";
+import { syncDestinationsWithDb, saveDestinationToStore, getAllStoredDestinations } from "@/lib/destinationsStore";
 
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export async function GET() {
   try {
-    const destinations = await prisma.destination.findMany({
+    // Synchronize across serverless containers and persistent store
+    await syncDestinationsWithDb(prisma);
+
+    let destinations = await prisma.destination.findMany({
       include: {
         _count: { select: { tours: true } },
       },
       orderBy: { name: "asc" },
     });
-    return NextResponse.json(destinations);
+
+    if (!destinations || destinations.length === 0) {
+      const stored = await getAllStoredDestinations().catch(() => []);
+      if (stored && stored.length > 0) {
+        destinations = stored as any;
+      }
+    }
+
+    return NextResponse.json(destinations, {
+      headers: {
+        "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
+        Pragma: "no-cache",
+      },
+    });
   } catch (error) {
     console.error("Fetch destinations admin error", error);
     return NextResponse.json({ error: "Failed to fetch destinations" }, { status: 500 });
@@ -93,10 +111,16 @@ export async function POST(req: Request) {
       });
     } catch (e) {}
 
+    // Persist to cross-lambda store
     try {
-      revalidatePath("/destinations");
-      revalidatePath("/");
-      if (newDest.slug) revalidatePath(`/destinations/${newDest.slug}`);
+      await saveDestinationToStore(newDest);
+    } catch (sErr) {}
+
+    try {
+      revalidatePath("/destinations", "page");
+      revalidatePath("/", "page");
+      revalidatePath("/admin", "page");
+      if (newDest.slug) revalidatePath(`/destinations/${newDest.slug}`, "page");
     } catch (e) {}
 
     return NextResponse.json({ success: true, destination: newDest });
@@ -115,6 +139,9 @@ export async function PUT(req: Request) {
     if (!auth.valid) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+
+    // Synchronize across serverless containers and persistent store
+    await syncDestinationsWithDb(prisma);
 
     const {
       id,
@@ -170,10 +197,16 @@ export async function PUT(req: Request) {
       });
     } catch (e) {}
 
+    // Persist to cross-lambda store
     try {
-      revalidatePath("/destinations");
-      revalidatePath("/");
-      if (updated.slug) revalidatePath(`/destinations/${updated.slug}`);
+      await saveDestinationToStore(updated);
+    } catch (sErr) {}
+
+    try {
+      revalidatePath("/destinations", "page");
+      revalidatePath("/", "page");
+      revalidatePath("/admin", "page");
+      if (updated.slug) revalidatePath(`/destinations/${updated.slug}`, "page");
     } catch (e) {}
 
     return NextResponse.json({ success: true, destination: updated });
@@ -205,10 +238,16 @@ export async function DELETE(req: Request) {
       data: { status: "ARCHIVED" },
     });
 
+    // Persist to cross-lambda store
     try {
-      revalidatePath("/destinations");
-      revalidatePath("/");
-      if (archived.slug) revalidatePath(`/destinations/${archived.slug}`);
+      await saveDestinationToStore(archived);
+    } catch (sErr) {}
+
+    try {
+      revalidatePath("/destinations", "page");
+      revalidatePath("/", "page");
+      revalidatePath("/admin", "page");
+      if (archived.slug) revalidatePath(`/destinations/${archived.slug}`, "page");
     } catch (e) {}
 
     return NextResponse.json({ success: true, destination: archived });

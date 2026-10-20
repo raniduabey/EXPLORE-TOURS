@@ -157,21 +157,35 @@ export default function AdminDashboardPage() {
   const [isDraggingTourGallery, setIsDraggingTourGallery] = useState(false);
   const [newGalleryUrlInput, setNewGalleryUrlInput] = useState("");
 
+  // Helper for fresh, un-cached admin queries
+  const adminFetch = (url: string, init?: RequestInit) => {
+    const sep = url.includes("?") ? "&" : "?";
+    return fetch(`${url}${sep}_t=${Date.now()}`, {
+      ...init,
+      cache: "no-store",
+      headers: {
+        Pragma: "no-cache",
+        "Cache-Control": "no-cache",
+        ...init?.headers,
+      },
+    });
+  };
+
   // Load all admin data
   async function loadAllData() {
     try {
       const [sRes, tRes, bRes, rRes, dRes, blRes, inqRes, slRes, fRes, mRes, bsRes] = await Promise.all([
-        fetch("/api/admin/stats"),
-        fetch("/api/admin/tours"),
-        fetch("/api/admin/bookings"),
-        fetch("/api/admin/reviews"),
-        fetch("/api/admin/destinations"),
-        fetch("/api/admin/blog"),
-        fetch("/api/admin/inquiries"),
-        fetch("/api/hero-slides?all=true"),
-        fetch("/api/admin/content?type=faqs"),
-        fetch("/api/admin/upload"),
-        fetch("/api/business-settings")
+        adminFetch("/api/admin/stats"),
+        adminFetch("/api/admin/tours"),
+        adminFetch("/api/admin/bookings"),
+        adminFetch("/api/admin/reviews"),
+        adminFetch("/api/admin/destinations"),
+        adminFetch("/api/admin/blog"),
+        adminFetch("/api/admin/inquiries"),
+        adminFetch("/api/hero-slides?all=true"),
+        adminFetch("/api/admin/content?type=faqs"),
+        adminFetch("/api/admin/upload"),
+        adminFetch("/api/business-settings"),
       ]);
 
       if (sRes.ok) setStatsData(await sRes.json());

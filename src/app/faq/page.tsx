@@ -95,12 +95,37 @@ const FAQS: FAQItem[] = [
 ];
 
 export default function FAQPage() {
+  const [faqList, setFaqList] = useState<FAQItem[]>(FAQS);
   const [activeCategory, setActiveCategory] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
+  React.useEffect(() => {
+    async function loadFreshFaqs() {
+      try {
+        const res = await fetch(`/api/faqs?_t=${Date.now()}`, { cache: "no-store" });
+        if (res.ok) {
+          const data = await res.json();
+          if (Array.isArray(data) && data.length > 0) {
+            const mapped = data.map((d: any) => ({
+              q: d.question,
+              a: d.answer,
+              category: d.category || "General",
+            }));
+            // Prepend live db faqs ahead of default faqs (avoiding duplicates)
+            const seen = new Set(mapped.map((m: any) => m.q.toLowerCase().trim()));
+            const combined = [...mapped, ...FAQS.filter((f) => !seen.has(f.q.toLowerCase().trim()))];
+            setFaqList(combined);
+          }
+        }
+      } catch (e) {}
+    }
+    loadFreshFaqs();
+  }, []);
+
   const categories = [
     "All",
+    "General",
     "Booking & Confirmation",
     "Payments & Currency",
     "Cancellations & Refunds",
@@ -109,7 +134,7 @@ export default function FAQPage() {
     "Tickets & Weather",
   ];
 
-  const filteredFaqs = FAQS.filter((item) => {
+  const filteredFaqs = faqList.filter((item) => {
     const matchesCategory =
       activeCategory === "All" || item.category === activeCategory;
     const matchesSearch =
@@ -121,7 +146,7 @@ export default function FAQPage() {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: FAQS.map((faq) => ({
+    mainEntity: faqList.map((faq) => ({
       "@type": "Question",
       name: faq.q,
       acceptedAnswer: {

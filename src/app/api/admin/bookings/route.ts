@@ -5,6 +5,7 @@ import prisma from "@/lib/prisma";
 import { verifyAdminToken } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export async function GET(req: Request) {
   try {
@@ -69,7 +70,12 @@ export async function GET(req: Request) {
       orderBy: { createdAt: "desc" },
     });
 
-    return NextResponse.json(bookings);
+    return NextResponse.json(bookings, {
+      headers: {
+        "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
+        Pragma: "no-cache",
+      },
+    });
   } catch (error) {
     console.error("Admin bookings error", error);
     return NextResponse.json({ error: "Failed to fetch bookings" }, { status: 500 });

@@ -96,7 +96,13 @@ export function ToursCatalogueClient({ initialTours }: ToursCatalogueClientProps
   useEffect(() => {
     async function loadTours() {
       try {
-        const res = await fetch("/api/tours");
+        const res = await fetch(`/api/tours?_t=${Date.now()}`, {
+          cache: "no-store",
+          headers: {
+            Pragma: "no-cache",
+            "Cache-Control": "no-cache",
+          },
+        });
         if (res.ok) {
           const data = await res.json();
           if (Array.isArray(data) && data.length > 0) {

@@ -5,6 +5,8 @@ import { TOURS_CATALOG } from "@/data/toursData";
 import { siteConfig } from "@/config/site";
 import { ToursCatalogueClient } from "@/components/tours/ToursCatalogueClient";
 
+import { syncToursWithDb, getAllStoredTours } from "@/lib/toursStore";
+
 export const metadata: Metadata = {
   title: "Curated Sri Lanka Tour Packages & Private Chauffeur Circuits | Ceylon Explore Tours",
   description:
@@ -20,9 +22,18 @@ export const metadata: Metadata = {
   },
 };
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 async function getInitialTours() {
+  try {
+    await syncToursWithDb(prisma);
+  } catch (syncErr) {
+    console.warn("syncToursWithDb warning in /tours:", syncErr);
+  }
+
+  let formatted: any[] = [];
+
   try {
     const dbTours = await prisma.tour.findMany({
       where: {
@@ -42,7 +53,7 @@ async function getInitialTours() {
     });
 
     if (dbTours && dbTours.length > 0) {
-      const formatted = dbTours.map((e: any) => ({
+      formatted = dbTours.map((e: any) => ({
         id: e.id,
         title: e.title,
         slug: e.slug,
@@ -60,35 +71,63 @@ async function getInitialTours() {
         instantBook: e.instantBook,
         primaryImage: e.images[0]?.url || "/images/destinations/sigiriya.jpg",
       }));
-
-      // Merge any catalog tours not yet in the DB results (ensuring multi-day packages appear)
-      const existingSlugs = new Set(formatted.map((t: any) => t.slug));
-      for (const t of TOURS_CATALOG) {
-        if (!existingSlugs.has(t.slug)) {
-          formatted.push({
-            id: t.id,
-            title: t.title,
-            slug: t.slug,
-            location: t.location,
-            destinationSlug: t.destinationSlug,
-            categorySlug: t.categorySlug,
-            duration: t.duration,
-            rating: t.rating,
-            reviewCount: t.reviewCount,
-            price: t.price,
-            previousPrice: t.previousPrice,
-            tourType: t.tourType,
-            badge: t.badge,
-            freeCancellation: t.freeCancellation,
-            instantBook: t.instantBook,
-            primaryImage: t.images[0]?.url || "/images/destinations/sigiriya.jpg",
-          });
-        }
-      }
-      return formatted;
     }
   } catch (e) {
-    console.error("Prisma lookup in /tours server component failed, falling back to TOURS_CATALOG:", e);
+    console.error("Prisma lookup in /tours server component failed:", e);
+  }
+
+  if (formatted.length === 0) {
+    const stored = await getAllStoredTours().catch(() => []);
+    if (stored && stored.length > 0) {
+      formatted = stored
+        .filter((t) => t.status !== "ARCHIVED")
+        .map((t) => ({
+          id: t.id,
+          title: t.title,
+          slug: t.slug,
+          location: t.location,
+          destinationSlug: t.destination?.slug || "",
+          categorySlug: t.category?.slug || "",
+          duration: t.duration,
+          rating: t.rating || 5,
+          reviewCount: t.reviewCount || 0,
+          price: t.price,
+          previousPrice: t.previousPrice,
+          tourType: t.tourType,
+          badge: t.badge,
+          freeCancellation: t.freeCancellation,
+          instantBook: t.instantBook,
+          primaryImage: t.images?.[0]?.url || "/images/destinations/sigiriya.jpg",
+        }));
+    }
+  }
+
+  if (formatted.length > 0) {
+    // Merge any catalog tours not yet in the DB results (ensuring multi-day packages appear)
+    const existingSlugs = new Set(formatted.map((t: any) => t.slug));
+    for (const t of TOURS_CATALOG) {
+      if (!existingSlugs.has(t.slug)) {
+        formatted.push({
+          id: t.id,
+          title: t.title,
+          slug: t.slug,
+          location: t.location,
+          destinationSlug: t.destinationSlug,
+          categorySlug: t.categorySlug,
+          duration: t.duration,
+          rating: t.rating,
+          reviewCount: t.reviewCount,
+          price: t.price,
+          previousPrice: t.previousPrice,
+          tourType: t.tourType,
+          badge: t.badge,
+          freeCancellation: t.freeCancellation,
+          instantBook: t.instantBook,
+          primaryImage: t.images[0]?.url || "/images/destinations/sigiriya.jpg",
+        });
+      }
+    }
+    return formatted;
   }
 
   // Fallback to static catalog if DB is unreachable

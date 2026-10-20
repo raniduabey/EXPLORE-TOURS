@@ -1,11 +1,16 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { syncToursWithDb, getAllStoredTours } from "@/lib/toursStore";
 import { TOURS_CATALOG } from "@/data/toursData";
 
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export async function GET() {
   try {
+    // Synchronize across serverless environments before serving live content
+    await syncToursWithDb(prisma);
+
     let formatted: any[] = [];
 
     try {
@@ -49,10 +54,39 @@ export async function GET() {
         }));
       }
     } catch (dbErr) {
-      console.error("Prisma tours query failed, using catalog fallback", dbErr);
+      console.error("Prisma tours query failed, using store fallback", dbErr);
     }
 
-    // Merge any catalog tours not yet in the DB results (ensuring multi-day packages appear)
+    // Fallback to stored tours if SQLite returned empty
+    if (formatted.length === 0) {
+      const stored = await getAllStoredTours();
+      if (stored && stored.length > 0) {
+        formatted = stored
+          .filter((t) => t.status !== "ARCHIVED")
+          .map((t) => ({
+            id: t.id,
+            title: t.title,
+            slug: t.slug,
+            location: t.location,
+            destinationSlug: t.destination?.slug || "",
+            categorySlug: t.category?.slug || "",
+            duration: t.duration,
+            rating: t.rating || 5,
+            reviewCount: t.reviewCount || 0,
+            price: t.price,
+            previousPrice: t.previousPrice,
+            tourType: t.tourType,
+            badge: t.badge,
+            freeCancellation: t.freeCancellation,
+            instantBook: t.instantBook,
+            primaryImage:
+              t.images?.[0]?.url ||
+              "/images/destinations/sigiriya.jpg",
+          }));
+      }
+    }
+
+    // Merge any catalog tours not yet in the results
     const existingSlugs = new Set(formatted.map((t: any) => t.slug));
     for (const t of TOURS_CATALOG) {
       if (!existingSlugs.has(t.slug)) {
@@ -79,7 +113,11 @@ export async function GET() {
 
     return NextResponse.json(formatted, {
       headers: {
-        "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300",
+        "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0",
+        "CDN-Cache-Control": "no-store",
+        "Vercel-CDN-Cache-Control": "no-store",
+        Pragma: "no-cache",
+        Expires: "0",
       },
     });
   } catch (error) {

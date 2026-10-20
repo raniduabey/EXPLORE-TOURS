@@ -1,18 +1,20 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, HelpCircle, ArrowRight, ShieldCheck, MessageCircle } from "lucide-react";
 import { FadeIn } from "@/components/ui/motion";
 import { siteConfig } from "@/config/site";
 
-interface FAQItem {
+export interface FAQItem {
+  id?: string;
   question: string;
   answer: string;
-  tag: string;
+  tag?: string;
+  category?: string;
 }
 
-const FAQS: FAQItem[] = [
+const DEFAULT_FAQS: FAQItem[] = [
   {
     tag: "Chauffeur & Transport",
     question: "What is included with our private chauffeur guide and vehicle?",
@@ -51,8 +53,28 @@ const FAQS: FAQItem[] = [
   },
 ];
 
-export const HomeFaqSection: React.FC = () => {
+export const HomeFaqSection: React.FC<{ faqs?: FAQItem[] }> = ({ faqs: initialFaqs }) => {
+  const [faqList, setFaqList] = useState<FAQItem[]>(
+    initialFaqs && initialFaqs.length > 0 ? initialFaqs : DEFAULT_FAQS
+  );
   const [openIdx, setOpenIdx] = useState<number | null>(0);
+
+  useEffect(() => {
+    async function loadFreshFaqs() {
+      try {
+        const res = await fetch(`/api/faqs?_t=${Date.now()}`, { cache: "no-store" });
+        if (res.ok) {
+          const data = await res.json();
+          if (Array.isArray(data) && data.length > 0) {
+            setFaqList(data);
+          }
+        }
+      } catch (e) {
+        // keep current
+      }
+    }
+    loadFreshFaqs();
+  }, []);
 
   const toggle = (idx: number) => {
     setOpenIdx(openIdx === idx ? null : idx);
@@ -74,11 +96,12 @@ export const HomeFaqSection: React.FC = () => {
       </FadeIn>
 
       <div className="space-y-4">
-        {FAQS.map((faq, idx) => {
+        {faqList.map((faq, idx) => {
           const isOpen = openIdx === idx;
+          const categoryTag = faq.tag || faq.category || "General";
           return (
             <motion.div
-              key={idx}
+              key={faq.id || idx}
               initial={false}
               className={`rounded-2xl border transition-all duration-300 overflow-hidden ${
                 isOpen
@@ -89,23 +112,26 @@ export const HomeFaqSection: React.FC = () => {
               <button
                 type="button"
                 onClick={() => toggle(idx)}
-                className="w-full p-4 sm:p-6 text-left flex items-center justify-between gap-3 sm:gap-4 focus:outline-none"
+                className="w-full text-left px-5 sm:px-6 py-4 sm:py-5 flex items-center justify-between gap-4 cursor-pointer select-none transition-colors"
+                aria-expanded={isOpen}
               >
-                <div className="space-y-1.5 min-w-0">
-                  <span className="text-[10px] font-mono uppercase tracking-widest text-[#C5A46B] block">
-                    {faq.tag}
-                  </span>
-                  <span className="font-serif text-base sm:text-lg font-medium text-[#15392D] break-words block">
+                <div className="flex-1 pr-2">
+                  <div className="text-[10px] font-mono uppercase tracking-wider text-[#C5A46B] mb-1 font-medium">
+                    {categoryTag}
+                  </div>
+                  <h3 className="text-base sm:text-lg font-serif font-normal text-[#15392D] leading-snug">
                     {faq.question}
-                  </span>
+                  </h3>
                 </div>
-                <motion.div
-                  animate={{ rotate: isOpen ? 180 : 0 }}
-                  transition={{ duration: 0.25, ease: "easeInOut" }}
-                  className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#F8F7F3] border border-[#E7E2D8] flex items-center justify-center text-[#15392D] shrink-0 shadow-xs"
+                <div
+                  className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-transform duration-300 ${
+                    isOpen
+                      ? "bg-[#15392D] text-[#C5A46B] rotate-180"
+                      : "bg-[#F0ECE4]/80 text-[#59645E]"
+                  }`}
                 >
-                  <ChevronDown className="w-4 h-4 text-[#C5A46B]" />
-                </motion.div>
+                  <ChevronDown className="w-4 h-4" />
+                </div>
               </button>
 
               <AnimatePresence initial={false}>
@@ -115,9 +141,10 @@ export const HomeFaqSection: React.FC = () => {
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: "auto", opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                    transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                    className="overflow-hidden"
                   >
-                    <div className="px-4 pb-5 pt-1 sm:px-6 sm:pb-6 text-xs sm:text-sm text-[#59645E] leading-relaxed border-t border-[#E7E2D8] break-words">
+                    <div className="px-5 sm:px-6 pb-5 sm:pb-6 pt-1 text-sm sm:text-[15px] text-[#59645E] font-light leading-relaxed border-t border-[#E7E2D8]/60 mt-1">
                       {faq.answer}
                     </div>
                   </motion.div>
@@ -128,24 +155,17 @@ export const HomeFaqSection: React.FC = () => {
         })}
       </div>
 
-      <div className="mt-10 sm:mt-12 p-6 sm:p-8 rounded-2xl sm:rounded-3xl bg-[#15392D] text-white border border-[#C5A46B]/30 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-6 text-center sm:text-left">
-        <div>
-          <h4 className="font-serif text-base sm:text-lg font-medium text-white break-words">
-            Seeking a bespoke route or have a special request?
-          </h4>
-          <p className="text-xs text-white/80 mt-1 font-light leading-relaxed">
-            Our private island travel concierge is available 24/7 on WhatsApp to craft your itinerary.
-          </p>
+      <div className="mt-10 sm:mt-12 text-center pt-6 border-t border-[#E7E2D8]">
+        <div className="inline-flex flex-col sm:flex-row items-center justify-center gap-3 text-sm text-[#59645E]">
+          <span className="font-light">Still have questions regarding your Sri Lanka travel circuit?</span>
+          <Link
+            href="/contact"
+            className="inline-flex items-center gap-1.5 font-medium text-[#15392D] hover:text-[#C5A46B] transition-colors group"
+          >
+            <span>Ask our concierge team directly</span>
+            <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1 text-[#C5A46B]" />
+          </Link>
         </div>
-        <a
-          href={`https://wa.me/${siteConfig.contact.whatsapp}?text=Hi%20${encodeURIComponent(siteConfig.name)},%20I%20have%20a%20question%20about%20traveling%20in%20Sri%20Lanka.`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="w-full sm:w-auto px-6 sm:px-7 py-3 sm:py-3.5 bg-white hover:bg-[#F8F7F3] text-[#15392D] rounded-full text-xs font-sans font-medium uppercase tracking-wider transition-all flex items-center justify-center gap-2 shrink-0 shadow-sm text-center"
-        >
-          <MessageCircle className="w-4 h-4 fill-current shrink-0" />
-          <span>Connect With Concierge</span>
-        </a>
       </div>
     </section>
   );

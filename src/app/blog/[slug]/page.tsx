@@ -17,8 +17,10 @@ import {
   ShieldCheck,
   ArrowRight,
 } from "lucide-react";
+import { syncBlogWithDb, getAllStoredBlogPosts } from "@/lib/blogStore";
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 interface BlogPostData {
   id: string;
@@ -77,7 +79,22 @@ export async function generateMetadata({
 }: {
   params: { slug: string };
 }): Promise<Metadata> {
-  const post = FALLBACK_POSTS[params.slug];
+  let post: any = null;
+  try {
+    post = await prisma.blogPost.findUnique({
+      where: { slug: params.slug },
+    });
+  } catch (e) {}
+
+  if (!post) {
+    const stored = await getAllStoredBlogPosts().catch(() => []);
+    post = stored.find((p) => p.slug === params.slug);
+  }
+
+  if (!post) {
+    post = FALLBACK_POSTS[params.slug];
+  }
+
   if (!post) {
     return {
       title: `Travel Guide | ${siteConfig.name}`,
@@ -103,6 +120,12 @@ export default async function BlogPostPage({
 }: {
   params: { slug: string };
 }) {
+  try {
+    await syncBlogWithDb(prisma);
+  } catch (syncErr) {
+    console.warn("syncBlogWithDb warning in /blog/[slug]:", syncErr);
+  }
+
   let post: any = null;
   try {
     post = await prisma.blogPost.findUnique({
@@ -110,6 +133,11 @@ export default async function BlogPostPage({
     });
   } catch (e) {
     console.error("Error finding post in Prisma", e);
+  }
+
+  if (!post) {
+    const stored = await getAllStoredBlogPosts().catch(() => []);
+    post = stored.find((p) => p.slug === params.slug);
   }
 
   if (!post) {

@@ -2,8 +2,10 @@ import Link from "next/link";
 import Image from "next/image";
 import prisma from "@/lib/prisma";
 import { Clock, ArrowRight } from "lucide-react";
+import { syncBlogWithDb, getAllStoredBlogPosts } from "@/lib/blogStore";
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 const FALLBACK_POSTS = [
   {
@@ -42,13 +44,27 @@ const FALLBACK_POSTS = [
 ];
 
 export default async function BlogPage() {
+  try {
+    await syncBlogWithDb(prisma);
+  } catch (syncErr) {
+    console.warn("syncBlogWithDb warning in /blog:", syncErr);
+  }
+
   let posts: any[] = [];
   try {
     posts = await prisma.blogPost.findMany({
+      where: { status: "PUBLISHED" },
       orderBy: { publishedAt: "desc" },
     });
   } catch (e) {
     console.error("Prisma error fetching blog posts:", e);
+  }
+
+  if (!posts || posts.length === 0) {
+    const stored = await getAllStoredBlogPosts().catch(() => []);
+    if (stored && stored.length > 0) {
+      posts = stored.filter((p) => p.status === "PUBLISHED");
+    }
   }
 
   if (!posts || posts.length === 0) {

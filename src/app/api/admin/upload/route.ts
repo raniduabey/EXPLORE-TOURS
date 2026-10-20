@@ -12,6 +12,7 @@ import {
 } from "@/lib/mediaStore";
 
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 const MAX_FILE_SIZE = 8 * 1024 * 1024; // Strict 8 Megabytes in exact bytes
 
@@ -151,7 +152,12 @@ export async function GET(req: Request) {
         )
       : enriched;
 
-    return NextResponse.json(filtered);
+    return NextResponse.json(filtered, {
+      headers: {
+        "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
+        Pragma: "no-cache",
+      },
+    });
   } catch (error) {
     console.error("GET /api/admin/upload error", error);
     return NextResponse.json({ error: "Failed to retrieve media asset library" }, { status: 500 });
@@ -472,6 +478,13 @@ export async function PUT(req: Request) {
       createdAt: updated.createdAt ? new Date(updated.createdAt).toISOString() : new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     });
+
+    try {
+      revalidatePath("/", "page");
+      revalidatePath("/tours", "page");
+      revalidatePath("/destinations", "page");
+      revalidatePath("/admin", "page");
+    } catch (e) {}
 
     return NextResponse.json({ success: true, asset: updated });
   } catch (error) {

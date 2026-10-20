@@ -6,7 +6,10 @@ import prisma from "@/lib/prisma";
 import { DESTINATIONS_CATALOG } from "@/data/destinationsData";
 import { MapPin, ArrowRight, Calendar, Compass, ShieldCheck } from "lucide-react";
 
+import { syncDestinationsWithDb, getAllStoredDestinations } from "@/lib/destinationsStore";
+
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export const metadata: Metadata = {
   title: `Destinations in Sri Lanka | ${siteConfig.name}`,
@@ -18,6 +21,12 @@ export const metadata: Metadata = {
 };
 
 export default async function DestinationsPage() {
+  try {
+    await syncDestinationsWithDb(prisma);
+  } catch (syncErr) {
+    console.warn("syncDestinationsWithDb warning in /destinations:", syncErr);
+  }
+
   let destinations: any[] = [];
   try {
     const dbDests = await prisma.destination.findMany({
@@ -29,6 +38,13 @@ export default async function DestinationsPage() {
     }
   } catch (e) {
     console.error("Failed to load destinations from database", e);
+  }
+
+  if (destinations.length === 0) {
+    const storedDests = await getAllStoredDestinations().catch(() => []);
+    if (storedDests && storedDests.length > 0) {
+      destinations = storedDests.filter((d) => d.status === "PUBLISHED");
+    }
   }
 
   if (destinations.length === 0) {

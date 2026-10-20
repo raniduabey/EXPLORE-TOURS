@@ -1,16 +1,34 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
+import { revalidatePath } from "next/cache";
 import prisma from "@/lib/prisma";
 import { verifyAdminToken } from "@/lib/auth";
+import { syncBlogWithDb, saveBlogPostToStore, getAllStoredBlogPosts } from "@/lib/blogStore";
 
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export async function GET() {
   try {
-    const posts = await prisma.blogPost.findMany({
+    await syncBlogWithDb(prisma);
+
+    let posts = await prisma.blogPost.findMany({
       orderBy: { publishedAt: "desc" },
     });
-    return NextResponse.json(posts);
+
+    if (!posts || posts.length === 0) {
+      const stored = await getAllStoredBlogPosts().catch(() => []);
+      if (stored && stored.length > 0) {
+        posts = stored as any;
+      }
+    }
+
+    return NextResponse.json(posts, {
+      headers: {
+        "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
+        Pragma: "no-cache",
+      },
+    });
   } catch (error) {
     console.error("GET /api/admin/blog error", error);
     return NextResponse.json({ error: "Failed to fetch blog posts" }, { status: 500 });
@@ -56,6 +74,14 @@ export async function POST(req: Request) {
     });
 
     try {
+      await saveBlogPostToStore(post);
+      revalidatePath("/blog", "page");
+      revalidatePath("/", "page");
+      revalidatePath("/admin", "page");
+      if (post.slug) revalidatePath(`/blog/${post.slug}`, "page");
+    } catch (e) {}
+
+    try {
       await prisma.auditLog.create({
         data: {
           adminEmail: auth.payload?.sub || "admin@ceylonexploretours.com",
@@ -83,6 +109,8 @@ export async function PUT(req: Request) {
     if (!auth.valid) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+
+    await syncBlogWithDb(prisma);
 
     const body = await req.json();
     const {
@@ -119,6 +147,14 @@ export async function PUT(req: Request) {
       },
     });
 
+    try {
+      await saveBlogPostToStore(updated);
+      revalidatePath("/blog", "page");
+      revalidatePath("/", "page");
+      revalidatePath("/admin", "page");
+      if (updated.slug) revalidatePath(`/blog/${updated.slug}`, "page");
+    } catch (e) {}
+
     return NextResponse.json({ success: true, post: updated });
   } catch (error) {
     console.error("PUT /api/admin/blog error", error);
@@ -143,7 +179,16 @@ export async function DELETE(req: Request) {
       return NextResponse.json({ error: "Post ID required" }, { status: 400 });
     }
 
+    const existing = await prisma.blogPost.findUnique({ where: { id } });
     await prisma.blogPost.delete({ where: { id } });
+
+    try {
+      revalidatePath("/blog", "page");
+      revalidatePath("/", "page");
+      revalidatePath("/admin", "page");
+      if (existing?.slug) revalidatePath(`/blog/${existing.slug}`, "page");
+    } catch (e) {}
+
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("DELETE /api/admin/blog error", error);

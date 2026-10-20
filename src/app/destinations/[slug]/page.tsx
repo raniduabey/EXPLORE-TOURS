@@ -13,7 +13,10 @@ import { getToursByDestination } from "@/data/toursData";
 import { siteConfig } from "@/config/site";
 import { MapPin, Calendar, Compass, Sun, Sparkles, ArrowRight } from "lucide-react";
 
+import { syncDestinationsWithDb, getAllStoredDestinations } from "@/lib/destinationsStore";
+
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export async function generateMetadata({
   params,
@@ -26,6 +29,11 @@ export async function generateMetadata({
       where: { slug: params.slug },
     });
   } catch (e) {}
+
+  if (!dbDest) {
+    const storedDests = await getAllStoredDestinations().catch(() => []);
+    dbDest = storedDests.find((d) => d.slug === params.slug);
+  }
 
   const dest = dbDest || getDestinationBySlug(params.slug);
   const title = dest?.seoTitle || (dest ? `${dest.name} Tours & Travel Guide | ${siteConfig.name}` : `Destination | ${siteConfig.name}`);
@@ -51,6 +59,12 @@ export default async function DestinationPage({
 }: {
   params: { slug: string };
 }) {
+  try {
+    await syncDestinationsWithDb(prisma);
+  } catch (syncErr) {
+    console.warn("syncDestinationsWithDb warning in /destinations/[slug]:", syncErr);
+  }
+
   let dest: any = null;
 
   try {
@@ -66,6 +80,11 @@ export default async function DestinationPage({
     });
   } catch (e) {
     console.error("Prisma destination lookup error", e);
+  }
+
+  if (!dest) {
+    const storedDests = await getAllStoredDestinations().catch(() => []);
+    dest = storedDests.find((d) => d.slug === params.slug);
   }
 
   if (!dest) {

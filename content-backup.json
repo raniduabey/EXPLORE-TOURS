@@ -1,0 +1,144 @@
+{
+  "faqs": [
+    {
+      "id": "680b0887-0337-4935-adc7-15a83a5c3b98",
+      "question": "Are Ceylon Explore Tours private or group tours?",
+      "answer": "All our itineraries are 100% private tours. You will travel in a dedicated, air-conditioned vehicle with your personal English-speaking chauffeur guide, allowing full flexibility to stop, adjust timing, and explore at your own pace.",
+      "category": "Tour Types",
+      "orderIndex": 0,
+      "active": true,
+      "createdAt": "2026-10-13T12:28:53.426Z",
+      "updatedAt": "2026-10-13T12:28:53.426Z"
+    },
+    {
+      "id": "366183b8-fbcd-4927-acd7-ccf87626aeb6",
+      "question": "What is your cancellation and refund policy?",
+      "answer": "We offer free cancellation up to 48 hours prior to the scheduled tour start date for standard day excursions. Multi-day tour packages can be cancelled up to 7 days before arrival for a full refund minus any non-refundable hotel deposit fees.",
+      "category": "Bookings",
+      "orderIndex": 1,
+      "active": true,
+      "createdAt": "2026-10-13T12:28:53.426Z",
+      "updatedAt": "2026-10-13T12:28:53.426Z"
+    },
+    {
+      "id": "6b6c0259-9187-424a-b326-66aeaffef172",
+      "question": "Are airport pickups and hotel drop-offs included?",
+      "answer": "Yes, round-trip transfers from Bandaranaike International Airport (CMB) or your hotel in Colombo, Negombo, or along the itinerary route are included in your private tour package with meet-and-greet service.",
+      "category": "Transport",
+      "orderIndex": 2,
+      "active": true,
+      "createdAt": "2026-10-13T12:28:53.426Z",
+      "updatedAt": "2026-10-13T12:28:53.426Z"
+    },
+    {
+      "id": "2200f4c8-b60b-4e02-8075-4c842636f167",
+      "question": "Can we customize the tour itineraries?",
+      "answer": "Absolutely. Every itinerary on our website can be tailored to match your preferences, travel dates, pace, budget, and special interests. Simply contact our travel specialists or submit a custom inquiry.",
+      "category": "Customization",
+      "orderIndex": 3,
+      "active": true,
+      "createdAt": "2026-10-13T12:28:53.426Z",
+      "updatedAt": "2026-10-13T12:28:53.426Z"
+    },
+    {
+      "id": "9c6e133b-bf46-44b5-80fb-cd1d9afc9e67",
+      "question": "What type of vehicles are provided?",
+      "answer": "We provide modern, fully air-conditioned tourist board approved vehicles: sedans (Toyota Axio/Prius) for 1-2 guests, luxury minivans (Toyota KDH/Commuter) for 3-6 guests, and larger passenger coaches for larger families.",
+      "category": "Transport",
+      "orderIndex": 4,
+      "active": true,
+      "createdAt": "2026-10-13T12:28:53.426Z",
+      "updatedAt": "2026-10-13T12:28:53.426Z"
+    },
+    {
+      "id": "f6e1aaaa-76c6-4633-825e-57fbfeefb62f",
+      "question": "How do customer reviews work on Ceylon Explore Tours?",
+      "answer": "We only publish authentic verified reviews from travelers who have booked and completed a tour with us. Following completion of your journey, you will receive an invitation link to submit your honest review and photos.",
+      "category": "Reviews",
+      "orderIndex": 5,
+      "active": true,
+      "createdAt": "2026-10-13T12:28:53.426Z",
+      "updatedAt": "2026-10-13T12:28:53.426Z"
+    }
+  ],
+  "slides": [
+    {
+      "id": "398b856c-7cb2-4aad-98a8-91761580d0e6",
+      "tagline": "Explore. Connect. Remember.",
+      "headlineLine1": "Discover Sri Lanka",
+      "headlineHighlight": "Your Way",
+      "subtitle": "Authentic private day tours, wildlife safaris, and highland journeys curated by local travel experts.",
+      "image": "https://images.unsplash.com/photo-1589182373726-e4f658ab50f0?q=80&w=1600&auto=format&fit=crop",
+      "mobileImage": null,
+      "destination": "Sigiriya Rock Fortress",
+      "ctaText": "Explore All Tours",
+      "ctaLink": "/tours",
+      "active": true,
+      "orderIndex": 0,
+      "createdAt": "2026-10-13T12:28:53.407Z",
+      "updatedAt": "2026-10-13T12:28:53.407Z"
+    },
+    {
+      "id": "ac362d4b-759f-4162-95a8-3cb106db5a8a",
+      "tagline": "The Highland Miracle",
+      "headlineLine1": "Ride the Iconic Blue Train",
+      "headlineHighlight": "Through Ella",
+      "subtitle": "Breathtaking mountain passes, Nine Arches viaducts, and Ceylon tea plantation vistas.",
+      "image": "https://images.unsplash.com/photo-1546708973-b339540b5162?q=80&w=1600&auto=format&fit=crop",
+      "mobileImage": null,
+      "destination": "Ella Highlands",
+      "ctaText": "View Train Experiences",
+      "ctaLink": "/tours?category=adventure",
+      "active": true,
+      "orderIndex": 1,
+      "createdAt": "2026-10-13T12:28:53.407Z",
+      "updatedAt": "2026-10-13T12:28:53.407Z"
+    },
+    {
+      "id": "c07d4137-37fd-4bcd-ab50-2eaf81f0430d",
+      "tagline": "Wild Ceylon",
+      "headlineLine1": "Track Royal Leopards",
+      "headlineHighlight": "In Yala",
+      "subtitle": "Expert 4x4 open safari jeeps with SLTDA registered wildlife trackers.",
+      "image": "https://images.unsplash.com/photo-1534567153574-2b12153a87f0?q=80&w=1600&auto=format&fit=crop",
+      "mobileImage": null,
+      "destination": "Yala National Park",
+      "ctaText": "Browse Safaris",
+      "ctaLink": "/tours?category=wildlife",
+      "active": true,
+      "orderIndex": 2,
+      "createdAt": "2026-10-13T12:28:53.407Z",
+      "updatedAt": "2026-10-13T12:28:53.407Z"
+    }
+  ],
+  "content": [
+    {
+      "id": "9d2b04a8-9c63-4177-9f63-d71f07115058",
+      "key": "company_name",
+      "value": "Ceylon Explore Tours",
+      "category": "branding",
+      "updatedAt": "2026-10-15T13:25:01.529Z"
+    },
+    {
+      "id": "e670124f-6c0e-42fb-9609-9c94bbcb25d0",
+      "key": "support_phone",
+      "value": "+94 77 123 4567",
+      "category": "contact",
+      "updatedAt": "2026-10-15T13:25:01.530Z"
+    },
+    {
+      "id": "7cac5f32-978e-4aa3-8340-ac2b38a4375c",
+      "key": "support_email",
+      "value": "info@ceylonexploretours.com",
+      "category": "contact",
+      "updatedAt": "2026-10-15T13:25:01.531Z"
+    },
+    {
+      "id": "7f8af2ad-2dac-4cfb-8211-50a70698b6c3",
+      "key": "office_address",
+      "value": "No. 42, Galle Road, Colombo 03, Sri Lanka",
+      "category": "contact",
+      "updatedAt": "2026-10-15T13:25:01.532Z"
+    }
+  ]
+}

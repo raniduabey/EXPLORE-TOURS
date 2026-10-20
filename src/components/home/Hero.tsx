@@ -75,7 +75,13 @@ export const Hero: React.FC<{ onOpenCustomPlanner?: () => void }> = ({ onOpenCus
   useEffect(() => {
     async function fetchSlides() {
       try {
-        const res = await fetch("/api/hero-slides");
+        const res = await fetch(`/api/hero-slides?_t=${Date.now()}`, {
+          cache: "no-store",
+          headers: {
+            Pragma: "no-cache",
+            "Cache-Control": "no-cache",
+          },
+        });
         if (res.ok) {
           const data = await res.json();
           if (Array.isArray(data) && data.length > 0) setSlides(data);

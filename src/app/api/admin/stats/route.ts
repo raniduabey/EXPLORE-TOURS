@@ -114,6 +114,11 @@ export async function GET() {
       },
       monthlyVolume: Object.values(monthlyData),
       recentAudit,
+    }, {
+      headers: {
+        "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
+        Pragma: "no-cache",
+      },
     });
   } catch (error) {
     console.error("GET /api/admin/stats error", error);

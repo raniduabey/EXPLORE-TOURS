@@ -1,7 +1,14 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
+import { revalidatePath } from "next/cache";
 import prisma from "@/lib/prisma";
 import { verifyAdminToken } from "@/lib/auth";
+import {
+  syncContentWithDb,
+  saveFaqToStore,
+  deleteFaqFromStore,
+  saveSlideToStore,
+} from "@/lib/contentStore";
 
 export const dynamic = "force-dynamic";
 
@@ -10,6 +17,9 @@ export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
     const type = searchParams.get("type");
+
+    // Synchronize across serverless containers and persistent store
+    await syncContentWithDb(prisma);
 
     if (type === "faqs") {
       const faqs = await prisma.faqItem.findMany({
@@ -44,6 +54,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    await syncContentWithDb(prisma);
+
     const body = await req.json();
     const { type, ...data } = body;
 
@@ -60,6 +72,12 @@ export async function POST(req: Request) {
             active: active !== false,
           },
         });
+        await saveFaqToStore(updated);
+        try {
+          revalidatePath("/", "page");
+          revalidatePath("/faq", "page");
+          revalidatePath("/admin", "page");
+        } catch (e) {}
         return NextResponse.json({ success: true, faq: updated });
       } else {
         const created = await prisma.faqItem.create({
@@ -71,6 +89,12 @@ export async function POST(req: Request) {
             active: active !== false,
           },
         });
+        await saveFaqToStore(created);
+        try {
+          revalidatePath("/", "page");
+          revalidatePath("/faq", "page");
+          revalidatePath("/admin", "page");
+        } catch (e) {}
         return NextResponse.json({ success: true, faq: created });
       }
     }
@@ -82,6 +106,10 @@ export async function POST(req: Request) {
         update: { value: String(value), category: category || "general" },
         create: { key, value: String(value), category: category || "general" },
       });
+      try {
+        revalidatePath("/", "page");
+        revalidatePath("/admin", "page");
+      } catch (e) {}
       return NextResponse.json({ success: true, setting });
     }
 
@@ -109,6 +137,12 @@ export async function DELETE(req: Request) {
 
     if (type === "faq" && id) {
       await prisma.faqItem.delete({ where: { id } });
+      await deleteFaqFromStore(id);
+      try {
+        revalidatePath("/", "page");
+        revalidatePath("/faq", "page");
+        revalidatePath("/admin", "page");
+      } catch (e) {}
       return NextResponse.json({ success: true });
     }
 
