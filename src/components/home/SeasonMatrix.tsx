@@ -172,21 +172,34 @@ export const SeasonMatrix: React.FC = () => {
   const scrollContainerRef = React.useRef<HTMLDivElement>(null);
   const monthButtonRefs = React.useRef<(HTMLButtonElement | null)[]>([]);
 
-  // Keep the selected month visible in the horizontal scroll container
+  const isInitialMount = React.useRef(true);
+
+  // Keep the selected month visible in the horizontal scroll container WITHOUT scrolling the window
   React.useEffect(() => {
     const activeBtn = monthButtonRefs.current[selectedIdx];
-    if (activeBtn && scrollContainerRef.current) {
-      activeBtn.scrollIntoView({
-        behavior: "smooth",
-        block: "nearest",
-        inline: "center",
-      });
+    const container = scrollContainerRef.current;
+    if (!activeBtn || !container) return;
+
+    const targetScrollLeft =
+      activeBtn.offsetLeft - container.clientWidth / 2 + activeBtn.clientWidth / 2;
+
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      // On initial page mount, set horizontal scroll position silently without animation or page shift
+      container.scrollLeft = Math.max(0, targetScrollLeft);
+      return;
     }
+
+    // On user interaction (clicking a month), smoothly scroll ONLY the horizontal month container
+    container.scrollTo({
+      left: Math.max(0, targetScrollLeft),
+      behavior: "smooth",
+    });
   }, [selectedIdx]);
 
   return (
-    <section className="py-14 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full overflow-hidden">
-      <FadeIn className="text-center max-w-3xl mx-auto mb-8 sm:mb-12 px-2 sm:px-0">
+    <section className="pt-6 sm:pt-8 lg:pt-10 pb-14 sm:pb-18 lg:pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full overflow-hidden">
+      <FadeIn className="text-center max-w-3xl mx-auto mb-6 sm:mb-8 px-2 sm:px-0">
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-luxury-forest/5 text-luxury-gold text-[10px] font-mono uppercase tracking-[0.25em] border border-luxury-gold/30 mb-3">
           <Sun className="w-3.5 h-3.5 text-luxury-gold shrink-0" />
           <span>Microclimate Almanac</span>
@@ -200,7 +213,7 @@ export const SeasonMatrix: React.FC = () => {
       </FadeIn>
 
       {/* Month Bar: Clearly Horizontally Scrollable on Mobile, Centered on Desktop */}
-      <div className="relative w-full mb-8 sm:mb-10">
+      <div className="relative w-full mb-6 sm:mb-8">
         {/* Subtle Edge Scroll Cues for Mobile */}
         <div className="absolute left-0 top-0 bottom-3 w-5 bg-gradient-to-r from-[#FAF8F5] to-transparent pointer-events-none md:hidden z-10" />
         <div className="absolute right-0 top-0 bottom-3 w-5 bg-gradient-to-l from-[#FAF8F5] to-transparent pointer-events-none md:hidden z-10" />

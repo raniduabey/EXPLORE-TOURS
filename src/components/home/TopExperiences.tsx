@@ -85,19 +85,56 @@ const defaultTours: TourCardData[] = [
 
 export const TopExperiences: React.FC<{ tours?: TourCardData[] }> = ({ tours: propTours }) => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = React.useState(false);
+  const [canScrollRight, setCanScrollRight] = React.useState(true);
+
+  const checkScroll = React.useCallback(() => {
+    if (containerRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = containerRef.current;
+      setCanScrollLeft(scrollLeft > 10);
+      setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
+    }
+  }, []);
+
+  const list = propTours && propTours.length > 0 ? propTours : defaultTours;
+
+  React.useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    checkScroll();
+    el.addEventListener("scroll", checkScroll, { passive: true });
+    window.addEventListener("resize", checkScroll);
+    return () => {
+      el.removeEventListener("scroll", checkScroll);
+      window.removeEventListener("resize", checkScroll);
+    };
+  }, [checkScroll, list]);
+
   const scroll = (dir: "left" | "right") => {
     if (containerRef.current) {
-      containerRef.current.scrollBy({
-        left: dir === "left" ? -380 : 380,
+      const container = containerRef.current;
+      const width = container.clientWidth;
+      let step = width;
+      if (window.innerWidth >= 1024) {
+        // Desktop: Exactly 1 card width + 24px gap
+        step = (width - 48) / 3 + 24;
+      } else if (window.innerWidth >= 640) {
+        // Tablet: 1 card width + 20px gap
+        step = (width - 20) / 2 + 20;
+      } else {
+        // Mobile: 1 card width + 20px gap
+        step = width * 0.86 + 20;
+      }
+
+      container.scrollBy({
+        left: dir === "left" ? -step : step,
         behavior: "smooth"
       });
     }
   };
 
-  const list = propTours && propTours.length > 0 ? propTours : defaultTours;
-
   return (
-    <section className="py-16 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-8 sm:space-y-10">
+    <section className="pt-12 sm:pt-16 lg:pt-18 pb-6 sm:pb-8 lg:pb-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-6 sm:space-y-8">
       <FadeIn className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-luxury-forest/5 border border-luxury-gold/30 text-luxury-gold text-[10px] font-mono uppercase tracking-[0.25em] mb-3">
@@ -117,16 +154,28 @@ export const TopExperiences: React.FC<{ tours?: TourCardData[] }> = ({ tours: pr
             <button
               type="button"
               onClick={() => scroll("left")}
-              className="w-11 h-11 rounded-full bg-white border border-luxury-sand/90 hover:border-luxury-gold hover:text-luxury-gold text-luxury-forest flex items-center justify-center shadow-sm transition-all"
+              disabled={!canScrollLeft}
+              className={`w-11 h-11 rounded-full border flex items-center justify-center shadow-sm transition-all ${
+                canScrollLeft
+                  ? "bg-white border-luxury-sand/90 hover:border-luxury-gold hover:text-luxury-gold text-luxury-forest cursor-pointer active:scale-95"
+                  : "bg-white/50 border-luxury-sand/40 text-luxury-charcoal/30 cursor-not-allowed"
+              }`}
               title="Previous Experience"
+              aria-label="Previous Experience"
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
             <button
               type="button"
               onClick={() => scroll("right")}
-              className="w-11 h-11 rounded-full bg-white border border-luxury-sand/90 hover:border-luxury-gold hover:text-luxury-gold text-luxury-forest flex items-center justify-center shadow-sm transition-all"
+              disabled={!canScrollRight}
+              className={`w-11 h-11 rounded-full border flex items-center justify-center shadow-sm transition-all ${
+                canScrollRight
+                  ? "bg-white border-luxury-sand/90 hover:border-luxury-gold hover:text-luxury-gold text-luxury-forest cursor-pointer active:scale-95"
+                  : "bg-white/50 border-luxury-sand/40 text-luxury-charcoal/30 cursor-not-allowed"
+              }`}
               title="Next Experience"
+              aria-label="Next Experience"
             >
               <ChevronRight className="w-5 h-5" />
             </button>
@@ -147,7 +196,10 @@ export const TopExperiences: React.FC<{ tours?: TourCardData[] }> = ({ tours: pr
         style={{ scrollbarWidth: "none", msOverflowStyle: "none", WebkitOverflowScrolling: "touch" }}
       >
         {list.map((t) => (
-          <div key={t.id} className="min-w-[270px] sm:min-w-[360px] max-w-[360px] snap-start flex-shrink-0">
+          <div
+            key={t.id}
+            className="w-[86vw] min-w-[280px] max-w-[340px] sm:w-[calc((100%-20px)/2)] sm:min-w-[calc((100%-20px)/2)] sm:max-w-[calc((100%-20px)/2)] lg:w-[calc((100%-48px)/3)] lg:min-w-[calc((100%-48px)/3)] lg:max-w-[calc((100%-48px)/3)] snap-start flex-shrink-0 flex flex-col"
+          >
             <TourCard tour={t} />
           </div>
         ))}

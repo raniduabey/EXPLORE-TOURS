@@ -115,7 +115,7 @@ export const DestinationGrid: React.FC<{ destinations?: DestinationItem[] }> = (
   });
 
   return (
-    <section className="py-16 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8 max-w-[1248px] mx-auto">
+    <section className="pt-8 sm:pt-12 lg:pt-14 pb-14 sm:pb-18 lg:pb-20 px-4 sm:px-6 lg:px-8 max-w-[1248px] mx-auto">
       <FadeIn className="flex flex-col md:flex-row md:items-end justify-between mb-10 sm:mb-12 gap-6">
         <div>
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-luxury-forest/5 border border-luxury-gold/30 text-luxury-gold text-[10px] font-mono uppercase tracking-[0.25em] mb-3">
