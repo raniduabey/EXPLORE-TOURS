@@ -57,17 +57,15 @@ export default async function BlogPage() {
 
   return (
     <div className="min-h-screen py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-10">
-      <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden bg-luxury-forest text-luxury-ivory p-6 sm:p-12 shadow-2xl border border-luxury-gold/30 space-y-3">
-        <div className="absolute -right-20 -top-20 w-96 h-96 rounded-full bg-luxury-gold/10 blur-3xl pointer-events-none" />
-        <div className="absolute -left-20 -bottom-20 w-96 h-96 rounded-full bg-luxury-emerald/20 blur-3xl pointer-events-none" />
+      <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden bg-[#F0ECE4]/60 text-[#15392D] p-6 sm:p-12 shadow-sm border border-[#E7E2D8] space-y-3">
         <div className="relative z-10 space-y-3">
-          <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-luxury-gold block">
+          <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-[#C5A46B] block">
             Editorial Travel Hub
           </span>
-          <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-normal tracking-tight text-luxury-ivory break-words">
+          <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-normal tracking-tight text-[#15392D] break-words">
             Sri Lanka Travel Guide & Inspiration
           </h1>
-          <p className="text-sm sm:text-base text-luxury-sand/85 max-w-xl font-light leading-relaxed">
+          <p className="text-sm sm:text-base text-[#59645E] max-w-xl font-light leading-relaxed">
             Discover insider tips, destination highlights, local food guides, and travel itineraries written by local Sri Lankan travel experts.
           </p>
         </div>
@@ -78,38 +76,38 @@ export default async function BlogPage() {
           <Link
             key={post.id}
             href={`/blog/${post.slug}`}
-            className="group bg-white rounded-3xl overflow-hidden shadow-card hover:shadow-card-hover border border-luxury-sand/80 hover:border-luxury-gold/40 transition-all duration-300 flex flex-col justify-between"
+            className="group bg-white rounded-3xl overflow-hidden shadow-[0_10px_30px_rgba(21,57,45,0.05)] hover:shadow-[0_20px_40px_rgba(21,57,45,0.1)] border border-[#E7E2D8] hover:border-[#C5A46B]/40 transition-all duration-300 flex flex-col justify-between"
           >
             <div>
-              <div className="relative h-52 w-full overflow-hidden bg-slate-100">
+              <div className="relative h-52 w-full overflow-hidden bg-[#F0ECE4]">
                 <Image
                   src={post.image}
                   alt={post.title}
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-500"
                 />
-                <div className="absolute top-4 left-4 bg-luxury-forest text-luxury-gold text-[10px] font-mono uppercase tracking-wider px-3 py-1 rounded-full border border-luxury-gold/30">
+                <div className="absolute top-4 left-4 bg-[#15392D] text-[#C5A46B] text-[10px] font-mono uppercase tracking-wider px-3 py-1 rounded-full border border-[#C5A46B]/30">
                   {post.category}
                 </div>
               </div>
               <div className="p-6 space-y-3">
-                <div className="flex items-center gap-2 text-xs text-luxury-charcoal/60">
-                  <Clock className="w-3.5 h-3.5 text-luxury-gold" />
+                <div className="flex items-center gap-2 text-xs text-[#59645E]">
+                  <Clock className="w-3.5 h-3.5 text-[#C5A46B]" />
                   <span>{post.readTime}</span>
                   <span>•</span>
                   <span>{post.author}</span>
                 </div>
-                <h3 className="font-serif font-medium text-lg text-luxury-forest group-hover:text-luxury-gold transition-colors line-clamp-2">
+                <h3 className="font-serif font-medium text-lg text-[#15392D] group-hover:text-[#C5A46B] transition-colors line-clamp-2">
                   {post.title}
                 </h3>
-                <p className="text-xs text-luxury-charcoal/70 line-clamp-3 leading-relaxed font-light">
+                <p className="text-xs text-[#59645E] line-clamp-3 leading-relaxed font-light">
                   {post.excerpt}
                 </p>
               </div>
             </div>
-            <div className="px-6 pb-6 pt-2 text-xs font-sans font-medium text-luxury-forest group-hover:text-luxury-gold flex items-center gap-1.5 uppercase tracking-wider transition-colors">
+            <div className="px-6 pb-6 pt-2 text-xs font-sans font-medium text-[#15392D] group-hover:text-[#C5A46B] flex items-center gap-1.5 uppercase tracking-wider transition-colors">
               <span>Read Full Article</span>
-              <ArrowRight className="w-4 h-4 text-luxury-gold group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="w-4 h-4 text-[#C5A46B] group-hover:translate-x-1 transition-transform" />
             </div>
           </Link>
         ))}

@@ -211,16 +211,16 @@ export function ToursCatalogueClient({ initialTours }: ToursCatalogueClientProps
   return (
     <div className="min-h-screen py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-8">
       {/* Banner */}
-      <div className="bg-luxury-forest rounded-3xl p-8 sm:p-12 text-luxury-ivory relative overflow-hidden shadow-2xl border border-luxury-gold/30">
-        <div className="absolute -right-16 -bottom-16 w-80 h-80 rounded-full bg-luxury-gold/10 blur-3xl pointer-events-none" />
+      <div className="bg-[#F0ECE4]/60 rounded-3xl p-8 sm:p-12 text-[#15392D] relative overflow-hidden border border-[#E7E2D8] shadow-sm">
+        <div className="absolute -right-16 -bottom-16 w-80 h-80 rounded-full bg-[#C5A46B]/10 blur-3xl pointer-events-none" />
         <div className="relative z-10 max-w-3xl space-y-3">
-          <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-luxury-gold block">
+          <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-[#C5A46B] block font-semibold">
             Curated Island Portfolios
           </span>
-          <h1 className="font-serif text-3xl sm:text-5xl font-normal tracking-tight text-luxury-ivory">
+          <h1 className="font-serif text-3xl sm:text-5xl font-normal tracking-tight text-[#15392D]">
             Sri Lankan Journeys & Expeditions
           </h1>
-          <p className="text-sm sm:text-base text-luxury-sand/85 font-light leading-relaxed">
+          <p className="text-sm sm:text-base text-[#59645E] font-light leading-relaxed">
             Private chauffeur circuits, wildlife safaris, scenic colonial rail journeys, and immersive heritage explorations crafted with Sri Lanka&apos;s foremost guides.
           </p>
         </div>
@@ -228,33 +228,33 @@ export function ToursCatalogueClient({ initialTours }: ToursCatalogueClientProps
 
       {/* Active Search Summary Banner */}
       {(urlDate || urlAdults || filters.destination || filters.category) && (
-        <div className="bg-luxury-gold/10 border border-luxury-gold/30 rounded-2xl p-3.5 sm:p-4 flex flex-wrap items-center justify-between gap-3 text-xs">
+        <div className="bg-[#C5A46B]/10 border border-[#C5A46B]/30 rounded-2xl p-3.5 sm:p-4 flex flex-wrap items-center justify-between gap-3 text-xs">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-[11px] font-sans font-semibold uppercase tracking-wider text-luxury-forest/80 flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-luxury-gold" />
+            <span className="text-[11px] font-sans font-semibold uppercase tracking-wider text-[#15392D]/90 flex items-center gap-1.5">
+              <Sparkles className="w-3.5 h-3.5 text-[#C5A46B]" />
               Active Search:
             </span>
             {filters.destination && (
-              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white text-luxury-forest border border-luxury-sand text-xs font-medium shadow-xs">
-                <MapPin className="w-3 h-3 text-luxury-gold" />
+              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white text-[#15392D] border border-[#E7E2D8] text-xs font-medium shadow-xs">
+                <MapPin className="w-3 h-3 text-[#C5A46B]" />
                 {DESTINATION_OPTIONS.find((d) => d.value === filters.destination)?.label || filters.destination}
               </span>
             )}
             {filters.category && (
-              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white text-luxury-forest border border-luxury-sand text-xs font-medium shadow-xs">
-                <Compass className="w-3 h-3 text-luxury-gold" />
+              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white text-[#15392D] border border-[#E7E2D8] text-xs font-medium shadow-xs">
+                <Compass className="w-3 h-3 text-[#C5A46B]" />
                 {CATEGORIES.find((c) => c.value === filters.category)?.label || filters.category}
               </span>
             )}
             {formattedSearchDate && (
-              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white text-luxury-forest border border-luxury-sand text-xs font-medium shadow-xs">
-                <Calendar className="w-3 h-3 text-luxury-gold" />
+              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white text-[#15392D] border border-[#E7E2D8] text-xs font-medium shadow-xs">
+                <Calendar className="w-3 h-3 text-[#C5A46B]" />
                 {formattedSearchDate}
               </span>
             )}
             {urlAdults && (
-              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white text-luxury-forest border border-luxury-sand text-xs font-medium shadow-xs">
-                <Users className="w-3 h-3 text-luxury-gold" />
+              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white text-[#15392D] border border-[#E7E2D8] text-xs font-medium shadow-xs">
+                <Users className="w-3 h-3 text-[#C5A46B]" />
                 {urlAdults} {Number(urlAdults) === 1 ? "Adult" : "Adults"}
                 {urlChildren && Number(urlChildren) > 0 ? `, ${urlChildren} Child${Number(urlChildren) > 1 ? "ren" : ""}` : ""}
               </span>
@@ -262,7 +262,7 @@ export function ToursCatalogueClient({ initialTours }: ToursCatalogueClientProps
           </div>
           <button
             onClick={resetFilters}
-            className="text-xs font-medium text-luxury-forest/80 hover:text-luxury-forest underline underline-offset-2 ml-auto"
+            className="text-xs font-medium text-[#15392D]/80 hover:text-[#15392D] underline underline-offset-2 ml-auto"
           >
             Clear Search
           </button>
@@ -270,16 +270,16 @@ export function ToursCatalogueClient({ initialTours }: ToursCatalogueClientProps
       )}
 
       {/* Filter and Controls Header */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 bg-[#FAF8F5] p-4 sm:p-5 rounded-2xl border border-luxury-sand/80 shadow-sm">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 bg-white p-4 sm:p-5 rounded-2xl border border-[#E7E2D8] shadow-sm">
         <div className="flex items-center gap-3">
-          <span className="font-serif text-sm font-semibold text-luxury-forest">
+          <span className="font-serif text-sm font-semibold text-[#15392D]">
             {filtered.length} {filtered.length === 1 ? "Curated Journey" : "Curated Journeys"} Available
           </span>
           <button
             onClick={() => setMobileFiltersOpen(!mobileFiltersOpen)}
-            className="lg:hidden flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white text-xs font-sans font-medium text-luxury-forest border border-luxury-sand"
+            className="lg:hidden flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#F8F7F3] text-xs font-sans font-medium text-[#15392D] border border-[#E7E2D8]"
           >
-            <SlidersHorizontal className="w-3.5 h-3.5 text-luxury-gold" />
+            <SlidersHorizontal className="w-3.5 h-3.5 text-[#C5A46B]" />
             <span>Refine ({activeFilterCount})</span>
           </button>
           {activeFilterCount > 0 && (
@@ -295,12 +295,12 @@ export function ToursCatalogueClient({ initialTours }: ToursCatalogueClientProps
 
         <div className="flex items-center gap-3 self-end sm:self-auto">
           {/* Sorting */}
-          <div className="flex items-center gap-2 text-xs text-luxury-charcoal/70">
-            <ArrowUpDown className="w-3.5 h-3.5 text-luxury-gold" />
+          <div className="flex items-center gap-2 text-xs text-[#59645E]">
+            <ArrowUpDown className="w-3.5 h-3.5 text-[#C5A46B]" />
             <select
               value={sort}
               onChange={(e) => setSort(e.target.value)}
-              className="bg-white border border-luxury-sand/80 rounded-xl px-3 py-1.5 text-xs font-sans text-luxury-forest focus:outline-none focus:border-luxury-gold"
+              className="bg-[#F8F7F3] border border-[#E7E2D8] rounded-xl px-3 py-1.5 text-xs font-sans text-[#15392D] focus:outline-none focus:border-[#15392D]"
             >
               <option value="recommended">Curator&apos;s Recommendation</option>
               <option value="top-rated">Highest Guest Rating</option>
@@ -311,11 +311,11 @@ export function ToursCatalogueClient({ initialTours }: ToursCatalogueClientProps
           </div>
 
           {/* Grid / List View Toggle */}
-          <div className="hidden sm:flex items-center border border-luxury-sand/80 rounded-xl p-0.5 bg-white">
+          <div className="hidden sm:flex items-center border border-[#E7E2D8] rounded-xl p-0.5 bg-[#F8F7F3]">
             <button
               onClick={() => setViewMode("grid")}
               className={`p-1.5 rounded-lg transition-colors ${
-                viewMode === "grid" ? "bg-luxury-gold/20 text-luxury-forest" : "text-luxury-charcoal/40"
+                viewMode === "grid" ? "bg-[#15392D] text-white shadow-xs" : "text-[#59645E]/60 hover:text-[#15392D]"
               }`}
               title="Grid View"
             >
@@ -324,7 +324,7 @@ export function ToursCatalogueClient({ initialTours }: ToursCatalogueClientProps
             <button
               onClick={() => setViewMode("list")}
               className={`p-1.5 rounded-lg transition-colors ${
-                viewMode === "list" ? "bg-luxury-gold/20 text-luxury-forest" : "text-luxury-charcoal/40"
+                viewMode === "list" ? "bg-[#15392D] text-white shadow-xs" : "text-[#59645E]/60 hover:text-[#15392D]"
               }`}
               title="List View"
             >
@@ -337,10 +337,10 @@ export function ToursCatalogueClient({ initialTours }: ToursCatalogueClientProps
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
         {/* Desktop Sidebar Filters */}
         <div className="hidden lg:block space-y-6">
-          <div className="bg-white rounded-3xl p-6 sm:p-7 border border-luxury-sand/80 shadow-[0_10px_30px_rgba(16,45,36,0.06)] space-y-6">
-            <div className="flex items-center justify-between pb-4 border-b border-luxury-sand/70">
-              <span className="font-sans font-semibold text-xs uppercase tracking-widest text-luxury-forest flex items-center gap-2">
-                <Filter className="w-4 h-4 text-luxury-gold" />
+          <div className="bg-white rounded-3xl p-6 sm:p-7 border border-[#E7E2D8] shadow-sm space-y-6">
+            <div className="flex items-center justify-between pb-4 border-b border-[#E7E2D8]">
+              <span className="font-sans font-semibold text-xs uppercase tracking-widest text-[#15392D] flex items-center gap-2">
+                <Filter className="w-4 h-4 text-[#C5A46B]" />
                 Refine Itineraries
               </span>
               {activeFilterCount > 0 && (
@@ -355,13 +355,13 @@ export function ToursCatalogueClient({ initialTours }: ToursCatalogueClientProps
 
             {/* Destination */}
             <div className="space-y-2">
-              <label className="text-xs font-semibold text-luxury-forest block">
+              <label className="text-xs font-semibold text-[#15392D] block">
                 Destination
               </label>
               <select
                 value={filters.destination}
                 onChange={(e) => handleDestinationChange(e.target.value)}
-                className="w-full bg-[#FAF8F5] border border-luxury-sand/80 rounded-xl px-3 py-2 text-xs font-medium text-luxury-forest focus:outline-none focus:border-luxury-gold"
+                className="w-full bg-[#F8F7F3] border border-[#E7E2D8] rounded-xl px-3 py-2 text-xs font-medium text-[#15392D] focus:outline-none focus:border-[#15392D]"
               >
                 {DESTINATION_OPTIONS.map((d) => (
                   <option key={d.value} value={d.value}>
@@ -373,7 +373,7 @@ export function ToursCatalogueClient({ initialTours }: ToursCatalogueClientProps
 
             {/* Category */}
             <div className="space-y-2">
-              <label className="text-xs font-semibold text-luxury-forest block">
+              <label className="text-xs font-semibold text-[#15392D] block">
                 Experience Category
               </label>
               <div className="space-y-1.5">
@@ -382,8 +382,8 @@ export function ToursCatalogueClient({ initialTours }: ToursCatalogueClientProps
                     key={cat.value}
                     className={`flex items-center justify-between p-2 rounded-xl text-xs font-medium cursor-pointer transition-colors ${
                       filters.category === cat.value
-                        ? "bg-luxury-gold/15 text-luxury-forest font-semibold"
-                        : "hover:bg-[#FAF8F5] text-luxury-charcoal/80"
+                        ? "bg-[#C5A46B]/15 text-[#15392D] font-semibold"
+                        : "hover:bg-[#F8F7F3] text-[#59645E]"
                     }`}
                   >
                     <span>{cat.label}</span>
@@ -395,7 +395,7 @@ export function ToursCatalogueClient({ initialTours }: ToursCatalogueClientProps
                       className="hidden"
                     />
                     {filters.category === cat.value && (
-                      <CheckCircle2 className="w-3.5 h-3.5 text-luxury-gold" />
+                      <CheckCircle2 className="w-3.5 h-3.5 text-[#C5A46B]" />
                     )}
                   </label>
                 ))}
@@ -404,9 +404,9 @@ export function ToursCatalogueClient({ initialTours }: ToursCatalogueClientProps
 
             {/* Max Price Slider */}
             <div className="space-y-2">
-              <div className="flex items-center justify-between text-xs font-semibold text-luxury-forest">
+              <div className="flex items-center justify-between text-xs font-semibold text-[#15392D]">
                 <span>Max Price</span>
-                <span className="text-luxury-gold font-serif font-bold">${filters.maxPrice} USD</span>
+                <span className="text-[#C5A46B] font-serif font-bold">${filters.maxPrice} USD</span>
               </div>
               <input
                 type="range"
@@ -415,14 +415,14 @@ export function ToursCatalogueClient({ initialTours }: ToursCatalogueClientProps
                 step="50"
                 value={filters.maxPrice}
                 onChange={(e) => setFilters({ ...filters, maxPrice: Number(e.target.value) })}
-                className="w-full accent-luxury-forest cursor-pointer"
+                className="w-full accent-[#15392D] cursor-pointer"
               />
             </div>
 
             {/* Min Rating */}
             {hasAnyRatings ? (
               <div className="space-y-2">
-                <label className="text-xs font-semibold text-luxury-forest block">
+                <label className="text-xs font-semibold text-[#15392D] block">
                   Minimum Rating
                 </label>
                 <div className="flex gap-2">
@@ -433,8 +433,8 @@ export function ToursCatalogueClient({ initialTours }: ToursCatalogueClientProps
                       onClick={() => setFilters({ ...filters, minRating: r })}
                       className={`flex-1 py-1.5 rounded-xl text-xs font-medium transition-colors ${
                         filters.minRating === r
-                          ? "bg-luxury-forest text-luxury-ivory"
-                          : "bg-[#FAF8F5] text-luxury-charcoal/70 hover:bg-luxury-sand/50"
+                          ? "bg-[#15392D] text-white"
+                          : "bg-[#F8F7F3] text-[#59645E] hover:bg-[#F0ECE4]"
                       }`}
                     >
                       {r === 0 ? "All" : `${r}★+`}
@@ -443,33 +443,33 @@ export function ToursCatalogueClient({ initialTours }: ToursCatalogueClientProps
                 </div>
               </div>
             ) : (
-              <div className="p-3 bg-[#FAF8F5] rounded-xl border border-luxury-sand/70 text-[11px] text-luxury-charcoal/70">
-                <span className="font-semibold text-luxury-forest block mb-0.5">Verified Reviews</span>
+              <div className="p-3 bg-[#F8F7F3] rounded-xl border border-[#E7E2D8] text-[11px] text-[#59645E]">
+                <span className="font-semibold text-[#15392D] block mb-0.5">Verified Reviews</span>
                 Reviews are collected and verified directly from completed guest bookings.
               </div>
             )}
 
             {/* Toggle Flags */}
-            <div className="space-y-2 pt-2 border-t border-luxury-sand/70">
-              <label className="flex items-center gap-2 text-xs font-medium text-luxury-charcoal/80 cursor-pointer">
+            <div className="space-y-2 pt-2 border-t border-[#E7E2D8]">
+              <label className="flex items-center gap-2 text-xs font-medium text-[#59645E] cursor-pointer">
                 <input
                   type="checkbox"
                   checked={filters.freeCancellation}
                   onChange={(e) =>
                     setFilters({ ...filters, freeCancellation: e.target.checked })
                   }
-                  className="rounded text-luxury-forest focus:ring-0 accent-luxury-forest"
+                  className="rounded text-[#15392D] focus:ring-0 accent-[#15392D]"
                 />
                 <span>Free Cancellation Available</span>
               </label>
-              <label className="flex items-center gap-2 text-xs font-medium text-luxury-charcoal/80 cursor-pointer">
+              <label className="flex items-center gap-2 text-xs font-medium text-[#59645E] cursor-pointer">
                 <input
                   type="checkbox"
                   checked={filters.instantBook}
                   onChange={(e) =>
                     setFilters({ ...filters, instantBook: e.target.checked })
                   }
-                  className="rounded text-luxury-forest focus:ring-0 accent-luxury-forest"
+                  className="rounded text-[#15392D] focus:ring-0 accent-[#15392D]"
                 />
                 <span>Instant Confirmation</span>
               </label>
@@ -485,14 +485,14 @@ export function ToursCatalogueClient({ initialTours }: ToursCatalogueClientProps
               onClick={() => setMobileFiltersOpen(false)}
             />
             <div className="relative ml-auto w-full max-w-xs bg-white h-full shadow-2xl p-6 overflow-y-auto space-y-6">
-              <div className="flex items-center justify-between pb-4 border-b border-luxury-sand/70">
-                <span className="font-sans font-semibold text-xs uppercase tracking-widest text-luxury-forest flex items-center gap-1.5">
-                  <Filter className="w-4 h-4 text-luxury-gold" />
+              <div className="flex items-center justify-between pb-4 border-b border-[#E7E2D8]">
+                <span className="font-sans font-semibold text-xs uppercase tracking-widest text-[#15392D] flex items-center gap-1.5">
+                  <Filter className="w-4 h-4 text-[#C5A46B]" />
                   Filter Tours
                 </span>
                 <button
                   onClick={() => setMobileFiltersOpen(false)}
-                  className="p-1 rounded-lg text-luxury-charcoal/50 hover:text-luxury-forest hover:bg-luxury-sand/30"
+                  className="p-1 rounded-lg text-[#59645E]/60 hover:text-[#15392D] hover:bg-[#F8F7F3]"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -500,13 +500,13 @@ export function ToursCatalogueClient({ initialTours }: ToursCatalogueClientProps
 
               {/* Destination */}
               <div className="space-y-2">
-                <label className="text-xs font-semibold text-luxury-forest block">
+                <label className="text-xs font-semibold text-[#15392D] block">
                   Destination
                 </label>
                 <select
                   value={filters.destination}
                   onChange={(e) => handleDestinationChange(e.target.value)}
-                  className="w-full bg-[#FAF8F5] border border-luxury-sand/80 rounded-xl px-3 py-2 text-xs font-medium text-luxury-forest focus:outline-none focus:border-luxury-gold"
+                  className="w-full bg-[#F8F7F3] border border-[#E7E2D8] rounded-xl px-3 py-2 text-xs font-medium text-[#15392D] focus:outline-none focus:border-[#15392D]"
                 >
                   {DESTINATION_OPTIONS.map((d) => (
                     <option key={d.value} value={d.value}>
@@ -518,7 +518,7 @@ export function ToursCatalogueClient({ initialTours }: ToursCatalogueClientProps
 
               {/* Category */}
               <div className="space-y-2">
-                <label className="text-xs font-semibold text-luxury-forest block">
+                <label className="text-xs font-semibold text-[#15392D] block">
                   Experience Category
                 </label>
                 <div className="space-y-1.5">
@@ -527,8 +527,8 @@ export function ToursCatalogueClient({ initialTours }: ToursCatalogueClientProps
                       key={cat.value}
                       className={`flex items-center justify-between p-2 rounded-xl text-xs font-medium cursor-pointer transition-colors ${
                         filters.category === cat.value
-                          ? "bg-luxury-gold/15 text-luxury-forest font-semibold"
-                          : "hover:bg-[#FAF8F5] text-luxury-charcoal/80"
+                          ? "bg-[#C5A46B]/15 text-[#15392D] font-semibold"
+                          : "hover:bg-[#F8F7F3] text-[#59645E]"
                       }`}
                     >
                       <span>{cat.label}</span>
@@ -540,7 +540,7 @@ export function ToursCatalogueClient({ initialTours }: ToursCatalogueClientProps
                         className="hidden"
                       />
                       {filters.category === cat.value && (
-                        <CheckCircle2 className="w-3.5 h-3.5 text-luxury-gold" />
+                        <CheckCircle2 className="w-3.5 h-3.5 text-[#C5A46B]" />
                       )}
                     </label>
                   ))}
@@ -549,9 +549,9 @@ export function ToursCatalogueClient({ initialTours }: ToursCatalogueClientProps
 
               {/* Max Price Slider */}
               <div className="space-y-2">
-                <div className="flex items-center justify-between text-xs font-semibold text-luxury-forest">
+                <div className="flex items-center justify-between text-xs font-semibold text-[#15392D]">
                   <span>Max Price</span>
-                  <span className="text-luxury-gold font-serif font-bold">${filters.maxPrice} USD</span>
+                  <span className="text-[#C5A46B] font-serif font-bold">${filters.maxPrice} USD</span>
                 </div>
                 <input
                   type="range"
@@ -560,21 +560,21 @@ export function ToursCatalogueClient({ initialTours }: ToursCatalogueClientProps
                   step="50"
                   value={filters.maxPrice}
                   onChange={(e) => setFilters({ ...filters, maxPrice: Number(e.target.value) })}
-                  className="w-full accent-luxury-forest cursor-pointer"
+                  className="w-full accent-[#15392D] cursor-pointer"
                 />
               </div>
 
               {/* Apply & Reset Buttons */}
-              <div className="pt-4 border-t border-luxury-sand/70 flex gap-2">
+              <div className="pt-4 border-t border-[#E7E2D8] flex gap-2">
                 <button
                   onClick={resetFilters}
-                  className="flex-1 py-2.5 rounded-xl border border-luxury-sand/80 text-xs font-medium text-luxury-charcoal/70 hover:bg-[#FAF8F5]"
+                  className="flex-1 py-2.5 rounded-xl border border-[#E7E2D8] text-xs font-medium text-[#59645E] hover:bg-[#F8F7F3]"
                 >
                   Reset
                 </button>
                 <button
                   onClick={() => setMobileFiltersOpen(false)}
-                  className="flex-1 py-2.5 rounded-xl bg-luxury-forest hover:bg-luxury-emerald text-luxury-ivory text-xs font-medium transition-colors"
+                  className="flex-1 py-2.5 rounded-xl bg-[#15392D] hover:bg-[#1E4D3D] text-white text-xs font-medium transition-colors"
                 >
                   Apply Filters
                 </button>
@@ -590,7 +590,7 @@ export function ToursCatalogueClient({ initialTours }: ToursCatalogueClientProps
               {[1, 2, 3, 4, 5, 6].map((n) => (
                 <div
                   key={n}
-                  className="bg-white rounded-2xl h-80 animate-pulse border border-luxury-sand/60"
+                  className="bg-white rounded-2xl h-80 animate-pulse border border-[#E7E2D8]"
                 />
               ))}
             </div>
@@ -611,19 +611,19 @@ export function ToursCatalogueClient({ initialTours }: ToursCatalogueClientProps
               ))}
             </div>
           ) : (
-            <div className="bg-white rounded-3xl p-12 text-center border border-luxury-sand/80 space-y-4">
-              <Compass className="w-12 h-12 text-luxury-gold/50 mx-auto" />
+            <div className="bg-white rounded-3xl p-12 text-center border border-[#E7E2D8] space-y-4">
+              <Compass className="w-12 h-12 text-[#C5A46B]/50 mx-auto" />
               <div className="space-y-1">
-                <h3 className="text-xl font-serif font-normal text-luxury-forest">
+                <h3 className="text-xl font-serif font-normal text-[#15392D]">
                   No Experiences Found
                 </h3>
-                <p className="text-xs text-luxury-charcoal/70 max-w-sm mx-auto font-light">
+                <p className="text-xs text-[#59645E] max-w-sm mx-auto font-light">
                   No tours matched your selected filter criteria. Try adjusting the destination, category, or budget slider.
                 </p>
               </div>
               <button
                 onClick={resetFilters}
-                className="px-5 py-2.5 bg-luxury-forest hover:bg-luxury-emerald text-luxury-ivory text-xs font-medium rounded-xl transition-colors shadow"
+                className="px-5 py-2.5 bg-[#15392D] hover:bg-[#1E4D3D] text-white text-xs font-medium rounded-xl transition-colors shadow"
               >
                 Clear All Filters
               </button>

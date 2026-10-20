@@ -274,7 +274,7 @@ export const CountrySelect: React.FC<CountrySelectProps> = ({
       {label && (
         <label
           htmlFor={id}
-          className="block text-xs font-bold text-ceylon-navy mb-1"
+          className="block text-xs font-semibold text-[#15392D] mb-1.5"
         >
           {label}
           {required && <span className="text-rose-500 ml-0.5">*</span>}
@@ -292,14 +292,14 @@ export const CountrySelect: React.FC<CountrySelectProps> = ({
         onKeyDown={handleKeyDown}
         aria-haspopup="listbox"
         aria-expanded={isOpen}
-        className={`w-full bg-slate-50 border rounded-xl px-3.5 py-2.5 text-xs text-left flex items-center justify-between gap-2 transition-all duration-200 outline-none ${
+        className={`w-full bg-[#F8F7F3] border rounded-xl px-3.5 py-2.5 text-xs text-left flex items-center justify-between gap-2 transition-all duration-200 outline-none ${
           disabled
-            ? "opacity-60 cursor-not-allowed bg-slate-100 border-slate-200"
+            ? "opacity-60 cursor-not-allowed bg-slate-100 border-[#E7E2D8]"
             : error
             ? "border-rose-300 focus:border-rose-500 bg-rose-50/20"
             : isOpen
-            ? "border-luxury-forest ring-1 ring-luxury-forest/20 shadow-sm bg-white"
-            : "border-slate-200 hover:border-slate-300 focus:border-luxury-forest focus:ring-1 focus:ring-luxury-forest/20"
+            ? "border-[#15392D] ring-1 ring-[#15392D]/20 shadow-xs bg-white"
+            : "border-[#E7E2D8] hover:border-[#C5A46B] focus:border-[#15392D] focus:ring-1 focus:ring-[#15392D]/20"
         }`}
       >
         <div className="flex items-center gap-2.5 min-w-0">
@@ -308,14 +308,14 @@ export const CountrySelect: React.FC<CountrySelectProps> = ({
               <span className="text-base leading-none shrink-0 drop-shadow-sm">
                 {selectedCountry.flag}
               </span>
-              <span className="font-semibold text-ceylon-navy truncate">
+              <span className="font-medium text-[#24362F] truncate">
                 {selectedCountry.name}
               </span>
             </>
           ) : (
             <>
-              <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-              <span className="text-slate-400 font-normal truncate">
+              <MapPin className="w-3.5 h-3.5 text-[#59645E]/60 shrink-0" />
+              <span className="text-[#59645E]/60 font-normal truncate">
                 {placeholder}
               </span>
             </>
@@ -323,8 +323,8 @@ export const CountrySelect: React.FC<CountrySelectProps> = ({
         </div>
 
         <ChevronDown
-          className={`w-4 h-4 text-slate-400 shrink-0 transition-transform duration-200 ${
-            isOpen ? "rotate-180 text-luxury-forest" : ""
+          className={`w-4 h-4 text-[#59645E]/60 shrink-0 transition-transform duration-200 ${
+            isOpen ? "rotate-180 text-[#15392D]" : ""
           }`}
         />
       </button>
@@ -333,7 +333,7 @@ export const CountrySelect: React.FC<CountrySelectProps> = ({
       {error ? (
         <p className="text-[11px] text-rose-500 mt-1 font-medium">{error}</p>
       ) : helperText ? (
-        <p className="text-[10px] text-slate-400 mt-1">{helperText}</p>
+        <p className="text-[10px] text-[#59645E]/60 mt-1">{helperText}</p>
       ) : null}
 
       {/* Floating Dropdown Portal */}
@@ -349,13 +349,13 @@ export const CountrySelect: React.FC<CountrySelectProps> = ({
               width: `${coords.width}px`,
               zIndex: 99999,
             }}
-            className="bg-white rounded-2xl shadow-[0_20px_50px_rgba(16,45,36,0.18)] border border-slate-200/90 overflow-hidden animate-in fade-in zoom-in-95 duration-150"
+            className="bg-white rounded-2xl shadow-[0_20px_50px_rgba(21,57,45,0.12)] border border-[#E7E2D8] overflow-hidden animate-in fade-in zoom-in-95 duration-150"
             role="dialog"
             aria-label="Country Selection"
           >
             {/* Search Box Header */}
-            <div className="p-2.5 border-b border-slate-100 bg-[#FAF8F5] flex items-center gap-2">
-              <Search className="w-4 h-4 text-slate-400 shrink-0 ml-1" />
+            <div className="p-2.5 border-b border-[#E7E2D8] bg-[#F0ECE4]/60 flex items-center gap-2">
+              <Search className="w-4 h-4 text-[#59645E]/60 shrink-0 ml-1" />
               <input
                 ref={searchInputRef}
                 type="text"
@@ -366,7 +366,7 @@ export const CountrySelect: React.FC<CountrySelectProps> = ({
                 }}
                 onKeyDown={handleKeyDown}
                 placeholder="Search for your country..."
-                className="w-full bg-transparent text-xs text-ceylon-navy placeholder-slate-400 focus:outline-none py-1"
+                className="w-full bg-transparent text-xs text-[#24362F] placeholder-[#59645E]/60 focus:outline-none py-1"
               />
               {searchQuery && (
                 <button
@@ -414,10 +414,10 @@ export const CountrySelect: React.FC<CountrySelectProps> = ({
                       onMouseEnter={() => setHighlightedIndex(index)}
                       className={`px-3.5 py-2.5 text-xs flex items-center justify-between cursor-pointer transition-colors duration-100 ${
                         isSelected
-                          ? "bg-luxury-forest text-luxury-ivory font-semibold"
+                          ? "bg-[#15392D] text-white font-semibold"
                           : isHighlighted
-                          ? "bg-luxury-forest/5 text-luxury-forest font-medium"
-                          : "text-slate-700 hover:bg-slate-50"
+                          ? "bg-[#15392D]/5 text-[#15392D] font-medium"
+                          : "text-[#24362F] hover:bg-[#F8F7F3]"
                       }`}
                     >
                       <div className="flex items-center gap-2.5 min-w-0 pr-2">
@@ -428,7 +428,7 @@ export const CountrySelect: React.FC<CountrySelectProps> = ({
                       </div>
 
                       {isSelected && (
-                        <Check className="w-3.5 h-3.5 text-luxury-gold shrink-0 ml-2" />
+                        <Check className="w-3.5 h-3.5 text-[#C5A46B] shrink-0 ml-2" />
                       )}
                     </li>
                   );

@@ -38,52 +38,52 @@ export const Newsletter: React.FC = () => {
 
   return (
     <section className="py-14 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-      <div className="bg-luxury-forest rounded-2xl sm:rounded-3xl p-6 sm:p-14 lg:p-16 text-luxury-ivory relative overflow-hidden shadow-2xl border border-luxury-gold/30">
-        <div className="absolute -right-20 -bottom-20 w-96 h-96 rounded-full bg-luxury-gold/10 blur-3xl pointer-events-none" />
-        <div className="absolute -left-20 -top-20 w-96 h-96 rounded-full bg-luxury-emerald/30 blur-3xl pointer-events-none" />
+      <div className="bg-[#0D281F] rounded-2xl sm:rounded-3xl p-6 sm:p-14 lg:p-16 text-white relative overflow-hidden shadow-xl border border-[#C5A46B]/30">
+        <div className="absolute -right-20 -bottom-20 w-96 h-96 rounded-full bg-[#C5A46B]/10 blur-3xl pointer-events-none" />
+        <div className="absolute -left-20 -top-20 w-96 h-96 rounded-full bg-[#15392D]/40 blur-3xl pointer-events-none" />
         <FadeIn className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-10 items-center">
           <div className="space-y-3.5">
-            <span className="text-[11px] font-sans font-semibold uppercase tracking-[0.25em] text-luxury-gold block">
+            <span className="text-[11px] font-sans font-semibold uppercase tracking-[0.25em] text-[#C5A46B] block">
               Private Dispatches
             </span>
-            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-normal tracking-tight text-luxury-ivory break-words">
+            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-normal tracking-tight text-white break-words">
               Island Chronicles, Delivered.
             </h2>
-            <p className="text-sm sm:text-base text-luxury-sand/90 max-w-md font-sans font-normal leading-relaxed">
+            <p className="text-sm sm:text-base text-white/80 max-w-md font-sans font-normal leading-relaxed">
               Curated private travel dispatches, seasonal wildlife calendars, and exclusive new journey itineraries from {siteConfig.name}.
             </p>
           </div>
 
           <div>
             {subscribed ? (
-              <div className="bg-white/10 backdrop-blur-md p-6 rounded-2xl border border-luxury-gold/40 flex items-center gap-3 text-luxury-gold">
-                <CheckCircle2 className="w-6 h-6 text-luxury-gold shrink-0" />
+              <div className="bg-white/10 backdrop-blur-md p-6 rounded-2xl border border-[#C5A46B]/40 flex items-center gap-3 text-[#C5A46B]">
+                <CheckCircle2 className="w-6 h-6 text-[#C5A46B] shrink-0" />
                 <div>
-                  <h4 className="font-serif font-semibold text-sm text-luxury-ivory tracking-wide">Welcome to Ceylon Explore</h4>
-                  <p className="text-xs text-luxury-sand/80 mt-0.5 font-sans font-normal">Your private island compendium has been dispatched to your inbox.</p>
+                  <h4 className="font-serif font-semibold text-sm text-white tracking-wide">Welcome to Ceylon Explore</h4>
+                  <p className="text-xs text-white/80 mt-0.5 font-sans font-normal">Your private island compendium has been dispatched to your inbox.</p>
                 </div>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-2">
                 <div className="flex flex-col sm:flex-row gap-3">
                   <div className="relative flex-1">
-                    <Mail className="w-4 h-4 text-luxury-gold absolute left-4 top-4" />
+                    <Mail className="w-4 h-4 text-[#C5A46B] absolute left-4 top-4" />
                     <input
                       type="email"
                       required
                       placeholder="Enter your email address"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="w-full bg-white/95 text-luxury-forest pl-12 pr-4 py-3.5 rounded-full text-xs font-sans placeholder:text-luxury-charcoal/50 focus:outline-none focus:ring-2 focus:ring-luxury-gold border border-luxury-sand"
+                      className="w-full bg-white text-[#15392D] pl-12 pr-4 py-3.5 rounded-full text-xs font-sans placeholder:text-[#59645E]/60 focus:outline-none focus:ring-2 focus:ring-[#C5A46B] border border-[#E7E2D8]"
                     />
                   </div>
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-full sm:w-auto px-8 py-3.5 bg-gradient-to-r from-[#DFBE82] via-[#C9A86A] to-[#A88647] hover:brightness-110 text-luxury-forest font-sans font-semibold text-xs uppercase tracking-wider rounded-full transition-all shadow-lg flex items-center justify-center gap-2 shrink-0 disabled:opacity-50"
+                    className="w-full sm:w-auto px-8 py-3.5 bg-white hover:bg-[#F8F7F3] text-[#15392D] font-sans font-semibold text-xs uppercase tracking-wider rounded-full transition-all shadow-sm flex items-center justify-center gap-2 shrink-0 disabled:opacity-50"
                   >
                     <span>{loading ? "Subscribing..." : "Subscribe"}</span>
-                    <Send className="w-3.5 h-3.5" />
+                    <Send className="w-3.5 h-3.5 text-[#15392D]" />
                   </button>
                 </div>
                 {error && (

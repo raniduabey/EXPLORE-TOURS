@@ -137,14 +137,14 @@ export const TopExperiences: React.FC<{ tours?: TourCardData[] }> = ({ tours: pr
     <section className="pt-12 sm:pt-16 lg:pt-18 pb-6 sm:pb-8 lg:pb-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-6 sm:space-y-8">
       <FadeIn className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-luxury-forest/5 border border-luxury-gold/30 text-luxury-gold text-[10px] font-mono uppercase tracking-[0.25em] mb-3">
-            <Sparkles className="w-3.5 h-3.5 text-luxury-gold" />
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#15392D]/5 border border-[#C5A46B]/30 text-[#C5A46B] text-[10px] font-mono uppercase tracking-[0.25em] mb-3">
+            <Sparkles className="w-3.5 h-3.5 text-[#C5A46B]" />
             <span>Curated Island Journeys</span>
           </div>
-          <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-normal text-luxury-forest tracking-tight">
+          <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-normal text-[#15392D] tracking-tight">
             Exceptional Sri Lankan Experiences
           </h2>
-          <p className="text-sm sm:text-base text-luxury-charcoal/80 font-sans font-normal mt-2 max-w-2xl leading-relaxed">
+          <p className="text-sm sm:text-base text-[#59645E] font-sans font-normal mt-2 max-w-2xl leading-relaxed">
             Thoughtfully designed itineraries led by licensed private chauffeur-guides, featuring boutique heritage stays, seamless logistics, and intimate island encounters.
           </p>
         </div>
@@ -157,8 +157,8 @@ export const TopExperiences: React.FC<{ tours?: TourCardData[] }> = ({ tours: pr
               disabled={!canScrollLeft}
               className={`w-11 h-11 rounded-full border flex items-center justify-center shadow-sm transition-all ${
                 canScrollLeft
-                  ? "bg-white border-luxury-sand/90 hover:border-luxury-gold hover:text-luxury-gold text-luxury-forest cursor-pointer active:scale-95"
-                  : "bg-white/50 border-luxury-sand/40 text-luxury-charcoal/30 cursor-not-allowed"
+                  ? "bg-white border-[#E7E2D8] hover:border-[#C5A46B] hover:text-[#C5A46B] text-[#15392D] cursor-pointer active:scale-95"
+                  : "bg-white/50 border-[#E7E2D8]/50 text-[#59645E]/30 cursor-not-allowed"
               }`}
               title="Previous Experience"
               aria-label="Previous Experience"
@@ -171,8 +171,8 @@ export const TopExperiences: React.FC<{ tours?: TourCardData[] }> = ({ tours: pr
               disabled={!canScrollRight}
               className={`w-11 h-11 rounded-full border flex items-center justify-center shadow-sm transition-all ${
                 canScrollRight
-                  ? "bg-white border-luxury-sand/90 hover:border-luxury-gold hover:text-luxury-gold text-luxury-forest cursor-pointer active:scale-95"
-                  : "bg-white/50 border-luxury-sand/40 text-luxury-charcoal/30 cursor-not-allowed"
+                  ? "bg-white border-[#E7E2D8] hover:border-[#C5A46B] hover:text-[#C5A46B] text-[#15392D] cursor-pointer active:scale-95"
+                  : "bg-white/50 border-[#E7E2D8]/50 text-[#59645E]/30 cursor-not-allowed"
               }`}
               title="Next Experience"
               aria-label="Next Experience"
@@ -182,10 +182,10 @@ export const TopExperiences: React.FC<{ tours?: TourCardData[] }> = ({ tours: pr
           </div>
           <Link
             href="/tours"
-            className="inline-flex items-center gap-1.5 font-sans text-xs font-semibold uppercase tracking-wider text-luxury-forest hover:text-luxury-gold transition-colors pl-2"
+            className="inline-flex items-center gap-1.5 font-sans text-xs font-semibold uppercase tracking-wider text-[#15392D] hover:text-[#C5A46B] transition-colors pl-2"
           >
             <span>View All Journeys</span>
-            <ArrowRight className="w-4 h-4 text-luxury-gold" />
+            <ArrowRight className="w-4 h-4 text-[#C5A46B]" />
           </Link>
         </div>
       </FadeIn>

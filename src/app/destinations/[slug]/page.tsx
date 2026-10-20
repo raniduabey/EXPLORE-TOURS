@@ -166,7 +166,7 @@ export default async function DestinationPage({
   return (
     <div className="min-h-screen py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-12">
       {/* Destination Hero Banner */}
-      <div className="relative h-[380px] sm:h-[480px] rounded-3xl overflow-hidden shadow-2xl flex items-end p-8 sm:p-12 border border-luxury-sand/80">
+      <div className="relative h-[380px] sm:h-[480px] rounded-3xl overflow-hidden shadow-2xl flex items-end p-8 sm:p-12 border border-[#E7E2D8]">
         <Image
           src={heroBannerImage}
           alt={dest.name}
@@ -175,16 +175,16 @@ export default async function DestinationPage({
           sizes="100vw"
           className="object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-luxury-forest via-luxury-forest/50 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0D281F]/90 via-[#0D281F]/40 to-transparent" />
         <div className="relative z-10 max-w-3xl space-y-3 text-white">
-          <div className="flex items-center gap-2 text-xs text-luxury-gold font-mono uppercase tracking-[0.2em]">
-            <MapPin className="w-4 h-4 text-luxury-gold" />
+          <div className="flex items-center gap-2 text-xs text-[#C5A46B] font-mono uppercase tracking-[0.2em]">
+            <MapPin className="w-4 h-4 text-[#C5A46B]" />
             <span>Sri Lanka Destination Guide</span>
           </div>
-          <h1 className="font-serif text-3xl sm:text-5xl lg:text-6xl font-normal text-luxury-ivory tracking-tight leading-tight">
+          <h1 className="font-serif text-3xl sm:text-5xl lg:text-6xl font-normal text-white tracking-tight leading-tight">
             {dest.name}
           </h1>
-          <p className="text-xs sm:text-sm text-luxury-sand/90 leading-relaxed font-light max-w-2xl">
+          <p className="text-xs sm:text-sm text-[#F0ECE4] leading-relaxed font-light max-w-2xl">
             {dest.shortDesc}
           </p>
         </div>
@@ -194,7 +194,7 @@ export default async function DestinationPage({
         <div className="lg:col-span-2 space-y-10">
           {/* About Destination Section with Rich Text Renderer */}
           <div className="space-y-4">
-            <h2 className="font-serif text-2xl sm:text-3xl font-normal text-luxury-forest tracking-tight">
+            <h2 className="font-serif text-2xl sm:text-3xl font-normal text-[#15392D] tracking-tight">
               {aboutHeading}
             </h2>
             <div className="pt-1">
@@ -204,28 +204,28 @@ export default async function DestinationPage({
 
           {/* Top Highlights & Attractions */}
           {attractionsList.length > 0 && (
-            <div className="space-y-4 pt-4 border-t border-luxury-sand/60">
+            <div className="space-y-4 pt-4 border-t border-[#E7E2D8]">
               <div className="flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-luxury-gold" />
-                <h3 className="font-serif text-xl sm:text-2xl font-normal text-luxury-forest tracking-tight">
+                <Sparkles className="w-4 h-4 text-[#C5A46B]" />
+                <h3 className="font-serif text-xl sm:text-2xl font-normal text-[#15392D] tracking-tight">
                   Top Highlights & Attractions
                 </h3>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                 {attractionsList.map((attr, idx) => {
                   const content = (
-                    <div className="p-4 rounded-2xl bg-[#FAF8F5] border border-luxury-sand/80 hover:border-luxury-gold/50 transition-all space-y-1 h-full">
+                    <div className="p-4 rounded-2xl bg-[#F0ECE4]/50 border border-[#E7E2D8] hover:border-[#C5A46B]/50 transition-all space-y-1 h-full">
                       <div className="flex items-center justify-between">
-                        <span className="font-serif font-semibold text-sm text-luxury-forest flex items-center gap-2">
-                          <span className="w-1.5 h-1.5 rounded-full bg-luxury-gold" />
+                        <span className="font-serif font-semibold text-sm text-[#15392D] flex items-center gap-2">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#C5A46B]" />
                           <span>{attr.name}</span>
                         </span>
                         {attr.tourSlug && (
-                          <ArrowRight className="w-3.5 h-3.5 text-luxury-gold" />
+                          <ArrowRight className="w-3.5 h-3.5 text-[#C5A46B]" />
                         )}
                       </div>
                       {attr.description && (
-                        <p className="text-xs text-luxury-charcoal/70 font-light leading-relaxed pl-3.5">
+                        <p className="text-xs text-[#59645E] font-light leading-relaxed pl-3.5">
                           {attr.description}
                         </p>
                       )}
@@ -247,45 +247,45 @@ export default async function DestinationPage({
 
         {/* Travel Overview Sidebar */}
         <div className="lg:col-span-1 space-y-6">
-          <div className="bg-[#FAF8F5] rounded-3xl p-6 sm:p-7 border border-luxury-sand/80 shadow-[0_10px_30px_rgba(16,45,36,0.05)] space-y-5">
-            <div className="border-b border-luxury-sand/70 pb-3">
-              <span className="text-[10px] font-mono text-luxury-gold uppercase tracking-[0.2em] block">
+          <div className="bg-white rounded-3xl p-6 sm:p-7 border border-[#E7E2D8] shadow-sm space-y-5">
+            <div className="border-b border-[#E7E2D8] pb-3">
+              <span className="text-[10px] font-mono text-[#C5A46B] uppercase tracking-[0.2em] block font-semibold">
                 Travel Guide
               </span>
-              <h3 className="font-serif text-lg font-semibold text-luxury-forest">
+              <h3 className="font-serif text-lg font-semibold text-[#15392D]">
                 Destination Overview
               </h3>
             </div>
 
             <div className="space-y-4 text-xs">
               <div className="flex items-start gap-3">
-                <div className="w-8 h-8 rounded-xl bg-white border border-luxury-sand flex items-center justify-center shrink-0">
-                  <Calendar className="w-4 h-4 text-luxury-gold" />
+                <div className="w-8 h-8 rounded-xl bg-[#F8F7F3] border border-[#E7E2D8] flex items-center justify-center shrink-0">
+                  <Calendar className="w-4 h-4 text-[#C5A46B]" />
                 </div>
                 <div>
-                  <span className="font-mono text-[10px] uppercase tracking-wider text-luxury-charcoal/50 block">Best Time to Visit</span>
-                  <span className="font-sans text-xs font-semibold text-luxury-forest">{dest.bestTimeToVisit || "Year-round destination"}</span>
+                  <span className="font-mono text-[10px] uppercase tracking-wider text-[#59645E]/60 block">Best Time to Visit</span>
+                  <span className="font-sans text-xs font-semibold text-[#15392D]">{dest.bestTimeToVisit || "Year-round destination"}</span>
                 </div>
               </div>
 
               <div className="flex items-start gap-3">
-                <div className="w-8 h-8 rounded-xl bg-white border border-luxury-sand flex items-center justify-center shrink-0">
-                  <Compass className="w-4 h-4 text-luxury-gold" />
+                <div className="w-8 h-8 rounded-xl bg-[#F8F7F3] border border-[#E7E2D8] flex items-center justify-center shrink-0">
+                  <Compass className="w-4 h-4 text-[#C5A46B]" />
                 </div>
                 <div>
-                  <span className="font-mono text-[10px] uppercase tracking-wider text-luxury-charcoal/50 block">Curated Experiences</span>
-                  <span className="font-sans text-xs font-semibold text-luxury-forest">{curatedExperiencesText}</span>
+                  <span className="font-mono text-[10px] uppercase tracking-wider text-[#59645E]/60 block">Curated Experiences</span>
+                  <span className="font-sans text-xs font-semibold text-[#15392D]">{curatedExperiencesText}</span>
                 </div>
               </div>
 
               {travelTips && (
-                <div className="flex items-start gap-3 pt-2 border-t border-luxury-sand/50">
-                  <div className="w-8 h-8 rounded-xl bg-white border border-luxury-sand flex items-center justify-center shrink-0">
-                    <Sun className="w-4 h-4 text-luxury-gold" />
+                <div className="flex items-start gap-3 pt-2 border-t border-[#E7E2D8]">
+                  <div className="w-8 h-8 rounded-xl bg-[#F8F7F3] border border-[#E7E2D8] flex items-center justify-center shrink-0">
+                    <Sun className="w-4 h-4 text-[#C5A46B]" />
                   </div>
                   <div>
-                    <span className="font-mono text-[10px] uppercase tracking-wider text-luxury-charcoal/50 block">Curator Tips & Climate</span>
-                    <span className="text-xs text-luxury-charcoal/80 font-light leading-relaxed block">{travelTips}</span>
+                    <span className="font-mono text-[10px] uppercase tracking-wider text-[#59645E]/60 block">Curator Tips & Climate</span>
+                    <span className="text-xs text-[#59645E] font-light leading-relaxed block">{travelTips}</span>
                   </div>
                 </div>
               )}
@@ -293,7 +293,7 @@ export default async function DestinationPage({
 
             <Link
               href={`/plan-my-trip?destination=${dest.slug}`}
-              className="w-full inline-flex items-center justify-center py-3.5 px-4 bg-luxury-forest hover:bg-luxury-gold text-luxury-ivory text-xs font-sans font-medium uppercase tracking-wider rounded-2xl transition-all duration-300 shadow-md group"
+              className="w-full inline-flex items-center justify-center py-3.5 px-4 bg-[#15392D] hover:bg-[#1E4D3D] text-white text-xs font-sans font-semibold uppercase tracking-wider rounded-xl transition-all duration-300 shadow-sm group"
             >
               <span>{customButtonText}</span>
             </Link>
@@ -301,17 +301,17 @@ export default async function DestinationPage({
         </div>
       </div>
 
-      <div className="space-y-6 pt-6 border-t border-luxury-sand/70">
+      <div className="space-y-6 pt-6 border-t border-[#E7E2D8]">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="text-2xl sm:text-3xl font-serif font-normal text-luxury-forest tracking-tight">
+            <h3 className="text-2xl sm:text-3xl font-serif font-normal text-[#15392D] tracking-tight">
               Tours & Experiences in {dest.name}
             </h3>
-            <p className="text-xs sm:text-sm text-luxury-charcoal/70 mt-1 font-light">
+            <p className="text-xs sm:text-sm text-[#59645E] mt-1 font-light">
               Handpicked authentic activities led by licensed local guides.
             </p>
           </div>
-          <span className="text-xs font-serif font-semibold text-luxury-forest">
+          <span className="text-xs font-serif font-semibold text-[#15392D]">
             {tours.length} {tours.length === 1 ? "Experience" : "Experiences"} Available
           </span>
         </div>
@@ -323,17 +323,17 @@ export default async function DestinationPage({
             ))}
           </div>
         ) : (
-          <div className="bg-white rounded-3xl p-12 text-center border border-luxury-sand/80 space-y-3">
-            <Compass className="w-10 h-10 text-luxury-gold/50 mx-auto" />
-            <h4 className="text-lg font-serif font-normal text-luxury-forest">
+          <div className="bg-white rounded-3xl p-12 text-center border border-[#E7E2D8] space-y-3">
+            <Compass className="w-10 h-10 text-[#C5A46B]/50 mx-auto" />
+            <h4 className="text-lg font-serif font-normal text-[#15392D]">
               Custom Experiences Coming Soon
             </h4>
-            <p className="text-xs text-luxury-charcoal/70 max-w-sm mx-auto font-light">
+            <p className="text-xs text-[#59645E] max-w-sm mx-auto font-light">
               Our team is currently curating new bespoke tours for this destination. Contact our local trip specialists to organize a private guide.
             </p>
             <Link
               href="/plan-my-trip"
-              className="inline-block px-5 py-2.5 bg-luxury-forest hover:bg-luxury-gold text-luxury-ivory text-xs font-sans font-medium uppercase tracking-wider rounded-xl transition-all shadow"
+              className="inline-block px-5 py-2.5 bg-[#15392D] hover:bg-[#1E4D3D] text-white text-xs font-sans font-medium uppercase tracking-wider rounded-xl transition-all shadow"
             >
               Request Custom Tour
             </Link>

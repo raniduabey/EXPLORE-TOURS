@@ -84,9 +84,9 @@ export const TourCard: React.FC<{ tour: TourCardData; searchParamsString?: strin
     <motion.div
       whileHover={{ y: -6 }}
       transition={{ duration: 0.25, ease: "easeOut" }}
-      className="group bg-white rounded-2xl overflow-hidden border border-luxury-sand/80 hover:border-luxury-gold/50 shadow-[0_10px_30px_rgba(16,45,36,0.06)] hover:shadow-[0_20px_40px_rgba(16,45,36,0.12)] transition-all duration-300 flex flex-col h-full"
+      className="group bg-white rounded-2xl overflow-hidden border border-[#E7E2D8] hover:border-[#C5A46B]/60 shadow-[0_10px_30px_rgba(21,57,45,0.05)] hover:shadow-[0_20px_40px_rgba(21,57,45,0.12)] transition-all duration-300 flex flex-col h-full"
     >
-      <div className="relative h-52 sm:h-56 w-full overflow-hidden bg-luxury-sand/20">
+      <div className="relative h-52 sm:h-56 w-full overflow-hidden bg-[#F0ECE4]">
         <Image
           src={imageUrl}
           alt={tour.title || "Tour package"}
@@ -98,13 +98,13 @@ export const TourCard: React.FC<{ tour: TourCardData; searchParamsString?: strin
         />
         {badgeText && (
           <div className="absolute top-3 left-3 z-10">
-            <span className="px-3 py-1 rounded-full text-[10px] font-sans font-semibold uppercase tracking-[0.16em] bg-luxury-forest/90 text-luxury-gold border border-luxury-gold/30 backdrop-blur-md shadow-sm">
+            <span className="px-3 py-1 rounded-full text-[10px] font-sans font-semibold uppercase tracking-[0.16em] bg-[#15392D]/90 text-[#C5A46B] border border-[#C5A46B]/30 backdrop-blur-md shadow-sm">
               {badgeText}
             </span>
           </div>
         )}
-        <div className="absolute bottom-3 left-3 z-10 flex items-center gap-1.5 px-3 py-1 rounded-full bg-luxury-forest/80 backdrop-blur-md text-luxury-ivory text-[11px] font-sans font-medium">
-          <MapPin className="w-3.5 h-3.5 text-luxury-gold" />
+        <div className="absolute bottom-3 left-3 z-10 flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#15392D]/85 backdrop-blur-md text-white text-[11px] font-sans font-medium">
+          <MapPin className="w-3.5 h-3.5 text-[#C5A46B]" />
           <span>{tour.location || "Sri Lanka"}</span>
         </div>
       </div>
@@ -114,54 +114,54 @@ export const TourCard: React.FC<{ tour: TourCardData; searchParamsString?: strin
           <div className="flex items-center gap-1.5 text-xs">
             {hasGenuineReviews && (
               <>
-                <div className="flex items-center text-luxury-gold">
+                <div className="flex items-center text-[#C5A46B]">
                   <Star className="w-3.5 h-3.5 fill-current" />
-                  <span className="font-sans font-semibold text-luxury-forest ml-1">
+                  <span className="font-sans font-semibold text-[#15392D] ml-1">
                     {(tour.rating || 0).toFixed(1)}
                   </span>
                 </div>
-                <span className="text-luxury-charcoal/60 text-[11px] font-sans">
+                <span className="text-[#59645E] text-[11px] font-sans">
                   ({tour.reviewCount} {tour.reviewCount === 1 ? "review" : "reviews"})
                 </span>
-                <span className="text-luxury-sand">•</span>
+                <span className="text-[#E7E2D8]">•</span>
               </>
             )}
-            <span className="text-luxury-forest/80 font-sans text-xs font-semibold uppercase tracking-wider">
+            <span className="text-[#15392D]/80 font-sans text-xs font-semibold uppercase tracking-wider">
               {tour.tourType || "Private Tour"}
             </span>
           </div>
 
           <div className="min-h-[2.75rem] sm:min-h-[3.25rem] flex items-start">
             <Link href={tourHref} className="block">
-              <h3 className="font-serif font-medium text-lg sm:text-[20px] lg:text-[22px] text-luxury-forest group-hover:text-luxury-gold transition-colors line-clamp-2 leading-snug">
+              <h3 className="font-serif font-medium text-lg sm:text-[20px] lg:text-[22px] text-[#15392D] group-hover:text-[#C5A46B] transition-colors line-clamp-2 leading-snug">
                 {tour.title}
               </h3>
             </Link>
           </div>
 
-          <div className="flex flex-wrap items-center gap-3 text-xs text-luxury-charcoal/70 pt-1">
+          <div className="flex flex-wrap items-center gap-3 text-xs text-[#59645E] pt-1">
             <div className="flex items-center gap-1.5 font-sans">
-              <Clock className="w-3.5 h-3.5 text-luxury-gold" />
+              <Clock className="w-3.5 h-3.5 text-[#C5A46B]" />
               <span>{tour.duration}</span>
             </div>
             {tour.freeCancellation !== false && (
-              <div className="flex items-center gap-1.5 text-luxury-emerald font-sans">
-                <CheckCircle className="w-3.5 h-3.5 text-luxury-gold" />
+              <div className="flex items-center gap-1.5 text-[#15392D] font-sans">
+                <CheckCircle className="w-3.5 h-3.5 text-[#C5A46B]" />
                 <span>Bespoke cancellation</span>
               </div>
             )}
           </div>
         </div>
 
-        <div className="mt-auto pt-3.5 border-t border-luxury-sand/70 flex items-center justify-between">
+        <div className="mt-auto pt-3.5 border-t border-[#E7E2D8] flex items-center justify-between">
           <div>
-            <span className="text-[11px] font-sans uppercase tracking-widest text-luxury-charcoal/60 block font-medium">From</span>
+            <span className="text-[11px] font-sans uppercase tracking-widest text-[#59645E] block font-medium">From</span>
             <div className="flex items-baseline gap-1.5">
-              <span className="font-sans font-semibold text-xl sm:text-[24px] lg:text-[28px] tabular-nums text-luxury-forest tracking-tight">
+              <span className="font-sans font-semibold text-xl sm:text-[24px] lg:text-[28px] tabular-nums text-[#15392D] tracking-tight">
                 {formatPrice(tour.price)}
               </span>
               {tour.previousPrice && tour.previousPrice > tour.price && (
-                <span className="text-xs font-sans tabular-nums text-luxury-charcoal/40 line-through">
+                <span className="text-xs font-sans tabular-nums text-[#59645E]/40 line-through">
                   {formatPrice(tour.previousPrice)}
                 </span>
               )}
@@ -169,7 +169,7 @@ export const TourCard: React.FC<{ tour: TourCardData; searchParamsString?: strin
           </div>
           <Link
             href={tourHref}
-            className="px-4 py-2 rounded-full bg-luxury-forest/5 hover:bg-luxury-forest text-luxury-forest hover:text-luxury-ivory border border-luxury-forest/20 hover:border-luxury-forest font-sans font-semibold text-xs uppercase tracking-wider transition-all duration-200"
+            className="px-4 py-2 rounded-full bg-[#15392D]/5 hover:bg-[#15392D] text-[#15392D] hover:text-white border border-[#15392D]/20 hover:border-[#15392D] font-sans font-semibold text-xs uppercase tracking-wider transition-all duration-200"
           >
             View Journey
           </Link>

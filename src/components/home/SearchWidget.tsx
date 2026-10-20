@@ -223,33 +223,33 @@ export const SearchWidget: React.FC = () => {
   return (
     <div
       ref={widgetRef}
-      className="w-full max-w-5xl mx-auto bg-white rounded-2xl p-2.5 sm:p-4 shadow-[0_20px_50px_rgba(16,45,36,0.12)] border border-luxury-sand/80 relative z-40 transition-shadow duration-300"
+      className="w-full max-w-5xl mx-auto bg-white rounded-2xl p-3 sm:p-5 shadow-[0_10px_35px_rgba(21,57,45,0.06)] border border-[#E7E2D8] relative z-40 transition-shadow duration-300"
     >
-      <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-12 gap-2 sm:gap-3 items-end">
+      <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-12 gap-2.5 sm:gap-3.5 items-end">
         {/* ============================================================ */}
         {/* 1. DESTINATION SELECTOR */}
         {/* ============================================================ */}
         <div className="relative col-span-12 md:col-span-6 lg:col-span-3">
-          <label className="block text-[10px] font-sans font-semibold text-luxury-charcoal/60 uppercase tracking-[0.14em] mb-1 sm:mb-1.5 flex items-center gap-1.5">
-            <MapPin className="w-3.5 h-3.5 text-luxury-gold shrink-0" />
+          <label className="block text-[10px] font-sans font-semibold text-[#59645E] uppercase tracking-[0.14em] mb-1 sm:mb-1.5 flex items-center gap-1.5">
+            <MapPin className="w-3.5 h-3.5 text-[#C5A46B] shrink-0" />
             <span>Destination</span>
           </label>
           <button
             type="button"
             onClick={() => toggleDropdown("destination")}
-            className={`w-full h-11 sm:h-12 bg-[#FAF8F5] hover:bg-[#F5F2EB] border rounded-xl px-3 sm:px-3.5 text-left text-xs font-sans cursor-pointer flex items-center justify-between transition-all ${
+            className={`w-full h-11 sm:h-12 bg-[#F8F7F3] hover:bg-[#F0ECE4] border rounded-xl px-3 sm:px-3.5 text-left text-xs font-sans cursor-pointer flex items-center justify-between transition-all ${
               activeDropdown === "destination"
-                ? "border-luxury-gold ring-2 ring-luxury-gold/20 bg-white"
-                : "border-luxury-sand/80 hover:border-luxury-gold/50"
+                ? "border-[#C5A46B] ring-2 ring-[#C5A46B]/20 bg-white"
+                : "border-[#E7E2D8] hover:border-[#C5A46B]/50"
             }`}
             aria-haspopup="listbox"
             aria-expanded={activeDropdown === "destination"}
           >
-            <span className={`truncate mr-2 ${destination ? "text-luxury-forest font-semibold" : "text-luxury-charcoal/50"}`}>
+            <span className={`truncate mr-2 ${destination ? "text-[#15392D] font-semibold" : "text-[#59645E]/60"}`}>
               {selectedDestinationObj ? selectedDestinationObj.name : "Where would you like to go?"}
             </span>
             <ChevronDown
-              className={`w-4 h-4 text-luxury-gold shrink-0 transition-transform duration-200 ${
+              className={`w-4 h-4 text-[#C5A46B] shrink-0 transition-transform duration-200 ${
                 activeDropdown === "destination" ? "rotate-180" : ""
               }`}
             />
@@ -263,18 +263,18 @@ export const SearchWidget: React.FC = () => {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 8, scale: 0.98 }}
                 transition={{ duration: 0.18, ease: "easeOut" }}
-                className="absolute left-0 top-full mt-2 w-full sm:w-88 md:w-96 bg-white rounded-2xl shadow-2xl border border-luxury-sand/80 p-3 z-50 space-y-2"
+                className="absolute left-0 top-full mt-2 w-full sm:w-88 md:w-96 bg-white rounded-2xl shadow-xl border border-[#E7E2D8] p-3 z-50 space-y-2"
                 style={{ maxHeight: "360px" }}
               >
                 {/* Search Destination Input */}
                 <div className="relative">
-                  <Search className="w-3.5 h-3.5 text-luxury-charcoal/40 absolute left-3 top-3" />
+                  <Search className="w-3.5 h-3.5 text-[#59645E]/50 absolute left-3 top-3" />
                   <input
                     type="text"
                     placeholder="Search destination, e.g. Sigiriya, Ella..."
                     value={destinationSearch}
                     onChange={(e) => setDestinationSearch(e.target.value)}
-                    className="w-full bg-[#FAF8F5] border border-luxury-sand/80 rounded-xl pl-8 pr-8 py-2 text-xs font-medium text-luxury-forest placeholder:text-luxury-charcoal/40 focus:outline-none focus:border-luxury-gold focus:bg-white"
+                    className="w-full bg-[#F8F7F3] border border-[#E7E2D8] rounded-xl pl-8 pr-8 py-2 text-xs font-medium text-[#15392D] placeholder:text-[#59645E]/50 focus:outline-none focus:border-[#C5A46B] focus:bg-white"
                     autoFocus
                   />
                   {destinationSearch && (
@@ -298,37 +298,37 @@ export const SearchWidget: React.FC = () => {
                     }}
                     className={`px-3 py-2.5 rounded-xl text-xs font-medium cursor-pointer flex items-center justify-between transition-colors ${
                       destination === ""
-                        ? "bg-luxury-gold/15 text-luxury-forest font-semibold border border-luxury-gold/30"
-                        : "text-luxury-charcoal/80 hover:bg-[#FAF8F5]"
+                        ? "bg-[#C5A46B]/15 text-[#15392D] font-semibold border border-[#C5A46B]/30"
+                        : "text-[#24362F] hover:bg-[#F8F7F3]"
                     }`}
                   >
                     <div className="flex items-center gap-2.5">
-                      <div className="w-10 h-10 rounded-xl bg-luxury-forest/5 text-luxury-gold flex items-center justify-center shrink-0 font-bold border border-luxury-gold/25">
+                      <div className="w-10 h-10 rounded-xl bg-[#15392D]/5 text-[#C5A46B] flex items-center justify-center shrink-0 font-bold border border-[#C5A46B]/25">
                         🇱🇰
                       </div>
                       <div>
-                        <span className="font-semibold text-xs block text-luxury-forest">
+                        <span className="font-semibold text-xs block text-[#15392D]">
                           All Sri Lanka Destinations
                         </span>
-                        <span className="text-[10px] text-luxury-charcoal/50 block">
+                        <span className="text-[10px] text-[#59645E]/70 block">
                           Explore island-wide private tours
                         </span>
                       </div>
                     </div>
                     {destination === "" && (
-                      <span className="w-5 h-5 rounded-full bg-luxury-forest text-luxury-gold flex items-center justify-center shrink-0">
+                      <span className="w-5 h-5 rounded-full bg-[#15392D] text-[#C5A46B] flex items-center justify-center shrink-0">
                         <Check className="w-3 h-3 stroke-[2.5]" />
                       </span>
                     )}
                   </div>
 
                   {filteredDestinations.length === 0 ? (
-                    <div className="py-6 text-center text-xs text-luxury-charcoal/50 space-y-1">
+                    <div className="py-6 text-center text-xs text-[#59645E] space-y-1">
                       <p>No destinations found matching &ldquo;{destinationSearch}&rdquo;</p>
                       <button
                         type="button"
                         onClick={() => setDestinationSearch("")}
-                        className="text-xs font-semibold text-luxury-forest hover:text-luxury-gold underline"
+                        className="text-xs font-semibold text-[#15392D] hover:text-[#C5A46B] underline"
                       >
                         Reset search
                       </button>
@@ -345,12 +345,12 @@ export const SearchWidget: React.FC = () => {
                           }}
                           className={`px-3 py-2 rounded-xl text-xs cursor-pointer flex items-center justify-between transition-colors ${
                             isSelected
-                              ? "bg-luxury-gold/15 text-luxury-forest font-semibold border border-luxury-gold/30"
-                              : "text-luxury-charcoal/80 hover:bg-[#FAF8F5]"
+                              ? "bg-[#C5A46B]/15 text-[#15392D] font-semibold border border-[#C5A46B]/30"
+                              : "text-[#24362F] hover:bg-[#F8F7F3]"
                           }`}
                         >
                           <div className="flex items-center gap-2.5 min-w-0">
-                            <div className="relative w-10 h-10 rounded-xl overflow-hidden shrink-0 border border-luxury-sand/60 bg-slate-100">
+                            <div className="relative w-10 h-10 rounded-xl overflow-hidden shrink-0 border border-[#E7E2D8] bg-slate-100">
                               <Image
                                 src={d.image}
                                 alt={d.name}
@@ -359,16 +359,16 @@ export const SearchWidget: React.FC = () => {
                               />
                             </div>
                             <div className="min-w-0">
-                              <span className="font-semibold text-xs block text-luxury-forest truncate">
+                              <span className="font-semibold text-xs block text-[#15392D] truncate">
                                 {d.name}
                               </span>
-                              <span className="text-[10px] text-luxury-charcoal/50 block truncate">
+                              <span className="text-[10px] text-[#59645E]/70 block truncate">
                                 {d.popularAttractions.split(",").slice(0, 2).join(", ")}
                               </span>
                             </div>
                           </div>
                           {isSelected && (
-                            <span className="w-5 h-5 rounded-full bg-luxury-forest text-luxury-gold flex items-center justify-center shrink-0 ml-2">
+                            <span className="w-5 h-5 rounded-full bg-[#15392D] text-[#C5A46B] flex items-center justify-center shrink-0 ml-2">
                               <Check className="w-3 h-3 stroke-[2.5]" />
                             </span>
                           )}
@@ -386,26 +386,26 @@ export const SearchWidget: React.FC = () => {
         {/* 2. ACTIVITY TYPE SELECTOR */}
         {/* ============================================================ */}
         <div className="relative col-span-12 md:col-span-6 lg:col-span-3">
-          <label className="block text-[10px] font-sans font-semibold text-luxury-charcoal/60 uppercase tracking-[0.14em] mb-1 sm:mb-1.5 flex items-center gap-1.5">
-            <Compass className="w-3.5 h-3.5 text-luxury-gold shrink-0" />
+          <label className="block text-[10px] font-sans font-semibold text-[#59645E] uppercase tracking-[0.14em] mb-1 sm:mb-1.5 flex items-center gap-1.5">
+            <Compass className="w-3.5 h-3.5 text-[#C5A46B] shrink-0" />
             <span>Activity Type</span>
           </label>
           <button
             type="button"
             onClick={() => toggleDropdown("activity")}
-            className={`w-full h-11 sm:h-12 bg-[#FAF8F5] hover:bg-[#F5F2EB] border rounded-xl px-3 sm:px-3.5 text-left text-xs font-sans cursor-pointer flex items-center justify-between transition-all ${
+            className={`w-full h-11 sm:h-12 bg-[#F8F7F3] hover:bg-[#F0ECE4] border rounded-xl px-3 sm:px-3.5 text-left text-xs font-sans cursor-pointer flex items-center justify-between transition-all ${
               activeDropdown === "activity"
-                ? "border-luxury-gold ring-2 ring-luxury-gold/20 bg-white"
-                : "border-luxury-sand/80 hover:border-luxury-gold/50"
+                ? "border-[#C5A46B] ring-2 ring-[#C5A46B]/20 bg-white"
+                : "border-[#E7E2D8] hover:border-[#C5A46B]/50"
             }`}
             aria-haspopup="listbox"
             aria-expanded={activeDropdown === "activity"}
           >
-            <span className={`truncate mr-2 ${category ? "text-luxury-forest font-semibold" : "text-luxury-charcoal/50"}`}>
+            <span className={`truncate mr-2 ${category ? "text-[#15392D] font-semibold" : "text-[#59645E]/60"}`}>
               {selectedCategoryObj ? selectedCategoryObj.label : "All Activities"}
             </span>
             <ChevronDown
-              className={`w-4 h-4 text-luxury-gold shrink-0 transition-transform duration-200 ${
+              className={`w-4 h-4 text-[#C5A46B] shrink-0 transition-transform duration-200 ${
                 activeDropdown === "activity" ? "rotate-180" : ""
               }`}
             />
@@ -419,7 +419,7 @@ export const SearchWidget: React.FC = () => {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 8, scale: 0.98 }}
                 transition={{ duration: 0.18, ease: "easeOut" }}
-                className="absolute left-0 top-full mt-2 w-full sm:w-80 md:w-88 bg-white rounded-2xl shadow-2xl border border-luxury-sand/80 p-2.5 z-50 space-y-1"
+                className="absolute left-0 top-full mt-2 w-full sm:w-80 md:w-88 bg-white rounded-2xl shadow-xl border border-[#E7E2D8] p-2.5 z-50 space-y-1"
                 style={{ maxHeight: "360px" }}
               >
                 <div className="max-h-72 overflow-y-auto space-y-1 pr-1 custom-scrollbar">
@@ -435,31 +435,31 @@ export const SearchWidget: React.FC = () => {
                         }}
                         className={`px-3 py-2.5 rounded-xl text-xs cursor-pointer flex items-center justify-between transition-colors ${
                           isSelected
-                            ? "bg-luxury-gold/15 text-luxury-forest font-semibold border border-luxury-gold/30"
-                            : "text-luxury-charcoal/80 hover:bg-[#FAF8F5]"
+                            ? "bg-[#C5A46B]/15 text-[#15392D] font-semibold border border-[#C5A46B]/30"
+                            : "text-[#24362F] hover:bg-[#F8F7F3]"
                         }`}
                       >
                         <div className="flex items-center gap-2.5 min-w-0">
                           <div
                             className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${
                               isSelected
-                                ? "bg-luxury-forest text-luxury-gold"
-                                : "bg-[#FAF8F5] text-luxury-forest"
+                                ? "bg-[#15392D] text-[#C5A46B]"
+                                : "bg-[#F8F7F3] text-[#15392D]"
                             }`}
                           >
                             <Icon className="w-4 h-4" />
                           </div>
                           <div className="min-w-0">
-                            <span className="font-semibold text-xs block text-luxury-forest truncate">
+                            <span className="font-semibold text-xs block text-[#15392D] truncate">
                               {c.label}
                             </span>
-                            <span className="text-[10px] text-luxury-charcoal/50 block truncate">
+                            <span className="text-[10px] text-[#59645E]/70 block truncate">
                               {c.desc}
                             </span>
                           </div>
                         </div>
                         {isSelected && (
-                          <span className="w-5 h-5 rounded-full bg-luxury-forest text-luxury-gold flex items-center justify-center shrink-0 ml-2">
+                          <span className="w-5 h-5 rounded-full bg-[#15392D] text-[#C5A46B] flex items-center justify-center shrink-0 ml-2">
                             <Check className="w-3 h-3 stroke-[2.5]" />
                           </span>
                         )}
@@ -476,27 +476,27 @@ export const SearchWidget: React.FC = () => {
         {/* 3. TRAVEL DATE SELECTOR (PREMIUM DATE PICKER) */}
         {/* ============================================================ */}
         <div className="relative col-span-12 md:col-span-4 lg:col-span-2">
-          <label className="block text-[10px] font-sans font-semibold text-luxury-charcoal/60 uppercase tracking-[0.14em] mb-1 sm:mb-1.5 flex items-center gap-1.5">
-            <CalendarIcon className="w-3.5 h-3.5 text-luxury-gold shrink-0" />
+          <label className="block text-[10px] font-sans font-semibold text-[#59645E] uppercase tracking-[0.14em] mb-1 sm:mb-1.5 flex items-center gap-1.5">
+            <CalendarIcon className="w-3.5 h-3.5 text-[#C5A46B] shrink-0" />
             <span>Travel Date</span>
           </label>
           <button
             type="button"
             onClick={() => toggleDropdown("date")}
-            className={`w-full h-11 sm:h-12 bg-[#FAF8F5] hover:bg-[#F5F2EB] border rounded-xl px-3 text-left text-xs font-sans cursor-pointer flex items-center justify-between transition-all ${
+            className={`w-full h-11 sm:h-12 bg-[#F8F7F3] hover:bg-[#F0ECE4] border rounded-xl px-3 text-left text-xs font-sans cursor-pointer flex items-center justify-between transition-all ${
               activeDropdown === "date"
-                ? "border-luxury-gold ring-2 ring-luxury-gold/20 bg-white"
-                : "border-luxury-sand/80 hover:border-luxury-gold/50"
+                ? "border-[#C5A46B] ring-2 ring-[#C5A46B]/20 bg-white"
+                : "border-[#E7E2D8] hover:border-[#C5A46B]/50"
             }`}
             aria-haspopup="dialog"
             aria-expanded={activeDropdown === "date"}
           >
-            <span className={`truncate mr-1.5 ${date ? "text-luxury-forest font-semibold" : "text-luxury-charcoal/50"}`}>
+            <span className={`truncate mr-1.5 ${date ? "text-[#15392D] font-semibold" : "text-[#59645E]/60"}`}>
               {formattedDisplayDate || "Select date"}
             </span>
             <CalendarIcon
-              className={`w-4 h-4 text-luxury-gold shrink-0 ${
-                activeDropdown === "date" ? "text-luxury-forest" : ""
+              className={`w-4 h-4 text-[#C5A46B] shrink-0 ${
+                activeDropdown === "date" ? "text-[#15392D]" : ""
               }`}
             />
           </button>
@@ -509,7 +509,7 @@ export const SearchWidget: React.FC = () => {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 8, scale: 0.98 }}
                 transition={{ duration: 0.18, ease: "easeOut" }}
-                className="absolute left-0 sm:left-auto sm:right-0 md:left-0 top-full mt-2 w-full sm:w-84 md:w-88 bg-white rounded-2xl sm:rounded-3xl shadow-2xl border border-luxury-sand/80 p-3.5 sm:p-5 z-50 space-y-3 sm:space-y-4"
+                className="absolute left-0 sm:left-auto sm:right-0 md:left-0 top-full mt-2 w-full sm:w-84 md:w-88 bg-white rounded-2xl sm:rounded-3xl shadow-2xl border border-[#E7E2D8] p-3.5 sm:p-5 z-50 space-y-3 sm:space-y-4"
               >
                 {/* Header: Month & Year with Navigation Arrows */}
                 <div className="flex items-center justify-between">
@@ -517,20 +517,20 @@ export const SearchWidget: React.FC = () => {
                     type="button"
                     onClick={handlePrevMonth}
                     disabled={isCurrentMonth}
-                    className="p-1.5 rounded-xl hover:bg-[#FAF8F5] text-luxury-forest disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                    className="p-1.5 rounded-xl hover:bg-[#F8F7F3] text-[#15392D] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
                     aria-label="Previous Month"
                   >
                     <ChevronLeft className="w-5 h-5" />
                   </button>
 
-                  <h4 className="text-xs sm:text-sm font-serif font-medium text-luxury-forest tracking-wide">
+                  <h4 className="text-xs sm:text-sm font-serif font-medium text-[#15392D] tracking-wide">
                     {monthName}
                   </h4>
 
                   <button
                     type="button"
                     onClick={handleNextMonth}
-                    className="p-1.5 rounded-xl hover:bg-[#FAF8F5] text-luxury-forest transition-colors"
+                    className="p-1.5 rounded-xl hover:bg-[#F8F7F3] text-[#15392D] transition-colors"
                     aria-label="Next Month"
                   >
                     <ChevronRight className="w-5 h-5" />
@@ -542,7 +542,7 @@ export const SearchWidget: React.FC = () => {
                   {["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"].map((dayName) => (
                     <span
                       key={dayName}
-                      className="text-[9px] sm:text-[10px] font-sans font-semibold text-luxury-charcoal/40 tracking-wider py-1"
+                      className="text-[9px] sm:text-[10px] font-sans font-semibold text-[#59645E]/50 tracking-wider py-1"
                     >
                       {dayName}
                     </span>
@@ -575,12 +575,12 @@ export const SearchWidget: React.FC = () => {
                         }}
                         className={`h-8 sm:h-9 w-full rounded-full flex items-center justify-center text-xs font-semibold transition-all ${
                           isSelected
-                            ? "bg-luxury-forest text-luxury-ivory font-bold shadow-sm scale-105"
+                            ? "bg-[#15392D] text-white font-bold shadow-sm scale-105"
                             : isPast
-                            ? "text-luxury-charcoal/25 cursor-not-allowed pointer-events-none"
+                            ? "text-[#59645E]/25 cursor-not-allowed pointer-events-none"
                             : isToday
-                            ? "ring-1.5 ring-luxury-gold text-luxury-forest font-semibold hover:bg-luxury-gold/15"
-                            : "text-luxury-charcoal hover:bg-luxury-gold/15 hover:text-luxury-forest cursor-pointer"
+                            ? "ring-1.5 ring-[#C5A46B] text-[#15392D] font-semibold hover:bg-[#C5A46B]/15"
+                            : "text-[#24362F] hover:bg-[#C5A46B]/15 hover:text-[#15392D] cursor-pointer"
                         }`}
                       >
                         {dayNum}
@@ -590,7 +590,7 @@ export const SearchWidget: React.FC = () => {
                 </div>
 
                 {/* Quick Shortcuts & Clear Action */}
-                <div className="pt-3 border-t border-luxury-sand/60 flex items-center justify-between text-xs">
+                <div className="pt-3 border-t border-[#E7E2D8] flex items-center justify-between text-xs">
                   <div className="flex gap-1.5">
                     <button
                       type="button"
@@ -601,7 +601,7 @@ export const SearchWidget: React.FC = () => {
                         setDate(tStr);
                         closeDropdown();
                       }}
-                      className="px-2.5 py-1 rounded-lg bg-[#FAF8F5] hover:bg-luxury-gold/15 text-luxury-forest text-[11px] font-sans font-medium transition-colors border border-luxury-sand/60"
+                      className="px-2.5 py-1 rounded-lg bg-[#F8F7F3] hover:bg-[#C5A46B]/15 text-[#15392D] text-[11px] font-sans font-medium transition-colors border border-[#E7E2D8]"
                     >
                       Tomorrow
                     </button>
@@ -614,7 +614,7 @@ export const SearchWidget: React.FC = () => {
                         setDate(wStr);
                         closeDropdown();
                       }}
-                      className="px-2.5 py-1 rounded-lg bg-[#FAF8F5] hover:bg-luxury-gold/15 text-luxury-forest text-[11px] font-sans font-medium transition-colors border border-luxury-sand/60"
+                      className="px-2.5 py-1 rounded-lg bg-[#F8F7F3] hover:bg-[#C5A46B]/15 text-[#15392D] text-[11px] font-sans font-medium transition-colors border border-[#E7E2D8]"
                     >
                       In 7 Days
                     </button>
@@ -642,26 +642,26 @@ export const SearchWidget: React.FC = () => {
         {/* 4. TRAVELLERS SELECTOR */}
         {/* ============================================================ */}
         <div className="relative col-span-12 md:col-span-4 lg:col-span-2">
-          <label className="block text-[10px] font-sans font-semibold text-luxury-charcoal/60 uppercase tracking-[0.14em] mb-1 sm:mb-1.5 flex items-center gap-1.5">
-            <Users className="w-3.5 h-3.5 text-luxury-gold shrink-0" />
+          <label className="block text-[10px] font-sans font-semibold text-[#59645E] uppercase tracking-[0.14em] mb-1 sm:mb-1.5 flex items-center gap-1.5">
+            <Users className="w-3.5 h-3.5 text-[#C5A46B] shrink-0" />
             <span>Travellers</span>
           </label>
           <button
             type="button"
             onClick={() => toggleDropdown("travellers")}
-            className={`w-full h-11 sm:h-12 bg-[#FAF8F5] hover:bg-[#F5F2EB] border rounded-xl px-3 text-left text-xs font-sans cursor-pointer flex items-center justify-between transition-all ${
+            className={`w-full h-11 sm:h-12 bg-[#F8F7F3] hover:bg-[#F0ECE4] border rounded-xl px-3 text-left text-xs font-sans cursor-pointer flex items-center justify-between transition-all ${
               activeDropdown === "travellers"
-                ? "border-luxury-gold ring-2 ring-luxury-gold/20 bg-white"
-                : "border-luxury-sand/80 hover:border-luxury-gold/50"
+                ? "border-[#C5A46B] ring-2 ring-[#C5A46B]/20 bg-white"
+                : "border-[#E7E2D8] hover:border-[#C5A46B]/50"
             }`}
             aria-haspopup="dialog"
             aria-expanded={activeDropdown === "travellers"}
           >
-            <span className="truncate mr-1 text-luxury-forest font-semibold">
+            <span className="truncate mr-1 text-[#15392D] font-semibold">
               {formattedTravellers}
             </span>
             <ChevronDown
-              className={`w-4 h-4 text-luxury-gold shrink-0 transition-transform duration-200 ${
+              className={`w-4 h-4 text-[#C5A46B] shrink-0 transition-transform duration-200 ${
                 activeDropdown === "travellers" ? "rotate-180" : ""
               }`}
             />
@@ -675,16 +675,16 @@ export const SearchWidget: React.FC = () => {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 8, scale: 0.98 }}
                 transition={{ duration: 0.18, ease: "easeOut" }}
-                className="absolute right-0 top-full mt-2 w-full sm:w-80 bg-white rounded-2xl sm:rounded-3xl shadow-2xl border border-luxury-sand/80 p-4 sm:p-5 z-50 space-y-4"
+                className="absolute right-0 top-full mt-2 w-full sm:w-80 bg-white rounded-2xl sm:rounded-3xl shadow-2xl border border-[#E7E2D8] p-4 sm:p-5 z-50 space-y-4"
               >
                 <div className="space-y-3.5">
                   {/* Adults row */}
                   <div className="flex items-center justify-between">
                     <div>
-                      <span className="text-xs font-semibold text-luxury-forest block">
+                      <span className="text-xs font-semibold text-[#15392D] block">
                         Adults
                       </span>
-                      <span className="text-[10px] text-luxury-charcoal/50 block">
+                      <span className="text-[10px] text-[#59645E]/60 block">
                         Age 12+ years
                       </span>
                     </div>
@@ -693,19 +693,19 @@ export const SearchWidget: React.FC = () => {
                         type="button"
                         onClick={() => setAdults(Math.max(1, adults - 1))}
                         disabled={adults <= 1}
-                        className="w-8 h-8 rounded-xl bg-[#FAF8F5] hover:bg-luxury-sand/50 border border-luxury-sand/60 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center font-bold text-luxury-forest transition-colors"
+                        className="w-8 h-8 rounded-xl bg-[#F8F7F3] hover:bg-[#F0ECE4] border border-[#E7E2D8] disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center font-bold text-[#15392D] transition-colors"
                         aria-label="Decrease Adults"
                       >
                         <Minus className="w-3.5 h-3.5" />
                       </button>
-                      <span className="text-xs font-semibold text-luxury-forest w-5 text-center">
+                      <span className="text-xs font-semibold text-[#15392D] w-5 text-center">
                         {adults}
                       </span>
                       <button
                         type="button"
                         onClick={() => setAdults(Math.min(15, adults + 1))}
                         disabled={adults >= 15}
-                        className="w-8 h-8 rounded-xl bg-[#FAF8F5] hover:bg-luxury-sand/50 border border-luxury-sand/60 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center font-bold text-luxury-forest transition-colors"
+                        className="w-8 h-8 rounded-xl bg-[#F8F7F3] hover:bg-[#F0ECE4] border border-[#E7E2D8] disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center font-bold text-[#15392D] transition-colors"
                         aria-label="Increase Adults"
                       >
                         <Plus className="w-3.5 h-3.5" />
@@ -714,12 +714,12 @@ export const SearchWidget: React.FC = () => {
                   </div>
 
                   {/* Children row */}
-                  <div className="flex items-center justify-between pt-2 border-t border-luxury-sand/60">
+                  <div className="flex items-center justify-between pt-2 border-t border-[#E7E2D8]">
                     <div>
-                      <span className="text-xs font-semibold text-luxury-forest block">
+                      <span className="text-xs font-semibold text-[#15392D] block">
                         Children
                       </span>
-                      <span className="text-[10px] text-luxury-charcoal/50 block">
+                      <span className="text-[10px] text-[#59645E]/60 block">
                         Age 2–11 years
                       </span>
                     </div>
@@ -728,19 +728,19 @@ export const SearchWidget: React.FC = () => {
                         type="button"
                         onClick={() => setChildren(Math.max(0, children - 1))}
                         disabled={children <= 0}
-                        className="w-8 h-8 rounded-xl bg-[#FAF8F5] hover:bg-luxury-sand/50 border border-luxury-sand/60 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center font-bold text-luxury-forest transition-colors"
+                        className="w-8 h-8 rounded-xl bg-[#F8F7F3] hover:bg-[#F0ECE4] border border-[#E7E2D8] disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center font-bold text-[#15392D] transition-colors"
                         aria-label="Decrease Children"
                       >
                         <Minus className="w-3.5 h-3.5" />
                       </button>
-                      <span className="text-xs font-semibold text-luxury-forest w-5 text-center">
+                      <span className="text-xs font-semibold text-[#15392D] w-5 text-center">
                         {children}
                       </span>
                       <button
                         type="button"
                         onClick={() => setChildren(Math.min(10, children + 1))}
                         disabled={children >= 10}
-                        className="w-8 h-8 rounded-xl bg-[#FAF8F5] hover:bg-luxury-sand/50 border border-luxury-sand/60 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center font-bold text-luxury-forest transition-colors"
+                        className="w-8 h-8 rounded-xl bg-[#F8F7F3] hover:bg-[#F0ECE4] border border-[#E7E2D8] disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center font-bold text-[#15392D] transition-colors"
                         aria-label="Increase Children"
                       >
                         <Plus className="w-3.5 h-3.5" />
@@ -749,12 +749,12 @@ export const SearchWidget: React.FC = () => {
                   </div>
 
                   {/* Infants row */}
-                  <div className="flex items-center justify-between pt-2 border-t border-luxury-sand/60">
+                  <div className="flex items-center justify-between pt-2 border-t border-[#E7E2D8]">
                     <div>
-                      <span className="text-xs font-semibold text-luxury-forest block">
+                      <span className="text-xs font-semibold text-[#15392D] block">
                         Infants
                       </span>
-                      <span className="text-[10px] text-luxury-charcoal/50 block">
+                      <span className="text-[10px] text-[#59645E]/60 block">
                         Under 2 years (Complimentary)
                       </span>
                     </div>
@@ -763,19 +763,19 @@ export const SearchWidget: React.FC = () => {
                         type="button"
                         onClick={() => setInfants(Math.max(0, infants - 1))}
                         disabled={infants <= 0}
-                        className="w-8 h-8 rounded-xl bg-[#FAF8F5] hover:bg-luxury-sand/50 border border-luxury-sand/60 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center font-bold text-luxury-forest transition-colors"
+                        className="w-8 h-8 rounded-xl bg-[#F8F7F3] hover:bg-[#F0ECE4] border border-[#E7E2D8] disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center font-bold text-[#15392D] transition-colors"
                         aria-label="Decrease Infants"
                       >
                         <Minus className="w-3.5 h-3.5" />
                       </button>
-                      <span className="text-xs font-semibold text-luxury-forest w-5 text-center">
+                      <span className="text-xs font-semibold text-[#15392D] w-5 text-center">
                         {infants}
                       </span>
                       <button
                         type="button"
                         onClick={() => setInfants(Math.min(5, infants + 1))}
                         disabled={infants >= 5}
-                        className="w-8 h-8 rounded-xl bg-[#FAF8F5] hover:bg-luxury-sand/50 border border-luxury-sand/60 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center font-bold text-luxury-forest transition-colors"
+                        className="w-8 h-8 rounded-xl bg-[#F8F7F3] hover:bg-[#F0ECE4] border border-[#E7E2D8] disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center font-bold text-[#15392D] transition-colors"
                         aria-label="Increase Infants"
                       >
                         <Plus className="w-3.5 h-3.5" />
@@ -788,7 +788,7 @@ export const SearchWidget: React.FC = () => {
                   <button
                     type="button"
                     onClick={closeDropdown}
-                    className="w-full py-2.5 bg-luxury-forest hover:bg-luxury-emerald text-luxury-ivory rounded-xl text-xs font-sans uppercase tracking-wider font-semibold transition-colors shadow-sm"
+                    className="w-full py-2.5 bg-[#15392D] hover:bg-[#1E4D3D] text-white rounded-xl text-xs font-sans uppercase tracking-wider font-semibold transition-colors shadow-sm"
                   >
                     Apply Travellers
                   </button>
@@ -804,7 +804,7 @@ export const SearchWidget: React.FC = () => {
         <div className="col-span-12 md:col-span-4 lg:col-span-2">
           <button
             type="submit"
-            className="h-11 sm:h-12 w-full bg-gradient-to-r from-[#DFBE82] via-[#C9A86A] to-[#A88647] hover:brightness-105 text-luxury-forest font-sans font-semibold text-xs tracking-wider uppercase rounded-xl shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 active:scale-95"
+            className="h-11 sm:h-12 w-full bg-[#15392D] hover:bg-[#1E4D3D] text-white font-sans font-semibold text-xs tracking-wider uppercase rounded-xl shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 active:scale-95"
             aria-label="Search tours"
           >
             <Search className="w-4 h-4 stroke-[2.5]" />
@@ -814,39 +814,39 @@ export const SearchWidget: React.FC = () => {
       </form>
 
       {/* Popular Curated Search Shortcuts */}
-      <div className="mt-2.5 sm:mt-3.5 pt-2.5 sm:pt-3 border-t border-luxury-sand/60 flex flex-wrap items-center gap-1.5 sm:gap-2 text-xs">
-        <span className="text-[10px] sm:text-[11px] font-sans font-medium text-luxury-charcoal/60 uppercase tracking-widest flex items-center gap-1.5 shrink-0">
-          <Sparkles className="w-3.5 h-3.5 text-luxury-gold shrink-0" />
+      <div className="mt-2.5 sm:mt-3.5 pt-2.5 sm:pt-3 border-t border-[#E7E2D8] flex flex-wrap items-center gap-1.5 sm:gap-2 text-xs">
+        <span className="text-[10px] sm:text-[11px] font-sans font-medium text-[#59645E] uppercase tracking-widest flex items-center gap-1.5 shrink-0">
+          <Sparkles className="w-3.5 h-3.5 text-[#C5A46B] shrink-0" />
           Popular Curations:
         </span>
         <div className="flex flex-wrap items-center gap-1.5">
           <Link
             href="/tours/8-day-splendour-of-sri-lanka-classical-circuit"
-            className="px-3 py-1 rounded-full bg-[#FAF8F5] hover:bg-luxury-gold/15 text-luxury-forest font-sans text-[11px] transition-colors border border-luxury-sand/80"
+            className="px-3 py-1 rounded-full bg-[#F8F7F3] hover:bg-[#C5A46B]/15 text-[#15392D] font-sans text-[11px] transition-colors border border-[#E7E2D8]"
           >
             ✦ 8-Day Classical Circuit
           </Link>
           <Link
             href="/tours/sigiriya-rock-fortress-dambulla-day-tour"
-            className="px-3 py-1 rounded-full bg-[#FAF8F5] hover:bg-luxury-gold/15 text-luxury-forest font-sans text-[11px] transition-colors border border-luxury-sand/80"
+            className="px-3 py-1 rounded-full bg-[#F8F7F3] hover:bg-[#C5A46B]/15 text-[#15392D] font-sans text-[11px] transition-colors border border-[#E7E2D8]"
           >
             ✦ Sigiriya Citadel
           </Link>
           <Link
             href="/tours/kandy-to-ella-scenic-train-journey"
-            className="px-3 py-1 rounded-full bg-[#FAF8F5] hover:bg-luxury-gold/15 text-luxury-forest font-sans text-[11px] transition-colors border border-luxury-sand/80"
+            className="px-3 py-1 rounded-full bg-[#F8F7F3] hover:bg-[#C5A46B]/15 text-[#15392D] font-sans text-[11px] transition-colors border border-[#E7E2D8]"
           >
             ✦ Ella Scenic Rail
           </Link>
           <Link
             href="/tours/yala-national-park-private-safari"
-            className="px-3 py-1 rounded-full bg-[#FAF8F5] hover:bg-luxury-gold/15 text-luxury-forest font-sans text-[11px] transition-colors border border-luxury-sand/80"
+            className="px-3 py-1 rounded-full bg-[#F8F7F3] hover:bg-[#C5A46B]/15 text-[#15392D] font-sans text-[11px] transition-colors border border-[#E7E2D8]"
           >
             ✦ Yala Private Safari
           </Link>
           <Link
             href="/tours?category=multiday"
-            className="px-3 py-1 rounded-full bg-luxury-gold/20 hover:bg-luxury-gold/30 text-luxury-forest font-sans font-medium text-[11px] transition-colors border border-luxury-gold/40"
+            className="px-3 py-1 rounded-full bg-[#C5A46B]/15 hover:bg-[#C5A46B]/25 text-[#15392D] font-sans font-medium text-[11px] transition-colors border border-[#C5A46B]/40"
           >
             ✨ Multi-Day Journeys
           </Link>

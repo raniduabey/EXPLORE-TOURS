@@ -385,17 +385,17 @@ export default async function TourDetailPage({
 
         {/* Dynamic Tour Information Icons Bar */}
         {infoItems.length > 0 && (
-          <div className="grid grid-cols-1 min-[420px]:grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 p-4 sm:p-5 rounded-2xl sm:rounded-3xl bg-[#FAF8F5] border border-luxury-sand/80 shadow-sm">
+          <div className="grid grid-cols-1 min-[420px]:grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 p-4 sm:p-5 rounded-2xl sm:rounded-3xl bg-[#F0ECE4]/50 border border-[#E7E2D8] shadow-sm">
             {infoItems.map((item) => (
               <div key={item.id} className="flex items-center gap-3.5">
-                <div className="w-10 h-10 rounded-2xl bg-white border border-luxury-sand flex items-center justify-center shrink-0">
-                  <DynamicIcon icon={item.icon} className="w-5 h-5 text-luxury-gold" />
+                <div className="w-10 h-10 rounded-2xl bg-white border border-[#E7E2D8] flex items-center justify-center shrink-0">
+                  <DynamicIcon icon={item.icon} className="w-5 h-5 text-[#C5A46B]" />
                 </div>
                 <div>
-                  <span className="text-[10px] font-mono text-luxury-charcoal/50 uppercase tracking-wider block">
+                  <span className="text-[10px] font-mono text-[#59645E]/70 uppercase tracking-wider block">
                     {item.label}
                   </span>
-                  <span className="text-xs font-sans font-semibold text-luxury-forest">
+                  <span className="text-xs font-sans font-semibold text-[#15392D]">
                     {item.value}
                   </span>
                 </div>
@@ -408,17 +408,17 @@ export default async function TourDetailPage({
           <div className="lg:col-span-2 space-y-10">
             {/* Overview with RichTextRenderer */}
             <div className="space-y-4">
-              <h3 className="font-serif text-2xl font-normal text-luxury-forest tracking-tight">Overview</h3>
-              <div className="text-sm sm:text-base text-luxury-charcoal/80 font-light leading-relaxed">
+              <h3 className="font-serif text-2xl font-normal text-[#15392D] tracking-tight">Overview</h3>
+              <div className="text-sm sm:text-base text-[#59645E] font-light leading-relaxed">
                 <RichTextRenderer content={tour.description} />
               </div>
             </div>
 
             {/* Curator's Highlights Card */}
             {curatorHighlights.enabled !== false && curatorHighlights.items.length > 0 && (
-              <div className="space-y-4 bg-luxury-forest text-luxury-ivory p-7 sm:p-8 rounded-3xl border border-luxury-gold/30 shadow-xl">
+              <div className="space-y-4 bg-[#0D281F] text-luxury-ivory p-7 sm:p-8 rounded-3xl border border-[#C5A46B]/30 shadow-xl">
                 <div>
-                  <h3 className="font-serif text-xl sm:text-2xl font-normal text-luxury-gold tracking-wide">
+                  <h3 className="font-serif text-xl sm:text-2xl font-normal text-[#C5A46B] tracking-wide">
                     {curatorHighlights.title}
                   </h3>
                   {curatorHighlights.subtitle && (
@@ -430,7 +430,7 @@ export default async function TourDetailPage({
                 <ul className="space-y-3 pt-2">
                   {curatorHighlights.items.map((h, i) => (
                     <li key={h.id || i} className="flex items-start gap-3 text-xs sm:text-sm font-light text-luxury-sand/95">
-                      <DynamicIcon icon={h.icon || "Sparkles"} className="w-4 h-4 text-luxury-gold shrink-0 mt-0.5" />
+                      <DynamicIcon icon={h.icon || "Sparkles"} className="w-4 h-4 text-[#C5A46B] shrink-0 mt-0.5" />
                       <span>{h.text}</span>
                     </li>
                   ))}
@@ -440,16 +440,16 @@ export default async function TourDetailPage({
 
             {/* Signature Experiences Included */}
             {signatureExperiences.enabled !== false && signatureExperiences.experiences.length > 0 && (
-              <div className="space-y-5 p-7 sm:p-8 rounded-3xl bg-[#FAF8F5] border border-luxury-sand/80 shadow-sm">
+              <div className="space-y-5 p-7 sm:p-8 rounded-3xl bg-[#F0ECE4]/50 border border-[#E7E2D8] shadow-sm">
                 <div>
-                  <span className="text-[10px] font-mono text-luxury-gold uppercase tracking-[0.25em] block">
+                  <span className="text-[10px] font-mono text-[#C5A46B] uppercase tracking-[0.25em] block font-semibold">
                     Bespoke Curations
                   </span>
-                  <h3 className="font-serif text-xl sm:text-2xl font-normal text-luxury-forest tracking-wide">
+                  <h3 className="font-serif text-xl sm:text-2xl font-normal text-[#15392D] tracking-wide">
                     {signatureExperiences.heading}
                   </h3>
                   {signatureExperiences.subtitle && (
-                    <p className="text-xs text-luxury-charcoal/70 font-light mt-1">
+                    <p className="text-xs text-[#59645E] font-light mt-1">
                       {signatureExperiences.subtitle}
                     </p>
                   )}
@@ -458,22 +458,22 @@ export default async function TourDetailPage({
                   {signatureExperiences.experiences.map((exp, idx) => (
                     <div
                       key={exp.id || idx}
-                      className="p-5 rounded-2xl bg-white border border-luxury-sand/80 space-y-2 hover:border-luxury-gold/50 transition-all shadow-[0_2px_10px_rgba(16,45,36,0.02)]"
+                      className="p-5 rounded-2xl bg-white border border-[#E7E2D8] space-y-2 hover:border-[#C5A46B]/50 transition-all shadow-[0_2px_10px_rgba(21,57,45,0.03)]"
                     >
                       <div className="flex items-center justify-between gap-2">
                         <div className="flex items-center gap-2">
-                          <DynamicIcon icon={exp.icon || "Sparkles"} className="w-4 h-4 text-luxury-gold shrink-0" />
-                          <h4 className="font-serif text-sm font-semibold text-luxury-forest">
+                          <DynamicIcon icon={exp.icon || "Sparkles"} className="w-4 h-4 text-[#C5A46B] shrink-0" />
+                          <h4 className="font-serif text-sm font-semibold text-[#15392D]">
                             {exp.title}
                           </h4>
                         </div>
                         {exp.tag && (
-                          <span className="px-2 py-0.5 rounded-full text-[9px] font-mono uppercase tracking-wider bg-luxury-forest text-luxury-gold">
+                          <span className="px-2 py-0.5 rounded-full text-[9px] font-mono uppercase tracking-wider bg-[#15392D] text-[#C5A46B]">
                             {exp.tag}
                           </span>
                         )}
                       </div>
-                      <p className="text-xs text-luxury-charcoal/75 font-light leading-relaxed pl-6">
+                      <p className="text-xs text-[#59645E] font-light leading-relaxed pl-6">
                         {exp.description}
                       </p>
                     </div>
@@ -488,12 +488,12 @@ export default async function TourDetailPage({
             {(includes.length > 0 || excludes.length > 0) && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {includes.length > 0 && (
-                  <div className="bg-white p-6 sm:p-7 rounded-3xl border border-luxury-sand/80 shadow-sm space-y-4">
-                    <h4 className="font-serif text-base font-semibold text-luxury-forest flex items-center gap-2">
-                      <CheckCircle className="w-4 h-4 text-luxury-gold" />
+                  <div className="bg-white p-6 sm:p-7 rounded-3xl border border-[#E7E2D8] shadow-sm space-y-4">
+                    <h4 className="font-serif text-base font-semibold text-[#15392D] flex items-center gap-2">
+                      <CheckCircle className="w-4 h-4 text-[#C5A46B]" />
                       <span>What&apos;s Included</span>
                     </h4>
-                    <ul className="space-y-2.5 text-xs text-luxury-charcoal/80">
+                    <ul className="space-y-2.5 text-xs text-[#59645E]">
                       {includes.map((inc, i) => (
                         <li key={i} className="flex items-start gap-2.5">
                           <CheckCircle className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
@@ -505,12 +505,12 @@ export default async function TourDetailPage({
                 )}
 
                 {excludes.length > 0 && (
-                  <div className="bg-white p-6 sm:p-7 rounded-3xl border border-luxury-sand/80 shadow-sm space-y-4">
-                    <h4 className="font-serif text-base font-semibold text-luxury-forest flex items-center gap-2">
+                  <div className="bg-white p-6 sm:p-7 rounded-3xl border border-[#E7E2D8] shadow-sm space-y-4">
+                    <h4 className="font-serif text-base font-semibold text-[#15392D] flex items-center gap-2">
                       <XCircle className="w-4 h-4 text-rose-500" />
                       <span>What&apos;s Excluded</span>
                     </h4>
-                    <ul className="space-y-2.5 text-xs text-luxury-charcoal/80">
+                    <ul className="space-y-2.5 text-xs text-[#59645E]">
                       {excludes.map((exc, i) => (
                         <li key={i} className="flex items-start gap-2.5">
                           <XCircle className="w-3.5 h-3.5 text-rose-400 shrink-0 mt-0.5" />
@@ -561,8 +561,8 @@ export default async function TourDetailPage({
           </div>
         </div>
 
-        <div className="pt-12 border-t border-slate-200 space-y-6">
-          <h3 className="text-2xl font-extrabold text-ceylon-navy tracking-tight">
+        <div className="pt-12 border-t border-[#E7E2D8] space-y-6">
+          <h3 className="text-2xl sm:text-3xl font-serif font-normal text-[#15392D] tracking-tight">
             You May Also Like
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

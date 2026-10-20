@@ -119,7 +119,7 @@ export const TailorMadeModal: React.FC<TailorMadeModalProps> = ({ isOpen, onClos
             className="relative w-full max-w-2xl bg-white rounded-3xl shadow-2xl border border-slate-100 overflow-hidden z-10"
           >
             {/* Modal Header */}
-            <div className="bg-ceylon-navy text-white p-6 sm:p-8 relative">
+            <div className="bg-[#15392D] text-white p-6 sm:p-8 relative">
               <button
                 onClick={onClose}
                 className="absolute top-5 right-5 w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors"
@@ -128,14 +128,14 @@ export const TailorMadeModal: React.FC<TailorMadeModalProps> = ({ isOpen, onClos
                 <X className="w-5 h-5" />
               </button>
 
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-400/20 text-emerald-300 text-[11px] font-extrabold uppercase tracking-wider mb-2 border border-emerald-400/30">
-                <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#C5A46B]/20 text-[#C5A46B] text-[11px] font-bold uppercase tracking-wider mb-2 border border-[#C5A46B]/30">
+                <Sparkles className="w-3.5 h-3.5 text-[#C5A46B]" />
                 <span>Bespoke Island Itinerary Service</span>
               </div>
-              <h3 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
+              <h3 className="text-2xl sm:text-3xl font-serif font-normal tracking-tight">
                 Design Your Dream Sri Lanka Vacation
               </h3>
-              <p className="text-xs sm:text-sm text-slate-300 mt-1 max-w-lg">
+              <p className="text-xs sm:text-sm text-white/80 mt-1 max-w-lg font-sans">
                 Crafted by licensed local travel planners within 24 hours. 100% free, personalized & no obligation.
               </p>
 
@@ -147,14 +147,14 @@ export const TailorMadeModal: React.FC<TailorMadeModalProps> = ({ isOpen, onClos
                       key={s}
                       className={`h-1.5 rounded-full transition-all duration-300 ${
                         s === step
-                          ? "w-8 bg-emerald-400"
+                          ? "w-8 bg-[#C5A46B]"
                           : s < step
                           ? "w-4 bg-white/60"
                           : "w-4 bg-white/20"
                       }`}
                     />
                   ))}
-                  <span className="text-[11px] text-slate-300 ml-2 font-medium">
+                  <span className="text-[11px] text-white/80 ml-2 font-medium">
                     Step {step} of 3
                   </span>
                 </div>
@@ -165,14 +165,14 @@ export const TailorMadeModal: React.FC<TailorMadeModalProps> = ({ isOpen, onClos
             <div className="p-6 sm:p-8">
               {submitted ? (
                 <div className="text-center py-6 space-y-5">
-                  <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto shadow-inner">
-                    <CheckCircle2 className="w-10 h-10" />
+                  <div className="w-16 h-16 rounded-full bg-[#C5A46B]/15 text-[#15392D] flex items-center justify-center mx-auto shadow-inner">
+                    <CheckCircle2 className="w-10 h-10 text-[#C5A46B]" />
                   </div>
                   <div className="space-y-1">
-                    <h4 className="text-2xl font-extrabold text-ceylon-navy">
+                    <h4 className="text-2xl font-serif font-normal text-[#15392D]">
                       Itinerary Request Received!
                     </h4>
-                    <p className="text-xs sm:text-sm text-slate-600 max-w-md mx-auto">
+                    <p className="text-xs sm:text-sm text-[#59645E] max-w-md mx-auto font-sans">
                       Thank you! Our Senior Tour Specialist is already reviewing your preferences and will email your personalized proposal within 24 hours.
                     </p>
                   </div>
@@ -190,7 +190,7 @@ export const TailorMadeModal: React.FC<TailorMadeModalProps> = ({ isOpen, onClos
                     <button
                       type="button"
                       onClick={onClose}
-                      className="w-full sm:w-auto px-6 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-colors"
+                      className="w-full sm:w-auto px-6 py-3 bg-[#F8F7F3] hover:bg-[#F0ECE4] text-[#15392D] border border-[#E7E2D8] rounded-xl text-xs font-bold transition-colors"
                     >
                       Done
                     </button>
@@ -206,7 +206,7 @@ export const TailorMadeModal: React.FC<TailorMadeModalProps> = ({ isOpen, onClos
                       className="space-y-5"
                     >
                       <div>
-                        <label className="block text-xs font-bold text-ceylon-navy uppercase tracking-wider mb-2">
+                        <label className="block text-xs font-bold text-[#15392D] uppercase tracking-wider mb-2">
                           1. How long would you like to explore Sri Lanka?
                         </label>
                         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
@@ -217,8 +217,8 @@ export const TailorMadeModal: React.FC<TailorMadeModalProps> = ({ isOpen, onClos
                               onClick={() => setDuration(dur)}
                               className={`p-3 rounded-xl border text-xs font-bold transition-all ${
                                 duration === dur
-                                  ? "border-ceylon-navy bg-ceylon-softblue text-ceylon-navy ring-2 ring-ceylon-navy/20"
-                                  : "border-slate-200 text-slate-600 hover:border-slate-300"
+                                  ? "border-[#15392D] bg-[#F8F7F3] text-[#15392D] ring-2 ring-[#15392D]/20"
+                                  : "border-[#E7E2D8] text-[#59645E] hover:border-[#15392D]/40"
                               }`}
                             >
                               {dur}
@@ -228,7 +228,7 @@ export const TailorMadeModal: React.FC<TailorMadeModalProps> = ({ isOpen, onClos
                       </div>
 
                       <div>
-                        <label className="block text-xs font-bold text-ceylon-navy uppercase tracking-wider mb-2">
+                        <label className="block text-xs font-bold text-[#15392D] uppercase tracking-wider mb-2">
                           2. When do you plan to arrive?
                         </label>
                         <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
@@ -239,8 +239,8 @@ export const TailorMadeModal: React.FC<TailorMadeModalProps> = ({ isOpen, onClos
                               onClick={() => setTravelMonth(m)}
                               className={`p-2.5 rounded-xl border text-xs font-semibold transition-all ${
                                 travelMonth === m
-                                  ? "border-ceylon-navy bg-ceylon-softblue text-ceylon-navy ring-2 ring-ceylon-navy/20"
-                                  : "border-slate-200 text-slate-600 hover:border-slate-300"
+                                  ? "border-[#15392D] bg-[#F8F7F3] text-[#15392D] ring-2 ring-[#15392D]/20"
+                                  : "border-[#E7E2D8] text-[#59645E] hover:border-[#15392D]/40"
                               }`}
                             >
                               {m}
@@ -250,7 +250,7 @@ export const TailorMadeModal: React.FC<TailorMadeModalProps> = ({ isOpen, onClos
                       </div>
 
                       <div>
-                        <label className="block text-xs font-bold text-ceylon-navy uppercase tracking-wider mb-2">
+                        <label className="block text-xs font-bold text-[#15392D] uppercase tracking-wider mb-2">
                           3. Who is traveling?
                         </label>
                         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
@@ -261,8 +261,8 @@ export const TailorMadeModal: React.FC<TailorMadeModalProps> = ({ isOpen, onClos
                               onClick={() => setTravelers(tr)}
                               className={`p-2.5 rounded-xl border text-xs font-semibold transition-all ${
                                 travelers === tr
-                                  ? "border-ceylon-navy bg-ceylon-softblue text-ceylon-navy ring-2 ring-ceylon-navy/20"
-                                  : "border-slate-200 text-slate-600 hover:border-slate-300"
+                                  ? "border-[#15392D] bg-[#F8F7F3] text-[#15392D] ring-2 ring-[#15392D]/20"
+                                  : "border-[#E7E2D8] text-[#59645E] hover:border-[#15392D]/40"
                               }`}
                             >
                               {tr}
@@ -275,7 +275,7 @@ export const TailorMadeModal: React.FC<TailorMadeModalProps> = ({ isOpen, onClos
                         <button
                           type="button"
                           onClick={() => setStep(2)}
-                          className="px-6 py-3 bg-ceylon-navy hover:bg-ceylon-blue text-white rounded-xl text-xs font-bold transition-all flex items-center gap-2 shadow-md"
+                          className="px-6 py-3 bg-[#15392D] hover:bg-[#1E4D3D] text-white rounded-xl text-xs font-bold transition-all flex items-center gap-2 shadow-md"
                         >
                           <span>Next: Interests & Places</span>
                           <ArrowRight className="w-4 h-4" />
@@ -292,7 +292,7 @@ export const TailorMadeModal: React.FC<TailorMadeModalProps> = ({ isOpen, onClos
                       className="space-y-5"
                     >
                       <div>
-                        <label className="block text-xs font-bold text-ceylon-navy uppercase tracking-wider mb-2">
+                        <label className="block text-xs font-bold text-[#15392D] uppercase tracking-wider mb-2">
                           4. What experiences interest you most? (Select multiple)
                         </label>
                         <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
@@ -315,12 +315,12 @@ export const TailorMadeModal: React.FC<TailorMadeModalProps> = ({ isOpen, onClos
                                 onClick={() => toggleStyle(item)}
                                 className={`p-2.5 rounded-xl border text-xs font-semibold flex items-center justify-between transition-all ${
                                   active
-                                    ? "border-emerald-600 bg-emerald-50 text-emerald-900 font-bold"
-                                    : "border-slate-200 text-slate-600 hover:border-slate-300"
+                                    ? "border-[#15392D] bg-[#F8F7F3] text-[#15392D] font-bold"
+                                    : "border-[#E7E2D8] text-[#59645E] hover:border-[#15392D]/40"
                                 }`}
                               >
                                 <span>{item}</span>
-                                {active && <Check className="w-3.5 h-3.5 text-emerald-600" />}
+                                {active && <Check className="w-3.5 h-3.5 text-[#15392D]" />}
                               </button>
                             );
                           })}
@@ -328,7 +328,7 @@ export const TailorMadeModal: React.FC<TailorMadeModalProps> = ({ isOpen, onClos
                       </div>
 
                       <div>
-                        <label className="block text-xs font-bold text-ceylon-navy uppercase tracking-wider mb-2">
+                        <label className="block text-xs font-bold text-[#15392D] uppercase tracking-wider mb-2">
                           5. Which key destinations would you love to include?
                         </label>
                         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
@@ -350,12 +350,12 @@ export const TailorMadeModal: React.FC<TailorMadeModalProps> = ({ isOpen, onClos
                                 onClick={() => toggleDest(dest)}
                                 className={`p-2 rounded-xl border text-xs font-semibold flex items-center justify-between transition-all ${
                                   active
-                                    ? "border-ceylon-blue bg-ceylon-softblue text-ceylon-navy font-bold"
-                                    : "border-slate-200 text-slate-600 hover:border-slate-300"
+                                    ? "border-[#15392D] bg-[#F8F7F3] text-[#15392D] font-bold"
+                                    : "border-[#E7E2D8] text-[#59645E] hover:border-[#15392D]/40"
                                 }`}
                               >
                                 <span>{dest}</span>
-                                {active && <Check className="w-3.5 h-3.5 text-ceylon-blue" />}
+                                {active && <Check className="w-3.5 h-3.5 text-[#15392D]" />}
                               </button>
                             );
                           })}
@@ -366,7 +366,7 @@ export const TailorMadeModal: React.FC<TailorMadeModalProps> = ({ isOpen, onClos
                         <button
                           type="button"
                           onClick={() => setStep(1)}
-                          className="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-colors flex items-center gap-1.5"
+                          className="px-5 py-2.5 bg-[#F8F7F3] hover:bg-[#F0ECE4] text-[#15392D] border border-[#E7E2D8] rounded-xl text-xs font-bold transition-colors flex items-center gap-1.5"
                         >
                           <ArrowLeft className="w-3.5 h-3.5" />
                           <span>Back</span>
@@ -374,7 +374,7 @@ export const TailorMadeModal: React.FC<TailorMadeModalProps> = ({ isOpen, onClos
                         <button
                           type="button"
                           onClick={() => setStep(3)}
-                          className="px-6 py-3 bg-ceylon-navy hover:bg-ceylon-blue text-white rounded-xl text-xs font-bold transition-all flex items-center gap-2 shadow-md"
+                          className="px-6 py-3 bg-[#15392D] hover:bg-[#1E4D3D] text-white rounded-xl text-xs font-bold transition-all flex items-center gap-2 shadow-md"
                         >
                           <span>Next: Contact Details</span>
                           <ArrowRight className="w-4 h-4" />
@@ -404,7 +404,7 @@ export const TailorMadeModal: React.FC<TailorMadeModalProps> = ({ isOpen, onClos
                       )}
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                          <label className="block text-xs font-bold text-ceylon-navy mb-1">
+                          <label className="block text-xs font-bold text-[#15392D] mb-1">
                             Your Full Name *
                           </label>
                           <input
@@ -413,12 +413,12 @@ export const TailorMadeModal: React.FC<TailorMadeModalProps> = ({ isOpen, onClos
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                             placeholder="e.g. Sarah Jenkins"
-                            className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-xs font-medium focus:ring-2 focus:ring-ceylon-navy focus:outline-none"
+                            className="w-full px-4 py-2.5 rounded-xl border border-[#E7E2D8] text-xs font-medium focus:ring-2 focus:ring-[#15392D] focus:outline-none"
                           />
                         </div>
 
                         <div>
-                          <label className="block text-xs font-bold text-ceylon-navy mb-1">
+                          <label className="block text-xs font-bold text-[#15392D] mb-1">
                             Email Address (for proposal PDF) *
                           </label>
                           <input
@@ -427,14 +427,14 @@ export const TailorMadeModal: React.FC<TailorMadeModalProps> = ({ isOpen, onClos
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             placeholder="sarah@example.com"
-                            className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-xs font-medium focus:ring-2 focus:ring-ceylon-navy focus:outline-none"
+                            className="w-full px-4 py-2.5 rounded-xl border border-[#E7E2D8] text-xs font-medium focus:ring-2 focus:ring-[#15392D] focus:outline-none"
                           />
                         </div>
                       </div>
 
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                          <label className="block text-xs font-bold text-ceylon-navy mb-1">
+                          <label className="block text-xs font-bold text-[#15392D] mb-1">
                             WhatsApp / Phone Number
                           </label>
                           <input
@@ -442,12 +442,12 @@ export const TailorMadeModal: React.FC<TailorMadeModalProps> = ({ isOpen, onClos
                             value={phone}
                             onChange={(e) => setPhone(e.target.value)}
                             placeholder="+44 7123 456789"
-                            className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-xs font-medium focus:ring-2 focus:ring-ceylon-navy focus:outline-none"
+                            className="w-full px-4 py-2.5 rounded-xl border border-[#E7E2D8] text-xs font-medium focus:ring-2 focus:ring-[#15392D] focus:outline-none"
                           />
                         </div>
 
                         <div>
-                          <label className="block text-xs font-bold text-ceylon-navy mb-1">
+                          <label className="block text-xs font-bold text-[#15392D] mb-1">
                             Any Special Wishes or Requirements?
                           </label>
                           <input
@@ -455,15 +455,15 @@ export const TailorMadeModal: React.FC<TailorMadeModalProps> = ({ isOpen, onClos
                             value={notes}
                             onChange={(e) => setNotes(e.target.value)}
                             placeholder="e.g. Vegetarian food, luxury villas, 1st class train"
-                            className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-xs font-medium focus:ring-2 focus:ring-ceylon-navy focus:outline-none"
+                            className="w-full px-4 py-2.5 rounded-xl border border-[#E7E2D8] text-xs font-medium focus:ring-2 focus:ring-[#15392D] focus:outline-none"
                           />
                         </div>
                       </div>
 
-                      <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100 flex items-start gap-3">
-                        <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
-                        <div className="text-[11px] text-slate-500 leading-relaxed">
-                          <strong className="text-slate-800">No Booking Fees or Commitments:</strong> Our native Sri Lankan guides will review your dates, craft the ideal route, calculate direct transparent rates, and send a complete daily plan to your email & WhatsApp.
+                      <div className="bg-[#F8F7F3] p-4 rounded-2xl border border-[#E7E2D8] flex items-start gap-3">
+                        <CheckCircle2 className="w-5 h-5 text-[#C5A46B] shrink-0 mt-0.5" />
+                        <div className="text-[11px] text-[#59645E] leading-relaxed font-sans">
+                          <strong className="text-[#15392D]">No Booking Fees or Commitments:</strong> Our native Sri Lankan guides will review your dates, craft the ideal route, calculate direct transparent rates, and send a complete daily plan to your email & WhatsApp.
                         </div>
                       </div>
 
@@ -471,7 +471,7 @@ export const TailorMadeModal: React.FC<TailorMadeModalProps> = ({ isOpen, onClos
                         <button
                           type="button"
                           onClick={() => setStep(2)}
-                          className="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-colors flex items-center gap-1.5"
+                          className="px-5 py-2.5 bg-[#F8F7F3] hover:bg-[#F0ECE4] text-[#15392D] border border-[#E7E2D8] rounded-xl text-xs font-bold transition-colors flex items-center gap-1.5"
                         >
                           <ArrowLeft className="w-3.5 h-3.5" />
                           <span>Back</span>
@@ -479,7 +479,7 @@ export const TailorMadeModal: React.FC<TailorMadeModalProps> = ({ isOpen, onClos
                         <button
                           type="submit"
                           disabled={submitting}
-                          className="px-8 py-3 bg-ceylon-green hover:bg-ceylon-darkgreen text-white rounded-xl text-xs font-bold transition-all flex items-center gap-2 shadow-lg disabled:opacity-50"
+                          className="px-8 py-3 bg-[#15392D] hover:bg-[#1E4D3D] text-white rounded-xl text-xs font-bold transition-all flex items-center gap-2 shadow-lg disabled:opacity-50"
                         >
                           <Send className="w-4 h-4" />
                           <span>{submitting ? "Sending Request..." : "Submit Custom Itinerary Request"}</span>

@@ -54,7 +54,7 @@ export const Header: React.FC = () => {
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
           isTransparent
             ? "bg-gradient-to-b from-black/60 via-black/25 to-transparent text-white py-4 border-b border-transparent"
-            : "bg-[#102D24]/95 backdrop-blur-md text-white py-3 border-b border-[#C9A86A]/20 shadow-xl"
+            : "bg-[#15392D]/95 backdrop-blur-md text-white py-3 border-b border-[#C5A46B]/20 shadow-xl"
         }`}
       >
         <div className="w-full px-4 sm:px-6 lg:px-8">
@@ -80,7 +80,7 @@ export const Header: React.FC = () => {
                   <span className="font-editorial text-sm sm:text-lg md:text-xl text-white font-bold tracking-wide leading-tight truncate block group-hover:text-luxury-sand transition-colors">
                     Ceylon Explore Tours
                   </span>
-                  <span className="text-[8px] sm:text-[10px] font-medium tracking-[0.16em] sm:tracking-[0.22em] uppercase block mt-0.5 truncate text-[#C9A86A]">
+                  <span className="text-[8px] sm:text-[10px] font-medium tracking-[0.16em] sm:tracking-[0.22em] uppercase block mt-0.5 truncate text-[#C5A46B]">
                     Curated Sri Lanka Journeys
                   </span>
                 </div>
@@ -100,15 +100,15 @@ export const Header: React.FC = () => {
                       href={link.href}
                       className={`text-[12px] uppercase tracking-[0.14em] font-medium whitespace-nowrap transition-all duration-200 relative py-1.5 ${
                         active
-                          ? "text-[#C9A86A] font-semibold"
-                          : "text-white/85 hover:text-[#C9A86A]"
+                          ? "text-[#C5A46B] font-semibold"
+                          : "text-white/85 hover:text-[#C5A46B]"
                       }`}
                     >
                       {link.name}
                       {active && (
                         <motion.span
                           layoutId="activeNavIndicator"
-                          className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#C9A86A] to-transparent rounded-full"
+                          className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#C5A46B] to-transparent rounded-full"
                         />
                       )}
                     </Link>
@@ -131,14 +131,14 @@ export const Header: React.FC = () => {
                   }`}
                   aria-label="Select Currency"
                 >
-                  <Globe className="w-3.5 h-3.5 text-[#C9A86A] shrink-0" />
+                  <Globe className="w-3.5 h-3.5 text-[#C5A46B] shrink-0" />
                   <span className="tracking-wide">
                     {currency} ({currencies[currency]?.symbol || "$"})
                   </span>
                   <ChevronDown className="w-3 h-3 text-white/60 shrink-0" />
                 </button>
                 {currencyOpen && (
-                  <div className="absolute right-0 mt-2 w-36 bg-[#102D24] rounded-xl shadow-2xl border border-[#C9A86A]/30 py-1.5 z-50 backdrop-blur-lg">
+                  <div className="absolute right-0 mt-2 w-36 bg-[#15392D] rounded-xl shadow-2xl border border-[#C5A46B]/30 py-1.5 z-50 backdrop-blur-lg">
                     {currencyOptions.map((c) => (
                       <button
                         type="button"
@@ -149,12 +149,12 @@ export const Header: React.FC = () => {
                         }}
                         className={`w-full text-left px-3.5 py-1.5 text-xs font-medium transition-colors flex items-center justify-between ${
                           currency === c
-                            ? "text-[#C9A86A] font-bold bg-[#1E4D3D]/60"
+                            ? "text-[#C5A46B] font-bold bg-[#1E4D3D]/60"
                             : "text-white/80 hover:bg-white/10 hover:text-white"
                         }`}
                       >
                         <span>{c}</span>
-                        <span className="text-[#C9A86A]/70">{currencies[c]?.symbol}</span>
+                        <span className="text-[#C5A46B]/70">{currencies[c]?.symbol}</span>
                       </button>
                     ))}
                   </div>
@@ -171,9 +171,9 @@ export const Header: React.FC = () => {
                 }`}
                 title="View Bookings Cart"
               >
-                <ShoppingBag className="w-4 h-4 text-[#C9A86A]" />
+                <ShoppingBag className="w-4 h-4 text-[#C5A46B]" />
                 {cartCount > 0 && (
-                  <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-[#C9A86A] text-[#102D24] text-[9px] font-black flex items-center justify-center shadow">
+                  <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-[#C5A46B] text-[#15392D] text-[9px] font-black flex items-center justify-center shadow">
                     {cartCount}
                   </span>
                 )}
@@ -182,7 +182,7 @@ export const Header: React.FC = () => {
               {/* My Booking Button */}
               <Link
                 href="/account"
-                className="px-3.5 py-1.5 bg-[#1E4D3D] hover:bg-[#102D24] text-white border border-[#C9A86A]/40 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all duration-300 shadow-sm hover:shadow whitespace-nowrap"
+                className="px-3.5 py-1.5 bg-[#1E4D3D] hover:bg-[#15392D] text-white border border-[#C5A46B]/40 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all duration-300 shadow-sm hover:shadow whitespace-nowrap"
               >
                 My Booking
               </Link>
@@ -203,9 +203,9 @@ export const Header: React.FC = () => {
                 href="/checkout"
                 className="relative p-2 rounded-xl bg-white/10 text-white border border-white/15"
               >
-                <ShoppingBag className="w-4 h-4 text-[#C9A86A]" />
+                <ShoppingBag className="w-4 h-4 text-[#C5A46B]" />
                 {cartCount > 0 && (
-                  <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-[#C9A86A] text-[#102D24] text-[9px] font-black flex items-center justify-center">
+                  <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-[#C5A46B] text-[#15392D] text-[9px] font-black flex items-center justify-center">
                     {cartCount}
                   </span>
                 )}
@@ -229,7 +229,7 @@ export const Header: React.FC = () => {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
-              className="xl:hidden bg-[#102D24] border-t border-[#C9A86A]/20 px-4 pt-4 pb-6 space-y-3 max-h-[calc(100vh-5rem)] overflow-y-auto"
+              className="xl:hidden bg-[#15392D] border-t border-[#C5A46B]/20 px-4 pt-4 pb-6 space-y-3 max-h-[calc(100vh-5rem)] overflow-y-auto"
             >
               <div className="flex flex-col space-y-2">
                 {navLinks.map((link) => {
@@ -243,12 +243,12 @@ export const Header: React.FC = () => {
                       onClick={() => setMobileMenuOpen(false)}
                       className={`px-3 py-2.5 rounded-xl text-xs uppercase tracking-widest font-semibold transition-colors flex items-center justify-between ${
                         active
-                          ? "bg-[#1E4D3D] text-[#C9A86A] border border-[#C9A86A]/30"
+                          ? "bg-[#1E4D3D] text-[#C5A46B] border border-[#C5A46B]/30"
                           : "text-white/80 hover:bg-white/5 hover:text-white"
                       }`}
                     >
                       <span>{link.name}</span>
-                      {active && <span className="w-1.5 h-1.5 rounded-full bg-[#C9A86A]" />}
+                      {active && <span className="w-1.5 h-1.5 rounded-full bg-[#C5A46B]" />}
                     </Link>
                   );
                 })}
@@ -258,7 +258,7 @@ export const Header: React.FC = () => {
               <div className="pt-3.5 border-t border-white/10 space-y-3.5">
                 {/* Currency Selector Grid (All 6 Currencies) */}
                 <div className="space-y-1.5">
-                  <span className="text-[10px] font-mono uppercase tracking-wider text-[#C9A86A] block">
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-[#C5A46B] block">
                     Display Currency:
                   </span>
                   <div className="grid grid-cols-6 gap-1 w-full">
@@ -269,7 +269,7 @@ export const Header: React.FC = () => {
                         onClick={() => setCurrency(c)}
                         className={`py-1.5 px-1 rounded-lg text-[10px] font-bold text-center transition-all ${
                           currency === c
-                            ? "bg-[#C9A86A] text-[#102D24] shadow-sm font-black"
+                            ? "bg-[#C5A46B] text-[#15392D] shadow-sm font-black"
                             : "bg-white/10 text-white/80 hover:bg-white/15 hover:text-white"
                         }`}
                       >
@@ -286,13 +286,13 @@ export const Header: React.FC = () => {
                     onClick={() => setMobileMenuOpen(false)}
                     className="py-2.5 px-2 bg-white/10 hover:bg-white/15 text-white border border-white/15 rounded-xl text-xs font-medium flex items-center justify-center gap-1.5 text-center transition-colors"
                   >
-                    <ShoppingBag className="w-3.5 h-3.5 text-[#C9A86A] shrink-0" />
+                    <ShoppingBag className="w-3.5 h-3.5 text-[#C5A46B] shrink-0" />
                     <span>Cart ({cartCount})</span>
                   </Link>
                   <Link
                     href="/account"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="py-2.5 px-2 bg-[#1E4D3D] hover:bg-[#153a2d] text-white border border-[#C9A86A]/40 rounded-xl text-xs font-semibold uppercase tracking-wider text-center transition-colors flex items-center justify-center"
+                    className="py-2.5 px-2 bg-[#1E4D3D] hover:bg-[#15392D] text-white border border-[#C5A46B]/40 rounded-xl text-xs font-semibold uppercase tracking-wider text-center transition-colors flex items-center justify-center"
                   >
                     My Booking
                   </Link>
