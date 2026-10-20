@@ -7,6 +7,7 @@ import {
   saveInquiryToStore,
   cleanInquiryId,
   getInquiryFromStore,
+  getAllStoredInquiries,
 } from "@/lib/inquiriesStore";
 
 export const dynamic = "force-dynamic";
@@ -43,10 +44,41 @@ export async function GET(req: Request) {
       ];
     }
 
-    const inquiries = await prisma.customTripRequest.findMany({
-      where,
-      orderBy: { createdAt: "desc" },
-    });
+    let inquiries: any[] = [];
+    try {
+      inquiries = await prisma.customTripRequest.findMany({
+        where,
+        orderBy: { createdAt: "desc" },
+      });
+    } catch (dbFindErr) {
+      console.warn("Prisma findMany inquiries warning:", dbFindErr);
+    }
+
+    // Resilience fallback: If SQLite returned empty (e.g. cold serverless instance), pull directly from store
+    if (!inquiries || inquiries.length === 0) {
+      const stored = await getAllStoredInquiries();
+      if (stored && stored.length > 0) {
+        let filtered = stored;
+        if (status && status !== "ALL") {
+          const upperStatus = status.toUpperCase();
+          filtered = filtered.filter(i => (i.status || "NEW").toUpperCase() === upperStatus);
+        }
+        if (search) {
+          const lowerSearch = search.toLowerCase();
+          filtered = filtered.filter(i =>
+            (i.name && i.name.toLowerCase().includes(lowerSearch)) ||
+            (i.email && i.email.toLowerCase().includes(lowerSearch)) ||
+            (i.destinations && i.destinations.toLowerCase().includes(lowerSearch)) ||
+            (i.specialNotes && i.specialNotes.toLowerCase().includes(lowerSearch))
+          );
+        }
+        inquiries = filtered.map(s => ({
+          ...s,
+          createdAt: new Date(s.createdAt),
+          updatedAt: new Date(s.updatedAt),
+        }));
+      }
+    }
 
     return NextResponse.json(inquiries, {
       headers: {

@@ -38,6 +38,9 @@ function getBackupPaths(): string[] {
   return [
     path.join("/tmp", "ceylon-inquiries-backup.json"),
     path.join(process.cwd(), "prisma", "inquiries-backup.json"),
+    path.join(process.cwd(), "inquiries-backup.json"),
+    path.join(__dirname, "..", "..", "prisma", "inquiries-backup.json"),
+    path.join(__dirname, "inquiries-backup.json"),
   ];
 }
 
