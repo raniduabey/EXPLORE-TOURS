@@ -179,10 +179,10 @@ export const DestinationGrid: React.FC<{ destinations?: DestinationItem[] }> = (
                   <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-luxury-gold block mb-1">
                     Sri Lanka Iconic Enclave
                   </span>
-                  <h3 className="font-serif text-lg sm:text-xl lg:text-xl font-normal tracking-wide text-luxury-ivory group-hover:text-luxury-gold transition-colors leading-tight line-clamp-1">
+                  <h3 className="font-serif text-xl sm:text-2xl lg:text-[24px] font-normal tracking-wide text-luxury-ivory group-hover:text-luxury-gold transition-colors leading-tight line-clamp-1">
                     {d.name}
                   </h3>
-                  <p className="text-xs text-luxury-sand/90 font-sans font-light mt-1.5 line-clamp-2 leading-relaxed">
+                  <p className="text-xs sm:text-[13px] text-luxury-sand/90 font-sans font-normal mt-1.5 line-clamp-2 leading-relaxed">
                     {d.shortDesc}
                   </p>
                   <div className="mt-2.5 pt-2 border-t border-white/15 flex items-center justify-between">
@@ -190,7 +190,7 @@ export const DestinationGrid: React.FC<{ destinations?: DestinationItem[] }> = (
                       <span className="text-[10px] font-sans uppercase tracking-widest text-luxury-sand/70 font-medium">
                         From
                       </span>
-                      <span className="font-serif text-sm sm:text-base font-semibold text-luxury-gold">
+                      <span className="font-sans font-semibold text-base sm:text-lg tabular-nums text-luxury-gold">
                         {formatPrice(d.startingPrice)}
                       </span>
                       <span className="text-[10px] font-sans font-normal text-luxury-sand/60">

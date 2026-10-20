@@ -4,23 +4,29 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --font-heading: var(--font-cormorant), "Cormorant Garamond", Georgia, serif;
+  --font-body: var(--font-poppins), "Poppins", sans-serif;
+  --font-numeric: var(--font-poppins), "Poppins", sans-serif;
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;
-    font-family: var(--font-poppins), 'Poppins', sans-serif;
+    font-family: var(--font-body);
   }
 
   body {
-    @apply bg-[#F8F6F0] text-[#222A25] font-sans antialiased;
-    font-family: var(--font-poppins), 'Poppins', sans-serif;
+    @apply bg-[#F8F6F0] text-[#222A25] antialiased;
+    font-family: var(--font-body);
     font-weight: 400;
     line-height: 1.68;
     letter-spacing: 0.01em;
   }
 
   /* Main Headings & Titles in Cormorant Garamond */
-  h1, h2, h3, h4, .font-heading, .font-editorial {
-    font-family: var(--font-cormorant), 'Cormorant Garamond', Georgia, serif;
+  h1, h2, h3, h4, h5, h6, .font-heading, .font-editorial {
+    font-family: var(--font-heading);
     font-weight: 500;
     line-height: 1.2;
     letter-spacing: -0.015em;
@@ -28,14 +34,14 @@
 
   /* Description text & paragraphs in Poppins with comfortable 1.65–1.75 line-height */
   p, .description-text {
-    font-family: var(--font-poppins), 'Poppins', sans-serif;
+    font-family: var(--font-body);
     font-weight: 400;
-    line-height: 1.72;
+    line-height: 1.68;
   }
 
   /* Navigation, Buttons, Labels & Form Controls in Poppins */
   button, input, select, textarea, label, nav {
-    font-family: var(--font-poppins), 'Poppins', sans-serif;
+    font-family: var(--font-body);
   }
 
   button {
@@ -43,13 +49,25 @@
   }
 
   nav a {
-    font-family: var(--font-poppins), 'Poppins', sans-serif;
+    font-family: var(--font-body);
     font-weight: 500;
   }
 
   label {
-    font-family: var(--font-poppins), 'Poppins', sans-serif;
+    font-family: var(--font-body);
     font-weight: 600;
+  }
+
+  /* Numeric values, Prices, Stats & Booking Calculations in Poppins with tabular numbers */
+  .price,
+  .stat-number,
+  .booking-total,
+  .traveller-count,
+  .font-numeric,
+  .tabular-nums {
+    font-family: var(--font-numeric);
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum";
   }
 }
 

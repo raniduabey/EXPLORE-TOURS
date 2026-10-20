@@ -138,10 +138,10 @@ export const CategoryGrid: React.FC = () => {
                     <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-luxury-gold block mb-1">
                       {c.subtitle}
                     </span>
-                    <h3 className="font-serif text-lg sm:text-xl lg:text-xl font-normal tracking-wide text-luxury-ivory group-hover:text-luxury-gold transition-colors leading-tight line-clamp-1">
+                    <h3 className="font-serif text-xl sm:text-2xl lg:text-[24px] font-normal tracking-wide text-luxury-ivory group-hover:text-luxury-gold transition-colors leading-tight line-clamp-1">
                       {c.title}
                     </h3>
-                    <p className="text-xs text-luxury-sand/90 font-sans font-light mt-1.5 line-clamp-2 leading-relaxed">
+                    <p className="text-xs sm:text-[13px] text-luxury-sand/90 font-sans font-normal mt-1.5 line-clamp-2 leading-relaxed">
                       {c.desc}
                     </p>
                     <div className="mt-2.5 pt-2 border-t border-white/15 flex items-center justify-between">

@@ -38,6 +38,7 @@ const config: Config = {
         serif: ["var(--font-cormorant)", "Cormorant Garamond", "Georgia", "serif"],
         heading: ["var(--font-cormorant)", "Cormorant Garamond", "Georgia", "serif"],
         editorial: ["var(--font-cormorant)", "Cormorant Garamond", "Georgia", "serif"],
+        numeric: ["var(--font-numeric)", "var(--font-poppins)", "Poppins", "sans-serif"],
       },
       boxShadow: {
         card: "0 4px 20px -2px rgba(7, 81, 125, 0.08)",

@@ -133,7 +133,7 @@ export const TourCard: React.FC<{ tour: TourCardData; searchParamsString?: strin
 
           <div className="min-h-[2.75rem] sm:min-h-[3.25rem] flex items-start">
             <Link href={tourHref} className="block">
-              <h3 className="font-serif font-medium text-base sm:text-lg text-luxury-forest group-hover:text-luxury-gold transition-colors line-clamp-2 leading-snug">
+              <h3 className="font-serif font-medium text-lg sm:text-[20px] lg:text-[22px] text-luxury-forest group-hover:text-luxury-gold transition-colors line-clamp-2 leading-snug">
                 {tour.title}
               </h3>
             </Link>
@@ -155,13 +155,13 @@ export const TourCard: React.FC<{ tour: TourCardData; searchParamsString?: strin
 
         <div className="mt-auto pt-3.5 border-t border-luxury-sand/70 flex items-center justify-between">
           <div>
-            <span className="text-[10px] font-sans uppercase tracking-widest text-luxury-charcoal/50 block font-medium">From</span>
+            <span className="text-[11px] font-sans uppercase tracking-widest text-luxury-charcoal/60 block font-medium">From</span>
             <div className="flex items-baseline gap-1.5">
-              <span className="font-serif text-xl sm:text-2xl font-normal text-luxury-forest">
+              <span className="font-sans font-semibold text-xl sm:text-[24px] lg:text-[28px] tabular-nums text-luxury-forest tracking-tight">
                 {formatPrice(tour.price)}
               </span>
               {tour.previousPrice && tour.previousPrice > tour.price && (
-                <span className="text-xs text-luxury-charcoal/40 line-through">
+                <span className="text-xs font-sans tabular-nums text-luxury-charcoal/40 line-through">
                   {formatPrice(tour.previousPrice)}
                 </span>
               )}

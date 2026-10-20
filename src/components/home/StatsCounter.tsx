@@ -56,14 +56,14 @@ export const StatsCounter: React.FC = () => {
                 </div>
 
                 <div>
-                  <div className="font-serif text-3xl sm:text-4xl lg:text-5xl font-normal text-luxury-forest tracking-tight flex items-baseline">
+                  <div className="font-sans font-semibold text-3xl sm:text-4xl lg:text-[48px] tabular-nums text-luxury-forest tracking-tight flex items-baseline">
                     <AnimatedCounter
                       target={pillar.target}
                       suffix={pillar.suffix}
                       decimals={0}
                     />
                   </div>
-                  <h4 className="font-serif text-sm sm:text-base font-semibold text-luxury-forest mt-2 tracking-wide">
+                  <h4 className="font-serif text-base sm:text-lg font-medium text-luxury-forest mt-2 tracking-wide">
                     {pillar.label}
                   </h4>
                   <p className="text-xs sm:text-[13px] text-luxury-charcoal/80 mt-1.5 leading-relaxed font-sans font-normal">

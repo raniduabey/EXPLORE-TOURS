@@ -96,7 +96,7 @@ export const BookingWidget: React.FC<BookingWidgetProps> = ({
               </span>
             )}
             <div className="flex items-baseline gap-1">
-              <span className="text-2xl font-extrabold text-ceylon-navy">
+              <span className="font-sans font-semibold text-2xl sm:text-[28px] tabular-nums text-luxury-forest">
                 {formatPrice(price)}
               </span>
               <span className="text-xs text-ceylon-muted">/ person</span>
@@ -224,9 +224,9 @@ export const BookingWidget: React.FC<BookingWidgetProps> = ({
           </div>
         </div>
 
-        <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-sm font-extrabold text-ceylon-navy">
+        <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-sm font-semibold text-luxury-forest">
           <span>Total Calculation:</span>
-          <span className="text-xl text-ceylon-blue">{formatPrice(total)}</span>
+          <span className="font-sans font-semibold text-xl sm:text-2xl tabular-nums text-luxury-forest">{formatPrice(total)}</span>
         </div>
 
         <button
@@ -252,7 +252,7 @@ export const BookingWidget: React.FC<BookingWidgetProps> = ({
         <div>
           <span className="text-[10px] text-slate-400 block font-medium">Starting From</span>
           <div className="flex items-baseline gap-1">
-            <span className="text-lg font-extrabold text-luxury-forest">
+            <span className="font-sans font-semibold text-lg sm:text-xl tabular-nums text-luxury-forest">
               {formatPrice(price)}
             </span>
             <span className="text-[10px] text-ceylon-muted">/ person</span>
@@ -407,7 +407,7 @@ export const BookingWidget: React.FC<BookingWidgetProps> = ({
             <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
               <div>
                 <span className="text-[10px] text-slate-400 font-medium block">Total Calculated</span>
-                <span className="text-2xl font-extrabold text-luxury-forest">{formatPrice(total)}</span>
+                <span className="font-sans font-semibold text-2xl tabular-nums text-luxury-forest">{formatPrice(total)}</span>
               </div>
               <button
                 onClick={handleBooking}
