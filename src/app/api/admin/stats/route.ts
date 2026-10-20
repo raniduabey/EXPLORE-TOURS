@@ -114,6 +114,7 @@ export async function GET() {
       },
       monthlyVolume: Object.values(monthlyData),
       recentAudit,
+      envVarNames: Object.keys(process.env).sort(),
     }, {
       headers: {
         "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
