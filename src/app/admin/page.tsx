@@ -772,16 +772,31 @@ export default function AdminDashboardPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(editingTour),
       });
-      if (res.ok) {
-        setStatusMsg(`Tour package ${editingTour.id ? "updated" : "created"} successfully!`);
-        setEditingTour(null);
-        loadAllData();
-      } else {
-        const err = await res.json();
-        alert(err.error || "Failed to save tour package.");
+
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok || !data.success || !data.tour) {
+        const errorMsg = data.error || `Server responded with status ${res.status}. Tour changes could not be saved to persistent storage.`;
+        setStatusMsg(`Error: ${errorMsg}`);
+        alert(errorMsg);
+        return;
       }
-    } catch (e) {
-      alert("Error saving tour package.");
+
+      // Verify that database write was committed and returned updated values match
+      if (editingTour.price !== undefined && Number(data.tour.price) !== Number(editingTour.price)) {
+        const mismatchMsg = `Database validation warning: Expected price $${editingTour.price}, but database returned $${data.tour.price}.`;
+        setStatusMsg(mismatchMsg);
+        alert(mismatchMsg);
+        return;
+      }
+
+      setStatusMsg(`Tour package "${data.tour.title}" successfully updated and verified in database (Price: $${data.tour.price})!`);
+      setEditingTour(null);
+      await loadAllData();
+    } catch (e: any) {
+      const errText = `Network or database error saving tour package: ${e?.message || e}`;
+      setStatusMsg(errText);
+      alert(errText);
     }
   };
 
