@@ -118,47 +118,123 @@ function writeBackupFile(reviews: StoredReview[]): void {
   }
 }
 
-// Optional Cloud KV (Vercel KV or Upstash Redis) sync
+let lastReviewsCloudSyncTime = 0;
+const REVIEWS_CLOUD_SYNC_TTL_MS = 2000;
+
+// Cloud KV & Blob Sync
 async function syncWithCloudKv(
   action: "get" | "set",
   reviews?: StoredReview[]
 ): Promise<StoredReview[] | null> {
-  const kvUrl =
-    process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
+  const kvUrl = (
+    process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL || ""
+  ).replace(/\/$/, "");
   const kvToken =
     process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
 
-  if (!kvUrl || !kvToken) {
-    return null;
+  if (kvUrl && kvToken) {
+    try {
+      if (action === "get") {
+        // Universal command endpoint: ["GET", "ceylon_reviews"]
+        const cmdRes = await fetch(kvUrl, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${kvToken}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(["GET", "ceylon_reviews"]),
+          cache: "no-store",
+        });
+
+        if (cmdRes.ok) {
+          const json = await cmdRes.json();
+          let raw = json?.result;
+          while (typeof raw === "string") {
+            try {
+              raw = JSON.parse(raw);
+            } catch (e) {
+              break;
+            }
+          }
+          if (Array.isArray(raw) && raw.length > 0) return raw;
+        }
+
+        const pathRes = await fetch(`${kvUrl}/get/ceylon_reviews`, {
+          headers: { Authorization: `Bearer ${kvToken}` },
+          cache: "no-store",
+        });
+        if (pathRes.ok) {
+          const json = await pathRes.json();
+          let raw = json?.result;
+          while (typeof raw === "string") {
+            try {
+              raw = JSON.parse(raw);
+            } catch (e) {
+              break;
+            }
+          }
+          if (Array.isArray(raw) && raw.length > 0) return raw;
+        }
+      } else if (action === "set" && reviews) {
+        const payload = JSON.stringify(reviews);
+        await fetch(kvUrl, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${kvToken}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(["SET", "ceylon_reviews", payload]),
+        }).catch(() => {});
+
+        await fetch(`${kvUrl}/set/ceylon_reviews`, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${kvToken}`,
+            "Content-Type": "application/json",
+          },
+          body: payload,
+        }).catch(() => {});
+      }
+    } catch (err) {
+      console.warn("KV storage sync notice for reviews:", err);
+    }
   }
 
-  try {
-    if (action === "get") {
-      const res = await fetch(`${kvUrl}/get/ceylon_reviews`, {
-        headers: { Authorization: `Bearer ${kvToken}` },
-        cache: "no-store",
-      });
-      if (res.ok) {
-        const json = await res.json();
-        const result = json.result;
-        if (typeof result === "string") {
-          return JSON.parse(result);
-        } else if (Array.isArray(result)) {
-          return result;
+  // Tier 2: Vercel Blob Storage Fallback
+  const blobToken = process.env.BLOB_READ_WRITE_TOKEN;
+  if (blobToken) {
+    try {
+      if (action === "get") {
+        const listRes = await fetch("https://blob.vercel-storage.com/?prefix=ceylon_reviews_backup.json", {
+          headers: { Authorization: `Bearer ${blobToken}` },
+          cache: "no-store",
+        });
+        if (listRes.ok) {
+          const listJson = await listRes.json();
+          const blobs = listJson.blobs || [];
+          if (blobs.length > 0 && blobs[0].downloadUrl) {
+            const dataRes = await fetch(blobs[0].downloadUrl, { cache: "no-store" });
+            if (dataRes.ok) {
+              const data = await dataRes.json();
+              if (Array.isArray(data) && data.length > 0) return data;
+            }
+          }
         }
+      } else if (action === "set" && reviews) {
+        await fetch("https://blob.vercel-storage.com/ceylon_reviews_backup.json", {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${blobToken}`,
+            "x-api-version": "7",
+            "content-type": "application/json",
+            "x-add-random-suffix": "false",
+          },
+          body: JSON.stringify(reviews),
+        }).catch(() => {});
       }
-    } else if (action === "set" && reviews) {
-      await fetch(`${kvUrl}/set/ceylon_reviews`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${kvToken}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(JSON.stringify(reviews)),
-      });
+    } catch (blobErr) {
+      console.warn("Blob reviews sync notice:", blobErr);
     }
-  } catch (err) {
-    console.warn("KV storage sync notice:", err);
   }
 
   return null;
@@ -176,14 +252,21 @@ export async function getAllStoredReviews(): Promise<StoredReview[]> {
     }
   }
 
-  // If memory store is still empty, restore from cloud
-  if (memoryStore.size === 0) {
+  const now = Date.now();
+  if (now - lastReviewsCloudSyncTime > REVIEWS_CLOUD_SYNC_TTL_MS) {
+    lastReviewsCloudSyncTime = now;
     const cloudReviews = await syncWithCloudKv("get");
     if (cloudReviews && cloudReviews.length > 0) {
       for (const r of cloudReviews) {
-        memoryStore.set(r.id, r);
+        if (!r || !r.id) continue;
+        const existing = memoryStore.get(r.id);
+        const cloudTime = new Date(r.updatedAt || r.createdAt || 0).getTime();
+        const memTime = existing ? new Date(existing.updatedAt || existing.createdAt || 0).getTime() : 0;
+        if (!existing || cloudTime >= memTime) {
+          memoryStore.set(r.id, r);
+        }
       }
-      writeBackupFile(cloudReviews);
+      writeBackupFile(Array.from(memoryStore.values()));
     }
   }
 

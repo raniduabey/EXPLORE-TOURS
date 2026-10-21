@@ -55,12 +55,36 @@ export async function GET(req: Request) {
       orderBy: { updatedAt: "desc" },
     });
 
-    if ((!tours || tours.length === 0) && !search && (!status || status === "ALL") && !destinationId) {
+    try {
       const stored = await getAllStoredTours().catch(() => []);
       if (stored && stored.length > 0) {
-        tours = stored as any;
+        const storedMap = new Map<string, any>();
+        for (const s of stored) {
+          if (s.id) storedMap.set(s.id, s);
+          if (s.slug) storedMap.set(s.slug, s);
+        }
+
+        if (tours && tours.length > 0) {
+          tours = tours.map((t: any) => {
+            const s = storedMap.get(t.id) || storedMap.get(t.slug);
+            if (s) {
+              return {
+                ...t,
+                price: s.price !== undefined ? s.price : t.price,
+                previousPrice: s.previousPrice !== undefined ? s.previousPrice : t.previousPrice,
+                title: s.title || t.title,
+                badge: s.badge !== undefined ? s.badge : t.badge,
+                status: s.status || t.status,
+                duration: s.duration || t.duration,
+              };
+            }
+            return t;
+          });
+        } else if (!search && (!status || status === "ALL") && !destinationId) {
+          tours = stored as any;
+        }
       }
-    }
+    } catch (e) {}
 
     return NextResponse.json(tours, {
       headers: {

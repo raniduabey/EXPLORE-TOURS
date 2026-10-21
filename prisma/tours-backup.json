@@ -11,7 +11,7 @@
     "rating": 5,
     "reviewCount": 2,
     "bookedCount": 0,
-    "price": 85,
+    "price": 89,
     "previousPrice": 110,
     "adultPrice": null,
     "childPrice": null,
@@ -37,7 +37,7 @@
     "seoTitle": null,
     "seoDescription": null,
     "createdAt": "2026-10-13T12:28:53.410Z",
-    "updatedAt": "2026-10-16T12:12:28.170Z",
+    "updatedAt": "2026-10-21T07:31:56.015Z",
     "images": [
       {
         "id": "1c57362b-6f48-4486-a83e-36f04f4e0e46",

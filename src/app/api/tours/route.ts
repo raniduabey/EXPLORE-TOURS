@@ -57,33 +57,59 @@ export async function GET() {
       console.error("Prisma tours query failed, using store fallback", dbErr);
     }
 
-    // Fallback to stored tours if SQLite returned empty
-    if (formatted.length === 0) {
+    try {
       const stored = await getAllStoredTours();
       if (stored && stored.length > 0) {
-        formatted = stored
-          .filter((t) => t.status !== "ARCHIVED")
-          .map((t) => ({
-            id: t.id,
-            title: t.title,
-            slug: t.slug,
-            location: t.location,
-            destinationSlug: t.destination?.slug || "",
-            categorySlug: t.category?.slug || "",
-            duration: t.duration,
-            rating: t.rating || 5,
-            reviewCount: t.reviewCount || 0,
-            price: t.price,
-            previousPrice: t.previousPrice,
-            tourType: t.tourType,
-            badge: t.badge,
-            freeCancellation: t.freeCancellation,
-            instantBook: t.instantBook,
-            primaryImage:
-              t.images?.[0]?.url ||
-              "/images/destinations/sigiriya.jpg",
-          }));
+        const storedMap = new Map<string, any>();
+        for (const s of stored) {
+          if (s.id) storedMap.set(s.id, s);
+          if (s.slug) storedMap.set(s.slug, s);
+        }
+
+        if (formatted.length > 0) {
+          formatted = formatted.map((f: any) => {
+            const match = storedMap.get(f.id) || storedMap.get(f.slug);
+            if (match) {
+              return {
+                ...f,
+                title: match.title || f.title,
+                price: match.price !== undefined ? match.price : f.price,
+                previousPrice: match.previousPrice !== undefined ? match.previousPrice : f.previousPrice,
+                duration: match.duration || f.duration,
+                badge: match.badge !== undefined ? match.badge : f.badge,
+                location: match.location || f.location,
+                primaryImage: match.images?.[0]?.url || f.primaryImage,
+              };
+            }
+            return f;
+          });
+        } else {
+          formatted = stored
+            .filter((t) => t.status !== "ARCHIVED")
+            .map((t) => ({
+              id: t.id,
+              title: t.title,
+              slug: t.slug,
+              location: t.location,
+              destinationSlug: t.destination?.slug || "",
+              categorySlug: t.category?.slug || "",
+              duration: t.duration,
+              rating: t.rating || 5,
+              reviewCount: t.reviewCount || 0,
+              price: t.price,
+              previousPrice: t.previousPrice,
+              tourType: t.tourType,
+              badge: t.badge,
+              freeCancellation: t.freeCancellation,
+              instantBook: t.instantBook,
+              primaryImage:
+                t.images?.[0]?.url ||
+                "/images/destinations/sigiriya.jpg",
+            }));
+        }
       }
+    } catch (storeErr) {
+      console.warn("Store merge warning in /api/tours:", storeErr);
     }
 
     // Merge any catalog tours not yet in the results

@@ -127,40 +127,58 @@ export default async function TourDetailPage({
     console.error("Prisma lookup error in tour detail:", e);
   }
 
-  // If not found in DB, pull from stored tours
-  if (!tour) {
-    const stored = await getAllStoredTours().catch(() => []);
-    const match = stored.find((t) => t.slug === params.slug);
-    if (match) {
-      tour = {
-        id: match.id,
-        title: match.title,
-        slug: match.slug,
-        location: match.location,
-        duration: match.duration,
-        durationHours: match.durationHours,
-        rating: match.rating || 5,
-        reviewCount: match.reviewCount || 0,
-        bookedCount: match.bookedCount || 0,
-        tourType: match.tourType,
-        liveGuide: match.liveGuide,
-        price: match.price,
-        previousPrice: match.previousPrice,
-        freeCancellation: match.freeCancellation,
-        instantBook: match.instantBook,
-        description: match.description,
-        importantInfo: match.importantInfo,
-        whatToBring: match.whatToBring,
-        highlights: match.highlights,
-        includes: match.includes,
-        excludes: match.excludes,
-        images: match.images || [],
-        itinerary: match.itinerary || [],
-        reviews: [],
-        destination: match.destination ? { name: match.destination.name } : null,
-        category: match.category ? { name: match.category.name } : null,
-      };
+  // Merge with stored tours (ensures runtime price updates, title, and highlights are reflected)
+  try {
+    const stored = await getStoredTourByIdOrSlug(params.slug);
+    if (stored) {
+      if (tour) {
+        if (stored.price !== undefined) tour.price = stored.price;
+        if (stored.previousPrice !== undefined) tour.previousPrice = stored.previousPrice;
+        if (stored.adultPrice !== undefined) tour.adultPrice = stored.adultPrice;
+        if (stored.childPrice !== undefined) tour.childPrice = stored.childPrice;
+        if (stored.title) tour.title = stored.title;
+        if (stored.duration) tour.duration = stored.duration;
+        if (stored.durationHours) tour.durationHours = stored.durationHours;
+        if (stored.description) tour.description = stored.description;
+        if (stored.highlights) tour.highlights = stored.highlights;
+        if (stored.includes) tour.includes = stored.includes;
+        if (stored.excludes) tour.excludes = stored.excludes;
+        if (stored.whatToBring) tour.whatToBring = stored.whatToBring;
+        if (stored.importantInfo !== undefined) tour.importantInfo = stored.importantInfo;
+        if (stored.badge !== undefined) tour.badge = stored.badge;
+      } else {
+        tour = {
+          id: stored.id,
+          title: stored.title,
+          slug: stored.slug,
+          location: stored.location,
+          duration: stored.duration,
+          durationHours: stored.durationHours,
+          rating: stored.rating || 5,
+          reviewCount: stored.reviewCount || 0,
+          bookedCount: stored.bookedCount || 0,
+          tourType: stored.tourType,
+          liveGuide: stored.liveGuide,
+          price: stored.price,
+          previousPrice: stored.previousPrice,
+          freeCancellation: stored.freeCancellation,
+          instantBook: stored.instantBook,
+          description: stored.description,
+          importantInfo: stored.importantInfo,
+          whatToBring: stored.whatToBring,
+          highlights: stored.highlights,
+          includes: stored.includes,
+          excludes: stored.excludes,
+          images: stored.images || [],
+          itinerary: stored.itinerary || [],
+          reviews: [],
+          destination: stored.destination ? { name: stored.destination.name } : null,
+          category: stored.category ? { name: stored.category.name } : null,
+        };
+      }
     }
+  } catch (storeErr) {
+    console.warn("Store lookup warning in /tours/[slug]:", storeErr);
   }
 
   // If not found in store, pull the exact tour from the verified TOURS_CATALOG

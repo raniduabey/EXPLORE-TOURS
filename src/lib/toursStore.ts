@@ -139,39 +139,125 @@ export function writeBackupFile(tours: StoredTour[]): void {
   }
 }
 
+let lastCloudSyncTime = 0;
+const CLOUD_SYNC_TTL_MS = 2000; // 2 seconds cache window for cloud reads in same serverless request
+
 async function syncWithCloudKv(
   action: "get" | "set",
   tours?: StoredTour[]
 ): Promise<StoredTour[] | null> {
-  const kvUrl = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
+  const kvUrl = (process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL || "").replace(/\/$/, "");
   const kvToken = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
-  if (!kvUrl || !kvToken) return null;
 
-  try {
-    if (action === "get") {
-      const res = await fetch(`${kvUrl}/get/ceylon_tours`, {
-        headers: { Authorization: `Bearer ${kvToken}` },
-        cache: "no-store",
-      });
-      if (res.ok) {
-        const json = await res.json();
-        const result = json.result;
-        if (typeof result === "string") return JSON.parse(result);
-        if (Array.isArray(result)) return result;
+  // Tier 1: Upstash Redis / Vercel KV REST API
+  if (kvUrl && kvToken) {
+    try {
+      if (action === "get") {
+        // Universal Redis command format: ["GET", "ceylon_tours"]
+        const cmdRes = await fetch(kvUrl, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${kvToken}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(["GET", "ceylon_tours"]),
+          cache: "no-store",
+        });
+
+        if (cmdRes.ok) {
+          const json = await cmdRes.json();
+          let raw = json?.result;
+          while (typeof raw === "string") {
+            try {
+              raw = JSON.parse(raw);
+            } catch (e) {
+              break;
+            }
+          }
+          if (Array.isArray(raw) && raw.length > 0) return raw;
+        }
+
+        // Fallback to /get/ceylon_tours endpoint
+        const pathRes = await fetch(`${kvUrl}/get/ceylon_tours`, {
+          headers: { Authorization: `Bearer ${kvToken}` },
+          cache: "no-store",
+        });
+        if (pathRes.ok) {
+          const json = await pathRes.json();
+          let raw = json?.result;
+          while (typeof raw === "string") {
+            try {
+              raw = JSON.parse(raw);
+            } catch (e) {
+              break;
+            }
+          }
+          if (Array.isArray(raw) && raw.length > 0) return raw;
+        }
+      } else if (action === "set" && tours) {
+        const payload = JSON.stringify(tours);
+        // Universal command endpoint: ["SET", "ceylon_tours", payload]
+        await fetch(kvUrl, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${kvToken}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(["SET", "ceylon_tours", payload]),
+        }).catch(() => {});
+
+        // Also post raw value to /set/ceylon_tours
+        await fetch(`${kvUrl}/set/ceylon_tours`, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${kvToken}`,
+            "Content-Type": "application/json",
+          },
+          body: payload,
+        }).catch(() => {});
       }
-    } else if (action === "set" && tours) {
-      await fetch(`${kvUrl}/set/ceylon_tours`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${kvToken}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(JSON.stringify(tours)),
-      });
+    } catch (err) {
+      console.warn("KV tours sync notice:", err);
     }
-  } catch (err) {
-    console.warn("KV tours sync notice:", err);
   }
+
+  // Tier 2: Vercel Blob Storage Fallback (if BLOB_READ_WRITE_TOKEN is configured)
+  const blobToken = process.env.BLOB_READ_WRITE_TOKEN;
+  if (blobToken) {
+    try {
+      if (action === "get") {
+        const listRes = await fetch("https://blob.vercel-storage.com/?prefix=ceylon_tours_backup.json", {
+          headers: { Authorization: `Bearer ${blobToken}` },
+          cache: "no-store",
+        });
+        if (listRes.ok) {
+          const listJson = await listRes.json();
+          const blobs = listJson.blobs || [];
+          if (blobs.length > 0 && blobs[0].downloadUrl) {
+            const dataRes = await fetch(blobs[0].downloadUrl, { cache: "no-store" });
+            if (dataRes.ok) {
+              const data = await dataRes.json();
+              if (Array.isArray(data) && data.length > 0) return data;
+            }
+          }
+        }
+      } else if (action === "set" && tours) {
+        await fetch("https://blob.vercel-storage.com/ceylon_tours_backup.json", {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${blobToken}`,
+            "x-api-version": "7",
+            "content-type": "application/json",
+            "x-add-random-suffix": "false",
+          },
+          body: JSON.stringify(tours),
+        }).catch(() => {});
+      }
+    } catch (blobErr) {
+      console.warn("Blob tours sync notice:", blobErr);
+    }
+  }
+
   return null;
 }
 
@@ -186,11 +272,20 @@ export async function getAllStoredTours(): Promise<StoredTour[]> {
     }
   }
 
-  if (memoryStore.size === 0) {
+  const now = Date.now();
+  if (now - lastCloudSyncTime > CLOUD_SYNC_TTL_MS) {
+    lastCloudSyncTime = now;
     const cloud = await syncWithCloudKv("get");
     if (cloud && Array.isArray(cloud)) {
       for (const t of cloud) {
-        memoryStore.set(t.id, t);
+        if (!t || (!t.id && !t.slug)) continue;
+        const key = t.id || t.slug;
+        const existing = memoryStore.get(key);
+        const cloudTime = new Date(t.updatedAt || t.createdAt || 0).getTime();
+        const memTime = existing ? new Date(existing.updatedAt || existing.createdAt || 0).getTime() : 0;
+        if (!existing || cloudTime >= memTime) {
+          memoryStore.set(key, t);
+        }
       }
       writeBackupFile(Array.from(memoryStore.values()));
     }
@@ -258,12 +353,33 @@ export async function saveTourToStore(tour: any): Promise<void> {
   memoryStore.set(cleanId, normalized);
   const all = Array.from(memoryStore.values());
   writeBackupFile(all);
-  syncWithCloudKv("set", all).catch(() => {});
+  try {
+    await syncWithCloudKv("set", all);
+  } catch (err) {
+    console.warn("Cloud KV set warning:", err);
+  }
 }
 
 export async function syncToursWithDb(prisma: any): Promise<void> {
   try {
-    // 1. Fetch current tours from SQLite
+    // 1. Fetch latest tours from Cloud KV / Blob if available
+    try {
+      const cloud = await syncWithCloudKv("get");
+      if (cloud && Array.isArray(cloud)) {
+        for (const t of cloud) {
+          if (!t || (!t.id && !t.slug)) continue;
+          const key = t.id || t.slug;
+          const existing = memoryStore.get(key);
+          const cloudTime = new Date(t.updatedAt || t.createdAt || 0).getTime();
+          const memTime = existing ? new Date(existing.updatedAt || existing.createdAt || 0).getTime() : 0;
+          if (!existing || cloudTime >= memTime) {
+            memoryStore.set(key, t);
+          }
+        }
+      }
+    } catch (cErr) {}
+
+    // 2. Fetch current tours from SQLite
     const dbTours = await prisma.tour.findMany({
       include: {
         images: { orderBy: [{ isPrimary: "desc" }, { order: "asc" }] },
@@ -289,49 +405,52 @@ export async function syncToursWithDb(prisma: any): Promise<void> {
       }
     }
 
-    // 2. Check if disk backups or cloud have newer versions than freshly-copied SQLite
-    const diskTours = readBackupFile();
-    for (const stored of diskTours) {
+    // 3. Reconcile SQLite if any stored tour (from cloud or memory) has newer price or timestamp
+    const allStored = Array.from(memoryStore.values());
+    for (const stored of allStored) {
       const dbTour = dbMap.get(stored.id);
-      const storedTime = new Date(stored.updatedAt || stored.createdAt || 0).getTime();
-      const dbTime = dbTour ? new Date(dbTour.updatedAt || dbTour.createdAt || 0).getTime() : 0;
+      if (!dbTour) continue;
 
-      // If stored tour is newer than the DB record, update SQLite to ensure consistency
-      if (dbTour && storedTime > dbTime + 1000) {
+      const storedTime = new Date(stored.updatedAt || stored.createdAt || 0).getTime();
+      const dbTime = new Date(dbTour.updatedAt || dbTour.createdAt || 0).getTime();
+      const priceDiff = stored.price !== undefined && Number(stored.price) !== Number(dbTour.price);
+
+      // If stored tour has different price or newer timestamp, update SQLite
+      if (priceDiff || storedTime > dbTime + 500) {
         try {
           await prisma.tour.update({
             where: { id: stored.id },
             data: {
-              title: stored.title,
-              slug: stored.slug,
-              location: stored.location,
-              duration: stored.duration,
-              durationHours: stored.durationHours,
-              price: stored.price,
-              previousPrice: stored.previousPrice,
-              adultPrice: stored.adultPrice,
-              childPrice: stored.childPrice,
-              tourType: stored.tourType,
-              badge: stored.badge,
-              freeCancellation: stored.freeCancellation,
-              instantBook: stored.instantBook,
-              pickupAvailable: stored.pickupAvailable,
-              guideIncluded: stored.guideIncluded,
-              liveGuide: stored.liveGuide,
-              languages: stored.languages,
-              minTravellers: stored.minTravellers,
-              maxTravellers: stored.maxTravellers,
-              description: stored.description,
-              highlights: typeof stored.highlights === "object" ? JSON.stringify(stored.highlights) : stored.highlights,
-              includes: typeof stored.includes === "object" ? JSON.stringify(stored.includes) : stored.includes,
-              excludes: typeof stored.excludes === "object" ? JSON.stringify(stored.excludes) : stored.excludes,
-              importantInfo: stored.importantInfo,
-              whatToBring: typeof stored.whatToBring === "object" ? JSON.stringify(stored.whatToBring) : stored.whatToBring,
-              cancellationPolicy: stored.cancellationPolicy,
-              featured: stored.featured,
-              status: stored.status,
-              seoTitle: stored.seoTitle,
-              seoDescription: stored.seoDescription,
+              ...(stored.title && { title: stored.title }),
+              ...(stored.slug && { slug: stored.slug }),
+              ...(stored.location && { location: stored.location }),
+              ...(stored.duration && { duration: stored.duration }),
+              ...(stored.durationHours && { durationHours: stored.durationHours }),
+              ...(stored.price !== undefined && { price: stored.price }),
+              ...(stored.previousPrice !== undefined && { previousPrice: stored.previousPrice }),
+              ...(stored.adultPrice !== undefined && { adultPrice: stored.adultPrice }),
+              ...(stored.childPrice !== undefined && { childPrice: stored.childPrice }),
+              ...(stored.tourType && { tourType: stored.tourType }),
+              ...(stored.badge !== undefined && { badge: stored.badge }),
+              ...(stored.freeCancellation !== undefined && { freeCancellation: stored.freeCancellation }),
+              ...(stored.instantBook !== undefined && { instantBook: stored.instantBook }),
+              ...(stored.pickupAvailable !== undefined && { pickupAvailable: stored.pickupAvailable }),
+              ...(stored.guideIncluded !== undefined && { guideIncluded: stored.guideIncluded }),
+              ...(stored.liveGuide && { liveGuide: stored.liveGuide }),
+              ...(stored.languages && { languages: stored.languages }),
+              ...(stored.minTravellers && { minTravellers: stored.minTravellers }),
+              ...(stored.maxTravellers && { maxTravellers: stored.maxTravellers }),
+              ...(stored.description && { description: stored.description }),
+              ...(stored.highlights && { highlights: typeof stored.highlights === "object" ? JSON.stringify(stored.highlights) : stored.highlights }),
+              ...(stored.includes && { includes: typeof stored.includes === "object" ? JSON.stringify(stored.includes) : stored.includes }),
+              ...(stored.excludes && { excludes: typeof stored.excludes === "object" ? JSON.stringify(stored.excludes) : stored.excludes }),
+              ...(stored.importantInfo !== undefined && { importantInfo: stored.importantInfo }),
+              ...(stored.whatToBring && { whatToBring: typeof stored.whatToBring === "object" ? JSON.stringify(stored.whatToBring) : stored.whatToBring }),
+              ...(stored.cancellationPolicy !== undefined && { cancellationPolicy: stored.cancellationPolicy }),
+              ...(stored.featured !== undefined && { featured: stored.featured }),
+              ...(stored.status && { status: stored.status }),
+              ...(stored.seoTitle !== undefined && { seoTitle: stored.seoTitle }),
+              ...(stored.seoDescription !== undefined && { seoDescription: stored.seoDescription }),
             },
           });
           memoryStore.set(stored.id, stored);

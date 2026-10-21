@@ -85,39 +85,120 @@ export function writeBackupFile(destinations: StoredDestination[]): void {
   }
 }
 
+let lastDestinationsCloudSyncTime = 0;
+const DESTINATIONS_CLOUD_SYNC_TTL_MS = 2000;
+
 async function syncWithCloudKv(
   action: "get" | "set",
   destinations?: StoredDestination[]
 ): Promise<StoredDestination[] | null> {
-  const kvUrl = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
+  const kvUrl = (process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL || "").replace(/\/$/, "");
   const kvToken = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
-  if (!kvUrl || !kvToken) return null;
 
-  try {
-    if (action === "get") {
-      const res = await fetch(`${kvUrl}/get/ceylon_destinations`, {
-        headers: { Authorization: `Bearer ${kvToken}` },
-        cache: "no-store",
-      });
-      if (res.ok) {
-        const json = await res.json();
-        const result = json.result;
-        if (typeof result === "string") return JSON.parse(result);
-        if (Array.isArray(result)) return result;
+  if (kvUrl && kvToken) {
+    try {
+      if (action === "get") {
+        const cmdRes = await fetch(kvUrl, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${kvToken}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(["GET", "ceylon_destinations"]),
+          cache: "no-store",
+        });
+
+        if (cmdRes.ok) {
+          const json = await cmdRes.json();
+          let raw = json?.result;
+          while (typeof raw === "string") {
+            try {
+              raw = JSON.parse(raw);
+            } catch (e) {
+              break;
+            }
+          }
+          if (Array.isArray(raw) && raw.length > 0) return raw;
+        }
+
+        const pathRes = await fetch(`${kvUrl}/get/ceylon_destinations`, {
+          headers: { Authorization: `Bearer ${kvToken}` },
+          cache: "no-store",
+        });
+        if (pathRes.ok) {
+          const json = await pathRes.json();
+          let raw = json?.result;
+          while (typeof raw === "string") {
+            try {
+              raw = JSON.parse(raw);
+            } catch (e) {
+              break;
+            }
+          }
+          if (Array.isArray(raw) && raw.length > 0) return raw;
+        }
+      } else if (action === "set" && destinations) {
+        const payload = JSON.stringify(destinations);
+        await fetch(kvUrl, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${kvToken}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(["SET", "ceylon_destinations", payload]),
+        }).catch(() => {});
+
+        await fetch(`${kvUrl}/set/ceylon_destinations`, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${kvToken}`,
+            "Content-Type": "application/json",
+          },
+          body: payload,
+        }).catch(() => {});
       }
-    } else if (action === "set" && destinations) {
-      await fetch(`${kvUrl}/set/ceylon_destinations`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${kvToken}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(JSON.stringify(destinations)),
-      });
+    } catch (err) {
+      console.warn("KV destinations sync notice:", err);
     }
-  } catch (err) {
-    console.warn("KV destinations sync notice:", err);
   }
+
+  // Tier 2: Vercel Blob Storage Fallback
+  const blobToken = process.env.BLOB_READ_WRITE_TOKEN;
+  if (blobToken) {
+    try {
+      if (action === "get") {
+        const listRes = await fetch("https://blob.vercel-storage.com/?prefix=ceylon_destinations_backup.json", {
+          headers: { Authorization: `Bearer ${blobToken}` },
+          cache: "no-store",
+        });
+        if (listRes.ok) {
+          const listJson = await listRes.json();
+          const blobs = listJson.blobs || [];
+          if (blobs.length > 0 && blobs[0].downloadUrl) {
+            const dataRes = await fetch(blobs[0].downloadUrl, { cache: "no-store" });
+            if (dataRes.ok) {
+              const data = await dataRes.json();
+              if (Array.isArray(data) && data.length > 0) return data;
+            }
+          }
+        }
+      } else if (action === "set" && destinations) {
+        await fetch("https://blob.vercel-storage.com/ceylon_destinations_backup.json", {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${blobToken}`,
+            "x-api-version": "7",
+            "content-type": "application/json",
+            "x-add-random-suffix": "false",
+          },
+          body: JSON.stringify(destinations),
+        }).catch(() => {});
+      }
+    } catch (blobErr) {
+      console.warn("Blob destinations sync notice:", blobErr);
+    }
+  }
+
   return null;
 }
 
@@ -132,11 +213,19 @@ export async function getAllStoredDestinations(): Promise<StoredDestination[]> {
     }
   }
 
-  if (memoryStore.size === 0) {
+  const now = Date.now();
+  if (now - lastDestinationsCloudSyncTime > DESTINATIONS_CLOUD_SYNC_TTL_MS) {
+    lastDestinationsCloudSyncTime = now;
     const cloud = await syncWithCloudKv("get");
     if (cloud && Array.isArray(cloud)) {
       for (const d of cloud) {
-        memoryStore.set(d.id, d);
+        if (!d || !d.id) continue;
+        const existing = memoryStore.get(d.id);
+        const cloudTime = new Date(d.updatedAt || d.createdAt || 0).getTime();
+        const memTime = existing ? new Date(existing.updatedAt || existing.createdAt || 0).getTime() : 0;
+        if (!existing || cloudTime >= memTime) {
+          memoryStore.set(d.id, d);
+        }
       }
       writeBackupFile(Array.from(memoryStore.values()));
     }
